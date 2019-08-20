@@ -1,0 +1,11 @@
+{
+  "name": "sim-ecs",
+  "version": "0.1.0",
+  "devDependencies": {
+    "typescript": "^3.5.3",
+    "tslib": "^1.10.0"
+  },
+  "scripts": {
+    "gravity": "ts-node -P tsconfig.json examples/gravity.ts"
+  }
+}
