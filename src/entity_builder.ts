@@ -29,4 +29,14 @@ export class EntityBuilder implements IEntityBuilder {
 
         return this;
     }
+
+    withQuick(component: IComponent | { new(): IComponent }, ...args: any[]): IEntityBuilder {
+        this.entity.addComponentQuick(typeof component === 'object'
+            ? component
+            // @ts-ignore
+            : new (component.bind.apply(component, [component].concat(Array.from(arguments).slice(1))))()
+        );
+
+        return this;
+    }
 }

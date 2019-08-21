@@ -8,6 +8,14 @@ The trade-off is that insertion and deletion are slow.
 I recommend doing insertions and deletions at defined points (for example loading screens)
 and batching these operations.
 
+Batching can be done by using `-Quick` methods (for example `world.registerSystemQuick()`),
+which will not calculate component and system dependencies). In the end, call `world.maintain()`
+in order to do the heavy lifting.
+
+Even while dispatching the world, you can use `-Quick` methods, however the inserted objects
+will only work after calling `world.maintain()`. This way, changes to a simulation can be prepared
+on a running world and then rather quickly added once ready.
+
 
 ## Creating the ECS and a world
 

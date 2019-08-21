@@ -15,11 +15,18 @@ export class Entity implements IEntity {
     }
 
     addComponent(component: IComponent): IEntity {
-        if (this.hasComponent(component.constructor as typeof Component)) return this;
-
-        this.components.set(component.constructor.name, component);
+        this.addComponentQuick(component);
         this.world && this._updateSystems(this.world);
 
+        return this;
+    }
+
+    addComponentQuick(component: IComponent): IEntity {
+        if (this.hasComponent(component.constructor as typeof Component)) {
+            throw new Error(`Component "${component.constructor.name}" already exists on entity!`)
+        }
+
+        this.components.set(component.constructor.name, component);
         return this;
     }
 
