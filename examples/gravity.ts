@@ -38,7 +38,6 @@ const Gravity = class extends System {
             console.log(`Pos: ${pos.y.toFixed(5)}    Vel: ${vel.y.toFixed(5)}`);
         }
     }
-
 };
 
 world.buildEntity()

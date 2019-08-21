@@ -1,6 +1,10 @@
 # sim-ecs
 ECS, which is optimized for simulations
 
+I highly advice you to take a look at the (working) examples in the `/examples` directory.
+The gravity example is the most basic one and shows you how to get a world up and running quickly.
+
+
 ## Considerations
 
 This ECS is built for easy usage (DX) and high iteration speed.
@@ -63,7 +67,7 @@ Systems are the logic, which operates on data sets (components).
 They are logic building blocks which separate concerns and make the world move.
 
 ```typescript
-const Gravity = class extends System {
+class Gravity extends System {
     protected absTime = 0;
 
     constructor() {
@@ -92,6 +96,9 @@ const Gravity = class extends System {
         }
     }
 };
+
+// register the system
+world.registerSystem(new Gravity());
 ```
 
 
