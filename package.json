@@ -6,6 +6,7 @@
     "tslib": "^1.10.0"
   },
   "scripts": {
-    "gravity": "ts-node -P tsconfig.json examples/gravity.ts"
+    "gravity": "ts-node -P tsconfig.json examples/gravity.ts",
+    "stated-gravity": "ts-node -P tsconfig.json examples/stated-gravity.ts"
   }
 }

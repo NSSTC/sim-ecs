@@ -12,6 +12,7 @@ export class World implements IWorld {
     protected defaultState = new State();
     protected entities: IEntity[] = [];
     protected lastDispatch = 0;
+    protected resources: Map<{ new(): Object }, Object> = new Map();
 
     get systems(): ISystem[] {
         return this.defaultState.systems;
@@ -23,6 +24,27 @@ export class World implements IWorld {
             this.entities.push(entity);
         }
 
+        return this;
+    }
+
+    addResource<T extends Object>(obj: T | { new(): T }, ...args: any[]): IWorld {
+        let type: { new(): T };
+        let instance: T;
+        if (typeof obj === 'object') {
+            type = obj.constructor as { new(): T };
+            instance = obj;
+        }
+        else {
+            type = obj;
+            // @ts-ignore
+            instance = new (obj.bind.apply(obj, [obj].concat(Array.from(arguments).slice(1))))();
+        }
+
+        if (this.resources.has(type)) {
+            throw new Error(`Resource with name "${type.name}" already exists!`);
+        }
+
+        this.resources.set(type, instance);
         return this;
     }
 
@@ -52,6 +74,14 @@ export class World implements IWorld {
         }
 
         this.lastDispatch = currentTime;
+    }
+
+    getResource<T extends Object>(type: { new(): T }): T {
+        if (! this.resources.has(type)) {
+            throw new Error(`Resource of type "${type.name}" does not exist!`);
+        }
+
+        return this.resources.get(type) as T;
     }
 
     maintain(): void {

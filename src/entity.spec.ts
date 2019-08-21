@@ -7,6 +7,7 @@ export interface IEntity {
     addComponent(component: IComponent): IEntity
     getComponent<T extends IComponent>(component: { new(): T }): T | undefined
     hasComponent(component: typeof Component): boolean
+    hasComponentName(name: string): boolean
     removeComponent(component: IComponent): IEntity
     setWorld(world: IWorld): IEntity
     _updateSystem(world: IWorld, system: ISystem): void

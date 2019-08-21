@@ -16,8 +16,12 @@ class Velocity extends Component {
 const Gravity = class extends System {
     protected absTime = 0;
 
-    canUseEntity(entity: IEntity): boolean {
-        return entity.hasComponent(Position) && entity.hasComponent(Velocity);
+    constructor() {
+        super();
+        this.setComponentQuery({
+            Position: true,
+            Velocity: true,
+        });
     }
 
     update(world: IWorld, entities: IEntity[], deltaTime: number): void {
@@ -41,6 +45,7 @@ world.buildEntity()
     .with(Position)
     .with(Velocity)
     .build();
+
 
 world.registerSystem(new Gravity());
 

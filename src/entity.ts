@@ -31,6 +31,10 @@ export class Entity implements IEntity {
         return this.components.has(component.name);
     }
 
+    hasComponentName(name: string): boolean {
+        return this.components.has(name);
+    }
+
     removeComponent(component: IComponent): IEntity {
         if (!this.components.has(component.constructor.name)) return this;
 
