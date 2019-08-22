@@ -2,7 +2,16 @@ import {IEntity} from "./entity.spec";
 import {IComponent, TComponentProto} from "./component.spec";
 
 export interface IEntityBuilder {
+    /**
+     * Create entity and add it to the world
+     */
     build(): IEntity
+
+    /**
+     * Associate component with target entity
+     * @param component
+     * @param args
+     */
     with(component: IComponent | TComponentProto, ...args: any[]): IEntityBuilder
 
     /**
