@@ -1,53 +1,24 @@
-import {Component, ECS, IEntity, IWorld, System} from "../src";
+import {ECS} from "../src";
+import {Gravity, Position, Velocity} from "./_helper";
 
+// 1. Create a new ECS
 const ecs = new ECS();
+
+// 2. Create a world
 const world = ecs.createWorld();
 
-class Position extends Component {
-    x = 0;
-    y = 0;
-}
-
-class Velocity extends Component {
-    x = 0;
-    y = 0;
-}
-
-const Gravity = class extends System {
-    protected absTime = 0;
-
-    constructor() {
-        super();
-        this.setComponentQuery({
-            Position: true,
-            Velocity: true,
-        });
-    }
-
-    update(world: IWorld, entities: IEntity[], deltaTime: number): void {
-        this.absTime += deltaTime;
-        for (let entity of entities) {
-            const pos = entity.getComponent(Position);
-            const vel = entity.getComponent(Velocity);
-
-            if (!pos || !vel) continue;
-
-            vel.y -= Math.pow(0.00981, 2) * this.absTime;
-            pos.y += vel.y;
-
-            console.log(`Pos: ${pos.y.toFixed(5)}    Vel: ${vel.y.toFixed(5)}`);
-        }
-    }
-};
-
+// 3. Define components (see _helper.ts for Position and Velocity)
+// 4. Add entities with components
 world.buildEntity()
     .with(Position)
     .with(Velocity)
     .build();
 
-
+// 5. Define systems (see _helper.ts for Gravity)
+// 6. Register the systems
 world.registerSystem(new Gravity());
 
+// 7. Dispatch the world to update the data contained in the components using the logic defined in the systems
 const update = function () {
     world.dispatch();
     setTimeout(update, 500);

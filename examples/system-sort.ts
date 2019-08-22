@@ -1,5 +1,6 @@
-import {Component, ECS, IEntity, IWorld, State, System, ISystem} from "../src";
+import {ECS, IEntity, IWorld, State, System} from "../src";
 import IState from '../src/state.spec';
+import {Gravity, Position, Velocity} from "./_helper";
 
 const ecs = new ECS();
 const world = ecs.createWorld();
@@ -7,16 +8,6 @@ const world = ecs.createWorld();
 class InitState extends State { _systems = [initSystem] }
 class RunState extends State { _systems = [gravitySystem, terrainPhysicsSystem] }
 class PauseState extends State { _systems = [pauseSystem] }
-
-class Position extends Component {
-    x = 0;
-    y = 0;
-}
-
-class Velocity extends Component {
-    x = 0;
-    y = 0;
-}
 
 class Init extends System {
     update(world: IWorld, entities: IEntity[], deltaTime: number): void {
@@ -46,32 +37,7 @@ class TerrainPhysics extends System {
     }
 } const terrainPhysicsSystem = new TerrainPhysics();
 
-class Gravity extends System {
-    protected absTime = 0;
-
-    constructor() {
-        super();
-        this.setComponentQuery({
-            Position: true,
-            Velocity: true,
-        });
-    }
-
-    update(world: IWorld, entities: IEntity[], deltaTime: number): void {
-        this.absTime += deltaTime;
-        for (let entity of entities) {
-            const pos = entity.getComponent(Position);
-            const vel = entity.getComponent(Velocity);
-
-            if (!pos || !vel) continue;
-
-            vel.y -= Math.pow(0.00981, 2) * this.absTime;
-            pos.y += vel.y;
-
-            console.log(`Pos: ${pos.y.toFixed(5)}    Vel: ${vel.y.toFixed(5)}`);
-        }
-    }
-} const gravitySystem = new Gravity();
+const gravitySystem = new Gravity();
 
 class Pause extends System {
     scheduled = false;
