@@ -2,7 +2,7 @@ import {Entity} from "./entity";
 import IWorld from "./world.spec";
 import IEntity from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
-import IComponent from "./component.spec";
+import IComponent, {TComponentProto} from "./component.spec";
 
 export * from './entity_builder.spec';
 
@@ -20,7 +20,7 @@ export class EntityBuilder implements IEntityBuilder {
         return this.entity;
     }
 
-    with(component: IComponent | { new(): IComponent }, ...args: any[]): IEntityBuilder {
+    with(component: IComponent | TComponentProto, ...args: any[]): IEntityBuilder {
         this.entity.addComponent(typeof component === 'object'
             ? component
             // @ts-ignore
@@ -30,7 +30,7 @@ export class EntityBuilder implements IEntityBuilder {
         return this;
     }
 
-    withQuick(component: IComponent | { new(): IComponent }, ...args: any[]): IEntityBuilder {
+    withQuick(component: IComponent | TComponentProto, ...args: any[]): IEntityBuilder {
         this.entity.addComponentQuick(typeof component === 'object'
             ? component
             // @ts-ignore

@@ -3,6 +3,7 @@ import IEntity from "./entity.spec";
 import IComponent from "./component.spec";
 import {Component} from "./component";
 import ISystem from "./system.spec";
+import {TTypeProto} from "./_.spec";
 
 export * from './entity.spec';
 
@@ -30,7 +31,7 @@ export class Entity implements IEntity {
         return this;
     }
 
-    getComponent<T extends IComponent>(component: { new(): T }): T | undefined {
+    getComponent<T extends IComponent>(component: TTypeProto<T>): T | undefined {
         return this.components.get(component.name) as T;
     }
 

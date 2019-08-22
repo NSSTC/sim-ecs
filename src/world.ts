@@ -3,11 +3,9 @@ import {EntityBuilder} from "./entity_builder";
 import {IWorld, TSystemNode} from "./world.spec";
 import IEntity from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
-import ISystem from "./system.spec";
+import ISystem, {TSystemProto} from "./system.spec";
 import {IState, State} from "./state";
-
-// @ts-ignore
-import toposort from 'toposort';
+import {TTypeProto} from "./_.spec";
 
 export * from './world.spec';
 
@@ -31,11 +29,11 @@ export class World implements IWorld {
         return this;
     }
 
-    addResource<T extends Object>(obj: T | { new(): T }, ...args: any[]): IWorld {
-        let type: { new(): T };
+    addResource<T extends Object>(obj: T | TTypeProto<T>, ...args: any[]): IWorld {
+        let type: TTypeProto<T>;
         let instance: T;
         if (typeof obj === 'object') {
-            type = obj.constructor as { new(): T };
+            type = obj.constructor as TTypeProto<T>;
             instance = obj;
         }
         else {
@@ -80,7 +78,7 @@ export class World implements IWorld {
         this.lastDispatch = currentTime;
     }
 
-    getResource<T extends Object>(type: { new(): T }): T {
+    getResource<T extends Object>(type: TTypeProto<T>): T {
         if (! this.resources.has(type)) {
             throw new Error(`Resource of type "${type.name}" does not exist!`);
         }
@@ -95,7 +93,7 @@ export class World implements IWorld {
         }
     }
 
-    registerSystem(system: ISystem, dependencies?: ({ new(): ISystem })[]): IWorld {
+    registerSystem(system: ISystem, dependencies?: TSystemProto[]): IWorld {
         this.registerSystemQuick(system, dependencies);
         for (let entity of this.entities) {
             entity._updateSystem(this, system);
@@ -105,7 +103,7 @@ export class World implements IWorld {
         return this;
     }
 
-    registerSystemQuick(system: ISystem, dependencies?: { new(): ISystem }[]): IWorld {
+    registerSystemQuick(system: ISystem, dependencies?: TSystemProto[]): IWorld {
         if (this.sortedSystems.find(node => node.system.constructor === system.constructor)) {
             throw new Error(`The system "${system.constructor.name}" was already added to the world!`);
         }
@@ -118,19 +116,18 @@ export class World implements IWorld {
     // toposort with Kahn
     // https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm
     protected sortSystems(unsorted: TSystemNode[]): TSystemNode[] {
-        type TSystemType = { new(): ISystem };
-        const graph = new Map<TSystemType, TSystemType[]>();
-        let edges: TSystemType[];
+        const graph = new Map<TSystemProto, TSystemProto[]>();
+        let edges: TSystemProto[];
 
         for (let {system} of unsorted) {
-            graph.set(system.constructor as TSystemType, []);
+            graph.set(system.constructor as TSystemProto, []);
         }
 
         for (let {system, dependencies} of unsorted) {
             for (let dep of dependencies) {
-                edges = graph.get(dep) as TSystemType[];
-                if (!edges.includes(system.constructor as TSystemType)) {
-                    edges.push(system.constructor as TSystemType);
+                edges = graph.get(dep) as TSystemProto[];
+                if (!edges.includes(system.constructor as TSystemProto)) {
+                    edges.push(system.constructor as TSystemProto);
                 }
 
                 graph.set(dep, edges);
@@ -138,21 +135,21 @@ export class World implements IWorld {
         }
 
 
-        const L: TSystemType[] = []; // Empty list that will contain the sorted elements
+        const L: TSystemProto[] = []; // Empty list that will contain the sorted elements
         const S = Array.from(graph.entries()).filter(pair => pair[1].length === 0).map(pair => pair[0]); // Set of all nodes with no incoming edge
-        let n: TSystemType;
+        let n: TSystemProto;
 
         // while S is non-empty do
         while (S.length > 0) {
             // remove a node n from S
-            n = S.shift() as TSystemType;
+            n = S.shift() as TSystemProto;
             // add n to tail of L
             L.push(n);
 
             // for each node m with an edge e from n to m do
             for (let m of Array.from(graph.entries()).filter(pair => pair[1].includes(n)).map(pair => pair[0])) {
                 // remove edge e from the graph
-                edges = graph.get(m) as TSystemType[];
+                edges = graph.get(m) as TSystemProto[];
                 edges.splice(edges.indexOf(n), 1);
                 graph.set(m, edges);
 

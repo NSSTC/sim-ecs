@@ -2,6 +2,7 @@ import IComponent from "./component.spec";
 import IWorld from "./world.spec";
 import {Component} from "./component";
 import ISystem from "./system.spec";
+import {TTypeProto} from "./_.spec";
 
 export interface IEntity {
     addComponent(component: IComponent): IEntity
@@ -12,7 +13,7 @@ export interface IEntity {
      * @param component
      */
     addComponentQuick(component: IComponent): IEntity
-    getComponent<T extends IComponent>(component: { new(): T }): T | undefined
+    getComponent<T extends IComponent>(component: TTypeProto<T>): T | undefined
     hasComponent(component: typeof Component): boolean
     hasComponentName(name: string): boolean
     removeComponent(component: IComponent): IEntity
@@ -21,4 +22,5 @@ export interface IEntity {
     _updateSystems(world: IWorld): void
 }
 
+export type TEntityProto = { new(): IEntity };
 export default IEntity;

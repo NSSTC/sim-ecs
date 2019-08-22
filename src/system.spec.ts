@@ -1,9 +1,9 @@
 import IWorld from "./world.spec";
 import IEntity from "./entity.spec";
-import { IComponent } from './component.spec';
+import {TComponentProto} from './component.spec';
 
 // @ts-ignore
-export type TComponentQuery = { [component: { new(): IComponent }]: boolean };
+export type TComponentQuery = { [component: TComponentProto]: boolean };
 
 export interface ISystem {
     readonly componentQuery: TComponentQuery
@@ -14,4 +14,5 @@ export interface ISystem {
     update(world: IWorld, entities: IEntity[], deltaTime: number): void
 }
 
+export type TSystemProto = { new(): ISystem };
 export default ISystem;
