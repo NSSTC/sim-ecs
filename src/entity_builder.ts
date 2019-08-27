@@ -21,22 +21,19 @@ export class EntityBuilder implements IEntityBuilder {
     }
 
     with(component: IComponent | TComponentProto, ...args: any[]): IEntityBuilder {
-        this.entity.addComponent(typeof component === 'object'
-            ? component
-            // @ts-ignore
-            : new (component.bind.apply(component, [component].concat(Array.from(arguments).slice(1))))()
-        );
-
+        this.entity.addComponent(this.asComponent(component));
         return this;
     }
 
     withQuick(component: IComponent | TComponentProto, ...args: any[]): IEntityBuilder {
-        this.entity.addComponentQuick(typeof component === 'object'
+        this.entity.addComponentQuick(this.asComponent(component));
+        return this;
+    }
+
+    protected asComponent(component: IComponent | TComponentProto, ...args: any[]): IComponent {
+        return typeof component === 'object'
             ? component
             // @ts-ignore
-            : new (component.bind.apply(component, [component].concat(Array.from(arguments).slice(1))))()
-        );
-
-        return this;
+            : new (component.bind.apply(component, [component].concat(Array.from(arguments).slice(1))))();
     }
 }

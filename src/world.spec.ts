@@ -21,7 +21,7 @@ export interface IWorld {
     /**
      * Add a resource to this world
      * @param type
-     * @param args
+     * @param args constructor parameters
      */
     addResource<T extends Object>(type: T | TTypeProto<T>, ...args: any[]): IWorld
 
