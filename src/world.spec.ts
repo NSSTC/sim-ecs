@@ -39,7 +39,7 @@ export interface IWorld {
      * Execute all systems
      * @param state
      */
-    dispatch(state?: IState): void
+    dispatch(state?: IState): Promise<void>
 
     /**
      * Get a resource which was previously stored

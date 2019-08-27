@@ -10,7 +10,7 @@ class RunState extends State { _systems = [gravitySystem, terrainPhysicsSystem] 
 class PauseState extends State { _systems = [pauseSystem] }
 
 class Init extends System {
-    update(world: IWorld, entities: IEntity[], deltaTime: number): void {
+    async update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
         console.log('INIT');
         world.getResource(SimulationData).state = runState;
     }
@@ -24,7 +24,7 @@ class TerrainPhysics extends System {
         });
     }
 
-    update(world: IWorld, entities: IEntity[], deltaTime: number): void {
+    async update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
         for (let entity of entities) {
             const pos = entity.getComponent(Position);
             if (!pos) continue;
@@ -41,7 +41,7 @@ const gravitySystem = new Gravity();
 
 class Pause extends System {
     scheduled = false;
-    update(world: IWorld, entities: IEntity[], deltaTime: number): void {
+    async update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
         console.log('PAUSE');
         if (!this.scheduled) {
             setTimeout(() => { world.getResource(SimulationData).state = runState; }, 3000);
@@ -72,10 +72,10 @@ world.registerSystemQuick(gravitySystem);
 world.registerSystemQuick(pauseSystem);
 world.maintain();
 
-const update = function () {
-    world.dispatch(world.getResource(SimulationData).state);
+const update = async function () {
+    await world.dispatch(world.getResource(SimulationData).state);
     setTimeout(update, 500);
 };
 
-update();
+update().catch(console.error);
 setTimeout(() => { world.getResource(SimulationData).state = pauseState; }, 3000);

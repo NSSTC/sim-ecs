@@ -60,7 +60,7 @@ export class World implements IWorld {
         return entity;
     }
 
-    dispatch(state?: IState): void {
+    async dispatch(state?: IState): Promise<void> {
         const currentTime = Date.now();
 
         if (!state) {
@@ -71,8 +71,11 @@ export class World implements IWorld {
             this.lastDispatch = currentTime;
         }
 
+        // todo: systems without dependencies could run in parallel for better performance
+        //   however, I do not want to implement lookup logic for dependencies here
+        //   because that might reduce performance on a case-by-case basis
         for (let system of state.systems) {
-            system.update(this, system.entities, currentTime - this.lastDispatch);
+            await system.update(this, system.entities, currentTime - this.lastDispatch);
         }
 
         this.lastDispatch = currentTime;

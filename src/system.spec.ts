@@ -34,7 +34,7 @@ export interface ISystem {
      * @param entities
      * @param deltaTime
      */
-    update(world: IWorld, entities: IEntity[], deltaTime: number): void
+    update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void>
 }
 
 export type TSystemProto = { new(): ISystem };

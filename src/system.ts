@@ -29,7 +29,7 @@ export class System implements ISystem {
         return this;
     }
 
-    update(world: IWorld, entities: IEntity[], deltaTime: number): void {
+    update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
         throw new Error(`You have to overwrite the update() method of ${this.constructor.name}!`);
     }
 }

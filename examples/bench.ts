@@ -1,4 +1,4 @@
-import {Component, ECS, IEntity, IWorld, System} from "../src";
+import {ECS} from "../src";
 
 const ecs = new ECS();
 const world = ecs.createWorld();
@@ -8,5 +8,7 @@ const world = ecs.createWorld();
 let i;
 const loops = 1000000;
 const start = Date.now();
-for (i = 0; i < loops; i++) world.dispatch();
-console.log(`Time: ${Date.now() - start}ns for ${loops} dispatches.`);
+
+(async () => { for (i = 0; i < loops; i++) await world.dispatch(); })()
+    .catch(console.error)
+    .then(() => console.log(`Time: ${Date.now() - start}ns for ${loops} dispatches.`));

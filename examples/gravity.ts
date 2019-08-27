@@ -19,9 +19,9 @@ world.buildEntity()
 world.registerSystem(new Gravity());
 
 // 7. Dispatch the world to update the data contained in the components using the logic defined in the systems
-const update = function () {
-    world.dispatch();
+const update = async function () {
+    await world.dispatch();
     setTimeout(update, 500);
 };
 
-update();
+update().catch(console.error);

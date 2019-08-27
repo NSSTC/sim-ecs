@@ -15,7 +15,7 @@ export class Gravity extends System {
         });
     }
 
-    update(world: IWorld, entities: IEntity[], deltaTime: number): void {
+    async update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
         this.absTime += deltaTime;
         for (let entity of entities) {
             const pos = entity.getComponent(Position);
