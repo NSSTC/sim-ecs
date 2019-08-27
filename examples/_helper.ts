@@ -4,6 +4,19 @@ export function wait(time: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, time));
 }
 
+export class DelaySystem extends System {
+    delay: number;
+
+    constructor(delay: number = 500) {
+        super();
+        this.delay = delay;
+    }
+
+    update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
+        return new Promise<void>(res => setTimeout(res, this.delay));
+    }
+}
+
 export class Gravity extends System {
     protected absTime = 0;
 

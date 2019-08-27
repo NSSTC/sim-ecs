@@ -9,6 +9,7 @@ let i;
 const loops = 1000000;
 const start = Date.now();
 
+// todo: use world.run(), because it is less synthetic
 (async () => { for (i = 0; i < loops; i++) await world.dispatch(); })()
     .catch(console.error)
     .then(() => console.log(`Time: ${Date.now() - start}ns for ${loops} dispatches.`));

@@ -1,5 +1,5 @@
 import {ECS} from "../src";
-import {Gravity, Position, Velocity} from "./_helper";
+import {DelaySystem, Gravity, Position, Velocity} from "./_helper";
 
 // 1. Create a new ECS
 const ecs = new ECS();
@@ -17,11 +17,7 @@ world.buildEntity()
 // 5. Define systems (see _helper.ts for Gravity)
 // 6. Register the systems
 world.registerSystem(new Gravity());
+world.registerSystem(new DelaySystem(500), [Gravity]);
 
 // 7. Dispatch the world to update the data contained in the components using the logic defined in the systems
-const update = async function () {
-    await world.dispatch();
-    setTimeout(update, 500);
-};
-
-update().catch(console.error);
+world.run().catch(console.error);

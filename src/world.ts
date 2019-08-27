@@ -13,7 +13,9 @@ export class World implements IWorld {
     protected defaultState = new State();
     protected entities: IEntity[] = [];
     protected lastDispatch = 0;
-    protected resources: Map<{ new(): Object }, Object> = new Map();
+    protected resources = new Map<{ new(): Object }, Object>();
+    protected runPromise?: Promise<void>;
+    protected runSystems = false;
     protected sortedSystems: TSystemNode[] = [];
 
     get systems(): ISystem[] {
@@ -71,11 +73,22 @@ export class World implements IWorld {
             this.lastDispatch = currentTime;
         }
 
-        // todo: systems without dependencies could run in parallel for better performance
-        //   however, I do not want to implement lookup logic for dependencies here
-        //   because that might reduce performance on a case-by-case basis
-        for (let system of state.systems) {
-            await system.update(this, system.entities, currentTime - this.lastDispatch);
+        {
+            let stateSystem;
+            let parallelRunningSystems = [];
+            for (let system of this.sortedSystems) {
+                stateSystem = state.systems.find(stateSys => stateSys.constructor.name === system.system.constructor.name);
+                if (stateSystem) {
+                    if (system.dependencies.length > 0) {
+                        await Promise.all(parallelRunningSystems);
+                        parallelRunningSystems = [];
+                        await system.system.update(this, system.system.entities, currentTime - this.lastDispatch);
+                    }
+                    else {
+                        parallelRunningSystems.push(system.system.update(this, system.system.entities, currentTime - this.lastDispatch))
+                    }
+                }
+            }
         }
 
         this.lastDispatch = currentTime;
@@ -137,7 +150,6 @@ export class World implements IWorld {
             }
         }
 
-
         const L: TSystemProto[] = []; // Empty list that will contain the sorted elements
         const S = Array.from(graph.entries()).filter(pair => pair[1].length === 0).map(pair => pair[0]); // Set of all nodes with no incoming edge
         let n: TSystemProto;
@@ -178,5 +190,70 @@ export class World implements IWorld {
 
             return obj;
         });
+    }
+
+    async stopRun(): Promise<void> {
+        this.runSystems = false;
+        await this.runPromise;
+    }
+
+    async run(state?: IState): Promise<void> {
+        // todo: this could be further optimized by allowing systems with dependencies to run in parallel
+        //    if all of their dependencies already ran
+
+        const systems: { system: ISystem, hasDependencies: boolean }[] = [];
+        let resolver = () => {};
+
+        if (this.runPromise) {
+            throw new Error('The dispatch loop is already running!');
+        }
+
+        if (!state) {
+            state = this.defaultState;
+        }
+
+        {
+            let stateSystem;
+            for (let system of this.sortedSystems) {
+                stateSystem = state.systems.find(stateSys => stateSys.constructor.name === system.system.constructor.name);
+                if (stateSystem) {
+                    systems.push({
+                        system: stateSystem,
+                        hasDependencies: system.dependencies.length > 0,
+                    });
+                }
+            }
+        }
+
+        this.runPromise = new Promise<void>(res => { resolver = res });
+        this.runSystems = true;
+
+        if (this.lastDispatch === 0) {
+            this.lastDispatch = Date.now();
+        }
+
+        {
+            let currentTime;
+            let parallelRunningSystems = [];
+            while (this.runSystems) {
+                currentTime = Date.now();
+
+                for (let system of systems) {
+                    if (system.hasDependencies) {
+                        await Promise.all(parallelRunningSystems);
+                        parallelRunningSystems = [];
+                        await system.system.update(this, system.system.entities, currentTime - this.lastDispatch);
+                    }
+                    else {
+                        parallelRunningSystems.push(system.system.update(this, system.system.entities, currentTime - this.lastDispatch))
+                    }
+                }
+
+                this.lastDispatch = currentTime;
+            }
+        }
+
+        resolver();
+        this.runPromise = undefined;
     }
 }

@@ -66,6 +66,19 @@ export interface IWorld {
      * @param dependencies
      */
     registerSystemQuick(system: ISystem, dependencies?: TSystemProto[]): IWorld
+
+    /**
+     * Signal the world to stop its dispatch-loop
+     * Resolves once the loop stops
+     */
+    stopRun(): Promise<void>
+
+    /**
+     * Execute all systems continuously in a dispatch-loop
+     * Contains performance benefits by pre-calculating and pre-scheduling the execution
+     * @param state
+     */
+    run(state?: IState): Promise<void>
 }
 
 export type TWorldProto = { new(): IWorld };
