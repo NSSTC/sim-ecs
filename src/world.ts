@@ -129,27 +129,12 @@ export class World implements IWorld {
         return this;
     }
 
-    // toposort with Kahn
-    // https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm
     protected sortSystems(unsorted: TSystemNode[]): TSystemNode[] {
-        const graph = new Map<TSystemProto, TSystemProto[]>();
+        const graph = new Map(unsorted.map(node => [node.system.constructor as TSystemProto, node.dependencies]));
         let edges: TSystemProto[];
 
-        for (let {system} of unsorted) {
-            graph.set(system.constructor as TSystemProto, []);
-        }
-
-        for (let {system, dependencies} of unsorted) {
-            for (let dep of dependencies) {
-                edges = graph.get(dep) as TSystemProto[];
-                if (!edges.includes(system.constructor as TSystemProto)) {
-                    edges.push(system.constructor as TSystemProto);
-                }
-
-                graph.set(dep, edges);
-            }
-        }
-
+        /// toposort with Kahn
+        /// https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm
         const L: TSystemProto[] = []; // Empty list that will contain the sorted elements
         const S = Array.from(graph.entries()).filter(pair => pair[1].length === 0).map(pair => pair[0]); // Set of all nodes with no incoming edge
         let n: TSystemProto;
@@ -166,7 +151,6 @@ export class World implements IWorld {
                 // remove edge e from the graph
                 edges = graph.get(m) as TSystemProto[];
                 edges.splice(edges.indexOf(n), 1);
-                graph.set(m, edges);
 
                 // if m has no other incoming edges then
                 if (edges.length <= 0) {
