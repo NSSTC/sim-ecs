@@ -5,6 +5,7 @@
     "typescript": "^3.5.3",
     "tslib": "^1.10.0"
   },
+  "main": "src/index.ts",
   "scripts": {
     "bench": "ts-node -P tsconfig.json examples/bench.ts",
     "gravity": "ts-node -P tsconfig.json examples/gravity.ts",
