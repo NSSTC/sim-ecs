@@ -76,6 +76,7 @@ export interface IWorld {
     /**
      * Execute all systems continuously in a dispatch-loop
      * Contains performance benefits by pre-calculating and pre-scheduling the execution
+     * @todo: state should be change-able at runtime!
      * @param state
      */
     run(state?: IState): Promise<void>

@@ -218,9 +218,11 @@ export class World implements IWorld {
 
         {
             let currentTime;
-            let parallelRunningSystems = [];
-            while (this.runSystems) {
+            let parallelRunningSystems: Promise<void>[] = [];
+            const mainLoop = async () => {
                 currentTime = Date.now();
+
+                if (!this.runSystems) return;
 
                 for (let system of systems) {
                     if (system.hasDependencies) {
@@ -234,7 +236,10 @@ export class World implements IWorld {
                 }
 
                 this.lastDispatch = currentTime;
-            }
+                requestAnimationFrame(mainLoop);
+            };
+
+            requestAnimationFrame(mainLoop);
         }
 
         resolver();
