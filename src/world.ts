@@ -219,12 +219,13 @@ export class World implements IWorld {
         {
             let currentTime;
             let parallelRunningSystems: Promise<void>[] = [];
+            let system;
             const mainLoop = async () => {
                 currentTime = Date.now();
 
                 if (!this.runSystems) return;
 
-                for (let system of systems) {
+                for (system of systems) {
                     if (system.hasDependencies) {
                         await Promise.all(parallelRunningSystems);
                         parallelRunningSystems = [];
