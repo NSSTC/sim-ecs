@@ -1,5 +1,6 @@
 import ISystem from "./system.spec";
 import IState from "./state.spec";
+import IWorld from "./world.spec";
 
 export * from './state.spec';
 
@@ -14,9 +15,9 @@ export class State implements IState {
         return this._systems;
     }
 
-    activate(): void {
+    activate(world: IWorld): void {
     }
 
-    deactivate(): void {
+    deactivate(world: IWorld): void {
     }
 }
