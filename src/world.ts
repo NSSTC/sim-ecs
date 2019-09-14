@@ -61,7 +61,10 @@ export class World implements IWorld {
     changeRunningState(newState: IState): void {
         let stateSystem;
 
+        this.runState && this.runState.deactivate();
         this.runState = newState;
+        this.runState.activate();
+
         this.runSystems.length = 0;
         for (let system of this.sortedSystems) {
             stateSystem = newState.systems.find(stateSys => stateSys.constructor.name === system.system.constructor.name);

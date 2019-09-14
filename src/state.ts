@@ -13,4 +13,10 @@ export class State implements IState {
     get systems(): ISystem[] {
         return this._systems;
     }
+
+    activate(): void {
+    }
+
+    deactivate(): void {
+    }
 }
