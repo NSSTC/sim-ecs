@@ -9,12 +9,12 @@ export interface IState {
     /**
      * Called to run tasks for state activation
      */
-    activate(): void
+    activate(): void | Promise<void>
 
     /**
      * Called to run clean-up tasks
      */
-    deactivate(): void
+    deactivate(): void | Promise<void>
 }
 
 export type TStateProto = { new(): IState };
