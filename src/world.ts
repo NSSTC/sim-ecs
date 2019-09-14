@@ -15,7 +15,9 @@ export class World implements IWorld {
     protected lastDispatch = 0;
     protected resources = new Map<{ new(): Object }, Object>();
     protected runPromise?: Promise<void>;
-    protected runSystems = false;
+    protected runState?: IState;
+    protected runSystems: { system: ISystem, hasDependencies: boolean }[] = [];
+    protected shouldRunSystems = false;
     protected sortedSystems: TSystemNode[] = [];
 
     get systems(): ISystem[] {
@@ -54,6 +56,22 @@ export class World implements IWorld {
 
     buildEntity(): IEntityBuilder {
         return new EntityBuilder(this);
+    }
+
+    changeRunningState(newState: IState): void {
+        let stateSystem;
+
+        this.runState = newState;
+        this.runSystems.length = 0;
+        for (let system of this.sortedSystems) {
+            stateSystem = newState.systems.find(stateSys => stateSys.constructor.name === system.system.constructor.name);
+            if (stateSystem) {
+                this.runSystems.push({
+                    system: stateSystem,
+                    hasDependencies: system.dependencies.length > 0,
+                });
+            }
+        }
     }
 
     createEntity(): Entity {
@@ -177,40 +195,27 @@ export class World implements IWorld {
     }
 
     async stopRun(): Promise<void> {
-        this.runSystems = false;
+        this.shouldRunSystems = false;
         await this.runPromise;
     }
 
-    async run(state?: IState): Promise<void> {
+    async run(initialState?: IState): Promise<void> {
         // todo: this could be further optimized by allowing systems with dependencies to run in parallel
         //    if all of their dependencies already ran
 
-        const systems: { system: ISystem, hasDependencies: boolean }[] = [];
         let resolver = () => {};
 
         if (this.runPromise) {
             throw new Error('The dispatch loop is already running!');
         }
 
-        if (!state) {
-            state = this.defaultState;
+        if (!initialState) {
+            initialState = this.defaultState;
         }
 
-        {
-            let stateSystem;
-            for (let system of this.sortedSystems) {
-                stateSystem = state.systems.find(stateSys => stateSys.constructor.name === system.system.constructor.name);
-                if (stateSystem) {
-                    systems.push({
-                        system: stateSystem,
-                        hasDependencies: system.dependencies.length > 0,
-                    });
-                }
-            }
-        }
-
+        this.changeRunningState(initialState);
         this.runPromise = new Promise<void>(res => { resolver = res });
-        this.runSystems = true;
+        this.shouldRunSystems = true;
 
         if (this.lastDispatch === 0) {
             this.lastDispatch = Date.now();
@@ -223,9 +228,9 @@ export class World implements IWorld {
             const mainLoop = async () => {
                 currentTime = Date.now();
 
-                if (!this.runSystems) return;
+                if (!this.shouldRunSystems) return;
 
-                for (system of systems) {
+                for (system of this.runSystems) {
                     if (system.hasDependencies) {
                         await Promise.all(parallelRunningSystems);
                         parallelRunningSystems = [];

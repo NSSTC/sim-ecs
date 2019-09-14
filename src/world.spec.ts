@@ -36,6 +36,12 @@ export interface IWorld {
     createEntity(): IEntity
 
     /**
+     * Change the state of a running world
+     * @param newState
+     */
+    changeRunningState(newState: IState): void
+
+    /**
      * Execute all systems
      * @param state
      */
