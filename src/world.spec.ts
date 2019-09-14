@@ -39,7 +39,7 @@ export interface IWorld {
      * Change the state of a running world
      * @param newState
      */
-    changeRunningState(newState: IState): void
+    changeRunningState(newState: IState): Promise<void>
 
     /**
      * Execute all systems

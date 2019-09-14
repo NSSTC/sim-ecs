@@ -58,12 +58,12 @@ export class World implements IWorld {
         return new EntityBuilder(this);
     }
 
-    changeRunningState(newState: IState): void {
+    async changeRunningState(newState: IState): Promise<void> {
         let stateSystem;
 
-        this.runState && this.runState.deactivate();
+        this.runState && await this.runState.deactivate();
         this.runState = newState;
-        this.runState.activate();
+        await this.runState.activate();
 
         this.runSystems.length = 0;
         for (let system of this.sortedSystems) {
@@ -216,7 +216,7 @@ export class World implements IWorld {
             initialState = this.defaultState;
         }
 
-        this.changeRunningState(initialState);
+        await this.changeRunningState(initialState);
         this.runPromise = new Promise<void>(res => { resolver = res });
         this.shouldRunSystems = true;
 
