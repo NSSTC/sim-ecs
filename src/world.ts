@@ -61,9 +61,9 @@ export class World implements IWorld {
     async changeRunningState(newState: IState): Promise<void> {
         let stateSystem;
 
-        this.runState && await this.runState.deactivate();
+        this.runState && await this.runState.deactivate(this);
         this.runState = newState;
-        await this.runState.activate();
+        await this.runState.activate(this);
 
         this.runSystems.length = 0;
         for (let system of this.sortedSystems) {
