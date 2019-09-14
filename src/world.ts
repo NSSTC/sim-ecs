@@ -63,8 +63,6 @@ export class World implements IWorld {
 
         this.runState && await this.runState.deactivate(this);
         this.runState = newState;
-        await this.runState.activate(this);
-
         this.runSystems.length = 0;
         for (let system of this.sortedSystems) {
             stateSystem = newState.systems.find(stateSys => stateSys.constructor.name === system.system.constructor.name);
@@ -75,6 +73,8 @@ export class World implements IWorld {
                 });
             }
         }
+
+        await this.runState.activate(this);
     }
 
     createEntity(): Entity {
