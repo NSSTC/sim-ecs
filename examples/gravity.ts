@@ -1,4 +1,4 @@
-import {ECS} from "../src";
+import {ECS} from "..";
 import {DelaySystem, Gravity, Position, Velocity} from "./_helper";
 
 // 1. Create a new ECS

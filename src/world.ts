@@ -115,7 +115,11 @@ export class World implements IWorld {
         this.lastDispatch = currentTime;
     }
 
-    getEntities(withComponents: TComponentQuery): IEntity[] {
+    getEntities(withComponents?: TComponentQuery): IEntity[] {
+        if (!withComponents) {
+            return this.entities;
+        }
+
         const resultEntities = [];
 
         entityLoop: for (const entity of this.entities) {

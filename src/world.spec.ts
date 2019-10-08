@@ -52,7 +52,7 @@ export interface IWorld {
      * Query entities and find the ones with a certain combination of component
      * @param withComponents
      */
-    getEntities(withComponents: TComponentQuery): IEntity[]
+    getEntities(withComponents?: TComponentQuery): IEntity[]
 
     /**
      * Get a resource which was previously stored
