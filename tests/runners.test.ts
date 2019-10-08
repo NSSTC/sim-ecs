@@ -29,5 +29,13 @@ describe('Entities', () => {
         const entity = world.buildEntity().with(C1).build();
         assert.equal(world.getEntities().length, 1, 'Number of entities in world does not match');
         assert(entity.hasComponent(C1), 'Component not found on entity');
+        assert(entity.hasComponentName(C1.constructor.name), 'Component not found by name on entity');
+    });
+
+    it('build_with_component_quick', () => {
+        const entity = world.buildEntity().withQuick(C1).build();
+        assert.equal(world.getEntities().length, 1, 'Number of entities in world does not match');
+        assert(entity.hasComponent(C1), 'Component not found on entity');
+        assert(entity.hasComponentName(C1.constructor.name), 'Component not found by name on entity');
     });
 });
