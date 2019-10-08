@@ -1,8 +1,9 @@
 import {IEntity} from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
-import ISystem, {TSystemProto} from "./system.spec";
+import ISystem, {TComponentQuery, TSystemProto} from "./system.spec";
 import IState from "./state.spec";
 import {TTypeProto} from "./_.spec";
+import {Component} from "./component";
 
 export type TSystemNode = { system: ISystem, dependencies: TSystemProto[]};
 
@@ -46,6 +47,12 @@ export interface IWorld {
      * @param state
      */
     dispatch(state?: IState): Promise<void>
+
+    /**
+     * Query entities and find the ones with a certain combination of component
+     * @param withComponents
+     */
+    getEntities(withComponents: TComponentQuery): IEntity[]
 
     /**
      * Get a resource which was previously stored

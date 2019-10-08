@@ -3,7 +3,7 @@ import {EntityBuilder} from "./entity_builder";
 import {IWorld, TSystemNode} from "./world.spec";
 import IEntity from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
-import ISystem, {TSystemProto} from "./system.spec";
+import ISystem, {TComponentQuery, TSystemProto} from "./system.spec";
 import {IState, State} from "./state";
 import {TTypeProto} from "./_.spec";
 
@@ -115,8 +115,22 @@ export class World implements IWorld {
         this.lastDispatch = currentTime;
     }
 
+    getEntities(withComponents: TComponentQuery): IEntity[] {
+        const resultEntities = [];
+
+        entityLoop: for (const entity of this.entities) {
+            for (let componentRequirement of Object.entries(withComponents)) {
+                if (entity.hasComponentName(componentRequirement[0]) !== componentRequirement[1]) continue entityLoop;
+            }
+
+            resultEntities.push(entity);
+        }
+
+        return resultEntities;
+    }
+
     getResource<T extends Object>(type: TTypeProto<T>): T {
-        if (! this.resources.has(type)) {
+        if (!this.resources.has(type)) {
             throw new Error(`Resource of type "${type.name}" does not exist!`);
         }
 
