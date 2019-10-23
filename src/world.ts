@@ -249,7 +249,11 @@ export class World implements IWorld {
             const mainLoop = async () => {
                 currentTime = Date.now();
 
-                if (!this.shouldRunSystems) return;
+                if (!this.shouldRunSystems) {
+                    this.runPromise = undefined;
+                    resolver();
+                    return;
+                }
 
                 for (system of this.runSystems) {
                     if (system.hasDependencies) {
@@ -268,8 +272,5 @@ export class World implements IWorld {
 
             requestAnimationFrame(mainLoop);
         }
-
-        resolver();
-        this.runPromise = undefined;
     }
 }
