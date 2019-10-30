@@ -3,9 +3,13 @@ import IEntityBuilder from "./entity_builder.spec";
 import ISystem, {TComponentQuery, TSystemProto} from "./system.spec";
 import IState from "./state.spec";
 import {TTypeProto} from "./_.spec";
-import {Component} from "./component";
 
+export type TRunConfiguration = {
+    initialState?: IState,
+    preFrameHandler?: () => Promise<void>
+};
 export type TSystemNode = { system: ISystem, dependencies: TSystemProto[]};
+
 
 export interface IWorld {
     /**
@@ -89,9 +93,9 @@ export interface IWorld {
     /**
      * Execute all systems continuously in a dispatch-loop
      * Contains performance benefits by pre-calculating and pre-scheduling the execution
-     * @param state
+     * @param configuration
      */
-    run(state?: IState): Promise<void>
+    run(configuration?: TRunConfiguration): Promise<void>
 }
 
 export type TWorldProto = { new(): IWorld };

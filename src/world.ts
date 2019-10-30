@@ -1,6 +1,6 @@
 import {Entity} from "./entity";
 import {EntityBuilder} from "./entity_builder";
-import {IWorld, TSystemNode} from "./world.spec";
+import {IWorld, TRunConfiguration, TSystemNode} from "./world.spec";
 import IEntity from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
 import ISystem, {TComponentQuery, TSystemProto} from "./system.spec";
@@ -220,7 +220,7 @@ export class World implements IWorld {
         await this.runPromise;
     }
 
-    async run(initialState?: IState): Promise<void> {
+    async run(configuration?: TRunConfiguration): Promise<void> {
         // todo: this could be further optimized by allowing systems with dependencies to run in parallel
         //    if all of their dependencies already ran
 
@@ -230,11 +230,15 @@ export class World implements IWorld {
             throw new Error('The dispatch loop is already running!');
         }
 
-        if (!initialState) {
-            initialState = this.defaultState;
+        if (!configuration) {
+            configuration = {};
         }
 
-        await this.changeRunningState(initialState);
+        if (!configuration.initialState) {
+            configuration.initialState = this.defaultState;
+        }
+
+        await this.changeRunningState(configuration.initialState);
         this.runPromise = new Promise<void>(res => { resolver = res });
         this.shouldRunSystems = true;
 
@@ -256,6 +260,12 @@ export class World implements IWorld {
                     this.runPromise = undefined;
                     resolver();
                     return;
+                }
+
+                // @ts-ignore guaranteed to be set at the beginning of method
+                if (configuration.preFrameHandler) {
+                    // @ts-ignore guaranteed to be set at the beginning of method
+                    await configuration.preFrameHandler();
                 }
 
                 for (system of this.runSystems) {
