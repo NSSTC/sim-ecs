@@ -14,8 +14,8 @@ export class World implements IWorld {
     protected entities: IEntity[] = [];
     protected lastDispatch = 0;
     protected resources = new Map<{ new(): Object }, Object>();
-    protected runPromise?: Promise<void>;
-    protected runState?: IState;
+    protected runPromise?: Promise<void> = undefined;
+    protected runState?: IState = undefined;
     protected runSystems: { system: ISystem, hasDependencies: boolean }[] = [];
     protected shouldRunSystems = false;
     protected sortedSystems: TSystemNode[] = [];
@@ -243,6 +243,9 @@ export class World implements IWorld {
         }
 
         {
+            const execAsync = typeof requestAnimationFrame == 'function'
+                ? requestAnimationFrame
+                : setTimeout;
             let currentTime;
             let parallelRunningSystems: Promise<void>[] = [];
             let system;
@@ -267,10 +270,12 @@ export class World implements IWorld {
                 }
 
                 this.lastDispatch = currentTime;
-                requestAnimationFrame(mainLoop);
+                execAsync(mainLoop);
             };
 
-            requestAnimationFrame(mainLoop);
+            execAsync(mainLoop);
         }
+
+        return this.runPromise;
     }
 }
