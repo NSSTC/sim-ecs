@@ -1,4 +1,4 @@
-import {ECS, IEntity, IWorld, State, System} from "../src";
+import {EComponentRequirement, ECS, IEntity, IWorld, State, System} from "../src";
 import IState from '../src/state.spec';
 import {Gravity, Position, Velocity} from "./_helper";
 
@@ -19,9 +19,9 @@ class Init extends System {
 class TerrainPhysics extends System {
     constructor() {
         super();
-        this.setComponentQuery({
-            Position: true,
-        });
+        this.setComponentQuery([
+            [Position, EComponentRequirement.WRITE],
+        ]);
     }
 
     async update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {

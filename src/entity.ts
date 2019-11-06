@@ -1,6 +1,6 @@
 import IWorld from "./world.spec";
 import IEntity from "./entity.spec";
-import IComponent from "./component.spec";
+import IComponent, {TComponentProto} from "./component.spec";
 import {Component} from "./component";
 import ISystem from "./system.spec";
 import {TTypeProto} from "./_.spec";
@@ -35,7 +35,7 @@ export class Entity implements IEntity {
         return this.components.get(component.name) as T;
     }
 
-    hasComponent(component: typeof Component): boolean {
+    hasComponent(component: typeof Component | TComponentProto): boolean {
         return this.components.has(component.name);
     }
 

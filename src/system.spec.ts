@@ -2,8 +2,13 @@ import IWorld from "./world.spec";
 import IEntity from "./entity.spec";
 import {TComponentProto} from './component.spec';
 
-// @ts-ignore
-export type TComponentQuery = { [component: TComponentProto]: boolean };
+export enum EComponentRequirement {
+    READ,
+    UNSET,
+    WRITE,
+}
+
+export type TComponentQuery = [TComponentProto, EComponentRequirement][];
 
 export interface ISystem {
     /**
@@ -30,6 +35,9 @@ export interface ISystem {
 
     /**
      * Update components during a dispatch
+     * @todo pass an object (which was derived from a Map<TComponentProto, Component>) as single parameter instead
+     *    in order to optimize the trampoline away and only pass one ref
+     *    This Map should contain all components which were queried, and READ-marked components should be read-only (ideally)
      * @param world
      * @param entities
      * @param deltaTime

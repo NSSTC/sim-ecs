@@ -1,4 +1,4 @@
-import IComponent from "./component.spec";
+import IComponent, {TComponentProto} from "./component.spec";
 import IWorld from "./world.spec";
 import {Component} from "./component";
 import ISystem from "./system.spec";
@@ -28,7 +28,7 @@ export interface IEntity {
      * Check if a certain component is associated with this entity
      * @param component
      */
-    hasComponent(component: typeof Component): boolean
+    hasComponent(component: typeof Component | TComponentProto): boolean
 
     /**
      * Check if a certain component is associated with this entity based on the type name

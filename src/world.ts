@@ -3,7 +3,7 @@ import {EntityBuilder} from "./entity_builder";
 import {IWorld, TRunConfiguration, TSystemNode} from "./world.spec";
 import IEntity from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
-import ISystem, {TComponentQuery, TSystemProto} from "./system.spec";
+import ISystem, {EComponentRequirement, TComponentQuery, TSystemProto} from "./system.spec";
 import {IState, State} from "./state";
 import {TTypeProto} from "./_.spec";
 
@@ -123,8 +123,11 @@ export class World implements IWorld {
         const resultEntities = [];
 
         entityLoop: for (const entity of this.entities) {
-            for (let componentRequirement of Object.entries(withComponents)) {
-                if (entity.hasComponentName(componentRequirement[0]) !== componentRequirement[1]) continue entityLoop;
+            for (let componentRequirement of withComponents) {
+                if (
+                    (entity.hasComponent(componentRequirement[0]) && componentRequirement[1] === EComponentRequirement.UNSET) ||
+                    (!entity.hasComponent(componentRequirement[0]) && componentRequirement[1] !== EComponentRequirement.UNSET)
+                ) continue entityLoop;
             }
 
             resultEntities.push(entity);
@@ -223,6 +226,9 @@ export class World implements IWorld {
     async run(configuration?: TRunConfiguration): Promise<void> {
         // todo: this could be further optimized by allowing systems with dependencies to run in parallel
         //    if all of their dependencies already ran
+
+        // todo: also, if two systems depend on the same components, they may run in parallel
+        //    if they only require READ access
 
         let resolver = () => {};
 
