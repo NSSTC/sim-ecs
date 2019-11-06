@@ -251,10 +251,12 @@ export class World implements IWorld {
                 ? requestAnimationFrame
                 : setTimeout;
             let currentTime;
+            let deltaTime;
             let parallelRunningSystems: Promise<void>[] = [];
             let system;
             const mainLoop = async () => {
                 currentTime = Date.now();
+                deltaTime = currentTime - this.lastDispatch;
 
                 if (!this.shouldRunSystems) {
                     this.runPromise = undefined;
@@ -272,10 +274,10 @@ export class World implements IWorld {
                     if (system.hasDependencies) {
                         await Promise.all(parallelRunningSystems);
                         parallelRunningSystems = [];
-                        await system.system.update(this, system.system.entities, currentTime - this.lastDispatch);
+                        await system.system.update(this, system.system.entities, deltaTime);
                     }
                     else {
-                        parallelRunningSystems.push(system.system.update(this, system.system.entities, currentTime - this.lastDispatch))
+                        parallelRunningSystems.push(system.system.update(this, system.system.entities, deltaTime))
                     }
                 }
 
