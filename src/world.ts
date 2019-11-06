@@ -242,7 +242,7 @@ export class World implements IWorld {
         this.runPromise = new Promise<void>(res => { resolver = res });
         this.shouldRunSystems = true;
 
-        if (this.lastDispatch === 0) {
+        if (this.lastDispatch <= 0) {
             this.lastDispatch = Date.now();
         }
 
