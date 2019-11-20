@@ -1,4 +1,4 @@
-import IWorld from "./world.spec";
+import {ISystemWorld} from "./world.spec";
 import IEntity from "./entity.spec";
 import {TComponentProto} from './component.spec';
 
@@ -42,7 +42,7 @@ export interface ISystem {
      * @param entities
      * @param deltaTime
      */
-    update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void>
+    update(world: ISystemWorld, entities: IEntity[], deltaTime: number): Promise<void>
 }
 
 export type TSystemProto = { new(): ISystem };

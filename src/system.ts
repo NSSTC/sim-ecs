@@ -1,4 +1,4 @@
-import IWorld from "./world.spec";
+import {ISystemWorld} from "./world.spec";
 import IEntity from "./entity.spec";
 import {EComponentRequirement, ISystem, TComponentQuery} from "./system.spec";
 
@@ -34,7 +34,7 @@ export class System implements ISystem {
         return this;
     }
 
-    update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
+    update(world: ISystemWorld, entities: IEntity[], deltaTime: number): Promise<void> {
         throw new Error(`You have to overwrite the update() method of ${this.constructor.name}!`);
     }
 }

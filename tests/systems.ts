@@ -1,4 +1,4 @@
-import {IEntity, IWorld, System} from "..";
+import {IEntity, ISystemWorld, System} from "..";
 
 export type THandlerFn = (entity: IEntity) => void
 export class S1 extends System {
@@ -9,7 +9,7 @@ export class S1 extends System {
         this.handler = handler;
     }
 
-    async update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
+    async update(world: ISystemWorld, entities: IEntity[], deltaTime: number): Promise<void> {
         for(const entity of entities) this.handler(entity);
     }
 }

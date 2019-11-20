@@ -10,8 +10,27 @@ export type TRunConfiguration = {
 };
 export type TSystemNode = { system: ISystem, dependencies: TSystemProto[]};
 
+export interface ISystemWorld {
+    /**
+     * Change the state of a running world
+     * @param newState
+     */
+    changeRunningState(newState: IState): Promise<void>
 
-export interface IWorld {
+    /**
+     * Query entities and find the ones with a certain combination of component
+     * @param withComponents
+     */
+    getEntities(withComponents?: TComponentQuery): IEntity[]
+
+    /**
+     * Get a resource which was previously stored
+     * @param type
+     */
+    getResource<T extends Object>(type: TTypeProto<T>): T
+}
+
+export interface IWorld extends ISystemWorld {
     /**
      * Systems which are registered with this world
      */
@@ -41,28 +60,10 @@ export interface IWorld {
     createEntity(): IEntity
 
     /**
-     * Change the state of a running world
-     * @param newState
-     */
-    changeRunningState(newState: IState): Promise<void>
-
-    /**
      * Execute all systems
      * @param state
      */
     dispatch(state?: IState): Promise<void>
-
-    /**
-     * Query entities and find the ones with a certain combination of component
-     * @param withComponents
-     */
-    getEntities(withComponents?: TComponentQuery): IEntity[]
-
-    /**
-     * Get a resource which was previously stored
-     * @param type
-     */
-    getResource<T extends Object>(type: TTypeProto<T>): T
 
     /**
      * Re-calculate all entity, component and system dependencies and connections

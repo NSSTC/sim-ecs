@@ -1,4 +1,4 @@
-import {Component, IEntity, IWorld, System} from "../src";
+import {Component, IEntity, ISystemWorld, IWorld, System} from "../src";
 
 export function wait(time: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, time));
@@ -28,7 +28,7 @@ export class Gravity extends System {
         });
     }
 
-    async update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
+    async update(world: ISystemWorld, entities: IEntity[], deltaTime: number): Promise<void> {
         this.absTime += deltaTime;
         for (let entity of entities) {
             const pos = entity.getComponent(Position);

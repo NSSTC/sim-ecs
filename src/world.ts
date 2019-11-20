@@ -1,6 +1,6 @@
 import {Entity} from "./entity";
 import {EntityBuilder} from "./entity_builder";
-import {IWorld, TRunConfiguration, TSystemNode} from "./world.spec";
+import {ISystemWorld, IWorld, TRunConfiguration, TSystemNode} from "./world.spec";
 import IEntity from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
 import ISystem, {EComponentRequirement, TComponentQuery, TSystemProto} from "./system.spec";
@@ -19,6 +19,15 @@ export class World implements IWorld {
     protected runSystems: { system: ISystem, hasDependencies: boolean }[] = [];
     protected shouldRunSystems = false;
     protected sortedSystems: TSystemNode[] = [];
+    protected systemWorld: ISystemWorld;
+
+    constructor() {
+        this.systemWorld = {
+            changeRunningState: this.changeRunningState,
+            getEntities: this.getEntities,
+            getResource: this.getResource,
+        };
+    }
 
     get systems(): ISystem[] {
         return this.defaultState.systems;
@@ -103,10 +112,10 @@ export class World implements IWorld {
                     if (system.dependencies.length > 0) {
                         await Promise.all(parallelRunningSystems);
                         parallelRunningSystems = [];
-                        await system.system.update(this, system.system.entities, currentTime - this.lastDispatch);
+                        await system.system.update(this.systemWorld, system.system.entities, currentTime - this.lastDispatch);
                     }
                     else {
-                        parallelRunningSystems.push(system.system.update(this, system.system.entities, currentTime - this.lastDispatch))
+                        parallelRunningSystems.push(system.system.update(this.systemWorld, system.system.entities, currentTime - this.lastDispatch))
                     }
                 }
             }
@@ -280,10 +289,10 @@ export class World implements IWorld {
                     if (system.hasDependencies) {
                         await Promise.all(parallelRunningSystems);
                         parallelRunningSystems = [];
-                        await system.system.update(this, system.system.entities, deltaTime);
+                        await system.system.update(this.systemWorld, system.system.entities, deltaTime);
                     }
                     else {
-                        parallelRunningSystems.push(system.system.update(this, system.system.entities, deltaTime))
+                        parallelRunningSystems.push(system.system.update(this.systemWorld, system.system.entities, deltaTime))
                     }
                 }
 
