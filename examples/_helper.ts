@@ -1,8 +1,4 @@
-import {Component, IEntity, ISystemWorld, IWorld, System} from "../src";
-
-export function wait(time: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, time));
-}
+import {Component, EComponentRequirement, IEntity, ISystemWorld, IWorld, System} from "../src";
 
 export class DelaySystem extends System {
     delay: number;
@@ -22,10 +18,10 @@ export class Gravity extends System {
 
     constructor() {
         super();
-        this.setComponentQuery({
-            Position: true,
-            Velocity: true,
-        });
+        this.setComponentQuery([
+            [Position, EComponentRequirement.WRITE],
+            [Velocity, EComponentRequirement.WRITE],
+        ]);
     }
 
     async update(world: ISystemWorld, entities: IEntity[], deltaTime: number): Promise<void> {
