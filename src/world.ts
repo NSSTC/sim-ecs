@@ -45,6 +45,7 @@ export class World implements IWorld {
     addResource<T extends Object>(obj: T | TTypeProto<T>, ...args: any[]): IWorld {
         let type: TTypeProto<T>;
         let instance: T;
+
         if (typeof obj === 'object') {
             type = obj.constructor as TTypeProto<T>;
             instance = obj;
@@ -178,6 +179,25 @@ export class World implements IWorld {
         this.defaultState.systems.push(system);
         this.sortedSystems.push({ system, dependencies: dependencies || [] });
         return this;
+    }
+
+    replaceResource<T extends Object>(obj: T | TTypeProto<T>, ...args: any[]): IWorld {
+        let type: TTypeProto<T>;
+
+        if (typeof obj === 'object') {
+            type = obj.constructor as TTypeProto<T>;
+        }
+        else {
+            type = obj;
+        }
+
+        if (!this.resources.has(type)) {
+            throw new Error(`Resource with name "${type.name}" does not exists!`);
+        }
+
+        this.resources.delete(type);
+        // @ts-ignore
+        return this.addResource.apply(this, [obj].concat(args));
     }
 
     protected sortSystems(unsorted: TSystemNode[]): TSystemNode[] {

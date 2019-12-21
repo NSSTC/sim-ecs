@@ -22,6 +22,14 @@ describe('Manage Resources', () => {
         assert(world.getResource(Date), 'Resource was not stored');
         assert(world.getResource(Date) instanceof Date, 'Resource type does not match')
     });
+
+    it('Replace resource', () => {
+        world.addResource(new Number(42));
+        assert.equal(world.getResource(Number), 42, 'Resource was not stored');
+
+        world.replaceResource(new Number(1337));
+        assert.equal(world.getResource(Number), 1337, 'Resource was not replaced');
+    });
 });
 
 describe('Build Entities', () => {

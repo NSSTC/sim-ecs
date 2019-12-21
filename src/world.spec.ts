@@ -86,6 +86,13 @@ export interface IWorld extends ISystemWorld {
     registerSystemQuick(system: ISystem, dependencies?: TSystemProto[]): IWorld
 
     /**
+     * Replace a resource from this world
+     * @param type
+     * @param args constructor parameters
+     */
+    replaceResource<T extends Object>(type: T | TTypeProto<T>, ...args: any[]): IWorld
+
+    /**
      * Signal the world to stop its dispatch-loop
      * Resolves once the loop stops
      */
