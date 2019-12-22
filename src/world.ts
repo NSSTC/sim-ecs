@@ -316,6 +316,8 @@ export class World implements IWorld {
                     }
                 }
 
+                await Promise.all(parallelRunningSystems);
+                parallelRunningSystems = [];
                 this.lastDispatch = currentTime;
                 execAsync(mainLoop);
             };
