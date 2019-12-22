@@ -69,21 +69,33 @@ export class World implements IWorld {
     }
 
     async changeRunningState(newState: IState): Promise<void> {
+        const dependencySystems: string[] = [];
         let stateSystem;
 
         this.runState && await this.runState.deactivate(this);
         this.runState = newState;
         this.runSystems.length = 0;
-        for (let system of this.sortedSystems) {
-            stateSystem = newState.systems.find(stateSys => stateSys.constructor.name === system.system.constructor.name);
+        for (let system of this.sortedSystems.reverse()) {
+            stateSystem = newState.systems.find(stateSys =>
+                stateSys.constructor.name === system.system.constructor.name
+                || dependencySystems.includes(stateSys.constructor.name)
+            );
+
             if (stateSystem) {
                 this.runSystems.push({
                     system: stateSystem,
                     hasDependencies: system.dependencies.length > 0,
                 });
+
+                for (const dependency of system.dependencies) {
+                    if (!dependencySystems.includes(dependency.constructor.name)) {
+                        dependencySystems.push(dependency.constructor.name);
+                    }
+                }
             }
         }
 
+        this.runSystems = this.runSystems.reverse();
         await this.runState.activate(this);
     }
 
