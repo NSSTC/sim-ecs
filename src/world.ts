@@ -76,10 +76,11 @@ export class World implements IWorld {
         this.runState = newState;
         this.runSystems.length = 0;
         for (let system of this.sortedSystems.reverse()) {
-            stateSystem = newState.systems.find(stateSys =>
-                stateSys.constructor.name === system.system.constructor.name
-                || dependencySystems.includes(system.system.constructor.name)
-            );
+            stateSystem = dependencySystems.includes(system.system.constructor.name)
+                ? system.system
+                : newState.systems.find(stateSys =>
+                    stateSys.constructor.name === system.system.constructor.name);
+
 
             if (stateSystem) {
                 this.runSystems.push({
