@@ -78,7 +78,7 @@ export class World implements IWorld {
         for (let system of this.sortedSystems.reverse()) {
             stateSystem = newState.systems.find(stateSys =>
                 stateSys.constructor.name === system.system.constructor.name
-                || dependencySystems.includes(stateSys.constructor.name)
+                || dependencySystems.includes(system.system.constructor.name)
             );
 
             if (stateSystem) {
@@ -88,8 +88,8 @@ export class World implements IWorld {
                 });
 
                 for (const dependency of system.dependencies) {
-                    if (!dependencySystems.includes(dependency.constructor.name)) {
-                        dependencySystems.push(dependency.constructor.name);
+                    if (!dependencySystems.includes(dependency.name)) {
+                        dependencySystems.push(dependency.name);
                     }
                 }
             }
