@@ -23,9 +23,9 @@ export class World implements IWorld {
 
     constructor() {
         this.systemWorld = {
-            changeRunningState: this.changeRunningState,
-            getEntities: this.getEntities,
-            getResource: this.getResource,
+            changeRunningState: this.changeRunningState.bind(this),
+            getEntities: this.getEntities.bind(this),
+            getResource: this.getResource.bind(this),
         };
     }
 
