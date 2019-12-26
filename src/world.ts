@@ -214,7 +214,7 @@ export class World implements IWorld {
     }
 
     protected sortSystems(unsorted: TSystemNode[]): TSystemNode[] {
-        const graph = new Map(unsorted.map(node => [node.system.constructor as TSystemProto, node.dependencies]));
+        const graph = new Map(unsorted.map(node => [node.system.constructor as TSystemProto, Array.from(node.dependencies)]));
         let edges: TSystemProto[];
 
         /// toposort with Kahn
