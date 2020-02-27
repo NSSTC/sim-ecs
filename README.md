@@ -119,9 +119,12 @@ world.buildEntity()
 
 States allow for splitting up a simulation into different logical parts.
 In games, that's for example "Menu", "Play" and "Pause".
-States can be switched arbitrarily, which allows to build a push-down automata on top, or really do anything else.
+States can be switched using a push-down automaton.
 States define which systems should run, so that a pause-state can run graphics updates, but not game-logic, for example.
 If no state is passed to the dispatcher, all systems are run by default.
+
+While the world is running (using `run()`), the state can be changed between every world dispatch
+using the handler function. Single calls to `dispatch()` do not offer the benefits of a PDA.
 
 ```typescript
 class InitState extends State { _systems = [initSystem] }

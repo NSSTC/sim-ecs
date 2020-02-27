@@ -6,6 +6,7 @@ import IEntityBuilder from "./entity_builder.spec";
 import ISystem, {EComponentRequirement, TComponentQuery, TSystemProto} from "./system.spec";
 import {IState, State} from "./state";
 import {TTypeProto} from "./_.spec";
+import {PushDownAutomaton} from "./pda";
 
 export * from './world.spec';
 
@@ -13,19 +14,23 @@ export class World implements IWorld {
     protected defaultState = new State();
     protected entities: IEntity[] = [];
     protected lastDispatch = 0;
+    protected pda = new PushDownAutomaton<IState>();
     protected resources = new Map<{ new(): Object }, Object>();
     protected runPromise?: Promise<void> = undefined;
-    protected runState?: IState = undefined;
     protected runSystems: { system: ISystem, hasDependencies: boolean }[] = [];
+    protected runSystemsCache: Map<IState, { system: ISystem, hasDependencies: boolean }[]> = new Map();
     protected shouldRunSystems = false;
     protected sortedSystems: TSystemNode[] = [];
     protected systemWorld: ISystemWorld;
 
     constructor() {
+        const self = this;
         this.systemWorld = {
-            changeRunningState: this.changeRunningState.bind(this),
+            get currentState(): IState | undefined { return self.pda.state; },
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
+            popState: this.popState.bind(this),
+            pushState: this.pushState.bind(this),
         };
     }
 
@@ -66,38 +71,6 @@ export class World implements IWorld {
 
     buildEntity(): IEntityBuilder {
         return new EntityBuilder(this);
-    }
-
-    async changeRunningState(newState: IState): Promise<void> {
-        const dependencySystems: string[] = [];
-        let stateSystem;
-
-        this.runState && await this.runState.deactivate(this);
-        this.runState = newState;
-        this.runSystems.length = 0;
-        for (let system of this.sortedSystems.reverse()) {
-            stateSystem = dependencySystems.includes(system.system.constructor.name)
-                ? system.system
-                : newState.systems.find(stateSys =>
-                    stateSys.constructor.name === system.system.constructor.name);
-
-
-            if (stateSystem) {
-                this.runSystems.push({
-                    system: stateSystem,
-                    hasDependencies: system.dependencies.length > 0,
-                });
-
-                for (const dependency of system.dependencies) {
-                    if (!dependencySystems.includes(dependency.name)) {
-                        dependencySystems.push(dependency.name);
-                    }
-                }
-            }
-        }
-
-        this.runSystems = this.runSystems.reverse();
-        await this.runState.activate(this);
     }
 
     createEntity(): Entity {
@@ -174,6 +147,48 @@ export class World implements IWorld {
         }
     }
 
+    protected async popState(): Promise<void> {
+        await this.pda.pop()?.deactivate(this);
+    }
+
+    protected async pushState(newState: IState): Promise<void> {
+        const dependencySystems: string[] = [];
+        let stateSystem;
+
+        this.pda.push(newState);
+        if (this.runSystemsCache.has(newState)) {
+            this.runSystems = this.runSystemsCache.get(newState) ?? [];
+        }
+        else {
+            this.runSystems.length = 0;
+            for (let system of this.sortedSystems.reverse()) {
+                stateSystem = dependencySystems.includes(system.system.constructor.name)
+                    ? system.system
+                    : newState.systems.find(stateSys =>
+                        stateSys.constructor.name === system.system.constructor.name);
+
+
+                if (stateSystem) {
+                    this.runSystems.push({
+                        system: stateSystem,
+                        hasDependencies: system.dependencies.length > 0,
+                    });
+
+                    for (const dependency of system.dependencies) {
+                        if (!dependencySystems.includes(dependency.name)) {
+                            dependencySystems.push(dependency.name);
+                        }
+                    }
+                }
+            }
+
+            this.runSystems = this.runSystems.reverse();
+            this.runSystemsCache.set(newState, this.runSystems);
+        }
+
+        await newState.activate(this);
+    }
+
     registerSystem(system: ISystem, dependencies?: TSystemProto[]): IWorld {
         this.registerSystemQuick(system, dependencies);
         for (let entity of this.entities) {
@@ -220,6 +235,8 @@ export class World implements IWorld {
         // todo: also, if two systems depend on the same components, they may run in parallel
         //    if they only require READ access
 
+        // todo: all states should be prepared (sorted in advance) so that state-changes can happen faster
+
         let resolver = () => {};
 
         if (this.runPromise) {
@@ -234,7 +251,8 @@ export class World implements IWorld {
             configuration.initialState = this.defaultState;
         }
 
-        await this.changeRunningState(configuration.initialState);
+        this.pda.clear();
+        await this.pushState(configuration.initialState);
         this.runPromise = new Promise<void>(res => { resolver = res });
         this.shouldRunSystems = true;
 
