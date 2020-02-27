@@ -162,7 +162,7 @@ export class World implements IWorld {
     }
 
     protected async popState(): Promise<void> {
-        await this.pda.pop()?.deactivate(this);
+        await this.pda.pop()?.deactivate(this.transitionWorld);
     }
 
     protected async pushState(newState: IState): Promise<void> {
@@ -200,7 +200,7 @@ export class World implements IWorld {
             this.runSystemsCache.set(newState, this.runSystems);
         }
 
-        await newState.activate(this);
+        await newState.activate(this.transitionWorld);
     }
 
     registerSystem(system: ISystem, dependencies?: TSystemProto[]): IWorld {

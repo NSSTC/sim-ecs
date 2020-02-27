@@ -1,5 +1,5 @@
 import ISystem from "./system.spec";
-import IWorld from "./world.spec";
+import IWorld, {ITransitionWorld} from "./world.spec";
 
 export interface IState {
     /**
@@ -10,12 +10,12 @@ export interface IState {
     /**
      * Called to run tasks for state activation
      */
-    activate(world: IWorld): void | Promise<void>
+    activate(world: ITransitionWorld): void | Promise<void>
 
     /**
      * Called to run clean-up tasks
      */
-    deactivate(world: IWorld): void | Promise<void>
+    deactivate(world: ITransitionWorld): void | Promise<void>
 }
 
 export type TStateProto = { new(): IState };
