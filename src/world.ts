@@ -1,6 +1,6 @@
 import {Entity} from "./entity";
 import {EntityBuilder} from "./entity_builder";
-import {ISystemWorld, IWorld, TRunConfiguration, TSystemNode} from "./world.spec";
+import {ISystemWorld, ITransitionWorld, IWorld, TRunConfiguration, TSystemNode} from "./world.spec";
 import IEntity from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
 import ISystem, {EComponentRequirement, TComponentQuery, TSystemProto} from "./system.spec";
@@ -22,6 +22,7 @@ export class World implements IWorld {
     protected shouldRunSystems = false;
     protected sortedSystems: TSystemNode[] = [];
     protected systemWorld: ISystemWorld;
+    protected transitionWorld: ITransitionWorld;
 
     constructor() {
         const self = this;
@@ -29,8 +30,21 @@ export class World implements IWorld {
             get currentState(): IState | undefined { return self.pda.state; },
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
+        };
+
+        this.transitionWorld = {
+            get currentState(): IState | undefined { return self.pda.state; },
+            addEntity: this.addEntity.bind(this),
+            addResource: this.addResource.bind(this),
+            buildEntity: this.buildEntity.bind(this),
+            createEntity: this.createEntity.bind(this),
+            getEntities: this.getEntities.bind(this),
+            getResource: this.getResource.bind(this),
+            maintain: this.maintain.bind(this),
             popState: this.popState.bind(this),
             pushState: this.pushState.bind(this),
+            replaceResource: this.replaceResource,
+            stopRun: this.stopRun.bind(this),
         };
     }
 
@@ -278,10 +292,8 @@ export class World implements IWorld {
                     return;
                 }
 
-                // @ts-ignore guaranteed to be set at the beginning of method
-                if (configuration.preFrameHandler) {
-                    // @ts-ignore guaranteed to be set at the beginning of method
-                    await configuration.preFrameHandler();
+                if (configuration?.preFrameHandler) {
+                    await configuration?.preFrameHandler(this.transitionWorld);
                 }
 
                 for (system of this.runSystems) {
