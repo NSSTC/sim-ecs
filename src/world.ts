@@ -213,58 +213,6 @@ export class World implements IWorld {
         return this.addResource.apply(this, [obj].concat(args));
     }
 
-    protected sortSystems(unsorted: TSystemNode[]): TSystemNode[] {
-        const graph = new Map(unsorted.map(node => [node.system.constructor as TSystemProto, Array.from(node.dependencies)]));
-        let edges: TSystemProto[];
-
-        /// toposort with Kahn
-        /// https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm
-        const L: TSystemProto[] = []; // Empty list that will contain the sorted elements
-        const S = Array.from(graph.entries()).filter(pair => pair[1].length === 0).map(pair => pair[0]); // Set of all nodes with no incoming edge
-        let n: TSystemProto;
-
-        // while S is non-empty do
-        while (S.length > 0) {
-            // remove a node n from S
-            n = S.shift() as TSystemProto;
-            // add n to tail of L
-            L.push(n);
-
-            // for each node m with an edge e from n to m do
-            for (let m of Array.from(graph.entries()).filter(pair => pair[1].includes(n)).map(pair => pair[0])) {
-                // remove edge e from the graph
-                edges = graph.get(m) as TSystemProto[];
-                edges.splice(edges.indexOf(n), 1);
-
-                // if m has no other incoming edges then
-                if (edges.length <= 0) {
-                    // insert m into S
-                    S.push(m);
-                }
-            }
-        }
-
-        if (Array.from(graph.values()).find(n => n.length > 0)) {
-            throw new Error('The system dependency graph is cyclic!');
-        }
-
-        let obj;
-        return L.map(t => {
-            obj = unsorted.find(n => n.system.constructor == t);
-
-            if (!obj) {
-                throw new Error(`The system ${t.name} was not registered!`);
-            }
-
-            return obj;
-        });
-    }
-
-    async stopRun(): Promise<void> {
-        this.shouldRunSystems = false;
-        await this.runPromise;
-    }
-
     async run(configuration?: TRunConfiguration): Promise<void> {
         // todo: this could be further optimized by allowing systems with dependencies to run in parallel
         //    if all of their dependencies already ran
@@ -339,5 +287,57 @@ export class World implements IWorld {
         }
 
         return this.runPromise;
+    }
+
+    protected sortSystems(unsorted: TSystemNode[]): TSystemNode[] {
+        const graph = new Map(unsorted.map(node => [node.system.constructor as TSystemProto, Array.from(node.dependencies)]));
+        let edges: TSystemProto[];
+
+        /// toposort with Kahn
+        /// https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm
+        const L: TSystemProto[] = []; // Empty list that will contain the sorted elements
+        const S = Array.from(graph.entries()).filter(pair => pair[1].length === 0).map(pair => pair[0]); // Set of all nodes with no incoming edge
+        let n: TSystemProto;
+
+        // while S is non-empty do
+        while (S.length > 0) {
+            // remove a node n from S
+            n = S.shift() as TSystemProto;
+            // add n to tail of L
+            L.push(n);
+
+            // for each node m with an edge e from n to m do
+            for (let m of Array.from(graph.entries()).filter(pair => pair[1].includes(n)).map(pair => pair[0])) {
+                // remove edge e from the graph
+                edges = graph.get(m) as TSystemProto[];
+                edges.splice(edges.indexOf(n), 1);
+
+                // if m has no other incoming edges then
+                if (edges.length <= 0) {
+                    // insert m into S
+                    S.push(m);
+                }
+            }
+        }
+
+        if (Array.from(graph.values()).find(n => n.length > 0)) {
+            throw new Error('The system dependency graph is cyclic!');
+        }
+
+        let obj;
+        return L.map(t => {
+            obj = unsorted.find(n => n.system.constructor == t);
+
+            if (!obj) {
+                throw new Error(`The system ${t.name} was not registered!`);
+            }
+
+            return obj;
+        });
+    }
+
+    async stopRun(): Promise<void> {
+        this.shouldRunSystems = false;
+        await this.runPromise;
     }
 }
