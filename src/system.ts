@@ -19,7 +19,7 @@ export class System implements ISystem {
     canUseEntity(entity: IEntity): boolean {
         for (let componentRequirement of this._componentQuery || []) {
             if (
-                entity.hasComponent(componentRequirement[0]) &&
+                !entity.hasComponent(componentRequirement[0]) ||
                 componentRequirement[1] === EComponentRequirement.UNSET
             ) return false;
         }
