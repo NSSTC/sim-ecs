@@ -28,6 +28,11 @@ export interface ISystem {
     canUseEntity(entity: IEntity): boolean
 
     /**
+     * Remove all associated entities
+     */
+    clearEntities(): void
+
+    /**
      * Define and freeze the used components
      * @param componentQuery
      */

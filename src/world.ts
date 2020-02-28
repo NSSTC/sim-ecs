@@ -157,8 +157,14 @@ export class World implements IWorld {
 
     maintain(): void {
         this.sortedSystems = this.sortSystems(this.sortedSystems);
-        for (let entity of this.entities) {
-            entity._updateSystems(this);
+
+        let entity;
+        let system;
+        for (system of this.sortedSystems) {
+            system.system.clearEntities();
+            for (entity of this.entities) {
+                entity._updateSystem(this, system.system);
+            }
         }
     }
 

@@ -27,6 +27,10 @@ export class System implements ISystem {
         return true;
     }
 
+    clearEntities(): void {
+        this._entities.length = 0;
+    }
+
     setComponentQuery(componentQuery: TComponentQuery): ISystem {
         if (this._componentQuery) throw new Error('Component query already set!');
 
