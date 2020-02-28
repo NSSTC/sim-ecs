@@ -43,6 +43,7 @@ export class World implements IWorld {
             maintain: this.maintain.bind(this),
             popState: this.popState.bind(this),
             pushState: this.pushState.bind(this),
+            removeEntity: this.removeEntity.bind(this),
             replaceResource: this.replaceResource,
             stopRun: this.stopRun.bind(this),
         };
@@ -221,6 +222,13 @@ export class World implements IWorld {
         this.defaultState.systems.push(system);
         this.sortedSystems.push({ system, dependencies: dependencies || [] });
         return this;
+    }
+
+    removeEntity(entity: IEntity): void {
+        const index = this.entities.indexOf(entity);
+        if (index < 0) return;
+
+        this.entities.splice(index, 1);
     }
 
     replaceResource<T extends Object>(obj: T | TTypeProto<T>, ...args: any[]): IWorld {

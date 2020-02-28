@@ -58,6 +58,12 @@ export interface IPartialWorld {
     maintain(): void
 
     /**
+     * Remove an entity from the world, deleting all of its components
+     * @param entity
+     */
+    removeEntity(entity: IEntity): void
+
+    /**
      * Replace a resource from this world
      * @param type
      * @param args constructor parameters

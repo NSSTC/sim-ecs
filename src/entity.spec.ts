@@ -19,6 +19,11 @@ export interface IEntity {
     addComponentQuick(component: IComponent): IEntity
 
     /**
+     * Remove this entity from the world, deleting all of its components
+     */
+    destroy(): void
+
+    /**
      * Get a component of a certain type which is associated with this entity
      * @param component
      */

@@ -31,6 +31,10 @@ export class Entity implements IEntity {
         return this;
     }
 
+    destroy(): void {
+        this.world?.removeEntity(this);
+    }
+
     getComponent<T extends IComponent>(component: TTypeProto<T>): T | undefined {
         return this.components.get(component.name) as T;
     }
