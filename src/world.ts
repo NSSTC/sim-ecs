@@ -44,7 +44,7 @@ export class World implements IWorld {
             popState: this.popState.bind(this),
             pushState: this.pushState.bind(this),
             removeEntity: this.removeEntity.bind(this),
-            replaceResource: this.replaceResource,
+            replaceResource: this.replaceResource.bind(this),
             stopRun: this.stopRun.bind(this),
         };
     }
