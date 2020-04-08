@@ -1,8 +1,9 @@
 import * as assert from "assert";
-import {ECS, IEntity, IWorld} from "..";
+import {ECS, IWorld} from "..";
 import * as Components from "./components";
 import * as Systems from "./systems";
-import {EComponentRequirement} from "../src";
+import {S1Data, THandlerFn1} from "./systems";
+import {With, Without} from "../src";
 
 
 describe('Manage Resources', () => {
@@ -60,24 +61,24 @@ describe('Build Entities', () => {
         assert(entity.hasComponent(Components.C1), 'Component not found on entity');
         assert(entity.hasComponentName(Components.C1.name), 'Component not found by name on entity');
         assert.equal(
-            world.getEntities([[Components.C1, EComponentRequirement.READ]]).length,
+            world.getEntities([With(Components.C1)]).length,
             1,
             'Number of entities with component C1 does not match'
         );
         assert.equal(
-            world.getEntities([[Components.C1, EComponentRequirement.UNSET]]).length,
+            world.getEntities([Without(Components.C1)]).length,
             0,
             'Number of entities with component C1 does not match'
         );
         assert.equal(
-            world.getEntities([[Components.C2, EComponentRequirement.READ]]).length,
+            world.getEntities([With(Components.C2)]).length,
             0,
             'Number of entities with component C2 does not match'
         );
         assert.equal(
-            world.getEntities([[Components.C1, EComponentRequirement.READ], [Components.C2,EComponentRequirement.READ]]).length,
+            world.getEntities([With(Components.C1), With(Components.C2)]).length,
             0,
-            'Number of entities with component C1&C2 does not match'
+            'Number of entities with component C1 & C2 does not match'
         );
     });
 
@@ -90,11 +91,9 @@ describe('Build Entities', () => {
 });
 
 describe('Run Systems', () => {
-    const op = (entity: IEntity) => {
-        const c1 = entity.getComponent(Components.C1);
-
-        if (c1) {
-            c1.a++;
+    const op: THandlerFn1 = (data: S1Data) => {
+        if (data.c1) {
+            data.c1.a++;
         }
     };
     let ecs: ECS;

@@ -1,26 +1,68 @@
 import {ISystemWorld} from "./world.spec";
+import {TTypeProto} from "./_.spec";
 import IEntity from "./entity.spec";
-import {TObjectProto} from "./_.spec";
 
-export enum EComponentRequirement {
+export const access = Symbol();
+
+export enum EAccess {
     READ,
-    UNSET,
     WRITE,
+    SET,
+    UNSET,
 }
 
-export type TComponentQuery = [TObjectProto, EComponentRequirement][];
+export type TComponentAccess<C extends Object> = {
+    [access]: {
+        readonly component: TTypeProto<C>
+        readonly type: EAccess
+    }
+}
+export type TSystemData = { [fieldName: string]: Object };
 
-// todo: implement a way to prepare a system before a run for things it cannot prepare in the constructor
-export interface ISystem {
-    /**
-     * Components which are used by this system
-     */
-    readonly componentQuery: TComponentQuery
+const a = (x: TTypeProto<Object>) => class extends x {};
 
+export function Read<C extends Object>(componentPrototype: TTypeProto<C>): C & TComponentAccess<C> {
+    return Object.assign({}, componentPrototype.prototype, {
+        [access]: {
+            component: componentPrototype,
+            type: EAccess.READ,
+        },
+    });
+}
+
+export function Write<C extends Object>(componentPrototype: TTypeProto<C>): C & TComponentAccess<C> {
+    return Object.assign({}, componentPrototype.prototype, {
+        [access]: {
+            component: componentPrototype,
+            type: EAccess.WRITE,
+        },
+    });
+}
+
+export function With<C extends Object>(componentPrototype: TTypeProto<C>): TComponentAccess<C> {
+    return {
+        [access]: {
+            component: componentPrototype,
+            type: EAccess.SET,
+        }
+    };
+}
+
+export function Without<C extends Object>(componentPrototype: TTypeProto<C>): TComponentAccess<C> {
+    return {
+        [access]: {
+            component: componentPrototype,
+            type: EAccess.UNSET,
+        }
+    };
+}
+
+export interface ISystem<T extends TSystemData> {
     /**
      * Entities which are associated with this system because of their components
      */
-    readonly entities: IEntity[]
+    readonly entities: Set<IEntity>
+    readonly SystemData: TTypeProto<T>;
 
     /**
      * Have the system check weather it should use an entity.
@@ -34,21 +76,12 @@ export interface ISystem {
     clearEntities(): void
 
     /**
-     * Define and freeze the used components
-     * @param componentQuery
-     */
-    setComponentQuery(componentQuery: TComponentQuery): ISystem
-
-    /**
      * Update components during a dispatch
-     * @todo pass an object (which was derived from a Map<TComponentProto, Component>) as single parameter instead
-     *    in order to optimize the trampoline away and only pass one ref
-     *    This Map should contain all components which were queried, and READ-marked components should be read-only (ideally)
      * @param world
-     * @param entities
+     * @param dataSet
      */
-    update(world: ISystemWorld, entities: IEntity[]): Promise<void>
+    update(world: ISystemWorld, dataSet: Set<T>): Promise<void>
 }
 
-export type TSystemProto = { new(): ISystem };
+export type TSystemProto<T extends TSystemData> = { new(): ISystem<T> };
 export default ISystem;

@@ -3,7 +3,7 @@ import {EntityBuilder} from "./entity_builder";
 import {ISystemWorld, ITransitionWorld, IWorld, TRunConfiguration, TSystemNode} from "./world.spec";
 import IEntity from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
-import ISystem, {EComponentRequirement, TComponentQuery, TSystemProto} from "./system.spec";
+import ISystem, {access, EAccess, TComponentAccess, TSystemData, TSystemProto} from "./system.spec";
 import {IState, State} from "./state";
 import {TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
@@ -16,8 +16,8 @@ export class World implements IWorld {
     protected pda = new PushDownAutomaton<IState>();
     protected resources = new Map<{ new(): Object }, Object>();
     protected runPromise?: Promise<void> = undefined;
-    protected runSystems: { system: ISystem, hasDependencies: boolean }[] = [];
-    protected runSystemsCache: Map<IState, { system: ISystem, hasDependencies: boolean }[]> = new Map();
+    protected runSystems: { system: ISystem<any>, hasDependencies: boolean }[] = [];
+    protected runSystemsCache: Map<IState, { system: ISystem<any>, hasDependencies: boolean }[]> = new Map();
     protected shouldRunSystems = false;
     protected sortedSystems: TSystemNode[] = [];
     protected systemWorld: ISystemWorld;
@@ -48,7 +48,7 @@ export class World implements IWorld {
         };
     }
 
-    get systems(): ISystem[] {
+    get systems(): ISystem<any>[] {
         return this.defaultState.systems;
     }
 
@@ -82,6 +82,23 @@ export class World implements IWorld {
         return this;
     }
 
+    private buildDataObjects<T extends TSystemData>(dataProto: TTypeProto<TSystemData>, entities: Set<IEntity>): Set<T> {
+        const result: Set<T> = new Set();
+        let dataObj: T;
+
+        for (const entity of entities) {
+            dataObj = new dataProto() as T;
+            for (const entry of Object.entries(dataObj)) {
+                // @ts-ignore
+                dataObj[entry[0]] = entity.getComponent(entry[1][access].component);
+            }
+
+            result.add(dataObj);
+        }
+
+        return result;
+    }
+
     buildEntity(): IEntityBuilder {
         return new EntityBuilder(this);
     }
@@ -106,28 +123,28 @@ export class World implements IWorld {
                     if (system.dependencies.length > 0) {
                         await Promise.all(parallelRunningSystems);
                         parallelRunningSystems = [];
-                        await system.system.update(this.systemWorld, system.system.entities);
+                        await system.system.update(this.systemWorld, this.buildDataObjects(system.system.SystemData, system.system.entities));
                     }
                     else {
-                        parallelRunningSystems.push(system.system.update(this.systemWorld, system.system.entities))
+                        parallelRunningSystems.push(system.system.update(this.systemWorld, this.buildDataObjects(system.system.SystemData, system.system.entities)))
                     }
                 }
             }
         }
     }
 
-    getEntities(withComponents?: TComponentQuery): IEntity[] {
-        if (!withComponents) {
+    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IEntity[] {
+        if (!query) {
             return this.entities;
         }
 
         const resultEntities = [];
 
         entityLoop: for (const entity of this.entities) {
-            for (let componentRequirement of withComponents) {
+            for (let componentRequirement of query) {
                 if (
-                    (entity.hasComponent(componentRequirement[0]) && componentRequirement[1] === EComponentRequirement.UNSET) ||
-                    (!entity.hasComponent(componentRequirement[0]) && componentRequirement[1] !== EComponentRequirement.UNSET)
+                    (componentRequirement[access].type == EAccess.SET && !entity.hasComponent(componentRequirement[access].component)) ||
+                    (componentRequirement[access].type == EAccess.UNSET && entity.hasComponent(componentRequirement[access].component))
                 ) continue entityLoop;
             }
 
@@ -200,7 +217,7 @@ export class World implements IWorld {
         await newState.activate(this.transitionWorld);
     }
 
-    registerSystem(system: ISystem, dependencies?: TSystemProto[]): IWorld {
+    registerSystem(system: ISystem<any>, dependencies?: TSystemProto<any>[]): IWorld {
         this.registerSystemQuick(system, dependencies);
         for (let entity of this.entities) {
             entity._updateSystem(this, system);
@@ -210,7 +227,7 @@ export class World implements IWorld {
         return this;
     }
 
-    registerSystemQuick(system: ISystem, dependencies?: TSystemProto[]): IWorld {
+    registerSystemQuick(system: ISystem<any>, dependencies?: TSystemProto<any>[]): IWorld {
         if (this.sortedSystems.find(node => node.system.constructor === system.constructor)) {
             throw new Error(`The system "${system.constructor.name}" was already added to the world!`);
         }
@@ -297,7 +314,7 @@ export class World implements IWorld {
                         await system.system.update(this.systemWorld, system.system.entities);
                     }
                     else {
-                        parallelRunningSystems.push(system.system.update(this.systemWorld, system.system.entities))
+                        parallelRunningSystems.push(system.system.update(this.systemWorld, this.buildDataObjects(system.system.SystemData, system.system.entities)))
                     }
                 }
 
@@ -313,26 +330,26 @@ export class World implements IWorld {
     }
 
     protected sortSystems(unsorted: TSystemNode[]): TSystemNode[] {
-        const graph = new Map(unsorted.map(node => [node.system.constructor as TSystemProto, Array.from(node.dependencies)]));
-        let edges: TSystemProto[];
+        const graph = new Map(unsorted.map(node => [node.system.constructor as TSystemProto<any>, Array.from(node.dependencies)]));
+        let edges: TSystemProto<any>[];
 
         /// toposort with Kahn
         /// https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm
-        const L: TSystemProto[] = []; // Empty list that will contain the sorted elements
+        const L: TSystemProto<any>[] = []; // Empty list that will contain the sorted elements
         const S = Array.from(graph.entries()).filter(pair => pair[1].length === 0).map(pair => pair[0]); // Set of all nodes with no incoming edge
-        let n: TSystemProto;
+        let n: TSystemProto<any>;
 
         // while S is non-empty do
         while (S.length > 0) {
             // remove a node n from S
-            n = S.shift() as TSystemProto;
+            n = S.shift() as TSystemProto<any>;
             // add n to tail of L
             L.push(n);
 
             // for each node m with an edge e from n to m do
             for (let m of Array.from(graph.entries()).filter(pair => pair[1].includes(n)).map(pair => pair[0])) {
                 // remove edge e from the graph
-                edges = graph.get(m) as TSystemProto[];
+                edges = graph.get(m) as TSystemProto<any>[];
                 edges.splice(edges.indexOf(n), 1);
 
                 // if m has no other incoming edges then

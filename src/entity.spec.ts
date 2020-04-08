@@ -51,7 +51,7 @@ export interface IEntity {
      */
     setWorld(world: IWorld): IEntity
 
-    _updateSystem(world: IWorld, system: ISystem): void
+    _updateSystem(world: IWorld, system: ISystem<any>): void
     _updateSystems(world: IWorld): void
 }
 

@@ -55,14 +55,8 @@ console.log(world.getResource(Date).getDate());
 Components are needed to define data on which the whole system can operate.
 
 ```typescript
-class Position {
-    x = 0;
-    y = 0;
-}
-
-class Velocity {
-    x = 0;
-    y = 0;
+class Counter {
+    a = 0;
 }
 ```
 
@@ -72,38 +66,20 @@ Systems are the logic, which operates on data sets (components).
 They are logic building blocks which separate concerns and make the world move.
 
 ```typescript
-class Gravity extends System {
-    protected absTime = 0;
-
-    constructor() {
-        super();
-
-        // a component query is the filter which defines the components used by this system
-        this.setComponentQuery([
-            [Position, WRITE],
-            [Velocity, WRITE],
-        ]);
-    }
+class Data extends SystemData{ counterObj = Write(Counter) }
+class CountSystem extends System<Data> {
+    readonly SystemData = Data;
 
     // update() is called every time the world needs to be updated. Put your logic in there
-    update(world: IWorld, entities: IEntity[], deltaTime: number): void {
-        this.absTime += deltaTime;
-        for (let entity of entities) {
-            const pos = entity.getComponent(Position);
-            const vel = entity.getComponent(Velocity);
-
-            if (!pos || !vel) continue;
-
-            vel.y -= Math.pow(0.00981, 2) * this.absTime;
-            pos.y += vel.y;
-
-            console.log(`Pos: ${pos.y.toFixed(5)}    Vel: ${vel.y.toFixed(5)}`);
+    update(world: ISystemWorld, dataSet: Set<Data>): void {
+        for (let data of dataSet) {
+            console.log(++data.counterObj.a);
         }
     }
 };
 
 // register the system
-world.registerSystem(new Gravity());
+world.registerSystem(new CountSystem());
 ```
 
 
@@ -114,8 +90,9 @@ Entities are automatically added to the world they are built in.
 
 ```typescript
 world.buildEntity()
-    .with(Position) // this call implicitely creates a new object of type Position. You can also pass an instance instead.
-    .with(Velocity) // you can pass arguments to the constructor by passing them as additional parameters here
+    // this call implicitely creates a new object of type Position. You can also pass an instance instead.
+    // you can pass arguments to the constructor by passing them as additional parameters here
+    .with(Counter)
     .build();
 ```
 
@@ -155,3 +132,16 @@ const update = function () {
 
 update();
 ```
+
+However, sim-ecs has to do a lot of calculations on each dispatch,
+so it offers its own `run()` method, which is optimized for continuously executing the system logic.
+It is the recommended way of running the ECS for simulations!
+
+```typescript
+
+world.run();
+```
+
+The run-method can be fed an options object to further configure the runner,
+and from within a transition-handler or the systems, certain actions can be called
+which influence how the runner acts. For example on transition, the state can be changed.

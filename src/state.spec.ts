@@ -5,7 +5,7 @@ export interface IState {
     /**
      * List of systems which should run when this state is active
      */
-    readonly systems: ISystem[]
+    readonly systems: ISystem<any>[]
 
     /**
      * Called to run tasks for state activation

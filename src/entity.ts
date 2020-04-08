@@ -1,6 +1,6 @@
 import IWorld from "./world.spec";
 import IEntity from "./entity.spec";
-import ISystem from "./system.spec";
+import ISystem, {access, TSystemData} from "./system.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
 
 export * from './entity.spec';
@@ -27,6 +27,23 @@ export class Entity implements IEntity {
 
         this.components.set(component.constructor.name, component);
         return this;
+    }
+
+    protected static buildDataObjects<T extends TSystemData>(dataProto: TTypeProto<TSystemData>, entities: IEntity[]): Set<T> {
+        const result: Set<T> = new Set();
+        let dataObj: T;
+
+        for (const entity of entities) {
+            dataObj = new dataProto() as T;
+            for (const entry of Object.entries(dataObj)) {
+                // @ts-ignore
+                dataObj[entry[0]] = entity.getComponent(entry[1][access].component);
+            }
+
+            result.add(dataObj);
+        }
+
+        return result;
     }
 
     destroy(): void {
@@ -56,10 +73,10 @@ export class Entity implements IEntity {
 
     setWorld(world: IWorld): IEntity {
         if (this.world) {
-            let system: ISystem;
+            let system: ISystem<any>;
             for (system of this.world.systems) {
-                if (system.entities.includes(this)) {
-                    system.entities.splice(system.entities.indexOf(this), 1);
+                if (system.entities.has(this)) {
+                    system.entities.delete(this);
                 }
             }
         }
@@ -70,21 +87,23 @@ export class Entity implements IEntity {
         return this;
     }
 
-    _updateSystem(world: IWorld, system: ISystem): void {
+    _updateSystem(world: IWorld, system: ISystem<any>): void {
         if (!world.systems.includes(system)) {
             throw new Error('The world does not contain the system ' + system.constructor.name);
         }
 
-        if (system.canUseEntity(this) && !system.entities.includes(this)) {
-            system.entities.push(this);
+        if (system.canUseEntity(this)) {
+            if (!system.entities.has(this)) {
+                system.entities.add(this);
+            }
         }
-        else if (system.entities.includes(this)) {
-            system.entities.splice(system.entities.indexOf(this), 1);
+        else if (system.entities.has(this)) {
+            system.entities.delete(this);
         }
     }
 
     _updateSystems(world: IWorld): void {
-        let system: ISystem;
+        let system: ISystem<any>;
         for (system of world.systems) {
             this._updateSystem(world, system);
         }

@@ -1,6 +1,6 @@
 import {IEntity} from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
-import ISystem, {TComponentQuery, TSystemProto} from "./system.spec";
+import ISystem, {TComponentAccess, TSystemData, TSystemProto} from "./system.spec";
 import IState from "./state.spec";
 import {TTypeProto} from "./_.spec";
 
@@ -8,7 +8,7 @@ export type TRunConfiguration = {
     initialState?: IState,
     preFrameHandler?: (world: ITransitionWorld) => Promise<void>
 };
-export type TSystemNode = { system: ISystem, dependencies: TSystemProto[]};
+export type TSystemNode = { system: ISystem<any>, dependencies: TSystemProto<any>[]};
 
 export interface IPartialWorld {
     /**
@@ -42,9 +42,9 @@ export interface IPartialWorld {
 
     /**
      * Query entities and find the ones with a certain combination of component
-     * @param withComponents
+     * @param query
      */
-    getEntities(withComponents?: TComponentQuery): IEntity[]
+    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IEntity[]
 
     /**
      * Get a resource which was previously stored
@@ -82,9 +82,9 @@ export interface ISystemWorld {
 
     /**
      * Query entities and find the ones with a certain combination of component
-     * @param withComponents
+     * @param query
      */
-    getEntities(withComponents?: TComponentQuery): IEntity[]
+    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IEntity[]
 
     /**
      * Get a resource which was previously stored
@@ -112,7 +112,7 @@ export interface IWorld extends IPartialWorld {
     /**
      * Systems which are registered with this world
      */
-    readonly systems: ISystem[]
+    readonly systems: ISystem<any>[]
 
     /**
      * Execute all systems
@@ -125,7 +125,7 @@ export interface IWorld extends IPartialWorld {
      * @param system
      * @param dependencies
      */
-    registerSystem(system: ISystem, dependencies?: TSystemProto[]): IWorld
+    registerSystem(system: ISystem<any>, dependencies?: TSystemProto<any>[]): IWorld
 
     /**
      * Inserts a system without adding entities or sorting the dependency graph
@@ -133,7 +133,7 @@ export interface IWorld extends IPartialWorld {
      * @param system
      * @param dependencies
      */
-    registerSystemQuick(system: ISystem, dependencies?: TSystemProto[]): IWorld
+    registerSystemQuick(system: ISystem<any>, dependencies?: TSystemProto<any>[]): IWorld
 
     /**
      * Execute all systems continuously in a dispatch-loop
