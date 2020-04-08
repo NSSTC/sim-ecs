@@ -33,7 +33,6 @@ export class EntityBuilder implements IEntityBuilder {
     protected asComponent(component: Object | TObjectProto, ...args: any[]): Object {
         return typeof component === 'object'
             ? component
-            // @ts-ignore
-            : new (component.bind.apply(component, [component].concat(Array.from(arguments).slice(1))))();
+            : new (component.prototype.constructor.bind(component, ...Array.from(arguments).slice(1)))();
     }
 }

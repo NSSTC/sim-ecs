@@ -72,8 +72,7 @@ export class World implements IWorld {
         }
         else {
             type = obj;
-            // @ts-ignore
-            instance = new (obj.bind.apply(obj, [obj].concat(Array.from(arguments).slice(1))))();
+            instance = new (obj.prototype.constructor.bind(obj, ...Array.from(arguments).slice(1)))();
         }
 
         if (this.resources.has(type)) {
@@ -252,8 +251,7 @@ export class World implements IWorld {
         }
 
         this.resources.delete(type);
-        // @ts-ignore
-        return this.addResource.apply(this, [obj].concat(args));
+        return this.addResource(obj, ...args);
     }
 
     async run(configuration?: TRunConfiguration): Promise<void> {
