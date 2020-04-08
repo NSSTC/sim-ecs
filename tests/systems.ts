@@ -9,7 +9,7 @@ export class S1 extends System {
         this.handler = handler;
     }
 
-    async update(world: ISystemWorld, entities: IEntity[], deltaTime: number): Promise<void> {
+    async update(world: ISystemWorld, entities: IEntity[]): Promise<void> {
         for(const entity of entities) this.handler(entity);
     }
 }

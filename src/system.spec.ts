@@ -46,9 +46,8 @@ export interface ISystem {
      *    This Map should contain all components which were queried, and READ-marked components should be read-only (ideally)
      * @param world
      * @param entities
-     * @param deltaTime
      */
-    update(world: ISystemWorld, entities: IEntity[], deltaTime: number): Promise<void>
+    update(world: ISystemWorld, entities: IEntity[]): Promise<void>
 }
 
 export type TSystemProto = { new(): ISystem };

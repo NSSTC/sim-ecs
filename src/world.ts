@@ -13,7 +13,6 @@ export * from './world.spec';
 export class World implements IWorld {
     protected defaultState = new State();
     protected entities: IEntity[] = [];
-    protected lastDispatch = 0;
     protected pda = new PushDownAutomaton<IState>();
     protected resources = new Map<{ new(): Object }, Object>();
     protected runPromise?: Promise<void> = undefined;
@@ -94,14 +93,8 @@ export class World implements IWorld {
     }
 
     async dispatch(state?: IState): Promise<void> {
-        const currentTime = Date.now();
-
         if (!state) {
             state = this.defaultState;
-        }
-
-        if (this.lastDispatch === 0) {
-            this.lastDispatch = currentTime;
         }
 
         {
@@ -113,16 +106,14 @@ export class World implements IWorld {
                     if (system.dependencies.length > 0) {
                         await Promise.all(parallelRunningSystems);
                         parallelRunningSystems = [];
-                        await system.system.update(this.systemWorld, system.system.entities, currentTime - this.lastDispatch);
+                        await system.system.update(this.systemWorld, system.system.entities);
                     }
                     else {
-                        parallelRunningSystems.push(system.system.update(this.systemWorld, system.system.entities, currentTime - this.lastDispatch))
+                        parallelRunningSystems.push(system.system.update(this.systemWorld, system.system.entities))
                     }
                 }
             }
         }
-
-        this.lastDispatch = currentTime;
     }
 
     getEntities(withComponents?: TComponentQuery): IEntity[] {
@@ -282,22 +273,13 @@ export class World implements IWorld {
         this.runPromise = new Promise<void>(res => { resolver = res });
         this.shouldRunSystems = true;
 
-        if (this.lastDispatch <= 0) {
-            this.lastDispatch = Date.now();
-        }
-
         {
             const execAsync = typeof requestAnimationFrame == 'function'
                 ? requestAnimationFrame
                 : setTimeout;
-            let currentTime;
-            let deltaTime;
             let parallelRunningSystems: Promise<void>[] = [];
             let system;
             const mainLoop = async () => {
-                currentTime = Date.now();
-                deltaTime = currentTime - this.lastDispatch;
-
                 if (!this.shouldRunSystems) {
                     this.runPromise = undefined;
                     resolver();
@@ -312,16 +294,15 @@ export class World implements IWorld {
                     if (system.hasDependencies) {
                         await Promise.all(parallelRunningSystems);
                         parallelRunningSystems = [];
-                        await system.system.update(this.systemWorld, system.system.entities, deltaTime);
+                        await system.system.update(this.systemWorld, system.system.entities);
                     }
                     else {
-                        parallelRunningSystems.push(system.system.update(this.systemWorld, system.system.entities, deltaTime))
+                        parallelRunningSystems.push(system.system.update(this.systemWorld, system.system.entities))
                     }
                 }
 
                 await Promise.all(parallelRunningSystems);
                 parallelRunningSystems = [];
-                this.lastDispatch = currentTime;
                 execAsync(mainLoop);
             };
 
