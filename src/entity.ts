@@ -1,29 +1,27 @@
 import IWorld from "./world.spec";
 import IEntity from "./entity.spec";
-import IComponent, {TComponentProto} from "./component.spec";
-import {Component} from "./component";
 import ISystem from "./system.spec";
-import {TTypeProto} from "./_.spec";
+import {TObjectProto, TTypeProto} from "./_.spec";
 
 export * from './entity.spec';
 
 export class Entity implements IEntity {
-    protected components: Map<string, IComponent> = new Map();
+    protected components: Map<string, Object> = new Map();
     protected world?: IWorld;
 
     constructor(world?: IWorld) {
         this.world = world;
     }
 
-    addComponent(component: IComponent): IEntity {
+    addComponent(component: Object): IEntity {
         this.addComponentQuick(component);
         this.world && this._updateSystems(this.world);
 
         return this;
     }
 
-    addComponentQuick(component: IComponent): IEntity {
-        if (this.hasComponent(component.constructor as typeof Component)) {
+    addComponentQuick(component: Object): IEntity {
+        if (this.hasComponent(component.constructor as typeof Object)) {
             throw new Error(`Component "${component.constructor.name}" already exists on entity!`)
         }
 
@@ -35,11 +33,11 @@ export class Entity implements IEntity {
         this.world?.removeEntity(this);
     }
 
-    getComponent<T extends IComponent>(component: TTypeProto<T>): T | undefined {
+    getComponent<T extends Object>(component: TTypeProto<T>): T | undefined {
         return this.components.get(component.name) as T;
     }
 
-    hasComponent(component: typeof Component | TComponentProto): boolean {
+    hasComponent(component: typeof Object | TObjectProto): boolean {
         return this.components.has(component.name);
     }
 
@@ -47,7 +45,7 @@ export class Entity implements IEntity {
         return this.components.has(name);
     }
 
-    removeComponent(component: IComponent): IEntity {
+    removeComponent(component: Object): IEntity {
         if (!this.components.has(component.constructor.name)) return this;
 
         this.components.delete(component.constructor.name);

@@ -2,7 +2,7 @@ import {Entity} from "./entity";
 import IWorld from "./world.spec";
 import IEntity from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
-import IComponent, {TComponentProto} from "./component.spec";
+import {TObjectProto} from "./_.spec";
 
 export * from './entity_builder.spec';
 
@@ -20,17 +20,17 @@ export class EntityBuilder implements IEntityBuilder {
         return this.entity;
     }
 
-    with(component: IComponent | TComponentProto, ...args: any[]): IEntityBuilder {
+    with(component: Object | TObjectProto, ...args: any[]): IEntityBuilder {
         this.entity.addComponent(this.asComponent(component));
         return this;
     }
 
-    withQuick(component: IComponent | TComponentProto, ...args: any[]): IEntityBuilder {
+    withQuick(component: Object | TObjectProto, ...args: any[]): IEntityBuilder {
         this.entity.addComponentQuick(this.asComponent(component));
         return this;
     }
 
-    protected asComponent(component: IComponent | TComponentProto, ...args: any[]): IComponent {
+    protected asComponent(component: Object | TObjectProto, ...args: any[]): Object {
         return typeof component === 'object'
             ? component
             // @ts-ignore

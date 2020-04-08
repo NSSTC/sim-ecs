@@ -1,22 +1,20 @@
-import IComponent, {TComponentProto} from "./component.spec";
 import IWorld from "./world.spec";
-import {Component} from "./component";
 import ISystem from "./system.spec";
-import {TTypeProto} from "./_.spec";
+import {TObjectProto, TTypeProto} from "./_.spec";
 
 export interface IEntity {
     /**
      * Add a component to this entity
      * @param component
      */
-    addComponent(component: IComponent): IEntity
+    addComponent(component: Object): IEntity
 
     /**
      * Add a component without recalculating the entity dependencies.
      * Must call world.maintain() in order to trigger changes
      * @param component
      */
-    addComponentQuick(component: IComponent): IEntity
+    addComponentQuick(component: Object): IEntity
 
     /**
      * Remove this entity from the world, deleting all of its components
@@ -27,13 +25,13 @@ export interface IEntity {
      * Get a component of a certain type which is associated with this entity
      * @param component
      */
-    getComponent<T extends IComponent>(component: TTypeProto<T>): T | undefined
+    getComponent<T extends Object>(component: TTypeProto<T>): T | undefined
 
     /**
      * Check if a certain component is associated with this entity
      * @param component
      */
-    hasComponent(component: typeof Component | TComponentProto): boolean
+    hasComponent(component: typeof Object | TObjectProto): boolean
 
     /**
      * Check if a certain component is associated with this entity based on the type name
@@ -45,7 +43,7 @@ export interface IEntity {
      * Un-associate a component from this entity
      * @param component
      */
-    removeComponent(component: IComponent): IEntity
+    removeComponent(component: Object): IEntity
 
     /**
      * Set the parent world of this entity

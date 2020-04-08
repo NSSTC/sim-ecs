@@ -1,6 +1,6 @@
 import {ISystemWorld} from "./world.spec";
 import IEntity from "./entity.spec";
-import {TComponentProto} from './component.spec';
+import {TObjectProto} from "./_.spec";
 
 export enum EComponentRequirement {
     READ,
@@ -8,8 +8,9 @@ export enum EComponentRequirement {
     WRITE,
 }
 
-export type TComponentQuery = [TComponentProto, EComponentRequirement][];
+export type TComponentQuery = [TObjectProto, EComponentRequirement][];
 
+// todo: implement a way to prepare a system before a run for things it cannot prepare in the constructor
 export interface ISystem {
     /**
      * Components which are used by this system

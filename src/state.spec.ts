@@ -1,5 +1,5 @@
 import ISystem from "./system.spec";
-import IWorld, {ITransitionWorld} from "./world.spec";
+import {ITransitionWorld} from "./world.spec";
 
 export interface IState {
     /**

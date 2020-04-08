@@ -1,18 +1,23 @@
 # sim-ecs
 ECS, which is optimized for simulations
 
-I highly advice you to take a look at the (working) examples in the `/examples` directory.
+I highly advice you to take a look at the (working) examples in the `/examples` directory 
+and test runners in `/tests`.
 The gravity example is the most basic one and shows you how to get a world up and running quickly.
 
 
 ## Considerations
 
-This ECS is built for easy usage (DX) and high iteration speed.
-The trade-off is that insertion and deletion are slow.
+This ECS is inspired by SPECS and Legion (two rust ECS libraries), however optimized for JS.
+It is built for easy usage (DX) and high iteration speed.
+The trade-off is that insertion and deletion are slow,
+however there are optimizations and opinionations in place to still make it fast.
 I recommend doing insertions and deletions at defined points (for example loading screens)
 and batching these operations.
+For on-the-fly changes, there is a way to register a callback which does the work
+in between system executions, so that all systems can work on the same dataset per iteration. 
 
-Batching can be done by using `-Quick` methods (for example `world.registerSystemQuick()`),
+Batching entity creation can be done by using `-Quick` methods (for example `world.buildEntity.withQuick()`),
 which will not calculate component and system dependencies). In the end, call `world.maintain()`
 in order to do the heavy lifting.
 
@@ -50,12 +55,12 @@ console.log(world.getResource(Date).getDate());
 Components are needed to define data on which the whole system can operate.
 
 ```typescript
-class Position extends Component {
+class Position {
     x = 0;
     y = 0;
 }
 
-class Velocity extends Component {
+class Velocity {
     x = 0;
     y = 0;
 }

@@ -1,6 +1,6 @@
 import ISystem from "./system.spec";
 import IState from "./state.spec";
-import IWorld, {ITransitionWorld} from "./world.spec";
+import {ITransitionWorld} from "./world.spec";
 
 export * from './state.spec';
 

@@ -1,5 +1,5 @@
 import {IEntity} from "./entity.spec";
-import {IComponent, TComponentProto} from "./component.spec";
+import {TObjectProto} from "./_.spec";
 
 export interface IEntityBuilder {
     /**
@@ -12,13 +12,13 @@ export interface IEntityBuilder {
      * @param component
      * @param args
      */
-    with(component: IComponent | TComponentProto, ...args: any[]): IEntityBuilder
+    with(component: Object | TObjectProto, ...args: any[]): IEntityBuilder
 
     /**
      * Adds component without doing entity-system-dependency calculations.
      * Must call world.maintain() to trigger changes.
      */
-    withQuick(component: IComponent | TComponentProto, ...args: any[]): IEntityBuilder
+    withQuick(component: Object | TObjectProto, ...args: any[]): IEntityBuilder
 }
 
 export type TEntityBuilderProto = { new(): TEntityBuilderProto };
