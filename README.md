@@ -79,10 +79,10 @@ class Gravity extends System {
         super();
 
         // a component query is the filter which defines the components used by this system
-        this.setComponentQuery({
-            Position: true,
-            Velocity: true,
-        });
+        this.setComponentQuery([
+            [Position, WRITE],
+            [Velocity, WRITE],
+        ]);
     }
 
     // update() is called every time the world needs to be updated. Put your logic in there
