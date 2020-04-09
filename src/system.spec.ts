@@ -1,4 +1,4 @@
-import {ISystemWorld} from "./world.spec";
+import {ISystemActions} from "./world.spec";
 import {TTypeProto} from "./_.spec";
 import IEntity from "./entity.spec";
 
@@ -56,7 +56,7 @@ export function Without<C extends Object>(componentPrototype: TTypeProto<C>): TC
 }
 
 export interface ISystem<D extends TSystemData> {
-    readonly SystemData: TTypeProto<D>;
+    readonly SystemDataType: TTypeProto<D>;
 
     /**
      * Have the system check weather it should use an entity.
@@ -66,10 +66,10 @@ export interface ISystem<D extends TSystemData> {
 
     /**
      * Update components during a dispatch
-     * @param world
+     * @param actions
      * @param dataSet
      */
-    update(world: ISystemWorld, dataSet: Set<D>): Promise<void>
+    update(actions: ISystemActions, dataSet: Set<D>): Promise<void>
 }
 
 export type TSystemProto<T extends TSystemData> = { new(): ISystem<T> };

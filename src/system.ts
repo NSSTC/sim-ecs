@@ -1,4 +1,4 @@
-import {ISystemWorld} from "./world.spec";
+import {ISystemActions} from "./world.spec";
 import {access, EAccess, ISystem, TComponentAccess, TSystemData} from "./system.spec";
 import {TTypeProto} from "./_.spec";
 import IEntity from "./entity.spec";
@@ -11,11 +11,11 @@ export class SystemData implements TSystemData {
 
 export abstract class System<D extends TSystemData> implements ISystem<D> {
     private _dataQuery?: D;
-    abstract readonly SystemData: TTypeProto<D>;
+    abstract readonly SystemDataType: TTypeProto<D>;
 
     canUseEntity(entity: IEntity): boolean {
         if (!this._dataQuery) {
-            this._dataQuery = new this.SystemData();
+            this._dataQuery = new this.SystemDataType();
         }
 
         let accessStruct: TComponentAccess<any>;
@@ -30,5 +30,5 @@ export abstract class System<D extends TSystemData> implements ISystem<D> {
         return true;
     }
 
-    abstract update(world: ISystemWorld, dataSet: Set<D>): Promise<void>;
+    abstract update(actions: ISystemActions, dataSet: Set<D>): Promise<void>;
 }

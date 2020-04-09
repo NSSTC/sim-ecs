@@ -6,7 +6,8 @@ import {TTypeProto} from "./_.spec";
 
 export type TRunConfiguration = {
     initialState?: IState,
-    preFrameHandler?: (world: ITransitionWorld) => Promise<void>
+    // called in-between world dispatches during a run
+    transitionHandler?: (actions: ITransitionActions) => Promise<void>
 };
 export type TSystemInfo<D extends TSystemData> = {
     dataPrototype: TTypeProto<D>
@@ -83,7 +84,10 @@ export interface IPartialWorld {
     stopRun(): Promise<void>
 }
 
-export interface ISystemWorld {
+/**
+ * Actions which can be called from a system run
+ */
+export interface ISystemActions {
     readonly currentState: IState | undefined
 
     /**
@@ -99,7 +103,10 @@ export interface ISystemWorld {
     getResource<T extends Object>(type: TTypeProto<T>): T
 }
 
-export interface ITransitionWorld extends IPartialWorld {
+/**
+ * Actions which can be called during an iteration-transition
+ */
+export interface ITransitionActions extends IPartialWorld {
     readonly currentState: IState | undefined
 
     /**

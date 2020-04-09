@@ -1,6 +1,6 @@
 import {Entity} from "./entity";
 import {EntityBuilder} from "./entity_builder";
-import {ISystemWorld, ITransitionWorld, IWorld, TRunConfiguration, TSystemInfo, TSystemNode} from "./world.spec";
+import {ISystemActions, ITransitionActions, IWorld, TRunConfiguration, TSystemInfo, TSystemNode} from "./world.spec";
 import IEntity from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
 import ISystem, {access, EAccess, TComponentAccess, TSystemData, TSystemProto} from "./system.spec";
@@ -22,8 +22,8 @@ export class World implements IWorld {
     protected runSystemsCache: Map<IState, { system: ISystem<any>, hasDependencies: boolean }[]> = new Map();
     protected shouldRunSystems = false;
     protected systemInfos: Map<ISystem<any>, TSystemInfo<any>> = new Map();
-    protected systemWorld: ISystemWorld;
-    protected transitionWorld: ITransitionWorld;
+    protected systemWorld: ISystemActions;
+    protected transitionWorld: ITransitionActions;
 
     constructor() {
         const self = this;
@@ -91,7 +91,7 @@ export class World implements IWorld {
 
         this.dirty = true;
         this.systemInfos.set(system, {
-            dataPrototype: system.SystemData,
+            dataPrototype: system.SystemDataType,
             dataSet: new Set(),
             dependencies: new Set(dependencies),
             system: system,
@@ -323,8 +323,8 @@ export class World implements IWorld {
                     return;
                 }
 
-                if (configuration?.preFrameHandler) {
-                    await configuration?.preFrameHandler(this.transitionWorld);
+                if (configuration?.transitionHandler) {
+                    await configuration?.transitionHandler(this.transitionWorld);
                 }
 
                 for (systemInfo of this.executionPipeline) {

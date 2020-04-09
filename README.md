@@ -1,9 +1,9 @@
 # sim-ecs
 ECS, which is optimized for simulations
 
-I highly advice you to take a look at the (working) examples in the `/examples` directory 
+I highly advice you to take a look at the examples in the `/examples` directory 
 and test runners in `/tests`.
-The gravity example is the most basic one and shows you how to get a world up and running quickly.
+The counter example is the most basic one and shows you how to get a world up and running quickly.
 
 
 ## Considerations
@@ -31,7 +31,7 @@ on a running world and then rather quickly added once ready.
 In an ECS, a world is like a container for entities.
 
 ```typescript
-import {Component, ECS, IEntity, IWorld, System} from "sim-ecs";
+import * from "sim-ecs";
 
 const ecs = new ECS();
 const world = ecs.createWorld();
@@ -53,6 +53,7 @@ console.log(world.getResource(Date).getDate());
 ## Defining components
 
 Components are needed to define data on which the whole system can operate.
+You can think of them like columns in a database.
 
 ```typescript
 class Counter {
@@ -71,7 +72,7 @@ class CountSystem extends System<Data> {
     readonly SystemData = Data;
 
     // update() is called every time the world needs to be updated. Put your logic in there
-    update(world: ISystemWorld, dataSet: Set<Data>): void {
+    async update(actions: ISystemActions, dataSet: Set<Data>): Promise<void> {
         for (let data of dataSet) {
             console.log(++data.counterObj.a);
         }
@@ -87,6 +88,7 @@ world.registerSystem(new CountSystem());
 
 Entities are like glue. They define which components belong together and form one data.
 Entities are automatically added to the world they are built in.
+You can think of entities like rows in a database.
 
 ```typescript
 world.buildEntity()

@@ -1,4 +1,4 @@
-import {Component, EComponentRequirement, IEntity, ISystemWorld, IWorld, System} from "../src";
+import {Component, EComponentRequirement, IEntity, ISystemActions, IWorld, System} from "../src";
 
 export class DelaySystem extends System {
     delay: number;
@@ -24,7 +24,7 @@ export class Gravity extends System {
         ]);
     }
 
-    async update(world: ISystemWorld, entities: IEntity[], deltaTime: number): Promise<void> {
+    async update(world: ISystemActions, entities: IEntity[], deltaTime: number): Promise<void> {
         this.absTime += deltaTime;
         for (let entity of entities) {
             const pos = entity.getComponent(Position);
