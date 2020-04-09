@@ -19,8 +19,6 @@ export type TComponentAccess<C extends Object> = {
 }
 export type TSystemData = { [fieldName: string]: Object };
 
-const a = (x: TTypeProto<Object>) => class extends x {};
-
 export function Read<C extends Object>(componentPrototype: TTypeProto<C>): C & TComponentAccess<C> {
     return Object.assign({}, componentPrototype.prototype, {
         [access]: {
@@ -57,12 +55,8 @@ export function Without<C extends Object>(componentPrototype: TTypeProto<C>): TC
     };
 }
 
-export interface ISystem<T extends TSystemData> {
-    /**
-     * Entities which are associated with this system because of their components
-     */
-    readonly entities: Set<IEntity>
-    readonly SystemData: TTypeProto<T>;
+export interface ISystem<D extends TSystemData> {
+    readonly SystemData: TTypeProto<D>;
 
     /**
      * Have the system check weather it should use an entity.
@@ -71,16 +65,11 @@ export interface ISystem<T extends TSystemData> {
     canUseEntity(entity: IEntity): boolean
 
     /**
-     * Remove all associated entities
-     */
-    clearEntities(): void
-
-    /**
      * Update components during a dispatch
      * @param world
      * @param dataSet
      */
-    update(world: ISystemWorld, dataSet: Set<T>): Promise<void>
+    update(world: ISystemWorld, dataSet: Set<D>): Promise<void>
 }
 
 export type TSystemProto<T extends TSystemData> = { new(): ISystem<T> };

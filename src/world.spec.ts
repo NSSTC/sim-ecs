@@ -8,6 +8,12 @@ export type TRunConfiguration = {
     initialState?: IState,
     preFrameHandler?: (world: ITransitionWorld) => Promise<void>
 };
+export type TSystemInfo<D extends TSystemData> = {
+    dataPrototype: TTypeProto<D>
+    dataSet: Set<D>
+    dependencies: Set<TSystemProto<any>>
+    system: ISystem<D>
+};
 export type TSystemNode = { system: ISystem<any>, dependencies: TSystemProto<any>[]};
 
 export interface IPartialWorld {
@@ -44,7 +50,7 @@ export interface IPartialWorld {
      * Query entities and find the ones with a certain combination of component
      * @param query
      */
-    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IEntity[]
+    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): Set<IEntity>
 
     /**
      * Get a resource which was previously stored
@@ -84,7 +90,7 @@ export interface ISystemWorld {
      * Query entities and find the ones with a certain combination of component
      * @param query
      */
-    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IEntity[]
+    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): Set<IEntity>
 
     /**
      * Get a resource which was previously stored
@@ -125,15 +131,7 @@ export interface IWorld extends IPartialWorld {
      * @param system
      * @param dependencies
      */
-    registerSystem(system: ISystem<any>, dependencies?: TSystemProto<any>[]): IWorld
-
-    /**
-     * Inserts a system without adding entities or sorting the dependency graph
-     * Must call world.maintain() afterwards!
-     * @param system
-     * @param dependencies
-     */
-    registerSystemQuick(system: ISystem<any>, dependencies?: TSystemProto<any>[]): IWorld
+    addSystem(system: ISystem<any>, dependencies?: TSystemProto<any>[]): IWorld
 
     /**
      * Execute all systems continuously in a dispatch-loop

@@ -5,13 +5,13 @@ import {ITransitionWorld} from "./world.spec";
 export * from './state.spec';
 
 export class State implements IState {
-    protected _systems: ISystem<any>[];
+    protected _systems: Set<ISystem<any>>;
 
-    constructor(systems: ISystem<any>[] = []) {
+    constructor(systems: Set<ISystem<any>> = new Set()) {
         this._systems = systems;
     }
 
-    get systems(): ISystem<any>[] {
+    get systems(): Set<ISystem<any>> {
         return this._systems;
     }
 

@@ -47,46 +47,39 @@ describe('Build Entities', () => {
 
     it('create', () => {
         assert.notEqual(world.createEntity(),null, 'Could not create a new entity');
-        assert.equal(world.getEntities().length, 1, 'Number of entities in world does not match');
+        assert.equal(world.getEntities().size, 1, 'Number of entities in world does not match');
     });
 
     it('build', () => {
         assert.notEqual(world.buildEntity().build(),null, 'Could not build a new entity');
-        assert.equal(world.getEntities().length, 1, 'Number of entities in world does not match');
+        assert.equal(world.getEntities().size, 1, 'Number of entities in world does not match');
     });
 
     it('build_with_component', () => {
         const entity = world.buildEntity().with(Components.C1).build();
-        assert.equal(world.getEntities().length, 1, 'Number of entities in world does not match');
+        assert.equal(world.getEntities().size, 1, 'Number of entities in world does not match');
         assert(entity.hasComponent(Components.C1), 'Component not found on entity');
         assert(entity.hasComponentName(Components.C1.name), 'Component not found by name on entity');
         assert.equal(
-            world.getEntities([With(Components.C1)]).length,
+            world.getEntities([With(Components.C1)]).size,
             1,
             'Number of entities with component C1 does not match'
         );
         assert.equal(
-            world.getEntities([Without(Components.C1)]).length,
+            world.getEntities([Without(Components.C1)]).size,
             0,
             'Number of entities with component C1 does not match'
         );
         assert.equal(
-            world.getEntities([With(Components.C2)]).length,
+            world.getEntities([With(Components.C2)]).size,
             0,
             'Number of entities with component C2 does not match'
         );
         assert.equal(
-            world.getEntities([With(Components.C1), With(Components.C2)]).length,
+            world.getEntities([With(Components.C1), With(Components.C2)]).size,
             0,
             'Number of entities with component C1 & C2 does not match'
         );
-    });
-
-    it('build_with_component_quick', () => {
-        const entity = world.buildEntity().withQuick(Components.C1).build();
-        assert.equal(world.getEntities().length, 1, 'Number of entities in world does not match');
-        assert(entity.hasComponent(Components.C1), 'Component not found on entity');
-        assert(entity.hasComponentName(Components.C1.name), 'Component not found by name on entity');
     });
 });
 
@@ -108,12 +101,7 @@ describe('Run Systems', () => {
     });
 
     it('register', () => {
-        world.registerSystem(new Systems.S1(() => {}));
-        assert.equal(world.systems.length, 1, 'System was not registered');
-    });
-
-    it('register_quick', () => {
-        world.registerSystemQuick(new Systems.S1(() => {}));
+        world.addSystem(new Systems.S1(() => {}));
         assert.equal(world.systems.length, 1, 'System was not registered');
     });
 
@@ -121,24 +109,7 @@ describe('Run Systems', () => {
         const entity = world.buildEntity().with(Components.C1).build();
         const c1 = entity.getComponent(Components.C1);
 
-        world.registerSystem(new Systems.S1(op));
-        world.dispatch();
-
-        assert(c1, 'Could not fetch component'); if (!c1) return;
-        assert.equal(c1.a, 1, 'System did not operate on component');
-    });
-
-    it('quick+dispatch', () => {
-        const entity = world.buildEntity().withQuick(Components.C1).build();
-        const c1 = entity.getComponent(Components.C1);
-
-        world.registerSystemQuick(new Systems.S1(op));
-        world.dispatch();
-
-        assert(c1, 'Could not fetch component'); if (!c1) return;
-        assert.equal(c1.a, 0, 'Component was added to systems pre-maturely');
-
-        world.maintain();
+        world.addSystem(new Systems.S1(op));
         world.dispatch();
 
         assert(c1, 'Could not fetch component'); if (!c1) return;
@@ -150,7 +121,7 @@ describe('Run Systems', () => {
         const c1 = entity.getComponent(Components.C1);
         let runFinished = false;
 
-        world.registerSystem(new Systems.S1(op));
+        world.addSystem(new Systems.S1(op));
         setTimeout(() => {
             runFinished = true;
             world.stopRun();

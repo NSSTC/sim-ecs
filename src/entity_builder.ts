@@ -25,11 +25,6 @@ export class EntityBuilder implements IEntityBuilder {
         return this;
     }
 
-    withQuick(component: Object | TObjectProto, ...args: any[]): IEntityBuilder {
-        this.entity.addComponentQuick(this.asComponent(component));
-        return this;
-    }
-
     protected asComponent(component: Object | TObjectProto, ...args: any[]): Object {
         return typeof component === 'object'
             ? component

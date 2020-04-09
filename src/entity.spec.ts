@@ -10,18 +10,6 @@ export interface IEntity {
     addComponent(component: Object): IEntity
 
     /**
-     * Add a component without recalculating the entity dependencies.
-     * Must call world.maintain() in order to trigger changes
-     * @param component
-     */
-    addComponentQuick(component: Object): IEntity
-
-    /**
-     * Remove this entity from the world, deleting all of its components
-     */
-    destroy(): void
-
-    /**
      * Get a component of a certain type which is associated with this entity
      * @param component
      */
@@ -44,15 +32,6 @@ export interface IEntity {
      * @param component
      */
     removeComponent(component: Object): IEntity
-
-    /**
-     * Set the parent world of this entity
-     * @param world
-     */
-    setWorld(world: IWorld): IEntity
-
-    _updateSystem(world: IWorld, system: ISystem<any>): void
-    _updateSystems(world: IWorld): void
 }
 
 export type TEntityProto = { new(): IEntity };

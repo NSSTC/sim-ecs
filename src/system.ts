@@ -9,14 +9,9 @@ export class SystemData implements TSystemData {
     [fieldName: string]: Object;
 }
 
-export abstract class System<T extends TSystemData> implements ISystem<T> {
-    private _entities: Set<IEntity> = new Set();
-    private _dataQuery?: T;
-    abstract readonly SystemData: TTypeProto<T>;
-
-    get entities(): Set<IEntity> {
-        return this._entities;
-    }
+export abstract class System<D extends TSystemData> implements ISystem<D> {
+    private _dataQuery?: D;
+    abstract readonly SystemData: TTypeProto<D>;
 
     canUseEntity(entity: IEntity): boolean {
         if (!this._dataQuery) {
@@ -35,9 +30,5 @@ export abstract class System<T extends TSystemData> implements ISystem<T> {
         return true;
     }
 
-    clearEntities(): void {
-        this._entities.clear();
-    }
-
-    abstract update(world: ISystemWorld, dataSet: Set<T>): Promise<void>;
+    abstract update(world: ISystemWorld, dataSet: Set<D>): Promise<void>;
 }

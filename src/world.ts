@@ -1,6 +1,6 @@
 import {Entity} from "./entity";
 import {EntityBuilder} from "./entity_builder";
-import {ISystemWorld, ITransitionWorld, IWorld, TRunConfiguration, TSystemNode} from "./world.spec";
+import {ISystemWorld, ITransitionWorld, IWorld, TRunConfiguration, TSystemInfo, TSystemNode} from "./world.spec";
 import IEntity from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
 import ISystem, {access, EAccess, TComponentAccess, TSystemData, TSystemProto} from "./system.spec";
@@ -11,15 +11,17 @@ import {PushDownAutomaton} from "./pda";
 export * from './world.spec';
 
 export class World implements IWorld {
-    protected defaultState = new State();
-    protected entities: IEntity[] = [];
+    protected dirty = false;
+    protected entities: Set<IEntity> = new Set();
+    // todo: the pipeline should be compromised of execution groups, which are simpler to handle than checking deps on each node
+    protected executionPipeline: TSystemInfo<any>[] = [];
     protected pda = new PushDownAutomaton<IState>();
     protected resources = new Map<{ new(): Object }, Object>();
     protected runPromise?: Promise<void> = undefined;
     protected runSystems: { system: ISystem<any>, hasDependencies: boolean }[] = [];
     protected runSystemsCache: Map<IState, { system: ISystem<any>, hasDependencies: boolean }[]> = new Map();
     protected shouldRunSystems = false;
-    protected sortedSystems: TSystemNode[] = [];
+    protected systemInfos: Map<ISystem<any>, TSystemInfo<any>> = new Map();
     protected systemWorld: ISystemWorld;
     protected transitionWorld: ITransitionWorld;
 
@@ -49,13 +51,13 @@ export class World implements IWorld {
     }
 
     get systems(): ISystem<any>[] {
-        return this.defaultState.systems;
+        return Array.from(this.systemInfos.keys());
     }
 
     addEntity(entity: IEntity): IWorld {
-        if (!this.entities.includes(entity)) {
-            entity.setWorld(this);
-            this.entities.push(entity);
+        if (!this.entities.has(entity)) {
+            this.entities.add(entity);
+            this.dirty = true;
         }
 
         return this;
@@ -82,7 +84,23 @@ export class World implements IWorld {
         return this;
     }
 
-    private buildDataObjects<T extends TSystemData>(dataProto: TTypeProto<TSystemData>, entities: Set<IEntity>): Set<T> {
+    addSystem(system: ISystem<any>, dependencies?: TSystemProto<any>[]): IWorld {
+        if (Array.from(this.systemInfos.values()).find(info => info.system.constructor == system.constructor)) {
+            throw new Error(`The system ${system.constructor.name} is already registered!`);
+        }
+
+        this.dirty = true;
+        this.systemInfos.set(system, {
+            dataPrototype: system.SystemData,
+            dataSet: new Set(),
+            dependencies: new Set(dependencies),
+            system: system,
+        } as TSystemInfo<any>);
+
+        return this;
+    }
+
+    private static buildDataObjects<T extends TSystemData>(dataProto: TTypeProto<TSystemData>, entities: Set<IEntity>): Set<T> {
         const result: Set<T> = new Set();
         let dataObj: T;
 
@@ -105,40 +123,46 @@ export class World implements IWorld {
 
     createEntity(): Entity {
         const entity = new Entity();
-        this.entities.push(entity);
+        this.entities.add(entity);
         return entity;
     }
 
     async dispatch(state?: IState): Promise<void> {
+        if (this.dirty) {
+            this.maintain();
+        }
+
         if (!state) {
-            state = this.defaultState;
+            state = new State(new Set(this.systemInfos.keys()));
         }
 
         {
+            const stateSystems = Array.from(state.systems);
             let stateSystem;
+            let systemInfo: TSystemInfo<any>;
             let parallelRunningSystems = [];
-            for (let system of this.sortedSystems) {
-                stateSystem = state.systems.find(stateSys => stateSys.constructor.name === system.system.constructor.name);
+            for (systemInfo of this.executionPipeline) {
+                stateSystem = stateSystems.find(stateSys => stateSys.constructor.name === systemInfo.system.constructor.name);
                 if (stateSystem) {
-                    if (system.dependencies.length > 0) {
+                    if (systemInfo.dependencies.size > 0) {
                         await Promise.all(parallelRunningSystems);
                         parallelRunningSystems = [];
-                        await system.system.update(this.systemWorld, this.buildDataObjects(system.system.SystemData, system.system.entities));
+                        await systemInfo.system.update(this.systemWorld, systemInfo.dataSet);
                     }
                     else {
-                        parallelRunningSystems.push(system.system.update(this.systemWorld, this.buildDataObjects(system.system.SystemData, system.system.entities)))
+                        parallelRunningSystems.push(systemInfo.system.update(this.systemWorld, systemInfo.dataSet))
                     }
                 }
             }
         }
     }
 
-    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IEntity[] {
+    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): Set<IEntity> {
         if (!query) {
             return this.entities;
         }
 
-        const resultEntities = [];
+        const resultEntities = new Set<IEntity>();
 
         entityLoop: for (const entity of this.entities) {
             for (let componentRequirement of query) {
@@ -148,7 +172,7 @@ export class World implements IWorld {
                 ) continue entityLoop;
             }
 
-            resultEntities.push(entity);
+            resultEntities.add(entity);
         }
 
         return resultEntities;
@@ -162,17 +186,30 @@ export class World implements IWorld {
         return this.resources.get(type) as T;
     }
 
+    // todo: add parameter which only maintains for a specific state
     maintain(): void {
-        this.sortedSystems = this.sortSystems(this.sortedSystems);
+        this.executionPipeline = this.sortSystems(Array.from(this.systemInfos.values()).map(info => ({
+            system: info.system,
+            dependencies: Array.from(info.dependencies),
+        }))).map(node => this.systemInfos.get(node.system) as TSystemInfo<any>);
 
         let entity;
-        let system;
-        for (system of this.sortedSystems) {
-            system.system.clearEntities();
+        let systemInfo;
+        let usableEntities;
+
+        for (systemInfo of this.systemInfos.values()) {
+            systemInfo.dataSet.clear();
+            usableEntities = new Set<IEntity>();
             for (entity of this.entities) {
-                entity._updateSystem(this, system.system);
+                if (systemInfo.system.canUseEntity(entity)) {
+                    usableEntities.add(entity);
+                }
             }
+
+            systemInfo.dataSet = World.buildDataObjects(systemInfo.dataPrototype, usableEntities);
         }
+
+        this.dirty = false;
     }
 
     protected async popState(): Promise<void> {
@@ -189,17 +226,17 @@ export class World implements IWorld {
         }
         else {
             this.runSystems.length = 0;
-            for (let system of this.sortedSystems.reverse()) {
+            for (let system of this.executionPipeline.reverse()) {
                 stateSystem = dependencySystems.includes(system.system.constructor.name)
                     ? system.system
-                    : newState.systems.find(stateSys =>
+                    : Array.from(newState.systems).find(stateSys =>
                         stateSys.constructor.name === system.system.constructor.name);
 
 
                 if (stateSystem) {
                     this.runSystems.push({
                         system: stateSystem,
-                        hasDependencies: system.dependencies.length > 0,
+                        hasDependencies: system.dependencies.size > 0,
                     });
 
                     for (const dependency of system.dependencies) {
@@ -217,31 +254,10 @@ export class World implements IWorld {
         await newState.activate(this.transitionWorld);
     }
 
-    registerSystem(system: ISystem<any>, dependencies?: TSystemProto<any>[]): IWorld {
-        this.registerSystemQuick(system, dependencies);
-        for (let entity of this.entities) {
-            entity._updateSystem(this, system);
-        }
-
-        this.sortedSystems = this.sortSystems(this.sortedSystems);
-        return this;
-    }
-
-    registerSystemQuick(system: ISystem<any>, dependencies?: TSystemProto<any>[]): IWorld {
-        if (this.sortedSystems.find(node => node.system.constructor === system.constructor)) {
-            throw new Error(`The system "${system.constructor.name}" was already added to the world!`);
-        }
-
-        this.defaultState.systems.push(system);
-        this.sortedSystems.push({ system, dependencies: dependencies || [] });
-        return this;
-    }
-
     removeEntity(entity: IEntity): void {
-        const index = this.entities.indexOf(entity);
-        if (index < 0) return;
-
-        this.entities.splice(index, 1);
+        if (this.entities.has(entity)) {
+            this.entities.delete(entity);
+        }
     }
 
     replaceResource<T extends Object>(obj: T | TTypeProto<T>, ...args: any[]): IWorld {
@@ -271,18 +287,22 @@ export class World implements IWorld {
 
         // todo: all states should be prepared (sorted in advance) so that state-changes can happen faster
 
-        let resolver = () => {};
-
         if (this.runPromise) {
             throw new Error('The dispatch loop is already running!');
         }
+
+        if (this.dirty) {
+            this.maintain();
+        }
+
+        let resolver = () => {};
 
         if (!configuration) {
             configuration = {};
         }
 
         if (!configuration.initialState) {
-            configuration.initialState = this.defaultState;
+            configuration.initialState = new State(new Set(this.systemInfos.keys()));
         }
 
         this.pda.clear();
@@ -295,7 +315,7 @@ export class World implements IWorld {
                 ? requestAnimationFrame
                 : setTimeout;
             let parallelRunningSystems: Promise<void>[] = [];
-            let system;
+            let systemInfo: TSystemInfo<any>;
             const mainLoop = async () => {
                 if (!this.shouldRunSystems) {
                     this.runPromise = undefined;
@@ -307,14 +327,14 @@ export class World implements IWorld {
                     await configuration?.preFrameHandler(this.transitionWorld);
                 }
 
-                for (system of this.runSystems) {
-                    if (system.hasDependencies) {
+                for (systemInfo of this.executionPipeline) {
+                    if (systemInfo.dependencies.size > 0) {
                         await Promise.all(parallelRunningSystems);
                         parallelRunningSystems = [];
-                        await system.system.update(this.systemWorld, system.system.entities);
+                        await systemInfo.system.update(this.systemWorld, systemInfo.dataSet);
                     }
                     else {
-                        parallelRunningSystems.push(system.system.update(this.systemWorld, this.buildDataObjects(system.system.SystemData, system.system.entities)))
+                        parallelRunningSystems.push(systemInfo.system.update(this.systemWorld, systemInfo.dataSet))
                     }
                 }
 

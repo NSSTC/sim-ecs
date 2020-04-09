@@ -13,12 +13,6 @@ export interface IEntityBuilder {
      * @param args
      */
     with(component: Object | TObjectProto, ...args: any[]): IEntityBuilder
-
-    /**
-     * Adds component without doing entity-system-dependency calculations.
-     * Must call world.maintain() to trigger changes.
-     */
-    withQuick(component: Object | TObjectProto, ...args: any[]): IEntityBuilder
 }
 
 export type TEntityBuilderProto = { new(): TEntityBuilderProto };

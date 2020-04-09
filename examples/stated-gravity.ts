@@ -46,9 +46,9 @@ world.buildEntity()
     .with(Velocity)
     .build();
 
-world.registerSystem(initSystem);
-world.registerSystem(gravitySystem);
-world.registerSystem(pauseSystem);
+world.addSystem(initSystem);
+world.addSystem(gravitySystem);
+world.addSystem(pauseSystem);
 
 const update = async function () {
     await world.dispatch(world.getResource(SimulationData).state);
