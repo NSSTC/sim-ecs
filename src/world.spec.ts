@@ -9,6 +9,10 @@ export type TRunConfiguration = {
     // called in-between world dispatches during a run
     transitionHandler?: (actions: ITransitionActions) => Promise<void>
 };
+export type TStaticRunConfiguration = {
+    initialState: IState,
+    transitionHandler: (actions: ITransitionActions) => Promise<void>
+};
 export type TSystemInfo<D extends TSystemData> = {
     dataPrototype: TTypeProto<D>
     dataSet: Set<D>

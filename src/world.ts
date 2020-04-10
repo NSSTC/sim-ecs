@@ -1,6 +1,14 @@
 import {Entity} from "./entity";
 import {EntityBuilder} from "./entity_builder";
-import {ISystemActions, ITransitionActions, IWorld, TRunConfiguration, TSystemInfo, TSystemNode} from "./world.spec";
+import {
+    ISystemActions,
+    ITransitionActions,
+    IWorld,
+    TRunConfiguration,
+    TStaticRunConfiguration,
+    TSystemInfo,
+    TSystemNode
+} from "./world.spec";
 import IEntity from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
 import ISystem, {access, EAccess, TComponentAccess, TSystemData, TSystemProto} from "./system.spec";
@@ -13,14 +21,15 @@ export * from './world.spec';
 export class World implements IWorld {
     protected dirty = false;
     protected entities: Set<IEntity> = new Set();
-    // todo: the pipeline should be compromised of execution groups, which are simpler to handle than checking deps on each node
-    protected executionPipeline: TSystemInfo<any>[] = [];
     protected pda = new PushDownAutomaton<IState>();
     protected resources = new Map<{ new(): Object }, Object>();
+    protected runExecutionPipeline: Set<TSystemInfo<any>>[] = [];
+    protected runExecutionPipelineCache: Map<IState, Set<TSystemInfo<any>>[]> = new Map();
     protected runPromise?: Promise<void> = undefined;
     protected runSystems: { system: ISystem<any>, hasDependencies: boolean }[] = [];
     protected runSystemsCache: Map<IState, { system: ISystem<any>, hasDependencies: boolean }[]> = new Map();
     protected shouldRunSystems = false;
+    protected sortedSystems?: TSystemInfo<any>[];
     protected systemInfos: Map<ISystem<any>, TSystemInfo<any>> = new Map();
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
@@ -128,31 +137,23 @@ export class World implements IWorld {
     }
 
     async dispatch(state?: IState): Promise<void> {
-        if (this.dirty) {
-            this.maintain();
-        }
-
         if (!state) {
             state = new State(new Set(this.systemInfos.keys()));
         }
 
         {
-            const stateSystems = Array.from(state.systems);
-            let stateSystem;
-            let systemInfo: TSystemInfo<any>;
-            let parallelRunningSystems = [];
-            for (systemInfo of this.executionPipeline) {
-                stateSystem = stateSystems.find(stateSys => stateSys.constructor.name === systemInfo.system.constructor.name);
-                if (stateSystem) {
-                    if (systemInfo.dependencies.size > 0) {
-                        await Promise.all(parallelRunningSystems);
-                        parallelRunningSystems = [];
-                        await systemInfo.system.update(this.systemWorld, systemInfo.dataSet);
-                    }
-                    else {
-                        parallelRunningSystems.push(systemInfo.system.update(this.systemWorld, systemInfo.dataSet))
-                    }
+            const executionPipeline = this.prepareExecutionPipeline(state);
+            let executionGroup;
+            let systemInfo;
+            let systemPromises;
+
+            for (executionGroup of executionPipeline) {
+                systemPromises = [];
+                for (systemInfo of executionGroup) {
+                    systemPromises.push(systemInfo.system.update(this.systemWorld, systemInfo.dataSet));
                 }
+
+                await Promise.all(systemPromises);
             }
         }
     }
@@ -188,7 +189,7 @@ export class World implements IWorld {
 
     // todo: add parameter which only maintains for a specific state
     maintain(): void {
-        this.executionPipeline = this.sortSystems(Array.from(this.systemInfos.values()).map(info => ({
+        this.sortedSystems = this.sortSystems(Array.from(this.systemInfos.values()).map(info => ({
             system: info.system,
             dependencies: Array.from(info.dependencies),
         }))).map(node => this.systemInfos.get(node.system) as TSystemInfo<any>);
@@ -214,41 +215,49 @@ export class World implements IWorld {
 
     protected async popState(): Promise<void> {
         await this.pda.pop()?.deactivate(this.transitionWorld);
+        await this.pda.state?.activate(this.transitionWorld);
+    }
+
+    // todo: improve logic which sets up the groups
+    protected prepareExecutionPipeline(state: IState): Set<TSystemInfo<any>>[] {
+        const result: Set<TSystemInfo<any>>[] = [];
+        const stateSystems = Array.from(state.systems);
+        let executionGroup: Set<TSystemInfo<any>> = new Set();
+        let shouldRunSystem;
+        let systemInfo: TSystemInfo<any>;
+
+        if (!this.sortedSystems || this.dirty) {
+            // this line is purely to satisfy my IDE
+            this.sortedSystems = [];
+            this.maintain();
+        }
+
+        for (systemInfo of this.sortedSystems) {
+            shouldRunSystem = !!stateSystems.find(stateSys => stateSys.constructor.name === systemInfo.system.constructor.name);
+
+            if (shouldRunSystem) {
+                if (systemInfo.dependencies.size > 0) {
+                    result.push(executionGroup);
+                    executionGroup = new Set<any>();
+                }
+
+                executionGroup.add(systemInfo);
+            }
+        }
+
+        return result;
     }
 
     protected async pushState(newState: IState): Promise<void> {
-        const dependencySystems: string[] = [];
-        let stateSystem;
-
+        await this.pda.state?.deactivate(this.transitionWorld);
         this.pda.push(newState);
-        if (this.runSystemsCache.has(newState)) {
-            this.runSystems = this.runSystemsCache.get(newState) ?? [];
+        if (this.runExecutionPipelineCache.has(newState)) {
+            this.runExecutionPipeline = this.runExecutionPipelineCache.get(newState) ?? [];
         }
         else {
-            this.runSystems.length = 0;
-            for (let system of this.executionPipeline.reverse()) {
-                stateSystem = dependencySystems.includes(system.system.constructor.name)
-                    ? system.system
-                    : Array.from(newState.systems).find(stateSys =>
-                        stateSys.constructor.name === system.system.constructor.name);
-
-
-                if (stateSystem) {
-                    this.runSystems.push({
-                        system: stateSystem,
-                        hasDependencies: system.dependencies.size > 0,
-                    });
-
-                    for (const dependency of system.dependencies) {
-                        if (!dependencySystems.includes(dependency.name)) {
-                            dependencySystems.push(dependency.name);
-                        }
-                    }
-                }
-            }
-
-            this.runSystems = this.runSystems.reverse();
-            this.runSystemsCache.set(newState, this.runSystems);
+            newState.create(this.transitionWorld);
+            this.runExecutionPipeline = this.prepareExecutionPipeline(newState);
+            this.runExecutionPipelineCache.set(newState, this.runExecutionPipeline);
         }
 
         await newState.activate(this.transitionWorld);
@@ -295,8 +304,6 @@ export class World implements IWorld {
             this.maintain();
         }
 
-        let resolver = () => {};
-
         if (!configuration) {
             configuration = {};
         }
@@ -304,6 +311,12 @@ export class World implements IWorld {
         if (!configuration.initialState) {
             configuration.initialState = new State(new Set(this.systemInfos.keys()));
         }
+
+        const runConfig: TStaticRunConfiguration = {
+            initialState: configuration.initialState ?? new State(new Set(this.systemInfos.keys())),
+            transitionHandler: configuration.transitionHandler ?? (async action => {}),
+        };
+        let resolver = () => {};
 
         this.pda.clear();
         await this.pushState(configuration.initialState);
@@ -314,34 +327,40 @@ export class World implements IWorld {
             const execAsync = typeof requestAnimationFrame == 'function'
                 ? requestAnimationFrame
                 : setTimeout;
-            let parallelRunningSystems: Promise<void>[] = [];
-            let systemInfo: TSystemInfo<any>;
+            let executionGroup;
+            this.runExecutionPipeline = this.prepareExecutionPipeline(configuration.initialState);
+            let systemInfo;
+            let systemPromises;
+
+            const cleanUp = async () => {
+                await this.pda.state?.deactivate(this.transitionWorld);
+                for (const state of this.runExecutionPipelineCache.keys()) {
+                    await state.destroy(this.transitionWorld);
+                }
+
+                this.runExecutionPipelineCache.clear();
+                this.runPromise = undefined;
+                resolver();
+            };
+
             const mainLoop = async () => {
                 if (!this.shouldRunSystems) {
-                    this.runPromise = undefined;
-                    resolver();
+                    await cleanUp();
                     return;
                 }
 
-                if (configuration?.transitionHandler) {
-                    await configuration?.transitionHandler(this.transitionWorld);
+                for (executionGroup of this.runExecutionPipeline) {
+                    systemPromises = [];
+                    for (systemInfo of executionGroup) {
+                        systemPromises.push(systemInfo.system.update(this.systemWorld, systemInfo.dataSet));
+                    }
+
+                    await Promise.all(systemPromises);
                 }
 
-                for (systemInfo of this.executionPipeline) {
-                    if (systemInfo.dependencies.size > 0) {
-                        await Promise.all(parallelRunningSystems);
-                        parallelRunningSystems = [];
-                        await systemInfo.system.update(this.systemWorld, systemInfo.dataSet);
-                    }
-                    else {
-                        parallelRunningSystems.push(systemInfo.system.update(this.systemWorld, systemInfo.dataSet))
-                    }
-                }
-
-                await Promise.all(parallelRunningSystems);
-                parallelRunningSystems = [];
+                await runConfig.transitionHandler(this.transitionWorld);
                 execAsync(mainLoop);
-            };
+            }
 
             execAsync(mainLoop);
         }

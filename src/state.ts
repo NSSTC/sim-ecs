@@ -4,7 +4,7 @@ import {ITransitionActions} from "./world.spec";
 
 export * from './state.spec';
 
-export abstract class State implements IState {
+export class State implements IState {
     protected _systems: Set<ISystem<any>>;
 
     constructor(systems: Set<ISystem<any>> = new Set()) {
@@ -15,11 +15,11 @@ export abstract class State implements IState {
         return this._systems;
     }
 
-    abstract activate(world: ITransitionActions): void | Promise<void>;
+    activate(world: ITransitionActions): void | Promise<void> {}
 
-    abstract create(actions: ITransitionActions): void | Promise<void>;
+    create(actions: ITransitionActions): void | Promise<void> {}
 
-    abstract deactivate(world: ITransitionActions): void | Promise<void>;
+    deactivate(world: ITransitionActions): void | Promise<void> {}
 
-    abstract destroy(actions: ITransitionActions): void | Promise<void>;
+    destroy(actions: ITransitionActions): void | Promise<void> {}
 }
