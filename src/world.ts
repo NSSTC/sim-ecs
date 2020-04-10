@@ -26,10 +26,8 @@ export class World implements IWorld {
     protected runExecutionPipeline: Set<TSystemInfo<any>>[] = [];
     protected runExecutionPipelineCache: Map<IState, Set<TSystemInfo<any>>[]> = new Map();
     protected runPromise?: Promise<void> = undefined;
-    protected runSystems: { system: ISystem<any>, hasDependencies: boolean }[] = [];
-    protected runSystemsCache: Map<IState, { system: ISystem<any>, hasDependencies: boolean }[]> = new Map();
     protected shouldRunSystems = false;
-    protected sortedSystems?: TSystemInfo<any>[];
+    protected sortedSystems?: TSystemInfo<any>[] = undefined;
     protected systemInfos: Map<ISystem<any>, TSystemInfo<any>> = new Map();
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
@@ -245,6 +243,7 @@ export class World implements IWorld {
             }
         }
 
+        result.push(executionGroup);
         return result;
     }
 

@@ -1,11 +1,12 @@
-import {ISystemWorld, System} from "..";
+import {System} from "..";
 import {SystemData, Write} from "../src/system";
 import {C1, C2} from "./components";
+import {ISystemActions} from "../src";
 
 export class S1Data extends SystemData{ c1 = Write(C1) }
 export type THandlerFn1 = (data: S1Data) => void
 export class S1 extends System<S1Data> {
-    readonly SystemData = S1Data;
+    readonly SystemDataType = S1Data;
     handler: THandlerFn1;
 
     constructor(handler: THandlerFn1) {
@@ -13,7 +14,7 @@ export class S1 extends System<S1Data> {
         this.handler = handler;
     }
 
-    async update(world: ISystemWorld, dataSet: Set<S1Data>): Promise<void> {
+    async update(actions: ISystemActions, dataSet: Set<S1Data>): Promise<void> {
         for(const entry of dataSet) this.handler(entry);
     }
 }
@@ -21,7 +22,7 @@ export class S1 extends System<S1Data> {
 export class S2Data extends SystemData{ c2 = Write(C2) }
 export type THandlerFn2 = (data: S2Data) => void
 export class S2 extends System<S2Data> {
-    readonly SystemData = S2Data;
+    readonly SystemDataType = S2Data;
     handler: THandlerFn2;
 
     constructor(handler: THandlerFn2) {
@@ -29,7 +30,7 @@ export class S2 extends System<S2Data> {
         this.handler = handler;
     }
 
-    async update(world: ISystemWorld, dataSet: Set<S2Data>): Promise<void> {
+    async update(actions: ISystemActions, dataSet: Set<S2Data>): Promise<void> {
         for(const entry of dataSet) this.handler(entry);
     }
 }
@@ -37,7 +38,7 @@ export class S2 extends System<S2Data> {
 export class S3Data extends SystemData{ c1 = Write(C1); c2 = Write(C2) }
 export type THandlerFn3 = (data: S3Data) => void
 export class S3 extends System<S3Data> {
-    readonly SystemData = S3Data;
+    readonly SystemDataType = S3Data;
     handler: THandlerFn3;
 
     constructor(handler: THandlerFn3) {
@@ -45,7 +46,7 @@ export class S3 extends System<S3Data> {
         this.handler = handler;
     }
 
-    async update(world: ISystemWorld, dataSet: Set<S3Data>): Promise<void> {
+    async update(actions: ISystemActions, dataSet: Set<S3Data>): Promise<void> {
         for(const entry of dataSet) this.handler(entry);
     }
 }
