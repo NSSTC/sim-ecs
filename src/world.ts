@@ -109,13 +109,30 @@ export class World implements IWorld {
 
     private static buildDataObjects<T extends TSystemData>(dataProto: TTypeProto<TSystemData>, entities: Set<IEntity>): Set<T> {
         const result: Set<T> = new Set();
+        let accessType: EAccess;
+        let component;
         let dataObj: T;
 
         for (const entity of entities) {
             dataObj = new dataProto() as T;
             for (const entry of Object.entries(dataObj)) {
                 // @ts-ignore
-                dataObj[entry[0]] = entity.getComponent(entry[1][access].component);
+                accessType = entry[1][access].type;
+                // @ts-ignore
+                component = entry[1][access].component;
+
+                if (accessType == EAccess.META) {
+                    switch (component) {
+                        case Entity: {
+                            component = entity;
+                            break;
+                        }
+                    }
+                }
+                else {
+                    // @ts-ignore
+                    dataObj[entry[0]] = entity.getComponent(component);
+                }
             }
 
             result.add(dataObj);
@@ -292,8 +309,6 @@ export class World implements IWorld {
 
         // todo: also, if two systems depend on the same components, they may run in parallel
         //    if they only require READ access
-
-        // todo: all states should be prepared (sorted in advance) so that state-changes can happen faster
 
         if (this.runPromise) {
             throw new Error('The dispatch loop is already running!');
