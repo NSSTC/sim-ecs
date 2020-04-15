@@ -4,6 +4,10 @@ import ISystem, {TComponentAccess, TSystemData, TSystemProto} from "./system.spe
 import IState from "./state.spec";
 import {TTypeProto} from "./_.spec";
 
+export type TEntityInfo = {
+    entity: IEntity
+    usage: Map<TSystemInfo<TSystemData>, TSystemData>
+};
 export type TRunConfiguration = {
     initialState?: IState,
     // called in-between world dispatches during a run
@@ -55,7 +59,7 @@ export interface IPartialWorld {
      * Query entities and find the ones with a certain combination of component
      * @param query
      */
-    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): Set<IEntity>
+    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IterableIterator<IEntity>
 
     /**
      * Get a resource which was previously stored
@@ -98,7 +102,7 @@ export interface ISystemActions {
      * Query entities and find the ones with a certain combination of component
      * @param query
      */
-    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): Set<IEntity>
+    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IterableIterator<IEntity>
 
     /**
      * Get a resource which was previously stored

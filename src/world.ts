@@ -4,6 +4,7 @@ import {
     ISystemActions,
     ITransitionActions,
     IWorld,
+    TEntityInfo,
     TRunConfiguration,
     TStaticRunConfiguration,
     TSystemInfo,
@@ -20,7 +21,7 @@ export * from './world.spec';
 
 export class World implements IWorld {
     protected dirty = false;
-    protected entities: Set<IEntity> = new Set();
+    protected entityInfos: Map<IEntity, TEntityInfo> = new Map();
     protected pda = new PushDownAutomaton<IState>();
     protected resources = new Map<{ new(): Object }, Object>();
     protected runExecutionPipeline: Set<TSystemInfo<any>>[] = [];
@@ -40,9 +41,10 @@ export class World implements IWorld {
             getResource: this.getResource.bind(this),
         };
 
+        // todo: should provide optimized CRUD actions to handle entities and components
         this.transitionWorld = {
             get currentState(): IState | undefined { return self.pda.state; },
-            addEntity: this.addEntity.bind(this),
+            addEntity: (entity) => { this.addEntity(entity); this.assignEntityToSystems(entity); return this; },
             addResource: this.addResource.bind(this),
             buildEntity: this.buildEntity.bind(this),
             createEntity: this.createEntity.bind(this),
@@ -51,7 +53,9 @@ export class World implements IWorld {
             maintain: this.maintain.bind(this),
             popState: this.popState.bind(this),
             pushState: this.pushState.bind(this),
-            removeEntity: this.removeEntity.bind(this),
+            removeEntity: (entity) => {
+                this.removeEntityFromSystems(entity);
+                this.removeEntity(entity); },
             replaceResource: this.replaceResource.bind(this),
             stopRun: this.stopRun.bind(this),
         };
@@ -62,8 +66,11 @@ export class World implements IWorld {
     }
 
     addEntity(entity: IEntity): IWorld {
-        if (!this.entities.has(entity)) {
-            this.entities.add(entity);
+        if (!this.entityInfos.has(entity)) {
+            this.entityInfos.set(entity, {
+                entity,
+                usage: new Map(),
+            });
             this.dirty = true;
         }
 
@@ -101,41 +108,66 @@ export class World implements IWorld {
             dataPrototype: system.SystemDataType,
             dataSet: new Set(),
             dependencies: new Set(dependencies),
-            system: system,
+            system,
         } as TSystemInfo<any>);
 
         return this;
     }
 
-    private static buildDataObjects<T extends TSystemData>(dataProto: TTypeProto<TSystemData>, entities: Set<IEntity>): Set<T> {
-        const result: Set<T> = new Set();
+    private assignEntityToSystem(systemInfo: TSystemInfo<any>, entityInfo: TEntityInfo): boolean {
+        if (!systemInfo.system.canUseEntity(entityInfo.entity)) return false;
+
+        const data = World.buildDataObject(systemInfo.dataPrototype, entityInfo.entity);
+
+        systemInfo.dataSet.add(data);
+        entityInfo.usage.set(systemInfo, data);
+        return true;
+    }
+
+    private assignEntityToSystems(entity: IEntity) {
+        const entityInfo = this.entityInfos.get(entity);
+        if (!entityInfo) return;
+
+        let systemInfo;
+        for (systemInfo of this.systemInfos.values()) {
+            this.assignEntityToSystem(systemInfo, entityInfo);
+        }
+    }
+
+    private static buildDataObject<T extends TSystemData>(dataProto: TTypeProto<TSystemData>, entity: IEntity): T {
+        const dataObj = new dataProto() as T;
         let accessType: EAccess;
         let component;
-        let dataObj: T;
 
-        for (const entity of entities) {
-            dataObj = new dataProto() as T;
-            for (const entry of Object.entries(dataObj)) {
-                // @ts-ignore
-                accessType = entry[1][access].type;
-                // @ts-ignore
-                component = entry[1][access].component;
+        for (const entry of Object.entries(dataObj)) {
+            // @ts-ignore
+            accessType = entry[1][access].type;
+            // @ts-ignore
+            component = entry[1][access].component;
 
-                if (accessType == EAccess.META) {
-                    switch (component) {
-                        case Entity: {
-                            component = entity;
-                            break;
-                        }
+            if (accessType == EAccess.META) {
+                switch (component) {
+                    case Entity: {
+                        component = entity;
+                        break;
                     }
                 }
-                else {
-                    // @ts-ignore
-                    dataObj[entry[0]] = entity.getComponent(component);
-                }
             }
+            else {
+                // @ts-ignore
+                dataObj[entry[0]] = entity.getComponent(component);
+            }
+        }
 
-            result.add(dataObj);
+        return dataObj;
+    }
+
+    private static buildDataObjects<T extends TSystemData>(dataProto: TTypeProto<TSystemData>, entities: Set<IEntity>): Set<T> {
+        const result: Set<T> = new Set();
+        let entity;
+
+        for (entity of entities) {
+            result.add(World.buildDataObject(dataProto, entity));
         }
 
         return result;
@@ -147,7 +179,10 @@ export class World implements IWorld {
 
     createEntity(): Entity {
         const entity = new Entity();
-        this.entities.add(entity);
+        this.entityInfos.set(entity, {
+            entity,
+            usage: new Map(),
+        });
         return entity;
     }
 
@@ -173,25 +208,26 @@ export class World implements IWorld {
         }
     }
 
-    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): Set<IEntity> {
+    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IterableIterator<IEntity> {
         if (!query) {
-            return this.entities;
+            return this.entityInfos.keys();
         }
 
         const resultEntities = new Set<IEntity>();
+        let entityInfo;
 
-        entityLoop: for (const entity of this.entities) {
+        entityLoop: for (entityInfo of this.entityInfos.values()) {
             for (let componentRequirement of query) {
                 if (
-                    (componentRequirement[access].type == EAccess.SET && !entity.hasComponent(componentRequirement[access].component)) ||
-                    (componentRequirement[access].type == EAccess.UNSET && entity.hasComponent(componentRequirement[access].component))
+                    (componentRequirement[access].type == EAccess.SET && !entityInfo.entity.hasComponent(componentRequirement[access].component)) ||
+                    (componentRequirement[access].type == EAccess.UNSET && entityInfo.entity.hasComponent(componentRequirement[access].component))
                 ) continue entityLoop;
             }
 
-            resultEntities.add(entity);
+            resultEntities.add(entityInfo.entity);
         }
 
-        return resultEntities;
+        return resultEntities.values();
     }
 
     getResource<T extends Object>(type: TTypeProto<T>): T {
@@ -209,20 +245,16 @@ export class World implements IWorld {
             dependencies: Array.from(info.dependencies),
         }))).map(node => this.systemInfos.get(node.system) as TSystemInfo<any>);
 
-        let entity;
+        let entityInfo;
         let systemInfo;
         let usableEntities;
 
         for (systemInfo of this.systemInfos.values()) {
             systemInfo.dataSet.clear();
             usableEntities = new Set<IEntity>();
-            for (entity of this.entities) {
-                if (systemInfo.system.canUseEntity(entity)) {
-                    usableEntities.add(entity);
-                }
+            for (entityInfo of this.entityInfos.values()) {
+                this.assignEntityToSystem(systemInfo, entityInfo);
             }
-
-            systemInfo.dataSet = World.buildDataObjects(systemInfo.dataPrototype, usableEntities);
         }
 
         this.dirty = false;
@@ -280,8 +312,22 @@ export class World implements IWorld {
     }
 
     removeEntity(entity: IEntity): void {
-        if (this.entities.has(entity)) {
-            this.entities.delete(entity);
+        if (this.entityInfos.has(entity)) {
+            this.entityInfos.delete(entity);
+        }
+    }
+
+    private removeEntityFromSystems(entity: IEntity): void {
+        const usage = this.entityInfos.get(entity)?.usage;
+        if (!usage) return;
+
+        let use;
+        for (use of usage.values()) {
+            for (const info of this.systemInfos.values()) {
+                if (info.dataSet.has(use)) {
+                    info.dataSet.delete(use);
+                }
+            }
         }
     }
 

@@ -2,8 +2,8 @@ import * as assert from "assert";
 import {ECS, IWorld} from "..";
 import * as Components from "./components";
 import * as Systems from "./systems";
-import {S1Data, THandlerFn1} from "./systems";
-import {With, Without} from "../src";
+import {S1Data, S2Data, THandlerFn1, THandlerFn2} from "./systems";
+import {System, With, Without} from "../src";
 
 
 describe('Manage Resources', () => {
@@ -47,36 +47,36 @@ describe('Build Entities', () => {
 
     it('create', () => {
         assert.notEqual(world.createEntity(),null, 'Could not create a new entity');
-        assert.equal(world.getEntities().size, 1, 'Number of entities in world does not match');
+        assert.equal(Array.from(world.getEntities()).length, 1, 'Number of entities in world does not match');
     });
 
     it('build', () => {
         assert.notEqual(world.buildEntity().build(),null, 'Could not build a new entity');
-        assert.equal(world.getEntities().size, 1, 'Number of entities in world does not match');
+        assert.equal(Array.from(world.getEntities()).length, 1, 'Number of entities in world does not match');
     });
 
     it('build_with_component', () => {
         const entity = world.buildEntity().with(Components.C1).build();
-        assert.equal(world.getEntities().size, 1, 'Number of entities in world does not match');
+        assert.equal(Array.from(world.getEntities()).length, 1, 'Number of entities in world does not match');
         assert(entity.hasComponent(Components.C1), 'Component not found on entity');
         assert(entity.hasComponentName(Components.C1.name), 'Component not found by name on entity');
         assert.equal(
-            world.getEntities([With(Components.C1)]).size,
+            Array.from(world.getEntities([With(Components.C1)])).length,
             1,
             'Number of entities with component C1 does not match'
         );
         assert.equal(
-            world.getEntities([Without(Components.C1)]).size,
+            Array.from(world.getEntities([Without(Components.C1)])).length,
             0,
             'Number of entities with component C1 does not match'
         );
         assert.equal(
-            world.getEntities([With(Components.C2)]).size,
+            Array.from(world.getEntities([With(Components.C2)])).length,
             0,
             'Number of entities with component C2 does not match'
         );
         assert.equal(
-            world.getEntities([With(Components.C1), With(Components.C2)]).size,
+            Array.from(world.getEntities([With(Components.C1), With(Components.C2)])).length,
             0,
             'Number of entities with component C1 & C2 does not match'
         );
@@ -131,5 +131,53 @@ describe('Run Systems', () => {
         assert(runFinished, 'Run promise resolved early');
         assert(c1, 'Could not fetch component'); if (!c1) return;
         assert(c1.a > 0, 'System did not operate on component');
+    });
+});
+
+describe('Delete Entities', () => {
+    let counter = 0;
+    let entityCount = -1;
+    const op: THandlerFn2 = (data: Set<S2Data>) => {
+        entityCount = data.size;
+    };
+    let ecs: ECS;
+    let world: IWorld;
+
+    before(() => {
+        ecs = Object.seal(new ECS());
+    });
+
+    beforeEach(() => {
+        counter = 0;
+        entityCount = -1;
+        world = Object.seal(ecs.createWorld());
+    });
+
+    it('delete before run', async () => {
+        const entity = world.buildEntity().with(Components.C1).build();
+
+        world.removeEntity(entity);
+        assert.equal(Array.from(world.getEntities()).length, 0, 'Did not remove entity');
+    });
+
+    it('delete during run', async () => {
+        const entity = world.buildEntity().with(Components.C1).build();
+
+        world.addSystem(new Systems.S2(op));
+        await world.run({
+            transitionHandler: async actions => {
+                if (counter == 0) {
+                    counter++;
+                    actions.removeEntity(entity);
+                }
+                else {
+                    actions.stopRun();
+                }
+            }
+        });
+
+        assert.equal(Array.from(world.getEntities()).length, 0, 'Did not remove entity');
+        assert.notEqual(entityCount, -1, 'System did not run');
+        assert.equal(entityCount, 0, 'Data set was not deleted');
     });
 });
