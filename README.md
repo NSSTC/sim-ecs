@@ -72,7 +72,7 @@ class CountSystem extends System<Data> {
     readonly SystemData = Data;
 
     // update() is called every time the world needs to be updated. Put your logic in there
-    async update(actions: ISystemActions, dataSet: Set<Data>): Promise<void> {
+    async run(actions: ISystemActions, dataSet: Set<Data>): Promise<void> {
         for (let data of dataSet) {
             console.log(++data.counterObj.a);
         }
