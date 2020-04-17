@@ -9,7 +9,7 @@ class RunState extends State { _systems = [gravitySystem] }
 class PauseState extends State { _systems = [pauseSystem] }
 
 class Init extends System {
-    async update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
+    async run(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
         console.log('INIT');
         world.getResource(SimulationData).state = runState;
     }
@@ -17,7 +17,7 @@ class Init extends System {
 
 class Pause extends System {
     scheduled = false;
-    async update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
+    async run(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
         console.log('PAUSE');
         if (!this.scheduled) {
             setTimeout(() => { world.getResource(SimulationData).state = runState; }, 3000);

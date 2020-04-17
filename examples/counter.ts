@@ -27,7 +27,7 @@ class CounterSystem extends System<Data> {
     readonly SystemDataType = Data;
 
     /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
-    async update(actions: ISystemActions, dataSet: Set<Data>): Promise<void> {
+    async run(actions: ISystemActions, dataSet: Set<Data>): Promise<void> {
         let data;
         for (data of dataSet) {
             data.counterInfo.count++;

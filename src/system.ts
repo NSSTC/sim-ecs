@@ -26,5 +26,5 @@ export abstract class System<D extends TSystemData> implements ISystem<D> {
         return true;
     }
 
-    abstract update(actions: ISystemActions, dataSet: Set<D>): Promise<void>;
+    abstract run(actions: ISystemActions, dataSet: Set<D>): Promise<void>;
 }

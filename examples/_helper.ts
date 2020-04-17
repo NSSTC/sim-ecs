@@ -8,7 +8,7 @@ export class DelaySystem extends System {
         this.delay = delay;
     }
 
-    update(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
+    run(world: IWorld, entities: IEntity[], deltaTime: number): Promise<void> {
         return new Promise<void>(res => setTimeout(res, this.delay));
     }
 }
@@ -24,7 +24,7 @@ export class Gravity extends System {
         ]);
     }
 
-    async update(world: ISystemActions, entities: IEntity[], deltaTime: number): Promise<void> {
+    async run(world: ISystemActions, entities: IEntity[], deltaTime: number): Promise<void> {
         this.absTime += deltaTime;
         for (let entity of entities) {
             const pos = entity.getComponent(Position);

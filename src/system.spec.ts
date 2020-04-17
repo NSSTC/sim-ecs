@@ -79,11 +79,11 @@ export interface ISystem<D extends TSystemData> {
     canUseEntity(entity: IEntity): boolean
 
     /**
-     * Update components during a dispatch
+     * Run the system logic during a dispatch
      * @param actions
      * @param dataSet
      */
-    update(actions: ISystemActions, dataSet: Set<D>): Promise<void>
+    run(actions: ISystemActions, dataSet: Set<D>): Promise<void>
 }
 
 export type TSystemProto<T extends TSystemData> = { new(): ISystem<T> };

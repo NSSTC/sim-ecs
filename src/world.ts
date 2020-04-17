@@ -224,7 +224,7 @@ export class World implements IWorld {
             for (executionGroup of executionPipeline) {
                 systemPromises = [];
                 for (systemInfo of executionGroup) {
-                    systemPromises.push(systemInfo.system.update(this.systemWorld, systemInfo.dataSet));
+                    systemPromises.push(systemInfo.system.run(this.systemWorld, systemInfo.dataSet));
                 }
 
                 await Promise.all(systemPromises);
@@ -437,7 +437,7 @@ export class World implements IWorld {
                 for (executionGroup of this.runExecutionPipeline) {
                     systemPromises = [];
                     for (systemInfo of executionGroup) {
-                        systemPromises.push(systemInfo.system.update(this.systemWorld, systemInfo.dataSet));
+                        systemPromises.push(systemInfo.system.run(this.systemWorld, systemInfo.dataSet));
                     }
 
                     await Promise.all(systemPromises);

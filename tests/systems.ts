@@ -14,7 +14,7 @@ export class S1 extends System<S1Data> {
         this.handler = handler;
     }
 
-    async update(actions: ISystemActions, dataSet: Set<S1Data>): Promise<void> {
+    async run(actions: ISystemActions, dataSet: Set<S1Data>): Promise<void> {
         for(const entry of dataSet) this.handler(entry);
     }
 }
@@ -30,7 +30,7 @@ export class S2 extends System<S2Data> {
         this.handler = handler;
     }
 
-    async update(actions: ISystemActions, dataSet: Set<S2Data>): Promise<void> {
+    async run(actions: ISystemActions, dataSet: Set<S2Data>): Promise<void> {
         this.handler(dataSet);
     }
 }
