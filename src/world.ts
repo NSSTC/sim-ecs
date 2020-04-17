@@ -1,6 +1,7 @@
 import {Entity} from "./entity";
 import {EntityBuilder} from "./entity_builder";
 import {
+    IEntityWorld,
     ISystemActions,
     ITransitionActions,
     IWorld,
@@ -22,6 +23,7 @@ export * from './world.spec';
 export class World implements IWorld {
     protected dirty = false;
     protected entityInfos: Map<IEntity, TEntityInfo> = new Map();
+    protected entityWorld: IEntityWorld;
     protected pda = new PushDownAutomaton<IState>();
     protected resources = new Map<{ new(): Object }, Object>();
     protected runExecutionPipeline: Set<TSystemInfo<any>>[] = [];
@@ -41,7 +43,6 @@ export class World implements IWorld {
             getResource: this.getResource.bind(this),
         };
 
-        // todo: should provide optimized CRUD actions to handle entities and components
         this.transitionWorld = {
             get currentState(): IState | undefined { return self.pda.state; },
             addEntity: (entity) => { this.addEntity(entity); this.assignEntityToSystems(entity); return this; },
@@ -59,6 +60,27 @@ export class World implements IWorld {
             replaceResource: this.replaceResource.bind(this),
             stopRun: this.stopRun.bind(this),
         };
+
+        this.entityWorld = {
+            get isDirty(): boolean { return self.dirty; },
+            get isRunning(): boolean { return !!self.runPromise; },
+            get systems(): ISystem<any>[] { return self.systems; },
+            addEntity: this.addEntity.bind(this),
+            addResource: this.addResource.bind(this),
+            addSystem: this.addSystem.bind(this),
+            assignEntityToSystems: this.assignEntityToSystems.bind(this),
+            buildEntity: this.buildEntity.bind(this),
+            createEntity: this.createEntity.bind(this),
+            dispatch: this.dispatch.bind(this),
+            getEntities: this.getEntities.bind(this),
+            getResource: this.getResource.bind(this),
+            maintain: this.maintain.bind(this),
+            removeEntity: this.removeEntity.bind(this),
+            removeEntityFromSystems: this.removeEntityFromSystems.bind(this),
+            replaceResource: this.replaceResource.bind(this),
+            run: this.run.bind(this),
+            stopRun: this.stopRun.bind(this),
+        };
     }
 
     get systems(): ISystem<any>[] {
@@ -72,6 +94,8 @@ export class World implements IWorld {
                 usage: new Map(),
             });
             this.dirty = true;
+
+            entity.changeWorldTo(this.entityWorld);
         }
 
         return this;
@@ -314,6 +338,7 @@ export class World implements IWorld {
     removeEntity(entity: IEntity): void {
         if (this.entityInfos.has(entity)) {
             this.entityInfos.delete(entity);
+            entity.changeWorldTo(undefined);
         }
     }
 

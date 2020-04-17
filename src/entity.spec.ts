@@ -1,4 +1,4 @@
-import IWorld from "./world.spec";
+import IWorld, {IEntityWorld} from "./world.spec";
 import ISystem from "./system.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
 
@@ -8,6 +8,12 @@ export interface IEntity {
      * @param component
      */
     addComponent(component: Object): IEntity
+
+    /**
+     * Relocate this entity to a new world
+     * @param newWorld
+     */
+    changeWorldTo(newWorld?: IEntityWorld): void
 
     /**
      * Get a component of a certain type which is associated with this entity

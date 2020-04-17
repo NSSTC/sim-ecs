@@ -156,5 +156,12 @@ export interface IWorld extends IPartialWorld {
     run(configuration?: TRunConfiguration): Promise<void>
 }
 
+export interface IEntityWorld extends IWorld {
+    readonly isDirty: boolean
+    readonly isRunning: boolean
+    assignEntityToSystems(entity: IEntity): void
+    removeEntityFromSystems(entity: IEntity): void
+}
+
 export type TWorldProto = { new(): IWorld };
 export default IWorld;
