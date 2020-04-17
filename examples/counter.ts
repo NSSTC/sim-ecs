@@ -28,15 +28,15 @@ class CounterSystem extends System<Data> {
 
     /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
     async run(actions: ISystemActions, dataSet: Set<Data>): Promise<void> {
-        let data;
-        for (data of dataSet) {
-            data.counterInfo.count++;
+        let counterInfo;
+        for ({counterInfo} of dataSet) {
+            counterInfo.count++;
 
-            if (data.counterInfo.count % 10 == 0) {
-                console.log(`The current count is ${data.counterInfo.count} / ${data.counterInfo.limit}!`);
+            if (counterInfo.count % 10 == 0) {
+                console.log(`The current count is ${counterInfo.count} / ${counterInfo.limit}!`);
             }
 
-            if (data.counterInfo.count == data.counterInfo.limit) {
+            if (counterInfo.count == counterInfo.limit) {
                 console.log('Time to exit!');
                 actions.getResource(GlobalStorage).exit = true;
             }
