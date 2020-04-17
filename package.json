@@ -4,6 +4,7 @@
   "license": "MPL 2.0",
   "repository": "https://github.com/NSSTC/sim-ecs.git",
   "main": "src/index.ts",
+  "keywords": ["ecs", "entity", "component", "system", "simulation", "sim", "sim-ecs"],
   "devDependencies": {
     "@types/assert": "^1.4.6",
     "@types/mocha": "^5.2.7",

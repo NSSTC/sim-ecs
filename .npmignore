@@ -1,0 +1,10 @@
+.idea/
+.nyc_output/
+coverage/
+examples/
+node_modules/
+tests/
+
+.gitignore
+package-lock.json
+tsconfig.json
