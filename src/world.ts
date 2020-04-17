@@ -289,8 +289,13 @@ export class World implements IWorld {
         await this.pda.state?.activate(this.transitionWorld);
     }
 
-    // todo: improve logic which sets up the groups
+    // todo: improve logic which sets up the groups (tracked by #13)
     protected prepareExecutionPipeline(state: IState): Set<TSystemInfo<any>>[] {
+        // todo: this could be further optimized by allowing systems with dependencies to run in parallel
+        //    if all of their dependencies already ran
+
+        // todo: also, if two systems depend on the same components, they may run in parallel
+        //    if they only require READ access
         const result: Set<TSystemInfo<any>>[] = [];
         const stateSystems = Array.from(state.systems);
         let executionGroup: Set<TSystemInfo<any>> = new Set();
@@ -375,12 +380,6 @@ export class World implements IWorld {
     }
 
     async run(configuration?: TRunConfiguration): Promise<void> {
-        // todo: this could be further optimized by allowing systems with dependencies to run in parallel
-        //    if all of their dependencies already ran
-
-        // todo: also, if two systems depend on the same components, they may run in parallel
-        //    if they only require READ access
-
         if (this.runPromise) {
             throw new Error('The dispatch loop is already running!');
         }
