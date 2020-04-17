@@ -20,6 +20,10 @@ export type TComponentAccess<C extends Object> = {
 }
 export type TSystemData = { [fieldName: string]: Object };
 
+export class SystemData implements TSystemData {
+    [fieldName: string]: Object;
+}
+
 export function ReadEntity(): Entity & TComponentAccess<Entity> {
     return Object.assign({}, Entity.prototype, {
         [access]: {

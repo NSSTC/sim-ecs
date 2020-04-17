@@ -5,10 +5,6 @@ import IEntity from "./entity.spec";
 
 export * from './system.spec';
 
-export class SystemData implements TSystemData {
-    [fieldName: string]: Object;
-}
-
 export abstract class System<D extends TSystemData> implements ISystem<D> {
     private _dataQuery?: D;
     abstract readonly SystemDataType: TTypeProto<D>;
