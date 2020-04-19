@@ -396,7 +396,7 @@ export class World implements IWorld {
                 ? requestAnimationFrame
                 : setTimeout;
             let executionGroup;
-            this.runExecutionPipeline = this.prepareExecutionPipeline(configuration.initialState);
+            this.runExecutionPipeline = this.prepareExecutionPipeline(this.pda.state ?? configuration.initialState);
             let systemInfo;
             let systemPromises;
 
