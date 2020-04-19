@@ -22,6 +22,10 @@ export abstract class System<D extends TSystemData> implements ISystem<D> {
         for (let componentRequirement of Object.values(this.systemDataBlueprint)) {
             accessStruct = componentRequirement as TComponentAccess<any>;
 
+            if (accessStruct[access].type == EAccess.META) {
+                continue;
+            }
+
             if (!entity.hasComponent(accessStruct[access].component) || accessStruct[access].type == EAccess.UNSET) {
                 return false;
             }
