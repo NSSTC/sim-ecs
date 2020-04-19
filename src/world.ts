@@ -45,7 +45,7 @@ export class World implements IWorld {
 
         this.transitionWorld = {
             get currentState(): IState | undefined { return self.pda.state; },
-            addEntity: (entity) => { this.addEntity(entity); this.assignEntityToSystems(entity); return this; },
+            addEntity: (entity) => { self.addEntity(entity); self.assignEntityToSystems(entity); },
             addResource: this.addResource.bind(this),
             buildEntity: this.buildEntity.bind(this),
             createEntity: this.createEntity.bind(this),
@@ -87,7 +87,7 @@ export class World implements IWorld {
         return Array.from(this.systemInfos.keys());
     }
 
-    addEntity(entity: IEntity): IWorld {
+    addEntity(entity: IEntity) {
         if (!this.entityInfos.has(entity)) {
             this.entityInfos.set(entity, {
                 entity,
@@ -97,11 +97,9 @@ export class World implements IWorld {
 
             entity.changeWorldTo(this.entityWorld);
         }
-
-        return this;
     }
 
-    addResource<T extends Object>(obj: T | TTypeProto<T>, ...args: any[]): IWorld {
+    addResource<T extends Object>(obj: T | TTypeProto<T>, ...args: any[]) {
         let type: TTypeProto<T>;
         let instance: T;
 
@@ -119,10 +117,9 @@ export class World implements IWorld {
         }
 
         this.resources.set(type, instance);
-        return this;
     }
 
-    addSystem(system: ISystem<any>, dependencies?: TSystemProto<any>[]): IWorld {
+    addSystem(system: ISystem<any>, dependencies?: TSystemProto<any>[]) {
         if (Array.from(this.systemInfos.values()).find(info => info.system.constructor == system.constructor)) {
             throw new Error(`The system ${system.constructor.name} is already registered!`);
         }
@@ -134,8 +131,6 @@ export class World implements IWorld {
             dependencies: new Set(dependencies),
             system,
         } as TSystemInfo<any>);
-
-        return this;
     }
 
     private assignEntityToSystem(systemInfo: TSystemInfo<any>, entityInfo: TEntityInfo): boolean {

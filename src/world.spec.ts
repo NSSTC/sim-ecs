@@ -36,14 +36,14 @@ export interface IPartialWorld {
      * Add an entity to this world
      * @param entity
      */
-    addEntity(entity: IEntity): IWorld
+    addEntity(entity: IEntity): void
 
     /**
      * Add a resource to this world
      * @param type
      * @param args constructor parameters
      */
-    addResource<T extends Object>(type: T | TTypeProto<T>, ...args: any[]): IWorld
+    addResource<T extends Object>(type: T | TTypeProto<T>, ...args: any[]): void
 
     /**
      * Build an entity and add it to this world using an entity builder
@@ -83,7 +83,7 @@ export interface IPartialWorld {
      * @param type
      * @param args constructor parameters
      */
-    replaceResource<T extends Object>(type: T | TTypeProto<T>, ...args: any[]): IWorld
+    replaceResource<T extends Object>(type: T | TTypeProto<T>, ...args: any[]): void
 
     /**
      * Signal the world to stop its dispatch-loop
@@ -146,7 +146,7 @@ export interface IWorld extends IPartialWorld {
      * @param system
      * @param dependencies
      */
-    addSystem(system: ISystem<any>, dependencies?: TSystemProto<any>[]): IWorld
+    addSystem(system: ISystem<any>, dependencies?: TSystemProto<any>[]): void
 
     /**
      * Execute all systems continuously in a dispatch-loop
