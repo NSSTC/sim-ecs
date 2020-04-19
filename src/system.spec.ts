@@ -24,6 +24,13 @@ export class SystemData implements TSystemData {
     [fieldName: string]: Object;
 }
 
+/**
+ * Use this to signal that you don't want to process data in this system
+ */
+export class NoData extends SystemData {
+    private _NoDataMarker: Object = {};
+}
+
 export function ReadEntity(): Entity & TComponentAccess<Entity> {
     return Object.assign({}, Entity.prototype, {
         [access]: {

@@ -132,6 +132,22 @@ describe('Run Systems', () => {
         assert(c1, 'Could not fetch component'); if (!c1) return;
         assert(c1.a > 0, 'System did not operate on component');
     });
+
+    it ('no-data', async () => {
+        const entity = world.buildEntity().with(Components.C1).build();
+        const c1 = entity.getComponent(Components.C1);
+        let numComponents = 0;
+        let runFinished = false;
+
+        world.addSystem(new Systems.NoDataSystem(dataSet => { numComponents = dataSet.size }));
+        setTimeout(() => {
+            runFinished = true;
+            world.stopRun();
+        });
+        await world.run();
+
+        assert.equal(numComponents, 0, 'NoDataSystem was assigned components to process');
+    });
 });
 
 describe('Delete Entities', () => {

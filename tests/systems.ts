@@ -1,5 +1,5 @@
 import {System} from "..";
-import {SystemData, Write} from "../src/system";
+import {NoData, SystemData, Write} from "../src/system";
 import {C1, C2} from "./components";
 import {ISystemActions} from "../src";
 
@@ -33,4 +33,20 @@ export class S2 extends System<S2Data> {
     async run(actions: ISystemActions, dataSet: Set<S2Data>): Promise<void> {
         this.handler(dataSet);
     }
+}
+
+export type THandlerFn3 = (data: Set<NoData>) => void
+export class NoDataSystem extends System<NoData> {
+    readonly SystemDataType = NoData;
+    handler: THandlerFn3;
+
+    constructor(handler: THandlerFn3) {
+        super();
+        this.handler = handler;
+    }
+
+    async run(actions: ISystemActions, dataSet: Set<NoData>): Promise<void> {
+        this.handler(dataSet);
+    }
+
 }
