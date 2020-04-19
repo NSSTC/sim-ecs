@@ -167,7 +167,8 @@ export class World implements IWorld {
             if (accessType == EAccess.META) {
                 switch (component) {
                     case Entity: {
-                        component = entity;
+                        // @ts-ignore
+                        dataObj[entry[0]] = entity;
                         break;
                     }
                 }
