@@ -1,5 +1,5 @@
 import {Entity} from "./entity";
-import IWorld from "./world.spec";
+import IWorld, {IPartialWorld} from "./world.spec";
 import IEntity from "./entity.spec";
 import IEntityBuilder from "./entity_builder.spec";
 import {TObjectProto} from "./_.spec";
@@ -8,9 +8,9 @@ export * from './entity_builder.spec';
 
 export class EntityBuilder implements IEntityBuilder {
     protected entity: IEntity;
-    protected world: IWorld;
+    protected world: IPartialWorld;
 
-    constructor(world: IWorld) {
+    constructor(world: IPartialWorld) {
         this.entity = new Entity();
         this.world = world;
     }

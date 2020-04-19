@@ -1,7 +1,7 @@
 import {Entity} from "./entity";
 import {EntityBuilder} from "./entity_builder";
 import {
-    IEntityWorld,
+    IEntityWorld, IPartialWorld,
     ISystemActions,
     ITransitionActions,
     IWorld,
@@ -133,7 +133,7 @@ export class World implements IWorld {
         } as TSystemInfo<any>);
     }
 
-    private assignEntityToSystem(systemInfo: TSystemInfo<any>, entityInfo: TEntityInfo): boolean {
+    private static assignEntityToSystem(systemInfo: TSystemInfo<any>, entityInfo: TEntityInfo): boolean {
         if (!systemInfo.system.canUseEntity(entityInfo.entity)) return false;
 
         const data = World.buildDataObject(systemInfo.dataPrototype, entityInfo.entity);
@@ -149,7 +149,7 @@ export class World implements IWorld {
 
         let systemInfo;
         for (systemInfo of this.systemInfos.values()) {
-            this.assignEntityToSystem(systemInfo, entityInfo);
+            World.assignEntityToSystem(systemInfo, entityInfo);
         }
     }
 
@@ -181,19 +181,8 @@ export class World implements IWorld {
         return dataObj;
     }
 
-    private static buildDataObjects<T extends TSystemData>(dataProto: TTypeProto<TSystemData>, entities: Set<IEntity>): Set<T> {
-        const result: Set<T> = new Set();
-        let entity;
-
-        for (entity of entities) {
-            result.add(World.buildDataObject(dataProto, entity));
-        }
-
-        return result;
-    }
-
-    buildEntity(): IEntityBuilder {
-        return new EntityBuilder(this);
+    buildEntity(world?: IPartialWorld): IEntityBuilder {
+        return new EntityBuilder(world ?? this);
     }
 
     createEntity(): Entity {
@@ -272,7 +261,7 @@ export class World implements IWorld {
             systemInfo.dataSet.clear();
             usableEntities = new Set<IEntity>();
             for (entityInfo of this.entityInfos.values()) {
-                this.assignEntityToSystem(systemInfo, entityInfo);
+                World.assignEntityToSystem(systemInfo, entityInfo);
             }
         }
 
@@ -356,7 +345,7 @@ export class World implements IWorld {
         }
     }
 
-    replaceResource<T extends Object>(obj: T | TTypeProto<T>, ...args: any[]): IWorld {
+    replaceResource<T extends Object>(obj: T | TTypeProto<T>, ...args: any[]) {
         let type: TTypeProto<T>;
 
         if (typeof obj === 'object') {
@@ -371,7 +360,7 @@ export class World implements IWorld {
         }
 
         this.resources.delete(type);
-        return this.addResource(obj, ...args);
+        this.addResource(obj, ...args);
     }
 
     async run(configuration?: TRunConfiguration): Promise<void> {
@@ -393,7 +382,7 @@ export class World implements IWorld {
 
         const runConfig: TStaticRunConfiguration = {
             initialState: configuration.initialState ?? new State(new Set(this.systemInfos.keys())),
-            transitionHandler: configuration.transitionHandler ?? (async action => {}),
+            transitionHandler: configuration.transitionHandler ?? (async _action => {}),
         };
         let resolver = () => {};
 
