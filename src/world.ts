@@ -38,12 +38,6 @@ export class World implements IWorld {
     constructor(systemInfos: Map<ISystem<any>, TSystemInfo<any>>) {
         const self = this;
 
-        this.systemInfos = systemInfos;
-        this.sortedSystems = this.sortSystems(Array.from(this.systemInfos.values()).map(info => ({
-            system: info.system,
-            dependencies: Array.from(info.dependencies),
-        }))).map(node => this.systemInfos.get(node.system) as TSystemInfo<any>);
-
         this.systemWorld = {
             get currentState(): IState | undefined { return self.pda.state; },
             getEntities: this.getEntities.bind(this),
@@ -84,6 +78,12 @@ export class World implements IWorld {
             replaceResource: this.replaceResource.bind(this),
             stopRun: this.stopRun.bind(this),
         };
+
+        this.systemInfos = systemInfos;
+        this.sortedSystems = this.sortSystems(Array.from(this.systemInfos.values()).map(info => ({
+            system: info.system,
+            dependencies: Array.from(info.dependencies),
+        }))).map(node => this.systemInfos.get(node.system) as TSystemInfo<any>);
     }
 
     get systems(): ISystem<any>[] {
@@ -359,6 +359,10 @@ export class World implements IWorld {
         this.pda.clear();
         this.shouldRunSystems = true;
 
+        for (const system of this.systemInfos.keys()) {
+            system.setup(this.systemWorld);
+        }
+
         this.runPromise = new Promise(async resolver => {
             await this.pushState(initialState);
 
@@ -390,7 +394,7 @@ export class World implements IWorld {
                 for (executionGroup of this.runExecutionPipeline) {
                     systemPromises = [];
                     for (systemInfo of executionGroup) {
-                        systemPromises.push(systemInfo.system.run(this.systemWorld, systemInfo.dataSet));
+                        systemPromises.push(systemInfo.system.run(systemInfo.dataSet));
                     }
 
                     await Promise.all(systemPromises);

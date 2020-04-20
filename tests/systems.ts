@@ -14,7 +14,7 @@ export class S1 extends System<S1Data> {
         this.handler = handler;
     }
 
-    async run(actions: ISystemActions, dataSet: Set<S1Data>): Promise<void> {
+    async run(dataSet: Set<S1Data>): Promise<void> {
         for(const entry of dataSet) this.handler(entry);
     }
 }
@@ -30,7 +30,7 @@ export class S2 extends System<S2Data> {
         this.handler = handler;
     }
 
-    async run(actions: ISystemActions, dataSet: Set<S2Data>): Promise<void> {
+    async run(dataSet: Set<S2Data>): Promise<void> {
         this.handler(dataSet);
     }
 }
@@ -45,7 +45,7 @@ export class NoDataSystem extends System<NoData> {
         this.handler = handler;
     }
 
-    async run(actions: ISystemActions, dataSet: Set<NoData>): Promise<void> {
+    async run(dataSet: Set<NoData>): Promise<void> {
         this.handler(dataSet);
     }
 

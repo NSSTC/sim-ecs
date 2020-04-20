@@ -23,11 +23,16 @@ class Data extends SystemData {
 /// systems process data. We declare what kind of input we need in the above Data struct,
 /// and then define the processing code here
 class CounterSystem extends System<Data> {
+    protected globalStorage?: GlobalStorage;
     /// we have to link the prototype for JS explicitly
     readonly SystemDataType = Data;
 
+    setup(actions: ISystemActions): void {
+        this.globalStorage = actions.getResource(GlobalStorage);
+    }
+
     /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
-    async run(actions: ISystemActions, dataSet: Set<Data>): Promise<void> {
+    async run(dataSet: Set<Data>): Promise<void> {
         let counterInfo;
         for ({counterInfo} of dataSet) {
             counterInfo.count++;
@@ -38,7 +43,12 @@ class CounterSystem extends System<Data> {
 
             if (counterInfo.count == counterInfo.limit) {
                 console.log('Time to exit!');
-                actions.getResource(GlobalStorage).exit = true;
+                if (this.globalStorage) {
+                    this.globalStorage.exit = true;
+                }
+                else {
+                    throw new Error('GlobalStorage not set in ' + CounterSystem.name);
+                }
             }
         }
     }

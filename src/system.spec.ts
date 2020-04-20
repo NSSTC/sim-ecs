@@ -87,10 +87,15 @@ export interface ISystem<D extends TSystemData> {
 
     /**
      * Run the system logic during a dispatch
-     * @param actions
      * @param dataSet
      */
-    run(actions: ISystemActions, dataSet: Set<D>): Promise<void>
+    run(dataSet: Set<D>): Promise<void>
+
+    /**
+     * Called before dispatching or running a world
+     * @param actions
+     */
+    setup(actions: ISystemActions): void
 }
 
 export type TSystemProto<T extends TSystemData> = { new(): ISystem<T> };
