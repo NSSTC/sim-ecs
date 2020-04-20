@@ -1,10 +1,10 @@
 import {Entity} from "./entity";
 import IWorld, {IPartialWorld} from "./world.spec";
 import IEntity from "./entity.spec";
-import IEntityBuilder from "./entity_builder.spec";
+import IEntityBuilder from "./entity-builder.spec";
 import {TObjectProto} from "./_.spec";
 
-export * from './entity_builder.spec';
+export * from './entity-builder.spec';
 
 export class EntityBuilder implements IEntityBuilder {
     protected entity: IEntity;

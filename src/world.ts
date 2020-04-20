@@ -1,5 +1,5 @@
 import {Entity} from "./entity";
-import {EntityBuilder} from "./entity_builder";
+import {EntityBuilder} from "./entity-builder";
 import {
     IEntityWorld, IPartialWorld,
     ISystemActions,
@@ -12,7 +12,7 @@ import {
     TSystemNode
 } from "./world.spec";
 import IEntity from "./entity.spec";
-import IEntityBuilder from "./entity_builder.spec";
+import IEntityBuilder from "./entity-builder.spec";
 import ISystem, {access, EAccess, TComponentAccess, TSystemData, TSystemProto} from "./system.spec";
 import {IState, State} from "./state";
 import {TTypeProto} from "./_.spec";

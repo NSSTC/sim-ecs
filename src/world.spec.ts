@@ -1,5 +1,5 @@
 import {IEntity} from "./entity.spec";
-import IEntityBuilder from "./entity_builder.spec";
+import IEntityBuilder from "./entity-builder.spec";
 import ISystem, {TComponentAccess, TSystemData, TSystemProto} from "./system.spec";
 import IState from "./state.spec";
 import {TTypeProto} from "./_.spec";
