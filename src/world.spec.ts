@@ -79,6 +79,12 @@ export interface IPartialWorld {
     removeEntity(entity: IEntity): void
 
     /**
+     * Remove a resource from the world
+     * @param type
+     */
+    removeResource<T extends Object>(type: TTypeProto<T>): void
+
+    /**
      * Replace a resource from this world
      * @param type
      * @param args constructor parameters

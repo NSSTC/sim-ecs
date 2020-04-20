@@ -58,6 +58,7 @@ export class World implements IWorld {
             removeEntity: (entity) => {
                 this.removeEntityFromSystems(entity);
                 this.removeEntity(entity); },
+            removeResource: this.removeResource.bind(this),
             replaceResource: this.replaceResource.bind(this),
             stopRun: this.stopRun.bind(this),
         });
@@ -75,6 +76,7 @@ export class World implements IWorld {
             maintain: this.maintain.bind(this),
             removeEntity: this.removeEntity.bind(this),
             removeEntityFromSystems: this.removeEntityFromSystems.bind(this),
+            removeResource: this.removeResource.bind(this),
             replaceResource: this.replaceResource.bind(this),
             stopRun: this.stopRun.bind(this),
         });
@@ -335,6 +337,14 @@ export class World implements IWorld {
 
         this.resources.delete(type);
         this.addResource(obj, ...args);
+    }
+
+    removeResource<T extends Object>(type: TTypeProto<T>) {
+        if (!this.resources.has(type)) {
+            throw new Error(`Resource with name "${type.name}" does not exists!`);
+        }
+
+        this.resources.delete(type);
     }
 
     run(configuration?: TRunConfiguration): Promise<void> {
