@@ -15,7 +15,7 @@ describe('Manage Resources', () => {
     });
 
     beforeEach(() => {
-        world = Object.seal(ecs.createWorld());
+        world = Object.seal(ecs.buildWorld().build());
     });
 
     it('Store resource', () => {
@@ -42,7 +42,7 @@ describe('Build Entities', () => {
     });
 
     beforeEach(() => {
-        world = Object.seal(ecs.createWorld());
+        world = Object.seal(ecs.buildWorld().build());
     });
 
     it('create', () => {
@@ -90,42 +90,37 @@ describe('Run Systems', () => {
         }
     };
     let ecs: ECS;
-    let world: IWorld;
 
     before(() => {
         ecs = Object.seal(new ECS());
     });
 
-    beforeEach(() => {
-        world = Object.seal(ecs.createWorld());
-    });
-
     it('register', () => {
-        world.addSystem(new Systems.S1(() => {}));
+        const world = ecs.buildWorld().with(new Systems.S1(() => {})).build();
         assert.equal(world.systems.length, 1, 'System was not registered');
     });
 
-    it('dispatch', () => {
+    it('dispatch', async () => {
+        const world = ecs.buildWorld().with(new Systems.S1(op)).build();
         const entity = world.buildEntity().with(Components.C1).build();
         const c1 = entity.getComponent(Components.C1);
 
-        world.addSystem(new Systems.S1(op));
-        world.dispatch();
+        await world.dispatch();
 
         assert(c1, 'Could not fetch component'); if (!c1) return;
         assert.equal(c1.a, 1, 'System did not operate on component');
     });
 
     it('run', async () => {
+        const world = ecs.buildWorld().with(new Systems.S1(op)).build();
         const entity = world.buildEntity().with(Components.C1).build();
         const c1 = entity.getComponent(Components.C1);
         let runFinished = false;
 
-        world.addSystem(new Systems.S1(op));
         setTimeout(() => {
             runFinished = true;
             world.stopRun();
-        }, 100);
+        }, 20);
         await world.run();
 
         assert(runFinished, 'Run promise resolved early');
@@ -134,12 +129,12 @@ describe('Run Systems', () => {
     });
 
     it ('no-data', async () => {
-        const entity = world.buildEntity().with(Components.C1).build();
-        const c1 = entity.getComponent(Components.C1);
         let numComponents = 0;
+        const world = ecs.buildWorld().with(new Systems.NoDataSystem(dataSet => { numComponents = dataSet.size })).build();
         let runFinished = false;
 
-        world.addSystem(new Systems.NoDataSystem(dataSet => { numComponents = dataSet.size }));
+        world.buildEntity().with(Components.C1).build();
+
         setTimeout(() => {
             runFinished = true;
             world.stopRun();
@@ -157,7 +152,6 @@ describe('Delete Entities', () => {
         entityCount = data.size;
     };
     let ecs: ECS;
-    let world: IWorld;
 
     before(() => {
         ecs = Object.seal(new ECS());
@@ -166,10 +160,10 @@ describe('Delete Entities', () => {
     beforeEach(() => {
         counter = 0;
         entityCount = -1;
-        world = Object.seal(ecs.createWorld());
     });
 
     it('delete before run', async () => {
+        const world = ecs.buildWorld().build();
         const entity = world.buildEntity().with(Components.C1).build();
 
         world.removeEntity(entity);
@@ -177,9 +171,9 @@ describe('Delete Entities', () => {
     });
 
     it('delete during run', async () => {
+        const world = ecs.buildWorld().with(new Systems.S2(op)).build();
         const entity = world.buildEntity().with(Components.C1).build();
 
-        world.addSystem(new Systems.S2(op));
         await world.run({
             transitionHandler: async actions => {
                 if (counter == 0) {

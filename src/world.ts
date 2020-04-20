@@ -30,13 +30,20 @@ export class World implements IWorld {
     protected runExecutionPipelineCache: Map<IState, Set<TSystemInfo<any>>[]> = new Map();
     protected runPromise?: Promise<void> = undefined;
     protected shouldRunSystems = false;
-    protected sortedSystems?: TSystemInfo<any>[] = undefined;
-    protected systemInfos: Map<ISystem<any>, TSystemInfo<any>> = new Map();
+    protected sortedSystems: TSystemInfo<any>[];
+    protected systemInfos: Map<ISystem<any>, TSystemInfo<any>>;
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
 
-    constructor() {
+    constructor(systemInfos: Map<ISystem<any>, TSystemInfo<any>>) {
         const self = this;
+
+        this.systemInfos = systemInfos;
+        this.sortedSystems = this.sortSystems(Array.from(this.systemInfos.values()).map(info => ({
+            system: info.system,
+            dependencies: Array.from(info.dependencies),
+        }))).map(node => this.systemInfos.get(node.system) as TSystemInfo<any>);
+
         this.systemWorld = {
             get currentState(): IState | undefined { return self.pda.state; },
             getEntities: this.getEntities.bind(this),
@@ -66,7 +73,6 @@ export class World implements IWorld {
             get isRunning(): boolean { return !!self.runPromise; },
             addEntity: this.addEntity.bind(this),
             addResource: this.addResource.bind(this),
-            addSystem: this.addSystem.bind(this),
             assignEntityToSystems: this.assignEntityToSystems.bind(this),
             buildEntity: () => this.buildEntity.call(this, this.transitionWorld),
             createEntity: this.createEntity.bind(this),
@@ -114,20 +120,6 @@ export class World implements IWorld {
         }
 
         this.resources.set(type, instance);
-    }
-
-    addSystem(system: ISystem<any>, dependencies?: TSystemProto<any>[]) {
-        if (Array.from(this.systemInfos.values()).find(info => info.system.constructor == system.constructor)) {
-            throw new Error(`The system ${system.constructor.name} is already registered!`);
-        }
-
-        this.dirty = true;
-        this.systemInfos.set(system, {
-            dataPrototype: system.SystemDataType,
-            dataSet: new Set(),
-            dependencies: new Set(dependencies),
-            system,
-        } as TSystemInfo<any>);
     }
 
     private static assignEntityToSystem(systemInfo: TSystemInfo<any>, entityInfo: TEntityInfo): boolean {
@@ -192,26 +184,11 @@ export class World implements IWorld {
         return entity;
     }
 
-    async dispatch(state?: IState): Promise<void> {
-        if (!state) {
-            state = new State(new Set(this.systemInfos.keys()));
-        }
-
-        {
-            const executionPipeline = this.prepareExecutionPipeline(state);
-            let executionGroup;
-            let systemInfo;
-            let systemPromises;
-
-            for (executionGroup of executionPipeline) {
-                systemPromises = [];
-                for (systemInfo of executionGroup) {
-                    systemPromises.push(systemInfo.system.run(this.systemWorld, systemInfo.dataSet));
-                }
-
-                await Promise.all(systemPromises);
-            }
-        }
+    dispatch(state?: IState): Promise<void> {
+        return this.run({
+            initialState: state,
+            transitionHandler: async actions => { actions.stopRun() },
+        });
     }
 
     getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IterableIterator<IEntity> {
@@ -246,11 +223,6 @@ export class World implements IWorld {
 
     // todo: add parameter which only maintains for a specific state
     maintain(): void {
-        this.sortedSystems = this.sortSystems(Array.from(this.systemInfos.values()).map(info => ({
-            system: info.system,
-            dependencies: Array.from(info.dependencies),
-        }))).map(node => this.systemInfos.get(node.system) as TSystemInfo<any>);
-
         let entityInfo;
         let systemInfo;
         let usableEntities;
@@ -284,7 +256,7 @@ export class World implements IWorld {
         let shouldRunSystem;
         let systemInfo: TSystemInfo<any>;
 
-        if (!this.sortedSystems || this.dirty) {
+        if (this.dirty) {
             // this line is purely to satisfy my IDE
             this.sortedSystems = [];
             this.maintain();
@@ -361,7 +333,7 @@ export class World implements IWorld {
         this.addResource(obj, ...args);
     }
 
-    async run(configuration?: TRunConfiguration): Promise<void> {
+    run(configuration?: TRunConfiguration): Promise<void> {
         if (this.runPromise) {
             throw new Error('The dispatch loop is already running!');
         }
@@ -378,23 +350,23 @@ export class World implements IWorld {
             configuration.initialState = new State(new Set(this.systemInfos.keys()));
         }
 
+        const initialState = configuration.initialState;
         const runConfig: TStaticRunConfiguration = {
-            initialState: configuration.initialState ?? new State(new Set(this.systemInfos.keys())),
+            initialState,
             transitionHandler: configuration.transitionHandler ?? (async _action => {}),
         };
-        let resolver = () => {};
 
         this.pda.clear();
-        await this.pushState(configuration.initialState);
-        this.runPromise = new Promise<void>(res => { resolver = res });
         this.shouldRunSystems = true;
 
-        {
+        this.runPromise = new Promise(async resolver => {
+            await this.pushState(initialState);
+
             const execAsync = typeof requestAnimationFrame == 'function'
                 ? requestAnimationFrame
                 : setTimeout;
             let executionGroup;
-            this.runExecutionPipeline = this.prepareExecutionPipeline(this.pda.state ?? configuration.initialState);
+            this.runExecutionPipeline = this.prepareExecutionPipeline(this.pda.state ?? initialState);
             let systemInfo;
             let systemPromises;
 
@@ -429,7 +401,7 @@ export class World implements IWorld {
             }
 
             execAsync(mainLoop);
-        }
+        });
 
         return this.runPromise;
     }
@@ -481,8 +453,7 @@ export class World implements IWorld {
         });
     }
 
-    async stopRun(): Promise<void> {
+    stopRun() {
         this.shouldRunSystems = false;
-        await this.runPromise;
     }
 }

@@ -1,12 +1,18 @@
-import {World} from "./world";
+import {IWorld} from "./world";
+import {IWorldBuilder} from "./world-builder.spec";
+import {WorldBuilder} from "./world-builder";
+
+
+type TWorldInfo = {
+    name?: string
+    world: IWorld
+};
 
 export class ECS {
-    protected worlds: World[] = [];
+    protected worlds: Set<TWorldInfo> = new Set();
 
-    createWorld(): World {
-        const world = new World();
-        this.worlds.push(world);
-        return world;
+    buildWorld(name?: string): IWorldBuilder {
+        return (new WorldBuilder()).addCallback(world => this.worlds.add({ name, world }));
     }
 }
 

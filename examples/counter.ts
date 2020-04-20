@@ -48,14 +48,15 @@ class CounterSystem extends System<Data> {
 /// everything starts with the ECS initialization
 const ecs = new ECS();
 /// then, we need a world which will hold our systems and entities
-const world = ecs.createWorld();
+const world = ecs
+    .buildWorld()
+    /// we can inform the world about our processing logic, by adding the above defined system
+    .with(new CounterSystem())
+    .build();
 
 /// let's add out global storage as resource to the world. The ECS can do the object instantiation for you,
 /// however you may also pass an object instead
 world.addResource(new GlobalStorage());
-
-/// next, we can inform the world about our processing logic, by adding the above defined system
-world.addSystem(new CounterSystem());
 
 /// in order to do something, we still need to add data, which can be processed.
 /// think of this like filling up your database, whereas each entity is a row and each component is a column

@@ -87,9 +87,8 @@ export interface IPartialWorld {
 
     /**
      * Signal the world to stop its dispatch-loop
-     * Resolves once the loop stops
      */
-    stopRun(): Promise<void>
+    stopRun(): void
 }
 
 /**
@@ -140,13 +139,6 @@ export interface IWorld extends IPartialWorld {
      * @param state
      */
     dispatch(state?: IState): Promise<void>
-
-    /**
-     * Add system to the world
-     * @param system
-     * @param dependencies
-     */
-    addSystem(system: ISystem<any>, dependencies?: TSystemProto<any>[]): void
 
     /**
      * Execute all systems continuously in a dispatch-loop
