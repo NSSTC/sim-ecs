@@ -38,13 +38,13 @@ export class World implements IWorld {
     constructor(systemInfos: Map<ISystem<any>, TSystemInfo<any>>) {
         const self = this;
 
-        this.systemWorld = {
+        this.systemWorld = Object.freeze({
             get currentState(): IState | undefined { return self.pda.state; },
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
-        };
+        });
 
-        this.transitionWorld = {
+        this.transitionWorld = Object.freeze({
             get currentState(): IState | undefined { return self.pda.state; },
             addEntity: (entity) => { self.addEntity(entity); self.assignEntityToSystems(entity); },
             addResource: this.addResource.bind(this),
@@ -60,9 +60,9 @@ export class World implements IWorld {
                 this.removeEntity(entity); },
             replaceResource: this.replaceResource.bind(this),
             stopRun: this.stopRun.bind(this),
-        };
+        });
 
-        this.entityWorld = {
+        this.entityWorld = Object.freeze({
             get isDirty(): boolean { return self.dirty; },
             get isRunning(): boolean { return !!self.runPromise; },
             addEntity: this.addEntity.bind(this),
@@ -77,7 +77,7 @@ export class World implements IWorld {
             removeEntityFromSystems: this.removeEntityFromSystems.bind(this),
             replaceResource: this.replaceResource.bind(this),
             stopRun: this.stopRun.bind(this),
-        };
+        });
 
         this.systemInfos = systemInfos;
         this.sortedSystems = this.sortSystems(Array.from(this.systemInfos.values()).map(info => ({
