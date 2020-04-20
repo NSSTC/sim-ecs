@@ -79,6 +79,10 @@ export class World implements IWorld {
             stopRun: this.stopRun.bind(this),
         });
 
+        for (const system of systemInfos.keys()) {
+            this.addResource(system);
+        }
+
         this.systemInfos = systemInfos;
         this.sortedSystems = this.sortSystems(Array.from(this.systemInfos.values()).map(info => ({
             system: info.system,
