@@ -17,13 +17,25 @@ and batching these operations.
 For on-the-fly changes, there is a way to register a callback which does the work
 in between system executions, so that all systems can work on the same dataset per iteration. 
 
-Batching entity creation can be done by using `-Quick` methods (for example `world.buildEntity.withQuick()`),
-which will not calculate component and system dependencies). In the end, call `world.maintain()`
-in order to do the heavy lifting.
 
-Even while dispatching the world, you can use `-Quick` methods, however the inserted objects
-will only work after calling `world.maintain()`. This way, changes to a simulation can be prepared
-on a running world and then rather quickly added once ready.
+## Defining systems
+
+Systems are the logic, which operates on data sets (components).
+They are logic building blocks which separate concerns and make the world move.
+
+```typescript
+class Data extends SystemData{ counterObj = Write(Counter) }
+class CountSystem extends System<Data> {
+    readonly SystemData = Data;
+
+    // update() is called every time the world needs to be updated. Put your logic in there
+    async run(dataSet: Set<Data>): Promise<void> {
+        for (let data of dataSet) {
+            console.log(++data.counterObj.a);
+        }
+    }
+}
+```
 
 
 ## Creating the ECS and a world
@@ -31,10 +43,8 @@ on a running world and then rather quickly added once ready.
 In an ECS, a world is like a container for entities.
 
 ```typescript
-import * from "sim-ecs";
-
 const ecs = new ECS();
-const world = ecs.createWorld();
+const world = ecs.buildWorld().with(new CountSystem()).build();
 ```
 
 
@@ -59,28 +69,6 @@ You can think of them like columns in a database.
 class Counter {
     a = 0;
 }
-```
-
-## Defining systems
-
-Systems are the logic, which operates on data sets (components).
-They are logic building blocks which separate concerns and make the world move.
-
-```typescript
-class Data extends SystemData{ counterObj = Write(Counter) }
-class CountSystem extends System<Data> {
-    readonly SystemData = Data;
-
-    // update() is called every time the world needs to be updated. Put your logic in there
-    async run(actions: ISystemActions, dataSet: Set<Data>): Promise<void> {
-        for (let data of dataSet) {
-            console.log(++data.counterObj.a);
-        }
-    }
-};
-
-// register the system
-world.registerSystem(new CountSystem());
 ```
 
 
