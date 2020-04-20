@@ -156,7 +156,7 @@ export interface IWorld extends IPartialWorld {
     run(configuration?: TRunConfiguration): Promise<void>
 }
 
-export interface IEntityWorld extends IWorld {
+export interface IEntityWorld extends IPartialWorld {
     readonly isDirty: boolean
     readonly isRunning: boolean
     assignEntityToSystems(entity: IEntity): void

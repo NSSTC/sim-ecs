@@ -64,21 +64,18 @@ export class World implements IWorld {
         this.entityWorld = {
             get isDirty(): boolean { return self.dirty; },
             get isRunning(): boolean { return !!self.runPromise; },
-            get systems(): ISystem<any>[] { return self.systems; },
             addEntity: this.addEntity.bind(this),
             addResource: this.addResource.bind(this),
             addSystem: this.addSystem.bind(this),
             assignEntityToSystems: this.assignEntityToSystems.bind(this),
             buildEntity: () => this.buildEntity.call(this, this.transitionWorld),
             createEntity: this.createEntity.bind(this),
-            dispatch: this.dispatch.bind(this),
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
             maintain: this.maintain.bind(this),
             removeEntity: this.removeEntity.bind(this),
             removeEntityFromSystems: this.removeEntityFromSystems.bind(this),
             replaceResource: this.replaceResource.bind(this),
-            run: this.run.bind(this),
             stopRun: this.stopRun.bind(this),
         };
     }
