@@ -53,6 +53,7 @@ export class World implements IWorld {
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
             maintain: this.maintain.bind(this),
+            merge: this.merge.bind(this),
             popState: this.popState.bind(this),
             pushState: this.pushState.bind(this),
             removeEntity: (entity) => {
@@ -74,6 +75,7 @@ export class World implements IWorld {
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
             maintain: this.maintain.bind(this),
+            merge: this.merge.bind(this),
             removeEntity: this.removeEntity.bind(this),
             removeEntityFromSystems: this.removeEntityFromSystems.bind(this),
             removeResource: this.removeResource.bind(this),
@@ -242,6 +244,13 @@ export class World implements IWorld {
         }
 
         this.dirty = false;
+    }
+
+    merge(elsewhere: IWorld) {
+        let entity;
+        for (entity of elsewhere.getEntities()) {
+            this.addEntity(entity);
+        }
     }
 
     protected async popState(): Promise<void> {

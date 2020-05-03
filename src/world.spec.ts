@@ -73,6 +73,12 @@ export interface IPartialWorld {
     maintain(): void
 
     /**
+     * Merge entities from another world into this one
+     * @param world
+     */
+    merge(world: IWorld): void
+
+    /**
      * Remove an entity from the world, deleting all of its components
      * @param entity
      */

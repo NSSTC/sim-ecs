@@ -191,3 +191,32 @@ describe('Delete Entities', () => {
         assert.equal(entityCount, 0, 'Data set was not deleted');
     });
 });
+
+describe('Householding', () => {
+    let ecs: ECS;
+
+    before(() => {
+        ecs = Object.seal(new ECS());
+    });
+
+    beforeEach(() => {});
+
+    it('merge two worlds', async () => {
+        const w1 = ecs.buildWorld().build();
+        const w2 = ecs.buildWorld().build();
+
+        w1.buildEntity().build();
+        w1.buildEntity().with(new Date(0)).build();
+        w2.buildEntity().with(new Date(1337)).build();
+
+        w2.merge(w1);
+
+        const w2Entities = Array.from(w2.getEntities());
+
+        assert.equal(Array.from(w1.getEntities()).length, 0, 'Entities were not removed from w1 on merge');
+        assert.equal(w2Entities.length, 3, 'Entities were not added correctly to ww on merge');
+        assert.equal(w2Entities[1].hasComponent(Date), false, 'Complication on merge E1');
+        assert.equal(w2Entities[2].getComponent(Date)?.getTime(), 0, 'Complication on merge E2');
+        assert.equal(w2Entities[0].getComponent(Date)?.getTime(), 1337, 'Complication on merge E3');
+    });
+});
