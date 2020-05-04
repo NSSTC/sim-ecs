@@ -64,6 +64,7 @@ console.log(world.getResource(Date).getDate());
 
 Components are needed to define data on which the whole system can operate.
 You can think of them like columns in a database.
+Any serialize-able object may be a component in sim-ecs.
 
 ```typescript
 class Counter {
@@ -79,11 +80,7 @@ Entities are automatically added to the world they are built in.
 You can think of entities like rows in a database.
 
 ```typescript
-world.buildEntity()
-    // this call implicitely creates a new object of type Position. You can also pass an instance instead.
-    // you can pass arguments to the constructor by passing them as additional parameters here
-    .with(Counter)
-    .build();
+world.buildEntity().with(new Counter()).build();
 ```
 
 
@@ -128,10 +125,47 @@ so it offers its own `run()` method, which is optimized for continuously executi
 It is the recommended way of running the ECS for simulations!
 
 ```typescript
-
 world.run();
 ```
 
 The run-method can be fed an options object to further configure the runner,
 and from within a transition-handler or the systems, certain actions can be called
 which influence how the runner acts. For example on transition, the state can be changed.
+
+
+## Save and load a world
+
+It is possible to save and load entities of an entire world.
+Saving a world is as simple as calling `toJSON()` on it in order to receive a JSON string representing the world.
+This string can be saved to the file system, browser storage or sent over the network.
+
+```typescript
+localStorage.setItem('save0', world.toJSON());
+```
+
+There is no version or upgrade management done by the ECS, though, and we highly recommend to implement it based on your needs.
+
+In order to load a saved world, the json string can be fed to the world builder during creation.
+In order to correctly initialize all components, a deserializer-function has to be provided.
+The function takes the constructor name and the parsed data-blob and returns the initialized object.
+
+```typescript
+ecs.buildWorld().fromJSON(jsonSave, (cn, data) => {
+    switch (cn) {
+        case Counter.name: {
+            const c = new Counter();
+            c.a = data.a;
+            return c;
+        }
+        case Date.name: {
+            return new Date(data);
+        }
+        default: {
+            throw new Error('Unknown constructor name: ' + cn);
+        }
+    }
+}).build();
+```
+
+At this point, the data may also be manipulated, for example updating time-stamps.
+Note that all components must be re-instantiated in order to set up the correct constructor and prototype chain.

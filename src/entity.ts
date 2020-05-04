@@ -35,6 +35,10 @@ export class Entity implements IEntity {
         return this.components.get(component) as T;
     }
 
+    getComponents(): IterableIterator<Object> {
+        return this.components.values();
+    }
+
     hasComponent(component: typeof Object | TObjectProto): boolean {
         return this.components.has(component);
     }

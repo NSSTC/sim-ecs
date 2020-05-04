@@ -22,6 +22,11 @@ export interface IEntity {
     getComponent<T extends Object>(component: TTypeProto<T>): T | undefined
 
     /**
+     * Get all components
+     */
+    getComponents(): IterableIterator<Object>
+
+    /**
      * Check if a certain component is associated with this entity
      * @param component
      */

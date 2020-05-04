@@ -2,10 +2,12 @@ import {IWorldBuilder} from "./world-builder.spec";
 import ISystem, {TSystemProto} from "./system.spec";
 import IWorld, {TSystemInfo} from "./world.spec";
 import {World} from "./world";
+import {TDeserializer} from "./save-format.spec";
 
 export class WorldBuilder implements IWorldBuilder {
     protected systemInfos: Map<ISystem<any>, TSystemInfo<any>> = new Map();
     protected callbacks: Set<(world: IWorld)=>void> = new Set();
+    protected fromWorld?: World;
 
     addCallback(cb: (world: IWorld)=>void): IWorldBuilder {
         this.callbacks.add(cb);
@@ -15,11 +17,20 @@ export class WorldBuilder implements IWorldBuilder {
     build(): IWorld {
         const world = new World(this.systemInfos);
 
+        if (this.fromWorld) {
+            world.merge(this.fromWorld);
+        }
+
         for (const cb of this.callbacks) {
             cb(world);
         }
 
         return world;
+    }
+
+    fromJSON(json: string, deserializer: TDeserializer): IWorldBuilder {
+        this.fromWorld = World.fromJSON(json, deserializer);
+        return this;
     }
 
     with(system: ISystem<any>, dependencies?: TSystemProto<any>[]): IWorldBuilder {

@@ -17,6 +17,8 @@ import ISystem, {access, EAccess, TComponentAccess, TSystemData, TSystemProto} f
 import {IState, State} from "./state";
 import {TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
+import {SaveFormat} from "./save-format";
+import {TDeserializer} from "./save-format.spec";
 
 export * from './world.spec';
 
@@ -34,6 +36,18 @@ export class World implements IWorld {
     protected systemInfos: Map<ISystem<any>, TSystemInfo<any>>;
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
+
+    static fromJSON(json: string, deserializer: TDeserializer): World {
+        const save = SaveFormat.fromJSON(json);
+        const newWorld = new World(new Map());
+        let entity;
+
+        for (entity of save.getEntities(deserializer)) {
+            newWorld.addEntity(entity);
+        }
+
+        return newWorld;
+    }
 
     constructor(systemInfos: Map<ISystem<any>, TSystemInfo<any>>) {
         const self = this;
@@ -62,6 +76,7 @@ export class World implements IWorld {
             removeResource: this.removeResource.bind(this),
             replaceResource: this.replaceResource.bind(this),
             stopRun: this.stopRun.bind(this),
+            toJSON: this.toJSON.bind(this),
         });
 
         this.entityWorld = Object.freeze({
@@ -81,6 +96,7 @@ export class World implements IWorld {
             removeResource: this.removeResource.bind(this),
             replaceResource: this.replaceResource.bind(this),
             stopRun: this.stopRun.bind(this),
+            toJSON: this.toJSON.bind(this),
         });
 
         for (const system of systemInfos.keys()) {
@@ -482,5 +498,13 @@ export class World implements IWorld {
 
     stopRun() {
         this.shouldRunSystems = false;
+    }
+
+    toJSON(): string {
+        const save = new SaveFormat({
+            entities: this.entityInfos.keys(),
+        });
+
+        return save.toJSON();
     }
 }

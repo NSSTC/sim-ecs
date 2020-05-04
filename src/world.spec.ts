@@ -101,6 +101,11 @@ export interface IPartialWorld {
      * Signal the world to stop its dispatch-loop
      */
     stopRun(): void
+
+    /**
+     * Save this world to a JSON string (entities and their components)
+     */
+    toJSON(): string
 }
 
 /**

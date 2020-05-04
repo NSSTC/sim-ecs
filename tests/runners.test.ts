@@ -191,7 +191,8 @@ describe('Delete Entities', () => {
     });
 });
 
-describe('Householding', () => {
+describe('Save / Load', () => {
+    const serializedWorld = '[[],[["Date","1970-01-01T00:00:00.000Z"]],[["Date","1970-01-01T00:00:01.337Z"],["C1",{"a":0}]]]';
     let ecs: ECS;
 
     before(() => {
@@ -200,7 +201,7 @@ describe('Householding', () => {
 
     beforeEach(() => {});
 
-    it('merge two worlds', async () => {
+    it('merge two worlds', () => {
         const w1 = ecs.buildWorld().build();
         const w2 = ecs.buildWorld().build();
 
@@ -217,5 +218,35 @@ describe('Householding', () => {
         assert.equal(w2Entities[1].hasComponent(Date), false, 'Complication on merge E1');
         assert.equal(w2Entities[2].getComponent(Date)?.getTime(), 0, 'Complication on merge E2');
         assert.equal(w2Entities[0].getComponent(Date)?.getTime(), 1337, 'Complication on merge E3');
+    });
+
+    it('save world to json', () => {
+        const w1 = ecs.buildWorld().build();
+
+        w1.buildEntity().build();
+        w1.buildEntity().with(new Date(0)).build();
+        w1.buildEntity().with(new Date(1337)).with(new Components.C1()).build();
+
+        assert.equal(w1.toJSON(), serializedWorld, 'Unable to serialize world');
+    });
+
+    it('load world from json', () => {
+        const w1 = ecs.buildWorld().fromJSON(serializedWorld, (cn, data) => {
+            switch (cn) {
+                case Components.C1.name: {
+                    const c = new Components.C1();
+                    c.a = data.a;
+                    return c;
+                }
+                case Date.name: {
+                    return new Date(data);
+                }
+                default: {
+                    throw new Error('Unknown constructor name: ' + cn);
+                }
+            }
+        }).build();
+
+        assert.equal(w1.toJSON(), serializedWorld, 'deserialization is lossy')
     });
 });
