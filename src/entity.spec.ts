@@ -28,12 +28,6 @@ export interface IEntity {
     hasComponent(component: typeof Object | TObjectProto): boolean
 
     /**
-     * Check if a certain component is associated with this entity based on the type name
-     * @param name
-     */
-    hasComponentName(name: string): boolean
-
-    /**
      * Un-associate a component from this entity
      * @param component
      */

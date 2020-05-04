@@ -5,7 +5,7 @@ import {TObjectProto, TTypeProto} from "./_.spec";
 export * from './entity.spec';
 
 export class Entity implements IEntity {
-    protected components: Map<string, Object> = new Map();
+    protected components: Map<TObjectProto, Object> = new Map();
     protected world?: IEntityWorld;
 
     constructor(world?: IEntityWorld) {
@@ -17,7 +17,7 @@ export class Entity implements IEntity {
             throw new Error(`Component "${component.constructor.name}" already exists on entity!`)
         }
 
-        this.components.set(component.constructor.name, component);
+        this.components.set(component.constructor as TObjectProto, component);
         return this;
     }
 
@@ -32,20 +32,16 @@ export class Entity implements IEntity {
     }
 
     getComponent<T extends Object>(component: TTypeProto<T>): T | undefined {
-        return this.components.get(component.name) as T;
+        return this.components.get(component) as T;
     }
 
     hasComponent(component: typeof Object | TObjectProto): boolean {
-        return this.components.has(component.name);
-    }
-
-    hasComponentName(name: string): boolean {
-        return this.components.has(name);
+        return this.components.has(component);
     }
 
     removeComponent(component: Object): IEntity {
-        if (this.components.has(component.constructor.name)) {
-            this.components.delete(component.constructor.name);
+        if (this.components.has(component.constructor as TObjectProto)) {
+            this.components.delete(component.constructor as TObjectProto);
         }
 
         // this will refresh the entity in the world

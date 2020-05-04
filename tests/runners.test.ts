@@ -59,7 +59,6 @@ describe('Build Entities', () => {
         const entity = world.buildEntity().with(Components.C1).build();
         assert.equal(Array.from(world.getEntities()).length, 1, 'Number of entities in world does not match');
         assert(entity.hasComponent(Components.C1), 'Component not found on entity');
-        assert(entity.hasComponentName(Components.C1.name), 'Component not found by name on entity');
         assert.equal(
             Array.from(world.getEntities([With(Components.C1)])).length,
             1,
