@@ -25,11 +25,8 @@
   },
   "scripts": {
     "bench": "ts-node -P tsconfig.json examples/bench.ts",
-    "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
+    "coverage": "nyc -r lcov -e .ts -x \"**/*.test.ts\" -x \"**/*.spec.ts\" -x \"src/tests\" npm run test",
     "counter": "ts-node -P tsconfig.json examples/counter.ts",
-    "gravity": "ts-node -P tsconfig.json examples/gravity.ts",
-    "stated-gravity": "ts-node -P tsconfig.json examples/stated-gravity.ts",
-    "system-sort": "ts-node -P tsconfig.json examples/system-sort.ts",
-    "test": "mocha -r ts-node/register tests/**/*.test.ts"
+    "test": "mocha -r ts-node/register src/**/*.test.ts"
   }
 }
