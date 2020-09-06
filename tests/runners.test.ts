@@ -1,9 +1,9 @@
-import * as assert from "assert";
+import {assert} from "chai";
 import {ECS, IWorld} from "..";
 import * as Components from "./components";
 import * as Systems from "./systems";
 import {S1Data, S2Data, THandlerFn1, THandlerFn2} from "./systems";
-import {System, With, Without} from "../src";
+import {With, Without} from "../src";
 
 
 describe('Manage Resources', () => {
