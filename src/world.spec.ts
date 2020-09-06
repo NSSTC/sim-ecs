@@ -20,10 +20,10 @@ export type TStaticRunConfiguration = {
 export type TSystemInfo<D extends TSystemData> = {
     dataPrototype: TTypeProto<D>
     dataSet: Set<D>
-    dependencies: Set<TSystemProto<any>>
+    dependencies: Set<TSystemProto<TSystemData>>
     system: ISystem<D>
 };
-export type TSystemNode = { system: ISystem<any>, dependencies: TSystemProto<any>[]};
+export type TSystemNode = { system: ISystem<TSystemData>, dependencies: TSystemProto<TSystemData>[]};
 
 export interface IPartialWorld {
     /**
@@ -43,7 +43,7 @@ export interface IPartialWorld {
      * @param type
      * @param args constructor parameters
      */
-    addResource<T extends Object>(type: T | TTypeProto<T>, ...args: any[]): void
+    addResource<T extends Object>(type: T | TTypeProto<T>, ...args: unknown[]): void
 
     /**
      * Build an entity and add it to this world using an entity builder
@@ -95,7 +95,7 @@ export interface IPartialWorld {
      * @param type
      * @param args constructor parameters
      */
-    replaceResource<T extends Object>(type: T | TTypeProto<T>, ...args: any[]): void
+    replaceResource<T extends Object>(type: T | TTypeProto<T>, ...args: unknown[]): void
 
     /**
      * Signal the world to stop its dispatch-loop
@@ -149,7 +149,7 @@ export interface IWorld extends IPartialWorld {
     /**
      * Systems which are registered with this world
      */
-    readonly systems: ISystem<any>[]
+    readonly systems: ISystem<TSystemData>[]
 
     /**
      * Execute all systems

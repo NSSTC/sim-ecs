@@ -23,7 +23,7 @@ class Data extends SystemData {
 /// systems process data. We declare what kind of input we need in the above Data struct,
 /// and then define the processing code here
 class CounterSystem extends System<Data> {
-    protected globalStorage?: GlobalStorage;
+    protected globalStorage!: GlobalStorage;
     /// we have to link the prototype for JS explicitly
     readonly SystemDataType = Data;
 
@@ -37,18 +37,15 @@ class CounterSystem extends System<Data> {
         for ({counterInfo} of dataSet) {
             counterInfo.count++;
 
+            // after every ten steps, write out a log message
             if (counterInfo.count % 10 == 0) {
                 console.log(`The current count is ${counterInfo.count} / ${counterInfo.limit}!`);
             }
 
+            // if the limit is reached, set the exit field to true
             if (counterInfo.count == counterInfo.limit) {
                 console.log('Time to exit!');
-                if (this.globalStorage) {
-                    this.globalStorage.exit = true;
-                }
-                else {
-                    throw new Error('GlobalStorage not set in ' + CounterSystem.name);
-                }
+                this.globalStorage.exit = true;
             }
         }
     }

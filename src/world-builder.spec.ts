@@ -1,4 +1,4 @@
-import ISystem, {TSystemProto} from "./system.spec";
+import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import IWorld from "./world.spec";
 import {TDeserializer} from "./save-format.spec";
 
@@ -20,5 +20,5 @@ export interface IWorldBuilder {
      * @param system
      * @param dependencies
      */
-    with(system: ISystem<any>, dependencies?: TSystemProto<any>[]): IWorldBuilder
+    with(system: ISystem<TSystemData>, dependencies?: TSystemProto<TSystemData>[]): IWorldBuilder
 }

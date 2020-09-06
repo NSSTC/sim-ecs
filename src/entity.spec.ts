@@ -1,5 +1,4 @@
-import IWorld, {IEntityWorld} from "./world.spec";
-import ISystem from "./system.spec";
+import {IEntityWorld} from "./world.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
 
 export interface IEntity {

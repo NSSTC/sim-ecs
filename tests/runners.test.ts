@@ -199,8 +199,6 @@ describe('Save / Load', () => {
         ecs = Object.seal(new ECS());
     });
 
-    beforeEach(() => {});
-
     it('merge two worlds', () => {
         const w1 = ecs.buildWorld().build();
         const w2 = ecs.buildWorld().build();
@@ -214,7 +212,7 @@ describe('Save / Load', () => {
         const w2Entities = Array.from(w2.getEntities());
 
         assert.equal(Array.from(w1.getEntities()).length, 0, 'Entities were not removed from w1 on merge');
-        assert.equal(w2Entities.length, 3, 'Entities were not added correctly to ww on merge');
+        assert.equal(w2Entities.length, 3, 'Entities were not added correctly to w2 on merge');
         assert.equal(w2Entities[1].hasComponent(Date), false, 'Complication on merge E1');
         assert.equal(w2Entities[2].getComponent(Date)?.getTime(), 0, 'Complication on merge E2');
         assert.equal(w2Entities[0].getComponent(Date)?.getTime(), 1337, 'Complication on merge E3');
@@ -234,11 +232,19 @@ describe('Save / Load', () => {
         const w1 = ecs.buildWorld().fromJSON(serializedWorld, (cn, data) => {
             switch (cn) {
                 case Components.C1.name: {
+                    if (typeof data != 'object') {
+                        throw new Error(`data is not of type object, but instead ${typeof data}!`);
+                    }
+
                     const c = new Components.C1();
-                    c.a = data.a;
+                    c.a = (data as Components.C1).a;
                     return c;
                 }
                 case Date.name: {
+                    if (typeof data != 'string') {
+                        throw new Error(`data is not of type string, but instead ${typeof data}!`);
+                    }
+
                     return new Date(data);
                 }
                 default: {

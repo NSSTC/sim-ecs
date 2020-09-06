@@ -1,7 +1,7 @@
 import {ECS} from "../src";
 
 const ecs = new ECS();
-const world = ecs.createWorld();
+const world = ecs.buildWorld().build();
 
 // todo: add different libs and define a sane base (components, systems) which are the same for all of the libs.
 

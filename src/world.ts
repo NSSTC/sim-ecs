@@ -28,12 +28,12 @@ export class World implements IWorld {
     protected entityWorld: IEntityWorld;
     protected pda = new PushDownAutomaton<IState>();
     protected resources = new Map<{ new(): Object }, Object>();
-    protected runExecutionPipeline: Set<TSystemInfo<any>>[] = [];
-    protected runExecutionPipelineCache: Map<IState, Set<TSystemInfo<any>>[]> = new Map();
+    protected runExecutionPipeline: Set<TSystemInfo<TSystemData>>[] = [];
+    protected runExecutionPipelineCache: Map<IState, Set<TSystemInfo<TSystemData>>[]> = new Map();
     protected runPromise?: Promise<void> = undefined;
     protected shouldRunSystems = false;
-    protected sortedSystems: TSystemInfo<any>[];
-    protected systemInfos: Map<ISystem<any>, TSystemInfo<any>>;
+    protected sortedSystems: TSystemInfo<TSystemData>[];
+    protected systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>>;
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
 
@@ -49,7 +49,7 @@ export class World implements IWorld {
         return newWorld;
     }
 
-    constructor(systemInfos: Map<ISystem<any>, TSystemInfo<any>>) {
+    constructor(systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>>) {
         const self = this;
 
         this.systemWorld = Object.freeze({
@@ -107,10 +107,10 @@ export class World implements IWorld {
         this.sortedSystems = this.sortSystems(Array.from(this.systemInfos.values()).map(info => ({
             system: info.system,
             dependencies: Array.from(info.dependencies),
-        }))).map(node => this.systemInfos.get(node.system) as TSystemInfo<any>);
+        }))).map(node => this.systemInfos.get(node.system) as TSystemInfo<TSystemData>);
     }
 
-    get systems(): ISystem<any>[] {
+    get systems(): ISystem<TSystemData>[] {
         return Array.from(this.systemInfos.keys());
     }
 
@@ -126,7 +126,7 @@ export class World implements IWorld {
         }
     }
 
-    addResource<T extends Object>(obj: T | TTypeProto<T>, ...args: any[]) {
+    addResource<T extends Object>(obj: T | TTypeProto<T>, ...args: unknown[]) {
         let type: TTypeProto<T>;
         let instance: T;
 
@@ -146,7 +146,7 @@ export class World implements IWorld {
         this.resources.set(type, instance);
     }
 
-    private static assignEntityToSystem(systemInfo: TSystemInfo<any>, entityInfo: TEntityInfo): boolean {
+    private static assignEntityToSystem(systemInfo: TSystemInfo<TSystemData>, entityInfo: TEntityInfo): boolean {
         if (!systemInfo.system.canUseEntity(entityInfo.entity)) return false;
 
         const data = World.buildDataObject(systemInfo.dataPrototype, entityInfo.entity);
@@ -275,17 +275,17 @@ export class World implements IWorld {
     }
 
     // todo: improve logic which sets up the groups (tracked by #13)
-    protected prepareExecutionPipeline(state: IState): Set<TSystemInfo<any>>[] {
+    protected prepareExecutionPipeline(state: IState): Set<TSystemInfo<TSystemData>>[] {
         // todo: this could be further optimized by allowing systems with dependencies to run in parallel
         //    if all of their dependencies already ran
 
         // todo: also, if two systems depend on the same components, they may run in parallel
         //    if they only require READ access
-        const result: Set<TSystemInfo<any>>[] = [];
+        const result: Set<TSystemInfo<TSystemData>>[] = [];
         const stateSystems = Array.from(state.systems);
-        let executionGroup: Set<TSystemInfo<any>> = new Set();
+        let executionGroup: Set<TSystemInfo<TSystemData>> = new Set();
         let shouldRunSystem;
-        let systemInfo: TSystemInfo<any>;
+        let systemInfo: TSystemInfo<TSystemData>;
 
         if (this.dirty) {
             // this line is purely to satisfy my IDE
@@ -299,7 +299,7 @@ export class World implements IWorld {
             if (shouldRunSystem) {
                 if (systemInfo.dependencies.size > 0) {
                     result.push(executionGroup);
-                    executionGroup = new Set<any>();
+                    executionGroup = new Set<TSystemInfo<TSystemData>>();
                 }
 
                 executionGroup.add(systemInfo);
@@ -346,7 +346,7 @@ export class World implements IWorld {
         }
     }
 
-    replaceResource<T extends Object>(obj: T | TTypeProto<T>, ...args: any[]) {
+    replaceResource<T extends Object>(obj: T | TTypeProto<T>, ...args: unknown[]) {
         let type: TTypeProto<T>;
 
         if (typeof obj === 'object') {
@@ -445,26 +445,26 @@ export class World implements IWorld {
     }
 
     protected sortSystems(unsorted: TSystemNode[]): TSystemNode[] {
-        const graph = new Map(unsorted.map(node => [node.system.constructor as TSystemProto<any>, Array.from(node.dependencies)]));
-        let edges: TSystemProto<any>[];
+        const graph = new Map(unsorted.map(node => [node.system.constructor as TSystemProto<TSystemData>, Array.from(node.dependencies)]));
+        let edges: TSystemProto<TSystemData>[];
 
         /// toposort with Kahn
         /// https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm
-        const L: TSystemProto<any>[] = []; // Empty list that will contain the sorted elements
+        const L: TSystemProto<TSystemData>[] = []; // Empty list that will contain the sorted elements
         const S = Array.from(graph.entries()).filter(pair => pair[1].length === 0).map(pair => pair[0]); // Set of all nodes with no incoming edge
-        let n: TSystemProto<any>;
+        let n: TSystemProto<TSystemData>;
 
         // while S is non-empty do
         while (S.length > 0) {
             // remove a node n from S
-            n = S.shift() as TSystemProto<any>;
+            n = S.shift() as TSystemProto<TSystemData>;
             // add n to tail of L
             L.push(n);
 
             // for each node m with an edge e from n to m do
             for (let m of Array.from(graph.entries()).filter(pair => pair[1].includes(n)).map(pair => pair[0])) {
                 // remove edge e from the graph
-                edges = graph.get(m) as TSystemProto<any>[];
+                edges = graph.get(m) as TSystemProto<TSystemData>[];
                 edges.splice(edges.indexOf(n), 1);
 
                 // if m has no other incoming edges then
