@@ -381,13 +381,8 @@ export class World implements IWorld {
             this.maintain();
         }
 
-        if (!configuration) {
-            configuration = {};
-        }
-
-        if (!configuration.initialState) {
-            configuration.initialState = new State(new Set(this.systemInfos.keys()));
-        }
+        configuration ||= {};
+        configuration.initialState ||= new State(new Set(this.systemInfos.keys()));
 
         const initialState = configuration.initialState;
         const runConfig: TStaticRunConfiguration = {

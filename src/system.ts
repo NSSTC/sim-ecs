@@ -14,20 +14,20 @@ export abstract class System<D extends TSystemData> implements ISystem<D> {
             return false
         }
 
-        if (!this.systemDataBlueprint) {
-            this.systemDataBlueprint = new this.SystemDataType();
-        }
+        this.systemDataBlueprint ||= new this.SystemDataType();
 
-        let accessStruct: TComponentAccess<any>;
-        for (let componentRequirement of Object.values(this.systemDataBlueprint)) {
-            accessStruct = componentRequirement as TComponentAccess<any>;
+        {
+            let accessStruct: TComponentAccess<any>;
+            for (let componentRequirement of Object.values(this.systemDataBlueprint)) {
+                accessStruct = componentRequirement as TComponentAccess<any>;
 
-            if (accessStruct[access].type == EAccess.META) {
-                continue;
-            }
+                if (accessStruct[access].type == EAccess.META) {
+                    continue;
+                }
 
-            if (!entity.hasComponent(accessStruct[access].component) || accessStruct[access].type == EAccess.UNSET) {
-                return false;
+                if (!entity.hasComponent(accessStruct[access].component) || accessStruct[access].type == EAccess.UNSET) {
+                    return false;
+                }
             }
         }
 
