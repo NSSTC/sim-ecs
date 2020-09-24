@@ -1,6 +1,7 @@
 import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import IWorld from "./world.spec";
-import {TDeserializer} from "./save-format.spec";
+import {TCustomDeserializer, TDeserializer, TSerializer} from "./save-format.spec";
+import {TObjectProto} from "./_.spec";
 
 export interface IWorldBuilder {
     /**
@@ -20,5 +21,13 @@ export interface IWorldBuilder {
      * @param system
      * @param dependencies
      */
-    with(system: ISystem<TSystemData>, dependencies?: TSystemProto<TSystemData>[]): IWorldBuilder
+    withSystem(system: ISystem<TSystemData>, dependencies?: TSystemProto<TSystemData>[]): IWorldBuilder
+
+    /**
+     * Add component to the world (used for loading and saving)
+     * @param Component
+     * @param deserializer
+     * @param serializer
+     */
+    withComponent(Component: TObjectProto, deserializer: TCustomDeserializer, serializer?: TSerializer): IWorldBuilder
 }

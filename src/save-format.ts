@@ -1,34 +1,72 @@
 import {Entity, IEntity} from "./entity";
-import {ISaveFormat, TComponent, TDeserializer, TEntity, TSaveFormat} from "./save-format.spec";
+import {
+    ISaveFormat,
+    TComponent,
+    TCustomDeserializer,
+    TDeserializer,
+    TEntity,
+    TSaveFormat,
+    TSerializer
+} from "./save-format.spec";
+import {TObjectProto} from "./_.spec";
+
+export const defaultDeserializer = function (customDeserializer?: TDeserializer): TDeserializer {
+    return (constructorName: string, data: unknown) => {
+        switch (constructorName.toLowerCase()) {
+            case 'date': {
+                if (typeof data != 'string') {
+                    throw new Error(`Cannot deserialize Date with data of type ${typeof data}! String expected!`);
+                }
+
+                return new Date(data);
+            }
+
+            case 'object': {
+                if (typeof data != 'object') {
+                    throw new Error(`Cannot deserialize Object with data of type ${typeof data}! Object expected!`);
+                }
+
+                return data as Object;
+            }
+
+            case 'string': {
+                if (typeof data != 'string') {
+                    throw new Error(`Cannot deserialize String with data of type ${typeof data}! String expected!`);
+                }
+
+                return data;
+            }
+        }
+
+        if (!customDeserializer) {
+            throw new Error(`Missing deserializer for "${constructorName}"!`);
+        }
+
+        return customDeserializer(constructorName, data);
+    }
+};
 
 export class SaveFormat implements ISaveFormat {
     protected entities: TSaveFormat = [];
+    protected serde: Map<string, {serializer?: TSerializer, deserializer: TCustomDeserializer}> = new Map();
 
     static fromJSON(json: string): SaveFormat {
         const save = new SaveFormat();
-        save.entities = JSON.parse(json);
+        save.loadJSON(json);
         return save;
     }
 
     constructor(data: { entities?: IterableIterator<IEntity> } = {}) {
         if (data.entities) {
-            let entity;
-            let components: TComponent[];
-            let component;
-
-            for (entity of data.entities) {
-                components = [];
-
-                for (component of entity.getComponents()) {
-                    components.push([component.constructor.name, component]);
-                }
-
-                this.entities.push(components);
-            }
+            this.setEntities(data.entities);
         }
     }
 
-    getEntities(deserializer: TDeserializer): Iterable<IEntity> {
+    loadJSON(json: string) {
+        this.entities = JSON.parse(json);
+    }
+
+    getEntities(deserializer?: TDeserializer): Iterable<IEntity> {
         const self = this;
         return {
             *[Symbol.iterator](): Iterator<IEntity> {
@@ -40,7 +78,13 @@ export class SaveFormat implements ISaveFormat {
                     entity = new Entity();
 
                     for (component of entityData) {
-                        entity.addComponent(deserializer(component[0], component[1]));
+                        if (self.serde.has(component[0])) {
+                            entity.addComponent(self.serde.get(component[0])!.deserializer(component[1]));
+                        }
+                        else if (deserializer) {
+                            entity.addComponent(deserializer(component[0], component[1]));
+                        }
+                        else throw new Error(`No deserializer provided for component of type "${component[0]}"!`);
                     }
 
                     yield entity;
@@ -49,7 +93,31 @@ export class SaveFormat implements ISaveFormat {
         };
     }
 
-    toJSON(): string {
+    registerComponent(Component: TObjectProto, deserializer: TCustomDeserializer, serializer?: TSerializer) {
+        if (this.serde.has(Component.name)) throw new Error(`Component ${Component.name} was already registered!`);
+        this.serde.set(Component.name, { serializer, deserializer });
+    }
+
+    setEntities(entities: IterableIterator<IEntity>) {
+        let entity;
+        let components: TComponent[];
+        let component;
+
+        this.entities.length = 0;
+
+        for (entity of entities) {
+            components = [];
+
+            for (component of entity.getComponents()) {
+                components.push([component.constructor.name, component]);
+            }
+
+            this.entities.push(components);
+        }
+    }
+
+    toJSON(serializer?: TSerializer): string {
+        // todo: implement serializer
         return JSON.stringify(this.entities);
     }
 }

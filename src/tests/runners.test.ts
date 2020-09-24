@@ -4,6 +4,7 @@ import * as Components from "./components";
 import * as Systems from "./systems";
 import {S1Data, S2Data, THandlerFn1, THandlerFn2} from "./systems";
 import {With, Without} from "../index";
+import {defaultDeserializer} from "../save-format";
 
 
 describe('Manage Resources', () => {
@@ -95,12 +96,12 @@ describe('Run Systems', () => {
     });
 
     it('register', () => {
-        const world = ecs.buildWorld().with(new Systems.S1(() => {})).build();
+        const world = ecs.buildWorld().withSystem(new Systems.S1(() => {})).build();
         assert.equal(world.systems.length, 1, 'System was not registered');
     });
 
     it('dispatch', async () => {
-        const world = ecs.buildWorld().with(new Systems.S1(op)).build();
+        const world = ecs.buildWorld().withSystem(new Systems.S1(op)).build();
         const entity = world.buildEntity().with(Components.C1).build();
         const c1 = entity.getComponent(Components.C1);
 
@@ -111,7 +112,7 @@ describe('Run Systems', () => {
     });
 
     it('run', async () => {
-        const world = ecs.buildWorld().with(new Systems.S1(op)).build();
+        const world = ecs.buildWorld().withSystem(new Systems.S1(op)).build();
         const entity = world.buildEntity().with(Components.C1).build();
         const c1 = entity.getComponent(Components.C1);
         let runFinished = false;
@@ -129,7 +130,7 @@ describe('Run Systems', () => {
 
     it ('no-data', async () => {
         let numComponents = 0;
-        const world = ecs.buildWorld().with(new Systems.NoDataSystem(dataSet => { numComponents = dataSet.size })).build();
+        const world = ecs.buildWorld().withSystem(new Systems.NoDataSystem(dataSet => { numComponents = dataSet.size })).build();
         let runFinished = false;
 
         world.buildEntity().with(Components.C1).build();
@@ -170,7 +171,7 @@ describe('Delete Entities', () => {
     });
 
     it('delete during run', async () => {
-        const world = ecs.buildWorld().with(new Systems.S2(op)).build();
+        const world = ecs.buildWorld().withSystem(new Systems.S2(op)).build();
         const entity = world.buildEntity().with(Components.C1).build();
 
         await world.run({
@@ -229,7 +230,7 @@ describe('Save / Load', () => {
     });
 
     it('load world from json', () => {
-        const w1 = ecs.buildWorld().fromJSON(serializedWorld, (cn, data) => {
+        const w1 = ecs.buildWorld().fromJSON(serializedWorld, defaultDeserializer((cn, data) => {
             switch (cn) {
                 case Components.C1.name: {
                     if (typeof data != 'object') {
@@ -240,18 +241,11 @@ describe('Save / Load', () => {
                     c.a = (data as Components.C1).a;
                     return c;
                 }
-                case Date.name: {
-                    if (typeof data != 'string') {
-                        throw new Error(`data is not of type string, but instead ${typeof data}!`);
-                    }
-
-                    return new Date(data);
-                }
                 default: {
                     throw new Error('Unknown constructor name: ' + cn);
                 }
             }
-        }).build();
+        })).build();
 
         assert.equal(w1.toJSON(), serializedWorld, 'deserialization is lossy')
     });

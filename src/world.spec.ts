@@ -3,6 +3,7 @@ import IEntityBuilder from "./entity-builder.spec";
 import ISystem, {TComponentAccess, TSystemData, TSystemProto} from "./system.spec";
 import IState from "./state.spec";
 import {TTypeProto} from "./_.spec";
+import {TSerializer} from "./save-format.spec";
 
 export type TEntityInfo = {
     entity: IEntity
@@ -105,7 +106,7 @@ export interface IPartialWorld {
     /**
      * Save this world to a JSON string (entities and their components)
      */
-    toJSON(): string
+    toJSON(serializer?: TSerializer): string
 }
 
 /**
