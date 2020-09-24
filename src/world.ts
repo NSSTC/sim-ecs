@@ -13,12 +13,13 @@ import {
 } from "./world.spec";
 import IEntity from "./entity.spec";
 import IEntityBuilder from "./entity-builder.spec";
-import ISystem, {access, EAccess, TComponentAccess, TSystemData, TSystemProto} from "./system.spec";
+import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import {IState, State} from "./state";
 import {TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
 import {SaveFormat} from "./save-format";
 import {ISaveFormat, TSerializer} from "./save-format.spec";
+import {access, EAccess, TComponentAccess} from "./queue.spec";
 
 export * from './world.spec';
 

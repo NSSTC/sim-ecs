@@ -1,6 +1,6 @@
 import {IEntityWorld} from "./world.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
-import {TComponentAccess} from "./system.spec";
+import {TComponentAccess} from "./queue.spec";
 
 export interface IEntity {
     /**

@@ -1,7 +1,8 @@
 import {ISystemActions} from "./world.spec";
-import {ISystem, NoData, TComponentAccess, TSystemData} from "./system.spec";
+import {ISystem, NoData, TSystemData} from "./system.spec";
 import {TTypeProto} from "./_.spec";
 import IEntity from "./entity.spec";
+import {TComponentAccess} from "./queue.spec";
 
 export * from './system.spec';
 

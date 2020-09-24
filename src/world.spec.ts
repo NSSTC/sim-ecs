@@ -1,9 +1,10 @@
 import {IEntity} from "./entity.spec";
 import IEntityBuilder from "./entity-builder.spec";
-import ISystem, {TComponentAccess, TSystemData, TSystemProto} from "./system.spec";
+import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import IState from "./state.spec";
 import {TTypeProto} from "./_.spec";
 import {TSerializer} from "./save-format.spec";
+import {TComponentAccess} from "./queue.spec";
 
 export type TEntityInfo = {
     entity: IEntity

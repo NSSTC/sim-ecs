@@ -1,7 +1,7 @@
 import {System} from "../..";
-import {NoData, SystemData, Write} from "../system";
-import {C1, C2} from "./components";
-import {ISystemActions} from "../index";
+import {NoData, SystemData} from "../system";
+import {C1} from "./components";
+import {Write} from "../queue.spec";
 
 export class S1Data extends SystemData{ c1 = Write(C1) }
 export type THandlerFn1 = (data: S1Data) => void

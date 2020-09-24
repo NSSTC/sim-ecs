@@ -1,7 +1,7 @@
 import {IEntityWorld} from "./world.spec";
 import IEntity from "./entity.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
-import {access, EAccess, TComponentAccess} from "./system.spec";
+import {access, EAccess, TComponentAccess} from "./queue.spec";
 
 export * from './entity.spec';
 
