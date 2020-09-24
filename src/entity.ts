@@ -7,11 +7,10 @@ export * from './entity.spec';
 
 export class Entity implements IEntity {
     protected components: Map<TObjectProto, Object> = new Map();
-    protected world?: IEntityWorld;
 
-    constructor(world?: IEntityWorld) {
-        this.world = world;
-    }
+    constructor(
+        protected world?: IEntityWorld
+    ) {}
 
     addComponent(component: Object): IEntity {
         if (this.hasComponent(component.constructor as typeof Object)) {

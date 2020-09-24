@@ -35,11 +35,12 @@ export class World implements IWorld {
     protected saveFormat?: ISaveFormat;
     protected shouldRunSystems = false;
     protected sortedSystems: TSystemInfo<TSystemData>[];
-    protected systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>>;
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
 
-    constructor(systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>>) {
+    constructor(
+        protected systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>>
+    ) {
         const self = this;
 
         this.systemWorld = Object.freeze({
@@ -93,7 +94,6 @@ export class World implements IWorld {
             this.addResource(system);
         }
 
-        this.systemInfos = systemInfos;
         this.sortedSystems = this.sortSystems(Array.from(this.systemInfos.values()).map(info => ({
             system: info.system,
             dependencies: Array.from(info.dependencies),

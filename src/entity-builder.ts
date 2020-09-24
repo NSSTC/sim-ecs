@@ -8,11 +8,11 @@ export * from './entity-builder.spec';
 
 export class EntityBuilder implements IEntityBuilder {
     protected entity: IEntity;
-    protected world: IPartialWorld;
 
-    constructor(world: IPartialWorld) {
+    constructor(
+        protected world: IPartialWorld
+    ) {
         this.entity = new Entity();
-        this.world = world;
     }
 
     build(): IEntity {
