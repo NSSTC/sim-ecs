@@ -13,6 +13,14 @@ import {TObjectProto} from "./_.spec";
 export const defaultDeserializer = function (customDeserializer?: TDeserializer): TDeserializer {
     return (constructorName: string, data: unknown) => {
         switch (constructorName.toLowerCase()) {
+            case 'array': {
+                if (!Array.isArray(data)) {
+                    throw new Error(`Cannot deserialize Array with data of type ${typeof data}! Array expected!`);
+                }
+
+                return data as Array<unknown>;
+            }
+
             case 'date': {
                 if (typeof data != 'string') {
                     throw new Error(`Cannot deserialize Date with data of type ${typeof data}! String expected!`);
@@ -21,12 +29,28 @@ export const defaultDeserializer = function (customDeserializer?: TDeserializer)
                 return new Date(data);
             }
 
+            case 'map': {
+                if (!Array.isArray(data)) {
+                    throw new Error(`Cannot deserialize Map with data of type ${typeof data}! Array of arrays expected!`);
+                }
+
+                return new Map(data as [unknown, unknown][]);
+            }
+
             case 'object': {
                 if (typeof data != 'object') {
                     throw new Error(`Cannot deserialize Object with data of type ${typeof data}! Object expected!`);
                 }
 
                 return data as Object;
+            }
+
+            case 'set': {
+                if (!Array.isArray(data)) {
+                    throw new Error(`Cannot deserialize Set with data of type ${typeof data}! Array expected!`);
+                }
+
+                return new Set(data as Array<unknown>);
             }
 
             case 'string': {
