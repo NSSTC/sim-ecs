@@ -212,15 +212,10 @@ export class World implements IWorld {
         const resultEntities = new Set<IEntity>();
         let entityInfo;
 
-        entityLoop: for (entityInfo of this.entityInfos.values()) {
-            for (let componentRequirement of query) {
-                if (
-                    (componentRequirement[access].type == EAccess.SET && !entityInfo.entity.hasComponent(componentRequirement[access].component)) ||
-                    (componentRequirement[access].type == EAccess.UNSET && entityInfo.entity.hasComponent(componentRequirement[access].component))
-                ) continue entityLoop;
+        for (entityInfo of this.entityInfos.values()) {
+            if (entityInfo.entity.matchesQueue(query)) {
+                resultEntities.add(entityInfo.entity);
             }
-
-            resultEntities.add(entityInfo.entity);
         }
 
         return resultEntities.values();

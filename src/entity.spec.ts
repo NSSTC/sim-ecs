@@ -1,5 +1,6 @@
 import {IEntityWorld} from "./world.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
+import {TComponentAccess} from "./system.spec";
 
 export interface IEntity {
     /**
@@ -30,6 +31,11 @@ export interface IEntity {
      * @param component
      */
     hasComponent(component: typeof Object | TObjectProto): boolean
+
+    /**
+     * Check if this entity matches a queue for components
+     */
+    matchesQueue<C extends Object, T extends TComponentAccess<C>>(query: T[]): boolean
 
     /**
      * Un-associate a component from this entity

@@ -1,5 +1,5 @@
 import {ISystemActions} from "./world.spec";
-import {access, EAccess, ISystem, NoData, TComponentAccess, TSystemData} from "./system.spec";
+import {ISystem, NoData, TComponentAccess, TSystemData} from "./system.spec";
 import {TTypeProto} from "./_.spec";
 import IEntity from "./entity.spec";
 
@@ -15,23 +15,7 @@ export abstract class System<D extends TSystemData> implements ISystem<D> {
         }
 
         this.systemDataBlueprint ||= new this.SystemDataType();
-
-        {
-            let accessStruct: TComponentAccess<any>;
-            for (let componentRequirement of Object.values(this.systemDataBlueprint)) {
-                accessStruct = componentRequirement as TComponentAccess<any>;
-
-                if (accessStruct[access].type == EAccess.META) {
-                    continue;
-                }
-
-                if (!entity.hasComponent(accessStruct[access].component) || accessStruct[access].type == EAccess.UNSET) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return entity.matchesQueue(Object.values(this.systemDataBlueprint) as TComponentAccess<any>[]);
     }
 
     abstract run(dataSet: Set<D>): Promise<void>;

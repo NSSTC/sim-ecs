@@ -1,6 +1,7 @@
 import {IEntityWorld} from "./world.spec";
 import IEntity from "./entity.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
+import {access, EAccess, TComponentAccess} from "./system.spec";
 
 export * from './entity.spec';
 
@@ -41,6 +42,25 @@ export class Entity implements IEntity {
 
     hasComponent(component: typeof Object | TObjectProto): boolean {
         return this.components.has(component);
+    }
+
+    matchesQueue<C extends Object, T extends TComponentAccess<C>>(query: T[]): boolean {
+        let requirement: TComponentAccess<C>;
+        let componentAccess;
+
+        for (requirement of query) {
+            componentAccess = requirement[access];
+
+            if (componentAccess.type == EAccess.META) {
+                continue;
+            }
+
+            if (this.components.has(componentAccess.component) == (componentAccess.type == EAccess.UNSET)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     removeComponent(component: Object): IEntity {
