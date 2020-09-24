@@ -489,7 +489,7 @@ export class World implements IWorld {
 
         if (this.saveFormat) {
             save = this.saveFormat;
-            save.setEntities(this.entityInfos.keys());
+            save.setEntities(this.entityInfos.keys(), serializer);
         }
         else {
             save = new SaveFormat({

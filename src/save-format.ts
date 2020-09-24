@@ -10,6 +10,43 @@ import {
 } from "./save-format.spec";
 import {TObjectProto} from "./_.spec";
 
+export const defaultSerializer = function (customSerializer?: TSerializer): TSerializer {
+    return (component: unknown) => {
+        let componentName: string = typeof component;
+
+        switch (typeof component) {
+            case 'object': {
+                if (component == null) {
+                    return 'null';
+                }
+
+                componentName = component.constructor.name;
+
+                switch (component.constructor.name) {
+                    case 'Array':
+                    case 'Date':
+                    case 'Object':
+                        return JSON.stringify(component);
+                    case 'Map':
+                    case 'Set':
+                        return JSON.stringify(Array.from(component as Iterable<unknown>));
+                }
+
+                break;
+            }
+            case "string": {
+                return JSON.stringify(component);
+            }
+        }
+
+        if (!customSerializer) {
+            throw new Error(`Missing serializer for "${componentName}"!`);
+        }
+
+        return customSerializer(component);
+    };
+}
+
 export const defaultDeserializer = function (customDeserializer?: TDeserializer): TDeserializer {
     return (constructorName: string, data: unknown) => {
         switch (constructorName.toLowerCase()) {
@@ -72,7 +109,7 @@ export const defaultDeserializer = function (customDeserializer?: TDeserializer)
 
 export class SaveFormat implements ISaveFormat {
     protected entities: TSaveFormat = [];
-    protected serde: Map<string, {serializer?: TSerializer, deserializer: TCustomDeserializer}> = new Map();
+    protected serde: Map<string, {serializer: TSerializer, deserializer: TCustomDeserializer}> = new Map();
 
     static fromJSON(json: string): SaveFormat {
         const save = new SaveFormat();
@@ -80,9 +117,9 @@ export class SaveFormat implements ISaveFormat {
         return save;
     }
 
-    constructor(data: { entities?: IterableIterator<IEntity> } = {}) {
+    constructor(data: { entities?: IterableIterator<IEntity> } = {}, serializer?: TSerializer) {
         if (data.entities) {
-            this.setEntities(data.entities);
+            this.setEntities(data.entities, serializer);
         }
     }
 
@@ -117,15 +154,16 @@ export class SaveFormat implements ISaveFormat {
         };
     }
 
-    registerComponent(Component: TObjectProto, deserializer: TCustomDeserializer, serializer?: TSerializer) {
+    registerComponent(Component: TObjectProto, deserializer: TCustomDeserializer, serializer: TSerializer) {
         if (this.serde.has(Component.name)) throw new Error(`Component ${Component.name} was already registered!`);
         this.serde.set(Component.name, { serializer, deserializer });
     }
 
-    setEntities(entities: IterableIterator<IEntity>) {
+    setEntities(entities: IterableIterator<IEntity>, serializer?: TSerializer) {
         let entity;
         let components: TComponent[];
         let component;
+        let saveComponent;
 
         this.entities.length = 0;
 
@@ -133,15 +171,22 @@ export class SaveFormat implements ISaveFormat {
             components = [];
 
             for (component of entity.getComponents()) {
-                components.push([component.constructor.name, component]);
+                if (this.serde.has(component.constructor.name)) {
+                    saveComponent = this.serde.get(component.constructor.name)!.serializer(component)
+                }
+                else if (serializer) {
+                    saveComponent = serializer(component)
+                }
+                else throw new Error(`No serializer provided for component of type "${component.constructor.name}"!`);
+
+                components.push([component.constructor.name, JSON.parse(saveComponent)]);
             }
 
             this.entities.push(components);
         }
     }
 
-    toJSON(serializer?: TSerializer): string {
-        // todo: implement serializer
+    toJSON(): string {
         return JSON.stringify(this.entities);
     }
 }

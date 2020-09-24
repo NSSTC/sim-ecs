@@ -60,7 +60,7 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withComponent(Component: TObjectProto, deserializer: TCustomDeserializer, serializer?: TSerializer): IWorldBuilder {
+    withComponent(Component: TObjectProto, deserializer: TCustomDeserializer, serializer: TSerializer): IWorldBuilder {
         this.save.registerComponent(Component, deserializer, serializer);
         return this;
     }

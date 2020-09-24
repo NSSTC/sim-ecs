@@ -12,7 +12,7 @@ export type TSaveFormat = TEntity[];
 export interface ISaveFormat {
     getEntities(deserializer?: TDeserializer): Iterable<IEntity>
     loadJSON(json: string): void
-    registerComponent(Component: TObjectProto, deserializer: TCustomDeserializer, serializer?: TSerializer): void
-    setEntities(entities?: IterableIterator<IEntity>): void
-    toJSON(serializer?: TSerializer): string
+    registerComponent(Component: TObjectProto, deserializer: TCustomDeserializer, serializer: TSerializer): void
+    setEntities(entities?: IterableIterator<IEntity>, serializer?: TSerializer): void
+    toJSON(): string
 }

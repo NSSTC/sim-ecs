@@ -226,7 +226,7 @@ describe('Save / Load', () => {
         w1.buildEntity().with(new Date(0)).build();
         w1.buildEntity().with(new Date(1337)).with(new Components.C1()).build();
 
-        assert.equal(w1.toJSON(), serializedWorld, 'Unable to serialize world');
+        assert.equal(w1.toJSON(o => JSON.stringify(o)), serializedWorld, 'Unable to serialize world');
     });
 
     it('load world from json', () => {
@@ -247,6 +247,6 @@ describe('Save / Load', () => {
             }
         })).build();
 
-        assert.equal(w1.toJSON(), serializedWorld, 'deserialization is lossy')
+        assert.equal(w1.toJSON(c => JSON.stringify(c)), serializedWorld, 'deserialization is lossy')
     });
 });

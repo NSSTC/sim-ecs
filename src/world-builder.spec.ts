@@ -29,5 +29,5 @@ export interface IWorldBuilder {
      * @param deserializer
      * @param serializer
      */
-    withComponent(Component: TObjectProto, deserializer: TCustomDeserializer, serializer?: TSerializer): IWorldBuilder
+    withComponent(Component: TObjectProto, deserializer: TCustomDeserializer, serializer: TSerializer): IWorldBuilder
 }
