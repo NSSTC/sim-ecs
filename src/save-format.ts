@@ -163,7 +163,7 @@ export class SaveFormat implements ISaveFormat {
         let entity;
         let components: TComponent[];
         let component;
-        let saveComponent;
+        let saveComponent: string;
 
         this.entities.length = 0;
 
@@ -172,10 +172,10 @@ export class SaveFormat implements ISaveFormat {
 
             for (component of entity.getComponents()) {
                 if (this.serde.has(component.constructor.name)) {
-                    saveComponent = this.serde.get(component.constructor.name)!.serializer(component)
+                    saveComponent = this.serde.get(component.constructor.name)!.serializer(component);
                 }
                 else if (serializer) {
-                    saveComponent = serializer(component)
+                    saveComponent = serializer(component);
                 }
                 else throw new Error(`No serializer provided for component of type "${component.constructor.name}"!`);
 

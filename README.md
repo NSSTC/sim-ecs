@@ -44,7 +44,7 @@ In an ECS, a world is like a container for entities.
 
 ```typescript
 const ecs = new ECS();
-const world = ecs.buildWorld().with(new CountSystem()).build();
+const world = ecs.buildWorld().withSystem(new CountSystem()).build();
 ```
 
 
@@ -72,6 +72,10 @@ class Counter {
 }
 ```
 
+In case you have advanced components, it is possible to pass a serializer and deserializer
+to the entity builder later on. If you don't do so, it is assumed that the component is a simple key:value map.
+You can also use a default-type de-/serializer on save/load, which allows for a variety of standard types (such as `Date`) as components.
+
 
 ## Adding entities
 
@@ -80,7 +84,7 @@ Entities are automatically added to the world they are built in.
 You can think of entities like rows in a database.
 
 ```typescript
-world.buildEntity().with(new Counter()).build();
+world.buildEntity().withComponent(Counter).build();
 ```
 
 

@@ -60,25 +60,7 @@ const world = ecs
     /// we can inform the world about our processing logic by adding the above defined system
     .withSystem(new CounterSystem())
     /// we can register components types at this level in order to enable saving (serialization) and loading (deserialization) of them
-    .withComponent(CounterInfo, rawData => {
-        // we must always create a new component in order to fire its constructor!
-        // the raw data object we get as parameter may be a hashmap, or string, or anything, depending on the serializer used
-        // the default serializer will generate a hashmap for objects
-        const counterInfo = new CounterInfo();
-
-        // since we load an untrusted file, we should make sure that everything is in order
-
-        if (typeof rawData !== 'object' || rawData === null) throw new Error('save data is of wrong format')
-        const objData: any = rawData;
-
-        if (!objData.count) throw new Error('save data is missing fields');
-        counterInfo.count = objData.count;
-
-        if (!objData.limit) throw new Error('save data is missing fields');
-        counterInfo.limit = objData.limit;
-
-        return counterInfo;
-    })
+    .withComponent(CounterInfo)
     .build();
 
 /// let's add out global storage as resource to the world. The ECS can do the object instantiation for you,
