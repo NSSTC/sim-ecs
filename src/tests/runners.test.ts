@@ -96,12 +96,12 @@ describe('Run Systems', () => {
     });
 
     it('register', () => {
-        const world = ecs.buildWorld().withSystem(new Systems.S1(() => {})).build();
+        const world = ecs.buildWorld().withSystem(Systems.S1.bind(undefined, () => {})).build();
         assert.equal(world.systems.length, 1, 'System was not registered');
     });
 
     it('dispatch', async () => {
-        const world = ecs.buildWorld().withSystem(new Systems.S1(op)).build();
+        const world = ecs.buildWorld().withSystem(Systems.S1.bind(undefined, op)).build();
         const entity = world.buildEntity().with(Components.C1).build();
         const c1 = entity.getComponent(Components.C1);
 
@@ -112,7 +112,7 @@ describe('Run Systems', () => {
     });
 
     it('run', async () => {
-        const world = ecs.buildWorld().withSystem(new Systems.S1(op)).build();
+        const world = ecs.buildWorld().withSystem(Systems.S1.bind(undefined, op)).build();
         const entity = world.buildEntity().with(Components.C1).build();
         const c1 = entity.getComponent(Components.C1);
         let runFinished = false;
@@ -130,7 +130,7 @@ describe('Run Systems', () => {
 
     it ('no-data', async () => {
         let numComponents = 0;
-        const world = ecs.buildWorld().withSystem(new Systems.NoDataSystem(dataSet => { numComponents = dataSet.size })).build();
+        const world = ecs.buildWorld().withSystem(Systems.NoDataSystem.bind(undefined, dataSet => { numComponents = dataSet.size })).build();
         let runFinished = false;
 
         world.buildEntity().with(Components.C1).build();
@@ -171,7 +171,7 @@ describe('Delete Entities', () => {
     });
 
     it('delete during run', async () => {
-        const world = ecs.buildWorld().withSystem(new Systems.S2(op)).build();
+        const world = ecs.buildWorld().withSystem(Systems.S2.bind(undefined, op)).build();
         const entity = world.buildEntity().with(Components.C1).build();
 
         await world.run({

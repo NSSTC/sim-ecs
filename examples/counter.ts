@@ -58,7 +58,7 @@ const ecs = new ECS();
 const world = ecs
     .buildWorld()
     /// we can inform the world about our processing logic by adding the above defined system
-    .withSystem(new CounterSystem())
+    .withSystem(CounterSystem)
     /// we can register components types at this level in order to enable saving (serialization) and loading (deserialization) of them
     .withComponent(CounterInfo)
     .build();

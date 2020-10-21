@@ -10,8 +10,8 @@ class ASystem extends System<NoData> {
 describe('Test WorldBuilder', () => {
     it('Unique Systems', () => {
         const builder = new WorldBuilder();
-        builder.withSystem(new ASystem());
-        expect(builder.withSystem.bind(builder, new ASystem())).to.throw();
+        builder.withSystem(ASystem);
+        expect(builder.withSystem.bind(builder, ASystem)).to.throw();
     });
 
     it('Default De-/Serializer', () => {

@@ -48,10 +48,12 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withSystem(system: ISystem<TSystemData>, dependencies?: TSystemProto<TSystemData>[]): IWorldBuilder {
-        if (Array.from(this.systemInfos.values()).find(info => info.system.constructor == system.constructor)) {
-            throw new Error(`The system ${system.constructor.name} is already registered!`);
+    withSystem(System: TSystemProto<TSystemData>, dependencies?: TSystemProto<TSystemData>[]): IWorldBuilder {
+        if (Array.from(this.systemInfos.values()).find(info => info.system.constructor == System)) {
+            throw new Error(`The system ${System.constructor.name} is already registered!`);
         }
+
+        const system = new System();
 
         this.systemInfos.set(system, {
             dataPrototype: system.SystemDataType,

@@ -44,7 +44,7 @@ In an ECS, a world is like a container for entities.
 
 ```typescript
 const ecs = new ECS();
-const world = ecs.buildWorld().withSystem(new CountSystem()).build();
+const world = ecs.buildWorld().withSystem(CountSystem).build();
 ```
 
 
