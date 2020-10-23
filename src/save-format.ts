@@ -10,7 +10,96 @@ import {
 } from "./save-format.spec";
 import {TObjectProto} from "./_.spec";
 
-export const defaultSerializer = function (customSerializer?: TSerializer): TSerializer {
+
+export class SaveFormat implements ISaveFormat {
+    protected entities: TSaveFormat = [];
+    protected serde: Map<string, {proto: TObjectProto, serializer: TSerializer, deserializer: TCustomDeserializer}> = new Map();
+
+    static fromJSON(json: string): SaveFormat {
+        const save = new SaveFormat();
+        save.loadJSON(json);
+        return save;
+    }
+
+    constructor(data: { entities?: IterableIterator<IEntity> } = {}, serializer?: TSerializer) {
+        if (data.entities) {
+            this.setEntities(data.entities, serializer);
+        }
+    }
+
+    deserialize(constructorName: string, rawComponent: unknown, fallbackDeserializer?: TDeserializer): Object {
+        if (this.serde.has(constructorName)) {
+            return this.serde.get(constructorName)!.deserializer(rawComponent);
+        }
+        else if (fallbackDeserializer) {
+            return fallbackDeserializer(constructorName, rawComponent);
+        }
+        else throw new Error(`No serializer provided for component of type "${constructorName}"!`);
+    }
+
+    loadJSON(json: string) {
+        this.entities = JSON.parse(json);
+    }
+
+    getEntities(deserializer?: TDeserializer): Iterable<IEntity> {
+        const self = this;
+        return {
+            *[Symbol.iterator](): Iterator<IEntity> {
+                let entity;
+                let entityData: TEntity;
+                let component: TComponent;
+
+                for (entityData of self.entities) {
+                    entity = new Entity();
+
+                    for (component of entityData) {
+                        entity.addComponent(self.deserialize(component[0], component[1], deserializer));
+                    }
+
+                    yield entity;
+                }
+            }
+        };
+    }
+
+    registerComponent(Component: TObjectProto, deserializer: TCustomDeserializer, serializer: TSerializer) {
+        if (this.serde.has(Component.name)) throw new Error(`Component ${Component.name} was already registered!`);
+        this.serde.set(Component.name, { proto: Component, serializer, deserializer });
+    }
+
+    setEntities(entities: IterableIterator<IEntity>, serializer?: TSerializer) {
+        let entity;
+        let components: TComponent[];
+        let component;
+        let saveComponent: string;
+
+        this.entities.length = 0;
+
+        for (entity of entities) {
+            components = [];
+
+            for (component of entity.getComponents()) {
+                if (this.serde.has(component.constructor.name)) {
+                    saveComponent = this.serde.get(component.constructor.name)!.serializer(component);
+                }
+                else if (serializer) {
+                    saveComponent = serializer(component);
+                }
+                else throw new Error(`No serializer provided for component of type "${component.constructor.name}"!`);
+
+                components.push([component.constructor.name, JSON.parse(saveComponent)]);
+            }
+
+            this.entities.push(components);
+        }
+    }
+
+    toJSON(): string {
+        return JSON.stringify(this.entities);
+    }
+}
+
+export const getDefaultSerializer = function (customSerializer?: TSerializer): TSerializer {
     return (component: unknown) => {
         let componentName: string = typeof component;
 
@@ -47,7 +136,7 @@ export const defaultSerializer = function (customSerializer?: TSerializer): TSer
     };
 }
 
-export const defaultDeserializer = function (customDeserializer?: TDeserializer): TDeserializer {
+export const getDefaultDeserializer = function (customDeserializer?: TDeserializer): TDeserializer {
     return (constructorName: string, data: unknown) => {
         switch (constructorName.toLowerCase()) {
             case 'array': {
@@ -106,87 +195,3 @@ export const defaultDeserializer = function (customDeserializer?: TDeserializer)
         return customDeserializer(constructorName, data);
     }
 };
-
-export class SaveFormat implements ISaveFormat {
-    protected entities: TSaveFormat = [];
-    protected serde: Map<string, {serializer: TSerializer, deserializer: TCustomDeserializer}> = new Map();
-
-    static fromJSON(json: string): SaveFormat {
-        const save = new SaveFormat();
-        save.loadJSON(json);
-        return save;
-    }
-
-    constructor(data: { entities?: IterableIterator<IEntity> } = {}, serializer?: TSerializer) {
-        if (data.entities) {
-            this.setEntities(data.entities, serializer);
-        }
-    }
-
-    loadJSON(json: string) {
-        this.entities = JSON.parse(json);
-    }
-
-    getEntities(deserializer?: TDeserializer): Iterable<IEntity> {
-        const self = this;
-        return {
-            *[Symbol.iterator](): Iterator<IEntity> {
-                let entity;
-                let entityData: TEntity;
-                let component: TComponent;
-
-                for (entityData of self.entities) {
-                    entity = new Entity();
-
-                    for (component of entityData) {
-                        if (self.serde.has(component[0])) {
-                            entity.addComponent(self.serde.get(component[0])!.deserializer(component[1]));
-                        }
-                        else if (deserializer) {
-                            entity.addComponent(deserializer(component[0], component[1]));
-                        }
-                        else throw new Error(`No deserializer provided for component of type "${component[0]}"!`);
-                    }
-
-                    yield entity;
-                }
-            }
-        };
-    }
-
-    registerComponent(Component: TObjectProto, deserializer: TCustomDeserializer, serializer: TSerializer) {
-        if (this.serde.has(Component.name)) throw new Error(`Component ${Component.name} was already registered!`);
-        this.serde.set(Component.name, { serializer, deserializer });
-    }
-
-    setEntities(entities: IterableIterator<IEntity>, serializer?: TSerializer) {
-        let entity;
-        let components: TComponent[];
-        let component;
-        let saveComponent: string;
-
-        this.entities.length = 0;
-
-        for (entity of entities) {
-            components = [];
-
-            for (component of entity.getComponents()) {
-                if (this.serde.has(component.constructor.name)) {
-                    saveComponent = this.serde.get(component.constructor.name)!.serializer(component);
-                }
-                else if (serializer) {
-                    saveComponent = serializer(component);
-                }
-                else throw new Error(`No serializer provided for component of type "${component.constructor.name}"!`);
-
-                components.push([component.constructor.name, JSON.parse(saveComponent)]);
-            }
-
-            this.entities.push(components);
-        }
-    }
-
-    toJSON(): string {
-        return JSON.stringify(this.entities);
-    }
-}

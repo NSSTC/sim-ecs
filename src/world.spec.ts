@@ -3,13 +3,15 @@ import IEntityBuilder from "./entity-builder.spec";
 import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import IState from "./state.spec";
 import {TTypeProto} from "./_.spec";
-import {TSerializer} from "./save-format.spec";
+import {ISaveFormat, TSerializer} from "./save-format.spec";
 import {TComponentAccess} from "./queue.spec";
 
 export type TEntityInfo = {
     entity: IEntity
     usage: Map<TSystemInfo<TSystemData>, TSystemData>
 };
+export type TPrefabHandle = number;
+export type TRawPrefab = { [Component: string]: Object }[];
 export type TRunConfiguration = {
     initialState?: IState,
     // called in-between world dispatches during a run
@@ -70,6 +72,12 @@ export interface IPartialWorld {
     getResource<T extends Object>(type: TTypeProto<T>): T
 
     /**
+     * Load entities with components from a prefab file
+     * @param rawPrefab
+     */
+    loadPrefab(rawPrefab: TRawPrefab): TPrefabHandle
+
+    /**
      * Re-calculate all entity, component and system dependencies and connections
      */
     maintain(): void
@@ -108,6 +116,12 @@ export interface IPartialWorld {
      * Save this world to a JSON string (entities and their components)
      */
     toJSON(serializer?: TSerializer): string
+
+    /**
+     * Remove entities with data-components from a prefab file
+     * @param handle
+     */
+    unloadPrefab(handle: TPrefabHandle): void
 }
 
 /**
@@ -165,6 +179,13 @@ export interface IWorld extends IPartialWorld {
      * @param configuration
      */
     run(configuration?: TRunConfiguration): Promise<void>
+
+    /**
+     * Set a save-format object, which will be used for saving/loading
+     * This is useful for when you want to manage de-/serialization
+     * @param saveFormat
+     */
+    setSaveFormat(saveFormat: ISaveFormat): void
 }
 
 export interface IEntityWorld extends IPartialWorld {

@@ -4,7 +4,7 @@ import * as Components from "./components";
 import * as Systems from "./systems";
 import {S1Data, S2Data, THandlerFn1, THandlerFn2} from "./systems";
 import {With, Without} from "../index";
-import {defaultDeserializer} from "../save-format";
+import {getDefaultDeserializer} from "../save-format";
 
 
 describe('Manage Resources', () => {
@@ -230,7 +230,7 @@ describe('Save / Load', () => {
     });
 
     it('load world from json', () => {
-        const w1 = ecs.buildWorld().fromJSON(serializedWorld, defaultDeserializer((cn, data) => {
+        const w1 = ecs.buildWorld().fromJSON(serializedWorld, getDefaultDeserializer((cn, data) => {
             switch (cn) {
                 case Components.C1.name: {
                     if (typeof data != 'object') {

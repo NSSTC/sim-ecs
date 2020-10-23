@@ -10,10 +10,10 @@ import {TObjectProto} from "./_.spec";
 import {SaveFormat} from "./save-format";
 
 export class WorldBuilder implements IWorldBuilder {
-    protected systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>> = new Map();
     protected callbacks: Set<(world: IWorld) => void> = new Set();
     protected fromWorld?: World;
     protected save = new SaveFormat();
+    protected systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>> = new Map();
 
     addCallback(cb: (world: IWorld) => void): IWorldBuilder {
         this.callbacks.add(cb);

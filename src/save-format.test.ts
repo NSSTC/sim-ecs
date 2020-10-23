@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {defaultDeserializer, defaultSerializer, SaveFormat} from "./save-format";
+import {getDefaultDeserializer, getDefaultSerializer, SaveFormat} from "./save-format";
 
 const serializedWorld = JSON.stringify([
     [],
@@ -35,8 +35,8 @@ describe('Test SaveFormat', () => {
     it('extended load/save round-trip', () => {
         expect(
             new SaveFormat({
-                entities: Array.from(SaveFormat.fromJSON(serializedWorldDefault).getEntities(defaultDeserializer()))[Symbol.iterator](),
-            }, defaultSerializer()).toJSON()
+                entities: Array.from(SaveFormat.fromJSON(serializedWorldDefault).getEntities(getDefaultDeserializer()))[Symbol.iterator](),
+            }, getDefaultSerializer()).toJSON()
         ).eq(serializedWorldDefault);
     })
 
@@ -48,7 +48,7 @@ describe('Test SaveFormat', () => {
     });
 
     it('getEntities() with default components', () => {
-        const entities = Array.from(SaveFormat.fromJSON(serializedWorldDefault).getEntities(defaultDeserializer()));
+        const entities = Array.from(SaveFormat.fromJSON(serializedWorldDefault).getEntities(getDefaultDeserializer()));
         expect(entities.length).eq(1);
 
         const components = Array.from(entities[0].getComponents());

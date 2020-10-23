@@ -5,7 +5,7 @@ import {
     ISystemActions,
     ITransitionActions,
     IWorld,
-    TEntityInfo,
+    TEntityInfo, TPrefabHandle, TRawPrefab,
     TRunConfiguration,
     TStaticRunConfiguration,
     TSystemInfo,
@@ -17,7 +17,7 @@ import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import {IState, State} from "./state";
 import {TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
-import {SaveFormat} from "./save-format";
+import {getDefaultDeserializer, SaveFormat} from "./save-format";
 import {ISaveFormat, TSerializer} from "./save-format.spec";
 import {access, EAccess, TComponentAccess} from "./queue.spec";
 
@@ -28,6 +28,10 @@ export class World implements IWorld {
     protected entityInfos: Map<IEntity, TEntityInfo> = new Map();
     protected entityWorld: IEntityWorld;
     protected pda = new PushDownAutomaton<IState>();
+    protected prefabs = {
+        counter: 0,
+        entityLinks: new Map<number, IEntity[]>(),
+    };
     protected resources = new Map<{ new(): Object }, Object>();
     protected runExecutionPipeline: Set<TSystemInfo<TSystemData>>[] = [];
     protected runExecutionPipelineCache: Map<IState, Set<TSystemInfo<TSystemData>>[]> = new Map();
@@ -57,6 +61,7 @@ export class World implements IWorld {
             createEntity: this.createEntity.bind(this),
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
+            loadPrefab: this.loadPrefab.bind(this),
             maintain: this.maintain.bind(this),
             merge: this.merge.bind(this),
             popState: this.popState.bind(this),
@@ -68,6 +73,7 @@ export class World implements IWorld {
             replaceResource: this.replaceResource.bind(this),
             stopRun: this.stopRun.bind(this),
             toJSON: this.toJSON.bind(this),
+            unloadPrefab: this.unloadPrefab.bind(this),
         });
 
         this.entityWorld = Object.freeze({
@@ -80,6 +86,7 @@ export class World implements IWorld {
             createEntity: this.createEntity.bind(this),
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
+            loadPrefab: this.loadPrefab.bind(this),
             maintain: this.maintain.bind(this),
             merge: this.merge.bind(this),
             removeEntity: this.removeEntity.bind(this),
@@ -88,6 +95,7 @@ export class World implements IWorld {
             replaceResource: this.replaceResource.bind(this),
             stopRun: this.stopRun.bind(this),
             toJSON: this.toJSON.bind(this),
+            unloadPrefab: this.unloadPrefab.bind(this),
         });
 
         for (const system of systemInfos.keys()) {
@@ -228,6 +236,26 @@ export class World implements IWorld {
         }
 
         return this.resources.get(type) as T;
+    }
+
+    loadPrefab(rawPrefab: TRawPrefab): TPrefabHandle {
+        const entities = [];
+        const saveFormat = this.saveFormat ?? new SaveFormat();
+
+        let entity: IEntity;
+        for (const rawEntity of rawPrefab) {
+            entity = this.createEntity();
+            entities.push(entity);
+
+            for (const rawComponent of Object.entries(rawEntity)) {
+                entity.addComponent(saveFormat.deserialize(rawComponent[0], rawComponent[1], getDefaultDeserializer()));
+            }
+
+            this.addEntity(entity);
+        }
+
+        this.prefabs.entityLinks.set(this.prefabs.counter, entities);
+        return this.prefabs.counter++;
     }
 
     // todo: add parameter which only maintains for a specific state
@@ -498,5 +526,16 @@ export class World implements IWorld {
         }
 
         return save.toJSON();
+    }
+
+    unloadPrefab(handle: TPrefabHandle) {
+        if (!this.prefabs.entityLinks.has(handle)) {
+            throw new Error(`Could not find any loaded prefab under handle "${handle}"!`)
+        }
+
+        let entity;
+        for (entity of this.prefabs.entityLinks.get(handle)!) {
+            this.removeEntity(entity);
+        }
     }
 }
