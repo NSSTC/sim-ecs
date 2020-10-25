@@ -5,7 +5,7 @@ import {
     ISystemActions,
     ITransitionActions,
     IWorld,
-    TEntityInfo, TPrefabHandle, TRawPrefab,
+    TEntityInfo, TPrefabHandle, TPrefab,
     TRunConfiguration,
     TStaticRunConfiguration,
     TSystemInfo,
@@ -29,7 +29,7 @@ export class World implements IWorld {
     protected entityWorld: IEntityWorld;
     protected pda = new PushDownAutomaton<IState>();
     protected prefabs = {
-        counter: 0,
+        nextHandle: 0,
         entityLinks: new Map<number, IEntity[]>(),
     };
     protected resources = new Map<{ new(): Object }, Object>();
@@ -238,7 +238,7 @@ export class World implements IWorld {
         return this.resources.get(type) as T;
     }
 
-    loadPrefab(rawPrefab: TRawPrefab): TPrefabHandle {
+    loadPrefab(rawPrefab: TPrefab): TPrefabHandle {
         const entities = [];
         const saveFormat = this.saveFormat ?? new SaveFormat();
 
@@ -254,8 +254,8 @@ export class World implements IWorld {
             this.addEntity(entity);
         }
 
-        this.prefabs.entityLinks.set(this.prefabs.counter, entities);
-        return this.prefabs.counter++;
+        this.prefabs.entityLinks.set(this.prefabs.nextHandle, entities);
+        return this.prefabs.nextHandle++;
     }
 
     // todo: add parameter which only maintains for a specific state
@@ -537,5 +537,7 @@ export class World implements IWorld {
         for (entity of this.prefabs.entityLinks.get(handle)!) {
             this.removeEntity(entity);
         }
+
+        this.prefabs.entityLinks.delete(handle);
     }
 }

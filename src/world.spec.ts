@@ -11,7 +11,7 @@ export type TEntityInfo = {
     usage: Map<TSystemInfo<TSystemData>, TSystemData>
 };
 export type TPrefabHandle = number;
-export type TRawPrefab = { [Component: string]: Object }[];
+export type TPrefab = { [Component: string]: Object }[];
 export type TRunConfiguration = {
     initialState?: IState,
     // called in-between world dispatches during a run
@@ -75,7 +75,7 @@ export interface IPartialWorld {
      * Load entities with components from a prefab file
      * @param rawPrefab
      */
-    loadPrefab(rawPrefab: TRawPrefab): TPrefabHandle
+    loadPrefab(rawPrefab: TPrefab): TPrefabHandle
 
     /**
      * Re-calculate all entity, component and system dependencies and connections
