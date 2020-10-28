@@ -259,6 +259,7 @@ export class World implements IWorld {
     }
 
     // todo: add parameter which only maintains for a specific state
+    // todo: maybe use a change-log to only maintain real changes instead of everything
     maintain(): void {
         let entityInfo;
         let systemInfo;
@@ -295,7 +296,7 @@ export class World implements IWorld {
         // todo: also, if two systems depend on the same components, they may run in parallel
         //    if they only require READ access
         const result: Set<TSystemInfo<TSystemData>>[] = [];
-        const stateSystems = Array.from(state.systems);
+        const stateSystems = state.systems;
         let executionGroup: Set<TSystemInfo<TSystemData>> = new Set();
         let shouldRunSystem;
         let systemInfo: TSystemInfo<TSystemData>;
@@ -307,7 +308,7 @@ export class World implements IWorld {
         }
 
         for (systemInfo of this.sortedSystems) {
-            shouldRunSystem = !!stateSystems.find(stateSys => stateSys.constructor.name === systemInfo.system.constructor.name);
+            shouldRunSystem = !!stateSystems.find(stateSys => stateSys.prototype.constructor.name === systemInfo.system.constructor.name);
 
             if (shouldRunSystem) {
                 if (systemInfo.dependencies.size > 0) {
@@ -395,7 +396,7 @@ export class World implements IWorld {
         }
 
         configuration ||= {};
-        configuration.initialState ||= new State(new Set(this.systemInfos.keys()));
+        configuration.initialState ||= new State(Array.from(this.systemInfos.keys()).map(system => system.constructor as TSystemProto<TSystemData>));
 
         const initialState = configuration.initialState;
         const runConfig: TStaticRunConfiguration = {

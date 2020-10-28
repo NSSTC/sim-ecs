@@ -100,9 +100,9 @@ While the world is running (using `run()`), the state can be changed between eve
 using the handler function. Single calls to `dispatch()` do not offer the benefits of a PDA.
 
 ```typescript
-class InitState extends State { _systems = [initSystem] }
-class RunState extends State { _systems = [gravitySystem] }
-class PauseState extends State { _systems = [pauseSystem] }
+class InitState extends State { _systems = [InitSystem] }
+class RunState extends State { _systems = [GravitySystem] }
+class PauseState extends State { _systems = [PauseSystem] }
 const initState = new InitState();
 const runState = new RunState();
 

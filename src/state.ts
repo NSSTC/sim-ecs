@@ -1,17 +1,17 @@
-import ISystem, {TSystemData} from "./system.spec";
+import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import IState from "./state.spec";
 import {ITransitionActions} from "./world.spec";
 
 export * from './state.spec';
 
 export class State implements IState {
-    protected _systems: Set<ISystem<TSystemData>>;
+    protected _systems: TSystemProto<TSystemData>[];
 
-    constructor(systems: Set<ISystem<TSystemData>> = new Set()) {
+    constructor(systems: TSystemProto<TSystemData>[] = []) {
         this._systems = systems;
     }
 
-    get systems(): Set<ISystem<TSystemData>> {
+    get systems(): TSystemProto<TSystemData>[] {
         return this._systems;
     }
 
