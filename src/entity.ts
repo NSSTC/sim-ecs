@@ -12,7 +12,7 @@ export class Entity implements IEntity {
         protected world?: IEntityWorld
     ) {}
 
-    addComponent(component: Object): IEntity {
+    addComponent(component: Object): Entity {
         if (this.hasComponent(component.constructor as typeof Object)) {
             throw new Error(`Component "${component.constructor.name}" already exists on entity!`)
         }
@@ -62,7 +62,7 @@ export class Entity implements IEntity {
         return true;
     }
 
-    removeComponent(component: Object): IEntity {
+    removeComponent(component: Object): Entity {
         if (this.components.has(component.constructor as TObjectProto)) {
             this.components.delete(component.constructor as TObjectProto);
         }

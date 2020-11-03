@@ -7,7 +7,7 @@ import {TObjectProto} from "./_.spec";
 export * from './entity-builder.spec';
 
 export class EntityBuilder implements IEntityBuilder {
-    protected entity: IEntity;
+    protected entity: Entity;
 
     constructor(
         protected world: IPartialWorld
@@ -15,12 +15,12 @@ export class EntityBuilder implements IEntityBuilder {
         this.entity = new Entity();
     }
 
-    build(): IEntity {
+    build(): Entity {
         this.world.addEntity(this.entity);
         return this.entity;
     }
 
-    with(component: Object | TObjectProto, ...args: unknown[]): IEntityBuilder {
+    with(component: Object | TObjectProto, ...args: unknown[]): EntityBuilder {
         this.entity.addComponent(this.asComponent(component));
         return this;
     }

@@ -1,4 +1,4 @@
-import {IEntity} from "./entity";
+import {IEntity} from "./entity.spec";
 import {TObjectProto} from "./_.spec";
 
 /// stores the constructor name and the data blob on indices 0 and 1 accordingly

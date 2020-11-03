@@ -15,7 +15,7 @@ export class WorldBuilder implements IWorldBuilder {
     protected save = new SaveFormat();
     protected systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>> = new Map();
 
-    addCallback(cb: (world: IWorld) => void): IWorldBuilder {
+    addCallback(cb: (world: IWorld) => void): WorldBuilder {
         this.callbacks.add(cb);
         return this;
     }
@@ -36,7 +36,7 @@ export class WorldBuilder implements IWorldBuilder {
         return world;
     }
 
-    fromJSON(json: string, deserializer?: TDeserializer): IWorldBuilder {
+    fromJSON(json: string, deserializer?: TDeserializer): WorldBuilder {
         this.save.loadJSON(json);
         this.fromWorld = new World(new Map());
         let entity;
@@ -48,7 +48,7 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withSystem(System: TSystemProto<TSystemData>, options?: ISystemRegistrationOptions | TSystemProto<TSystemData>[]): IWorldBuilder {
+    withSystem(System: TSystemProto<TSystemData>, options?: ISystemRegistrationOptions | TSystemProto<TSystemData>[]): WorldBuilder {
         if (Array.from(this.systemInfos.values()).find(info => info.system.constructor == System)) {
             throw new Error(`The system ${System.constructor.name} is already registered!`);
         }
@@ -78,7 +78,7 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withComponent(Component: TObjectProto, options?: IComponentRegistrationOptions): IWorldBuilder {
+    withComponent(Component: TObjectProto, options?: IComponentRegistrationOptions): WorldBuilder {
         this.save.registerComponent(
             Component,
             options?.serDe?.deserializer ?? dataStructDeserializer.bind(undefined, Component),

@@ -41,10 +41,10 @@ export class SaveFormat implements ISaveFormat {
         this.entities = JSON.parse(json);
     }
 
-    getEntities(deserializer?: TDeserializer): Iterable<IEntity> {
+    getEntities(deserializer?: TDeserializer): Iterable<Entity> {
         const self = this;
         return {
-            *[Symbol.iterator](): Iterator<IEntity> {
+            *[Symbol.iterator](): Iterator<Entity> {
                 let entity;
                 let entityData: TEntity;
                 let component: TComponent;

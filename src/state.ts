@@ -1,4 +1,4 @@
-import ISystem, {TSystemData, TSystemProto} from "./system.spec";
+import {TSystemData, TSystemProto} from "./system.spec";
 import IState from "./state.spec";
 import {ITransitionActions} from "./world.spec";
 

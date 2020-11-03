@@ -12,7 +12,6 @@ import {
     TSystemNode
 } from "./world.spec";
 import IEntity from "./entity.spec";
-import IEntityBuilder from "./entity-builder.spec";
 import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import {IState, State} from "./state";
 import {TTypeProto} from "./_.spec";
@@ -193,7 +192,7 @@ export class World implements IWorld {
         return dataObj;
     }
 
-    buildEntity(world?: IPartialWorld): IEntityBuilder {
+    buildEntity(world?: IPartialWorld): EntityBuilder {
         return new EntityBuilder(world ?? this);
     }
 

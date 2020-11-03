@@ -1,6 +1,6 @@
 import {ISystemActions} from "./world.spec";
 import {TTypeProto} from "./_.spec";
-import {IEntity} from "./entity";
+import {IEntity} from "./entity.spec";
 
 export type TSystemData = { [fieldName: string]: Object };
 
