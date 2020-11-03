@@ -25,6 +25,12 @@ export interface ISystem<D extends TSystemData> {
     canUseEntity(entity: IEntity): boolean
 
     /**
+     * Called after dispatching or running a world
+     * @param actions
+     */
+    destroy(actions: ISystemActions): void | Promise<void>
+
+    /**
      * Run the system logic during a dispatch
      * @param dataSet
      */
@@ -34,7 +40,7 @@ export interface ISystem<D extends TSystemData> {
      * Called before dispatching or running a world
      * @param actions
      */
-    setup(actions: ISystemActions): void
+    setup(actions: ISystemActions): void | Promise<void>
 }
 
 export type TSystemProto<T extends TSystemData> = { new(): ISystem<T> };

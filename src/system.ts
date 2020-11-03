@@ -19,7 +19,9 @@ export abstract class System<D extends TSystemData> implements ISystem<D> {
         return entity.matchesQueue(Object.values(this.systemDataBlueprint) as TComponentAccess<any>[]);
     }
 
+    destroy(actions: ISystemActions): void | Promise<void> {}
+
     abstract run(dataSet: Set<D>): Promise<void>;
 
-    setup(actions: ISystemActions): void {}
+    setup(actions: ISystemActions): void | Promise<void> {}
 }

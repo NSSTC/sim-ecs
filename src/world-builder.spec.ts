@@ -7,6 +7,11 @@ export interface IComponentRegistrationOptions {
     serDe: ISerDe
 }
 
+export interface ISystemRegistrationOptions {
+    dependencies?: TSystemProto<TSystemData>[]
+    parallelize?: boolean
+}
+
 export interface IWorldBuilder {
     /**
      * Build the execution unit
@@ -22,10 +27,10 @@ export interface IWorldBuilder {
 
     /**
      * Add system to the world
-     * @param system
-     * @param dependencies
+     * @param System
+     * @param options
      */
-    withSystem(system: TSystemProto<TSystemData>, dependencies?: TSystemProto<TSystemData>[]): IWorldBuilder
+    withSystem(System: TSystemProto<TSystemData>, options?: ISystemRegistrationOptions | TSystemProto<TSystemData>[]): IWorldBuilder
 
     /**
      * Add component to the world (used for loading and saving)

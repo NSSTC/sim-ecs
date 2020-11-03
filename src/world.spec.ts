@@ -25,6 +25,7 @@ export type TSystemInfo<D extends TSystemData> = {
     dataPrototype: TTypeProto<D>
     dataSet: Set<D>
     dependencies: Set<TSystemProto<TSystemData>>
+    parallelize: boolean
     system: ISystem<D>
 };
 export type TSystemNode = { system: ISystem<TSystemData>, dependencies: TSystemProto<TSystemData>[]};

@@ -407,11 +407,11 @@ export class World implements IWorld {
         this.pda.clear();
         this.shouldRunSystems = true;
 
-        for (const system of this.systemInfos.keys()) {
-            system.setup(this.systemWorld);
-        }
-
         this.runPromise = new Promise(async resolver => {
+            for (const system of this.systemInfos.keys()) {
+                await system.setup(this.systemWorld);
+            }
+
             await this.pushState(initialState);
 
             const execAsync = typeof requestAnimationFrame == 'function'
@@ -426,6 +426,10 @@ export class World implements IWorld {
                 await this.pda.state?.deactivate(this.transitionWorld);
                 for (const state of this.runExecutionPipelineCache.keys()) {
                     await state.destroy(this.transitionWorld);
+                }
+
+                for (const system of this.systemInfos.keys()) {
+                    await system.destroy(this.systemWorld);
                 }
 
                 this.runExecutionPipelineCache.clear();

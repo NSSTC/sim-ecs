@@ -1,5 +1,5 @@
 import {
-    IComponentRegistrationOptions,
+    IComponentRegistrationOptions, ISystemRegistrationOptions,
     IWorldBuilder,
 } from "./world-builder.spec";
 import ISystem, {TSystemData, TSystemProto} from "./system.spec";
@@ -48,9 +48,21 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withSystem(System: TSystemProto<TSystemData>, dependencies?: TSystemProto<TSystemData>[]): IWorldBuilder {
+    withSystem(System: TSystemProto<TSystemData>, options?: ISystemRegistrationOptions | TSystemProto<TSystemData>[]): IWorldBuilder {
         if (Array.from(this.systemInfos.values()).find(info => info.system.constructor == System)) {
             throw new Error(`The system ${System.constructor.name} is already registered!`);
+        }
+
+        let dependencies;
+        // todo: read from options and thread to service workers if true in order spread a single system's workload
+        let parallelize = false;
+
+        if (Array.isArray(options)) {
+            dependencies = options;
+        }
+        else if (!!options) {
+            dependencies = options.dependencies ?? [];
+            parallelize = !!options.parallelize;
         }
 
         const system = new System();
@@ -59,8 +71,9 @@ export class WorldBuilder implements IWorldBuilder {
             dataPrototype: system.SystemDataType,
             dataSet: new Set(),
             dependencies: new Set(dependencies),
+            parallelize,
             system,
-        } as TSystemInfo<TSystemData>);
+        });
 
         return this;
     }
