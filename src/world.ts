@@ -6,8 +6,8 @@ import {
     ITransitionActions,
     IWorld,
     TEntityInfo, TPrefabHandle, TPrefab,
-    TRunConfiguration,
-    TStaticRunConfiguration,
+    IRunConfiguration,
+    IStaticRunConfiguration,
     TSystemInfo,
     TSystemNode
 } from "./world.spec";
@@ -208,7 +208,7 @@ export class World implements IWorld {
     dispatch(state?: IState): Promise<void> {
         return this.run({
             initialState: state,
-            transitionHandler: async actions => { actions.stopRun() },
+            afterStepHandler: async actions => { actions.stopRun() },
         });
     }
 
@@ -385,7 +385,7 @@ export class World implements IWorld {
         this.resources.delete(type);
     }
 
-    run(configuration?: TRunConfiguration): Promise<void> {
+    run(configuration?: IRunConfiguration): Promise<void> {
         if (this.runPromise) {
             throw new Error('The dispatch loop is already running!');
         }
@@ -398,9 +398,10 @@ export class World implements IWorld {
         configuration.initialState ||= new State(Array.from(this.systemInfos.keys()).map(system => system.constructor as TSystemProto<TSystemData>));
 
         const initialState = configuration.initialState;
-        const runConfig: TStaticRunConfiguration = {
+        const runConfig: IStaticRunConfiguration = {
+            afterStepHandler: configuration.afterStepHandler ?? (async _action => {}),
+            beforeStepHandler: configuration.beforeStepHandler ?? (async _action => {}),
             initialState,
-            transitionHandler: configuration.transitionHandler ?? (async _action => {}),
         };
 
         this.pda.clear();
@@ -442,6 +443,8 @@ export class World implements IWorld {
                     return;
                 }
 
+                await runConfig.beforeStepHandler(this.transitionWorld);
+
                 for (executionGroup of this.runExecutionPipeline) {
                     systemPromises = [];
                     for (systemInfo of executionGroup) {
@@ -451,7 +454,7 @@ export class World implements IWorld {
                     await Promise.all(systemPromises);
                 }
 
-                await runConfig.transitionHandler(this.transitionWorld);
+                await runConfig.afterStepHandler(this.transitionWorld);
                 execAsync(mainLoop);
             }
 

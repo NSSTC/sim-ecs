@@ -12,15 +12,16 @@ export type TEntityInfo = {
 };
 export type TPrefabHandle = number;
 export type TPrefab = { [Component: string]: Object }[];
-export type TRunConfiguration = {
+export interface IRunConfiguration {
+    afterStepHandler?: (actions: ITransitionActions) => Promise<void>
+    beforeStepHandler?: (actions: ITransitionActions) => Promise<void>
     initialState?: IState,
-    // called in-between world dispatches during a run
-    transitionHandler?: (actions: ITransitionActions) => Promise<void>
-};
-export type TStaticRunConfiguration = {
+}
+export interface IStaticRunConfiguration extends IRunConfiguration {
+    afterStepHandler: (actions: ITransitionActions) => Promise<void>
+    beforeStepHandler: (actions: ITransitionActions) => Promise<void>
     initialState: IState,
-    transitionHandler: (actions: ITransitionActions) => Promise<void>
-};
+}
 export type TSystemInfo<D extends TSystemData> = {
     dataPrototype: TTypeProto<D>
     dataSet: Set<D>
@@ -179,7 +180,7 @@ export interface IWorld extends IPartialWorld {
      * Contains performance benefits by pre-calculating and pre-scheduling the execution
      * @param configuration
      */
-    run(configuration?: TRunConfiguration): Promise<void>
+    run(configuration?: IRunConfiguration): Promise<void>
 
     /**
      * Set a save-format object, which will be used for saving/loading
