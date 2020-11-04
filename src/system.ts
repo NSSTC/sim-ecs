@@ -21,7 +21,7 @@ export abstract class System<D extends TSystemData> implements ISystem<D> {
 
     destroy(actions: ISystemActions): void | Promise<void> {}
 
-    abstract run(dataSet: Set<D>): Promise<void>;
+    abstract run(dataSet: Set<D>): void | Promise<void>;
 
     setup(actions: ISystemActions): void | Promise<void> {}
 }

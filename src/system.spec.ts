@@ -34,7 +34,7 @@ export interface ISystem<D extends TSystemData> {
      * Run the system logic during a dispatch
      * @param dataSet
      */
-    run(dataSet: Set<D>): Promise<void>
+    run(dataSet: Set<D>): void | Promise<void>
 
     /**
      * Called before dispatching or running a world
