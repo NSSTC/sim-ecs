@@ -15,11 +15,11 @@ export class State implements IState {
         return this._systems;
     }
 
-    activate(world: ITransitionActions): void | Promise<void> {}
+    activate(actions: ITransitionActions): void | Promise<void> {}
 
     create(actions: ITransitionActions): void | Promise<void> {}
 
-    deactivate(world: ITransitionActions): void | Promise<void> {}
+    deactivate(actions: ITransitionActions): void | Promise<void> {}
 
     destroy(actions: ITransitionActions): void | Promise<void> {}
 }

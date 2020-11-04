@@ -34,7 +34,7 @@ export class SaveFormat implements ISaveFormat {
         else if (fallbackDeserializer) {
             return fallbackDeserializer(constructorName, rawComponent);
         }
-        else throw new Error(`No serializer provided for component of type "${constructorName}"!`);
+        else throw new Error(`No deserializer provided for component of type "${constructorName}"! Did you forget to register the component?`);
     }
 
     loadJSON(json: string) {

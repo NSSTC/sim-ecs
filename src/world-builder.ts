@@ -89,6 +89,7 @@ export class WorldBuilder implements IWorldBuilder {
     }
 }
 
+// todo: read the Constructor parameters in order to throw early if a field is missing
 function dataStructDeserializer(Constructor: TObjectProto, data: unknown): Object {
     if (typeof data != 'object') {
         throw new Error(`Cannot default-deserialize data of type ${typeof data}!`);
