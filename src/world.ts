@@ -284,7 +284,15 @@ export class World implements IWorld {
 
     protected async popState(): Promise<void> {
         await this.pda.pop()?.deactivate(this.transitionWorld);
-        await this.pda.state?.activate(this.transitionWorld);
+
+        const newState = this.pda.state;
+        if (!newState) {
+            this.runExecutionPipeline = [];
+            return;
+        }
+
+        await newState.activate(this.transitionWorld);
+        this.runExecutionPipeline = this.runExecutionPipelineCache.get(newState) ?? [];
     }
 
     // todo: improve logic which sets up the groups (tracked by #13)
