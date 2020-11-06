@@ -262,11 +262,9 @@ export class World implements IWorld {
     maintain(): void {
         let entityInfo;
         let systemInfo;
-        let usableEntities;
 
         for (systemInfo of this.systemInfos.values()) {
             systemInfo.dataSet.clear();
-            usableEntities = new Set<IEntity>();
             for (entityInfo of this.entityInfos.values()) {
                 World.assignEntityToSystem(systemInfo, entityInfo);
             }
@@ -308,6 +306,7 @@ export class World implements IWorld {
         let shouldRunSystem;
         let systemInfo: TSystemInfo<TSystemData>;
 
+        // todo: system-sorting should not depend on entity-sorting!
         if (this.dirty) {
             // this line is purely to satisfy my IDE
             this.sortedSystems = [];
