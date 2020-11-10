@@ -1,7 +1,7 @@
 import {IEntity} from "./entity.spec";
 import IEntityBuilder from "./entity-builder.spec";
 import ISystem, {TSystemData, TSystemProto} from "./system.spec";
-import IState from "./state.spec";
+import IState, {TStateProto} from "./state.spec";
 import {TTypeProto} from "./_.spec";
 import {ISaveFormat, TSerializer} from "./save-format.spec";
 import {TComponentAccess} from "./queue.spec";
@@ -15,9 +15,9 @@ export type TPrefab = { [Component: string]: Object }[];
 export interface IRunConfiguration {
     afterStepHandler?: (actions: ITransitionActions) => Promise<void> | void
     beforeStepHandler?: (actions: ITransitionActions) => Promise<void> | void
-    initialState?: IState,
+    initialState?: TStateProto,
 }
-export interface IStaticRunConfiguration extends IRunConfiguration {
+export interface IStaticRunConfiguration {
     afterStepHandler: (actions: ITransitionActions) => Promise<void> | void
     beforeStepHandler: (actions: ITransitionActions) => Promise<void> | void
     initialState: IState,
@@ -173,7 +173,7 @@ export interface IWorld extends IPartialWorld {
      * Execute all systems
      * @param state
      */
-    dispatch(state?: IState): Promise<void>
+    dispatch(state?: TStateProto): Promise<void>
 
     /**
      * Execute all systems continuously in a dispatch-loop

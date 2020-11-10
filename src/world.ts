@@ -13,7 +13,7 @@ import {
 } from "./world.spec";
 import IEntity from "./entity.spec";
 import ISystem, {TSystemData, TSystemProto} from "./system.spec";
-import {IState, State} from "./state";
+import {IState, State, TStateProto} from "./state";
 import {TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
 import {getDefaultDeserializer, SaveFormat} from "./save-format";
@@ -205,7 +205,7 @@ export class World implements IWorld {
         return entity;
     }
 
-    async dispatch(state?: IState): Promise<void> {
+    async dispatch(state?: TStateProto): Promise<void> {
         await this.run({
             initialState: state,
             afterStepHandler: actions => actions.stopRun(),
@@ -402,9 +402,10 @@ export class World implements IWorld {
         }
 
         configuration ||= {};
-        configuration.initialState ||= new State(Array.from(this.systemInfos.keys()).map(system => system.constructor as TSystemProto<TSystemData>));
 
-        const initialState = configuration.initialState;
+        const initialState = configuration.initialState
+            ? new configuration.initialState()
+            : new State(Array.from(this.systemInfos.keys()).map(system => system.constructor as TSystemProto<TSystemData>));
         const runConfig: IStaticRunConfiguration = {
             afterStepHandler: configuration.afterStepHandler ?? (_action => {}),
             beforeStepHandler: configuration.beforeStepHandler ?? (_action => {}),

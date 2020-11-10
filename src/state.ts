@@ -5,11 +5,9 @@ import {ITransitionActions} from "./world.spec";
 export * from './state.spec';
 
 export class State implements IState {
-    protected _systems: TSystemProto<TSystemData>[];
-
-    constructor(systems: TSystemProto<TSystemData>[] = []) {
-        this._systems = systems;
-    }
+    constructor(
+        protected _systems: TSystemProto<TSystemData>[] = []
+    ) {}
 
     get systems(): TSystemProto<TSystemData>[] {
         return this._systems;

@@ -75,7 +75,7 @@ const runGame = async (world: IWorld) => {
     return world.run({
         afterStepHandler: afterFrameStep,
         beforeStepHandler: beforeFrameStep,
-        initialState: new MenuState(), // todo: do not require constructor here!
+        initialState: MenuState,
     }).catch(console.error);
 }
 
