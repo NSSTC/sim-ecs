@@ -406,8 +406,8 @@ export class World implements IWorld {
 
         const initialState = configuration.initialState;
         const runConfig: IStaticRunConfiguration = {
-            afterStepHandler: configuration.afterStepHandler ?? (async _action => {}),
-            beforeStepHandler: configuration.beforeStepHandler ?? (async _action => {}),
+            afterStepHandler: configuration.afterStepHandler ?? (_action => {}),
+            beforeStepHandler: configuration.beforeStepHandler ?? (_action => {}),
             initialState,
         };
 

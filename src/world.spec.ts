@@ -13,13 +13,13 @@ export type TEntityInfo = {
 export type TPrefabHandle = number;
 export type TPrefab = { [Component: string]: Object }[];
 export interface IRunConfiguration {
-    afterStepHandler?: (actions: ITransitionActions) => Promise<void>
-    beforeStepHandler?: (actions: ITransitionActions) => Promise<void>
+    afterStepHandler?: (actions: ITransitionActions) => Promise<void> | void
+    beforeStepHandler?: (actions: ITransitionActions) => Promise<void> | void
     initialState?: IState,
 }
 export interface IStaticRunConfiguration extends IRunConfiguration {
-    afterStepHandler: (actions: ITransitionActions) => Promise<void>
-    beforeStepHandler: (actions: ITransitionActions) => Promise<void>
+    afterStepHandler: (actions: ITransitionActions) => Promise<void> | void
+    beforeStepHandler: (actions: ITransitionActions) => Promise<void> | void
     initialState: IState,
 }
 export type TSystemInfo<D extends TSystemData> = {
