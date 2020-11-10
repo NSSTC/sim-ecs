@@ -205,10 +205,10 @@ export class World implements IWorld {
         return entity;
     }
 
-    dispatch(state?: IState): Promise<void> {
-        return this.run({
+    async dispatch(state?: IState): Promise<void> {
+        await this.run({
             initialState: state,
-            afterStepHandler: async actions => { actions.stopRun() },
+            afterStepHandler: actions => actions.stopRun(),
         });
     }
 
