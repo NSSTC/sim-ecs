@@ -39,11 +39,15 @@ export class World implements IWorld {
     protected runExecutionPipeline: Set<TSystemInfo<TSystemData>>[] = [];
     protected runExecutionPipelineCache: Map<IState, Set<TSystemInfo<TSystemData>>[]> = new Map();
     protected runPromise?: Promise<void> = undefined;
-    protected saveFormat?: ISaveFormat;
+    protected _saveFormat?: ISaveFormat;
     protected shouldRunSystems = false;
     protected sortedSystems: TSystemInfo<TSystemData>[];
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
+
+    get saveFormat() {
+        return this._saveFormat;
+    }
 
     constructor(
         protected systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>>
@@ -243,7 +247,7 @@ export class World implements IWorld {
 
     loadPrefab(rawPrefab: TPrefab, customDeserializer?: TDeserializer): TPrefabHandle {
         const entities = [];
-        const saveFormat = this.saveFormat ?? new SaveFormat();
+        const saveFormat = this._saveFormat ?? new SaveFormat();
 
         let entity: IEntity;
         for (const rawEntity of rawPrefab) {
@@ -477,7 +481,7 @@ export class World implements IWorld {
     }
 
     setSaveFormat(saveFormat: ISaveFormat) {
-        this.saveFormat = saveFormat;
+        this._saveFormat = saveFormat;
     }
 
     protected sortSystems(unsorted: TSystemNode[]): TSystemNode[] {
@@ -534,8 +538,8 @@ export class World implements IWorld {
     toJSON(serializer?: TSerializer): string {
         let save;
 
-        if (this.saveFormat) {
-            save = this.saveFormat;
+        if (this._saveFormat) {
+            save = this._saveFormat;
             save.setEntities(this.entityInfos.keys(), serializer);
         }
         else {

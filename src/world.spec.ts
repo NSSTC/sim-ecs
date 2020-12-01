@@ -3,7 +3,7 @@ import IEntityBuilder from "./entity-builder.spec";
 import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import IState, {TStateProto} from "./state.spec";
 import {TTypeProto} from "./_.spec";
-import {ISaveFormat, TSerializer} from "./save-format.spec";
+import {ISaveFormat, TDeserializer, TSerializer} from "./save-format.spec";
 import {TComponentAccess} from "./queue.spec";
 
 export type TEntityInfo = {
@@ -32,6 +32,8 @@ export type TSystemInfo<D extends TSystemData> = {
 export type TSystemNode = { system: ISystem<TSystemData>, dependencies: TSystemProto<TSystemData>[]};
 
 export interface IPartialWorld {
+    readonly saveFormat?: ISaveFormat
+
     /**
      * Get a resource which was previously stored
      * @param type
