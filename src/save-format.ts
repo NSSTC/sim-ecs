@@ -15,6 +15,10 @@ export class SaveFormat implements ISaveFormat {
     protected entities: TSaveFormat = [];
     protected serde: Map<string, {proto: TObjectProto, serializer: TSerializer, deserializer: TCustomDeserializer}> = new Map();
 
+    get rawEntities() {
+        return Array.from(this.entities);
+    }
+
     static fromJSON(json: string): SaveFormat {
         const save = new SaveFormat();
         save.loadJSON(json);

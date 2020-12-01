@@ -15,6 +15,8 @@ export interface ISerDe {
 }
 
 export interface ISaveFormat {
+    readonly rawEntities: TSaveFormat
+
     deserialize(constructorName: string, rawComponent: unknown, fallbackDeserializer?: TDeserializer): Object
     getEntities(deserializer?: TDeserializer): Iterable<IEntity>
     loadJSON(json: string): void
