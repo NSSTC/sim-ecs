@@ -189,6 +189,12 @@ This means that prefabs can be used to design menus, levels, GUIs, etc. which ar
 and discarded after use. After all, who needs level1 data when they switched over to level2?
 
 ```typescript
+enum MonsterTypes {
+    Duck,
+    Lizard,
+    Tiger,
+}
+
 // loading a prefab, the prefab might be in a different file, even maybe just JSON data!
 const prefab = [
     {
@@ -199,7 +205,7 @@ const prefab = [
         Player: {
             name: 'Jane',
             health: 100,
-        }
+        },
     },
     {
       Position: {
@@ -209,7 +215,7 @@ const prefab = [
       Monster: {
           type: MonsterTypes.Tiger,
           health: 250,
-      }
+      },
     }, 
 ];
 
@@ -237,30 +243,15 @@ localStorage.setItem('save0', world.toJSON());
 
 There is no version or upgrade management done by the ECS, though, and we highly recommend to implement it based on your needs.
 
-In order to load a saved world, the json string can be fed to the world builder during creation.
-In order to correctly initialize all components, a deserializer-function has to be provided.
-The function takes the constructor name and the parsed data-blob and returns the initialized object.
+In order to load a saved world, the json string can be fed to the world builder during creation:
 
 ```typescript
-ecs.buildWorld().fromJSON(jsonSave, (cn, data) => {
-    switch (cn) {
-        case Counter.name: {
-            const c = new Counter();
-            c.a = data.a;
-            return c;
-        }
-        case Date.name: {
-            return new Date(data);
-        }
-        default: {
-            throw new Error('Unknown constructor name: ' + cn);
-        }
-    }
-}).build();
+new ECS().buildWorld().fromJSON(localStorage.getItem('save0')).build();
 ```
 
-At this point, the data may also be manipulated, for example updating time-stamps.
-Note that all components must be re-instantiated in order to set up the correct constructor and prototype chain.
+In order to correctly initialize all components, a deserializer-function may be provided.
+At this point, the data can also be manipulated, for example updating timestamps in components.
+Usually, though, registering the Components is enough for sim-ecs to correctly handle deserialization.
 
 
 ## Comparison with other TS ECS libs
