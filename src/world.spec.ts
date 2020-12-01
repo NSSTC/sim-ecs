@@ -77,7 +77,7 @@ export interface IPartialWorld {
      * Load entities with components from a prefab file
      * @param rawPrefab
      */
-    loadPrefab(rawPrefab: TPrefab): TPrefabHandle
+    loadPrefab(rawPrefab: TPrefab, customDeserializer?: TDeserializer): TPrefabHandle
 
     /**
      * Re-calculate all entity, component and system dependencies and connections

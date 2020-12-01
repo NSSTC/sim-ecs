@@ -237,7 +237,7 @@ export class World implements IWorld {
         return this.resources.get(type) as T;
     }
 
-    loadPrefab(rawPrefab: TPrefab): TPrefabHandle {
+    loadPrefab(rawPrefab: TPrefab, customDeserializer?: TDeserializer): TPrefabHandle {
         const entities = [];
         const saveFormat = this.saveFormat ?? new SaveFormat();
 
@@ -247,7 +247,7 @@ export class World implements IWorld {
             entities.push(entity);
 
             for (const rawComponent of Object.entries(rawEntity)) {
-                entity.addComponent(saveFormat.deserialize(rawComponent[0], rawComponent[1], getDefaultDeserializer()));
+                entity.addComponent(saveFormat.deserialize(rawComponent[0], rawComponent[1], getDefaultDeserializer(customDeserializer)));
             }
 
             this.addEntity(entity);
