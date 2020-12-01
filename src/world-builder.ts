@@ -87,6 +87,14 @@ export class WorldBuilder implements IWorldBuilder {
 
         return this;
     }
+
+    withComponents(Components: TObjectProto[]): IWorldBuilder {
+        for (const Component of Components) {
+            this.withComponent(Component);
+        }
+
+        return this;
+    }
 }
 
 // todo: read the Constructor parameters in order to throw early if a field is missing

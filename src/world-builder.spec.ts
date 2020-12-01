@@ -28,14 +28,20 @@ export interface IWorldBuilder {
     /**
      * Add system to the world
      * @param System
-     * @param options
+     * @param optionsOrDependencies
      */
-    withSystem(System: TSystemProto<TSystemData>, options?: ISystemRegistrationOptions | TSystemProto<TSystemData>[]): IWorldBuilder
+    withSystem(System: TSystemProto<TSystemData>, optionsOrDependencies?: ISystemRegistrationOptions | TSystemProto<TSystemData>[]): IWorldBuilder
 
     /**
-     * Add component to the world (used for loading and saving)
+     * Register a component in the world
      * @param Component
      * @param options
      */
     withComponent(Component: TObjectProto, options?: IComponentRegistrationOptions): IWorldBuilder
+
+    /**
+     * Register several components with default options in the world
+     * @param Components
+     */
+    withComponents(Components: TObjectProto[]): IWorldBuilder
 }
