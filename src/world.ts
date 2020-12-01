@@ -1,13 +1,17 @@
 import {Entity} from "./entity";
 import {EntityBuilder} from "./entity-builder";
 import {
-    IEntityWorld, IPartialWorld,
+    IEntityWorld,
+    IPartialWorld,
+    IRunConfiguration,
+    IStaticRunConfiguration,
     ISystemActions,
     ITransitionActions,
     IWorld,
-    TEntityInfo, TPrefabHandle, TPrefab,
-    IRunConfiguration,
-    IStaticRunConfiguration,
+    TEntityInfo,
+    TPrefab,
+    TPrefabEntity,
+    TPrefabHandle,
     TSystemInfo,
     TSystemNode
 } from "./world.spec";
@@ -17,7 +21,7 @@ import {IState, State, TStateProto} from "./state";
 import {TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
 import {getDefaultDeserializer, SaveFormat} from "./save-format";
-import {ISaveFormat, TSerializer} from "./save-format.spec";
+import {ISaveFormat, TDeserializer, TSerializer} from "./save-format.spec";
 import {access, EAccess, TComponentAccess} from "./queue.spec";
 
 export * from './world.spec';
