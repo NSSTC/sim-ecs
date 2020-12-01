@@ -100,6 +100,7 @@ export class World implements IWorld {
             removeEntityFromSystems: this.removeEntityFromSystems.bind(this),
             removeResource: this.removeResource.bind(this),
             replaceResource: this.replaceResource.bind(this),
+            savePrefab: this.savePrefab.bind(this),
             stopRun: this.stopRun.bind(this),
             toJSON: this.toJSON.bind(this),
             unloadPrefab: this.unloadPrefab.bind(this),
@@ -479,6 +480,30 @@ export class World implements IWorld {
         });
 
         return this.runPromise;
+    }
+
+    savePrefab(): TPrefab {
+        const entities = [];
+        const saveFormat = this._saveFormat ?? new SaveFormat();
+
+        saveFormat.setEntities(this.getEntities());
+
+        {
+            let component;
+            let entity;
+            let entityPrefab: TPrefabEntity;
+            for (entity of saveFormat.rawEntities) {
+                entityPrefab = {};
+
+                for (component of entity) {
+                    entityPrefab[component[0]] = component[1];
+                }
+
+                entities.push(entityPrefab);
+            }
+        }
+
+        return entities;
     }
 
     setSaveFormat(saveFormat: ISaveFormat) {

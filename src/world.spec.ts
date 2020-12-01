@@ -11,8 +11,9 @@ export type TEntityInfo = {
     usage: Map<TSystemInfo<TSystemData>, TSystemData>
 };
 export type TExecutionFunction = ((callback: Function) => any) | typeof setTimeout | typeof requestAnimationFrame;
+export type TPrefabEntity = { [Component: string]: unknown };
 export type TPrefabHandle = number;
-export type TPrefab = { [Component: string]: Object }[];
+export type TPrefab = TPrefabEntity[];
 export interface IRunConfiguration {
     afterStepHandler?: (actions: ITransitionActions) => Promise<void> | void
     beforeStepHandler?: (actions: ITransitionActions) => Promise<void> | void
@@ -115,12 +116,18 @@ export interface IPartialWorld {
     replaceResource<T extends Object>(type: T | TTypeProto<T>, ...args: unknown[]): void
 
     /**
+     * Save this world to a JSON string as human-readable prefab
+     */
+    savePrefab(): TPrefab
+
+    /**
      * Signal the world to stop its dispatch-loop
      */
     stopRun(): void
 
     /**
      * Save this world to a JSON string (entities and their components)
+     * @param serializer
      */
     toJSON(serializer?: TSerializer): string
 
