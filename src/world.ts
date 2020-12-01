@@ -55,14 +55,24 @@ export class World implements IWorld {
         const self = this;
 
         this.systemWorld = Object.freeze({
-            get currentState(): IState | undefined { return self.pda.state; },
+            get currentState(): IState | undefined {
+                return self.pda.state;
+            },
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
         });
 
         this.transitionWorld = Object.freeze({
-            get currentState(): IState | undefined { return self.pda.state; },
-            addEntity: (entity) => { self.addEntity(entity); self.assignEntityToSystems(entity); },
+            get currentState() {
+                return self.pda.state;
+            },
+            get saveFormat() {
+                return self.saveFormat;
+            },
+            addEntity: (entity) => {
+                self.addEntity(entity);
+                self.assignEntityToSystems(entity);
+            },
             addResource: this.addResource.bind(this),
             buildEntity: () => this.buildEntity.call(this, this.transitionWorld),
             createEntity: this.createEntity.bind(this),
@@ -75,17 +85,26 @@ export class World implements IWorld {
             pushState: this.pushState.bind(this),
             removeEntity: (entity) => {
                 this.removeEntityFromSystems(entity);
-                this.removeEntity(entity); },
+                this.removeEntity(entity);
+            },
             removeResource: this.removeResource.bind(this),
             replaceResource: this.replaceResource.bind(this),
+            savePrefab: this.savePrefab.bind(this),
             stopRun: this.stopRun.bind(this),
             toJSON: this.toJSON.bind(this),
             unloadPrefab: this.unloadPrefab.bind(this),
         });
 
         this.entityWorld = Object.freeze({
-            get isDirty(): boolean { return self.dirty; },
-            get isRunning(): boolean { return !!self.runPromise; },
+            get isDirty() {
+                return self.dirty;
+            },
+            get isRunning() {
+                return !!self.runPromise;
+            },
+            get saveFormat() {
+                return self.saveFormat;
+            },
             addEntity: this.addEntity.bind(this),
             addResource: this.addResource.bind(this),
             assignEntityToSystems: this.assignEntityToSystems.bind(this),
@@ -139,8 +158,7 @@ export class World implements IWorld {
         if (typeof obj === 'object') {
             type = obj.constructor as TTypeProto<T>;
             instance = obj;
-        }
-        else {
+        } else {
             type = obj;
             instance = new (obj.prototype.constructor.bind(obj, ...Array.from(arguments).slice(1)))();
         }
@@ -191,8 +209,7 @@ export class World implements IWorld {
                         break;
                     }
                 }
-            }
-            else {
+            } else {
                 // @ts-ignore
                 dataObj[entry[0]] = entity.getComponent(component);
             }
@@ -344,8 +361,7 @@ export class World implements IWorld {
         this.pda.push(newState);
         if (this.runExecutionPipelineCache.has(newState)) {
             this.runExecutionPipeline = this.runExecutionPipelineCache.get(newState) ?? [];
-        }
-        else {
+        } else {
             newState.create(this.transitionWorld);
             this.runExecutionPipeline = this.prepareExecutionPipeline(newState);
             this.runExecutionPipelineCache.set(newState, this.runExecutionPipeline);
@@ -380,8 +396,7 @@ export class World implements IWorld {
 
         if (typeof obj === 'object') {
             type = obj.constructor as TTypeProto<T>;
-        }
-        else {
+        } else {
             type = obj;
         }
 
@@ -416,8 +431,10 @@ export class World implements IWorld {
             ? new configuration.initialState()
             : new State(Array.from(this.systemInfos.keys()).map(system => system.constructor as TSystemProto<TSystemData>));
         const runConfig: IStaticRunConfiguration = {
-            afterStepHandler: configuration.afterStepHandler ?? (_action => {}),
-            beforeStepHandler: configuration.beforeStepHandler ?? (_action => {}),
+            afterStepHandler: configuration.afterStepHandler ?? (_action => {
+            }),
+            beforeStepHandler: configuration.beforeStepHandler ?? (_action => {
+            }),
             executionFunction: configuration.executionFunction ?? (typeof requestAnimationFrame == 'function'
                 ? requestAnimationFrame
                 : setTimeout),
@@ -567,8 +584,7 @@ export class World implements IWorld {
         if (this._saveFormat) {
             save = this._saveFormat;
             save.setEntities(this.entityInfos.keys(), serializer);
-        }
-        else {
+        } else {
             save = new SaveFormat({
                 entities: this.entityInfos.keys(),
             });
