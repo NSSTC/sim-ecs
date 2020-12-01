@@ -10,16 +10,19 @@ export type TEntityInfo = {
     entity: IEntity
     usage: Map<TSystemInfo<TSystemData>, TSystemData>
 };
+export type TExecutionFunction = ((callback: Function) => any) | typeof setTimeout | typeof requestAnimationFrame;
 export type TPrefabHandle = number;
 export type TPrefab = { [Component: string]: Object }[];
 export interface IRunConfiguration {
     afterStepHandler?: (actions: ITransitionActions) => Promise<void> | void
     beforeStepHandler?: (actions: ITransitionActions) => Promise<void> | void
-    initialState?: TStateProto,
+    executionFunction?: TExecutionFunction
+    initialState?: TStateProto
 }
 export interface IStaticRunConfiguration {
     afterStepHandler: (actions: ITransitionActions) => Promise<void> | void
     beforeStepHandler: (actions: ITransitionActions) => Promise<void> | void
+    executionFunction: TExecutionFunction
     initialState: IState,
 }
 export type TSystemInfo<D extends TSystemData> = {

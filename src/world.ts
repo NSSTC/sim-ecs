@@ -417,6 +417,9 @@ export class World implements IWorld {
         const runConfig: IStaticRunConfiguration = {
             afterStepHandler: configuration.afterStepHandler ?? (_action => {}),
             beforeStepHandler: configuration.beforeStepHandler ?? (_action => {}),
+            executionFunction: configuration.executionFunction ?? (typeof requestAnimationFrame == 'function'
+                ? requestAnimationFrame
+                : setTimeout),
             initialState,
         };
 
@@ -430,9 +433,7 @@ export class World implements IWorld {
 
             await this.pushState(initialState);
 
-            const execAsync = typeof requestAnimationFrame == 'function'
-                ? requestAnimationFrame
-                : setTimeout;
+            const execFn = runConfig.executionFunction;
             let executionGroup;
             this.runExecutionPipeline = this.prepareExecutionPipeline(this.pda.state ?? initialState);
             let systemInfo;
@@ -471,10 +472,10 @@ export class World implements IWorld {
                 }
 
                 await runConfig.afterStepHandler(this.transitionWorld);
-                execAsync(mainLoop);
+                execFn(mainLoop);
             }
 
-            execAsync(mainLoop);
+            execFn(mainLoop);
         });
 
         return this.runPromise;
