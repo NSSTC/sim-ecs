@@ -116,11 +116,6 @@ export interface IPartialWorld {
     replaceResource<T extends Object>(type: T | TTypeProto<T>, ...args: unknown[]): void
 
     /**
-     * Save this world to a JSON string as human-readable prefab
-     */
-    savePrefab(): TPrefab
-
-    /**
      * Signal the world to stop its dispatch-loop
      */
     stopRun(): void
@@ -130,6 +125,11 @@ export interface IPartialWorld {
      * @param serializer
      */
     toJSON(serializer?: TSerializer): string
+
+    /**
+     * Save this world to a JSON string as human-readable prefab
+     */
+    toPrefab(): TPrefab
 
     /**
      * Remove entities with data-components from a prefab file
