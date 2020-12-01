@@ -1,6 +1,6 @@
 import {ECS, IWorld} from "./ecs";
 import {PaddleSystem} from "./systems/paddle";
-import {afterFrameStep, beforeFrameStep} from "./app/frame-transition-handlers";
+import {afterFrameHandler, beforeFrameHandler} from "./app/frame-transition-handlers";
 import {InputSystem} from "./systems/input";
 import {GameStore} from "./app/game-store";
 import {MenuState} from "./states/menu";
@@ -17,7 +17,7 @@ import {GameItem} from "./components/game-item";
 import {ScoreBoardSystem} from "./systems/score-board";
 
 
-const cleanup = async (_world: IWorld) => {
+const cleanup = () => {
     const canvasEle = document.querySelector('canvas');
     if (!canvasEle) throw new Error('Could not find canvas element!');
 
@@ -30,8 +30,7 @@ const cleanup = async (_world: IWorld) => {
 };
 
 const createWorld = () => {
-    const ecs = new ECS();
-    return ecs
+    return new ECS()
         .buildWorld()
         .withSystem(BallSystem, [InputSystem])
         .withSystem(InputSystem)
@@ -40,18 +39,20 @@ const createWorld = () => {
         .withSystem(PauseSystem, [InputSystem])
         .withSystem(ScoreBoardSystem) // todo: throw if a system was not registered but is supposed to run
         .withSystem(ScoreSystem, [InputSystem])
-        .withComponent(Ball)
-        .withComponent(GameItem)
-        .withComponent(MenuItem)
-        .withComponent(Paddle)
-        .withComponent(PauseItem)
-        .withComponent(Position)
-        .withComponent(ScoreItem)
-        .withComponent(UIItem)
+        .withComponents([
+            Ball,
+            GameItem,
+            MenuItem,
+            Paddle,
+            PauseItem,
+            Position,
+            ScoreItem,
+            UIItem,
+        ])
         .build();
 };
 
-const initGame = async (world: IWorld) => {
+const initGame = (world: IWorld) => {
     const canvasEle = document.querySelector('canvas');
     if (!canvasEle) throw new Error('Could not find canvas element!');
 
@@ -71,21 +72,19 @@ const initGame = async (world: IWorld) => {
     world.addResource(gameStore);
 };
 
-const runGame = async (world: IWorld) => {
+const runGame = (world: IWorld) => {
     return world.run({
-        afterStepHandler: afterFrameStep,
-        beforeStepHandler: beforeFrameStep,
+        afterStepHandler: afterFrameHandler,
+        beforeStepHandler: beforeFrameHandler,
         initialState: MenuState,
-    }).catch(console.error);
+    });
 }
 
 // main function
 (async () => {
     const world = createWorld();
 
-    await initGame(world);
+    initGame(world);
     await runGame(world);
-    await cleanup(world);
-})();
-
-// todo: find a way to fix the problem of optimizers destroying constructor names
+    cleanup();
+})().catch(console.error);

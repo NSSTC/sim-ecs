@@ -24,7 +24,7 @@ export interface IStaticRunConfiguration {
     afterStepHandler: (actions: ITransitionActions) => Promise<void> | void
     beforeStepHandler: (actions: ITransitionActions) => Promise<void> | void
     executionFunction: TExecutionFunction
-    initialState: IState,
+    initialState: TStateProto,
 }
 export type TSystemInfo<D extends TSystemData> = {
     dataPrototype: TTypeProto<D>
@@ -170,9 +170,9 @@ export interface ITransitionActions extends IPartialWorld {
 
     /**
      * Change the running world to a new state
-     * @param newState
+     * @param NewState
      */
-    pushState(newState: IState): Promise<void>
+    pushState(NewState: TStateProto): Promise<void>
 }
 
 export interface IWorld extends IPartialWorld {

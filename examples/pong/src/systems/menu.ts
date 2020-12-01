@@ -32,7 +32,7 @@ export class MenuSystem extends System<Data> {
 
         if (this.gameStore.input.actions.menuConfirm) {
             if (this.menuAction == EActions.Play) {
-                this.gameStore.pushState = new GameState();
+                this.gameStore.PushState = GameState;
             }
             else {
                 this.gameStore.exit = true;

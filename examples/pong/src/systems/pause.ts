@@ -34,7 +34,7 @@ export class PauseSystem extends System<Data> {
 
         if (this.gameStore.input.actions.togglePause) {
             if (isGameState) {
-                this.gameStore.pushState = new PauseState();
+                this.gameStore.PushState = PauseState;
             }
             else {
                 this.gameStore.popState = true;

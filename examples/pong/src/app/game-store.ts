@@ -1,5 +1,5 @@
 import { EKeyState } from '../systems/input'
-import {IState} from "../ecs";
+import {IState, TStateProto} from "../ecs";
 
 export enum EMovement {
     up,
@@ -39,5 +39,5 @@ export class GameStore {
     pointsLeft = 0
     pointsRight = 0
     popState = false
-    pushState?: IState
+    PushState?: TStateProto
 }

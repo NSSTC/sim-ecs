@@ -29,7 +29,7 @@ export class ScoreSystem extends System<Data> {
     scorePoint(scoreItem: GameItem, score: number, ball: Ball, ballPos: Position, ballDir: Direction) {
         scoreItem.score = score;
         if (score == this.gameStore.pointLimit) {
-            this.gameStore.pushState = new ScoreBoardState();
+            this.gameStore.PushState = ScoreBoardState;
         }
 
         ballPos.x = this.canvasEle.width / 2 - ball.size / 2;

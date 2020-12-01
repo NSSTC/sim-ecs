@@ -103,11 +103,9 @@ using the handler function. Single calls to `dispatch()` do not offer the benefi
 class InitState extends State { _systems = [InitSystem] }
 class RunState extends State { _systems = [GravitySystem] }
 class PauseState extends State { _systems = [PauseSystem] }
-const initState = new InitState();
-const runState = new RunState();
 
-world.dispatch(initState);
-while (true) world.dispatch(runState);
+world.dispatch(InitState);
+world.run({ initialState: RunState });
 ``` 
 
 ## Update loop

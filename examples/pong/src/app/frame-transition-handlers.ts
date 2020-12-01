@@ -4,7 +4,7 @@ import {MenuState} from "../states/menu";
 
 let lastTransition = Date.now();
 
-export async function afterFrameStep(actions: ITransitionActions) {
+export async function afterFrameHandler(actions: ITransitionActions) {
     const gameStore = actions.getResource(GameStore);
 
     if (gameStore.exit) {
@@ -17,9 +17,9 @@ export async function afterFrameStep(actions: ITransitionActions) {
         gameStore.popState = false;
     }
 
-    if (gameStore.pushState) {
-        await actions.pushState(gameStore.pushState);
-        gameStore.pushState = undefined;
+    if (gameStore.PushState) {
+        await actions.pushState(gameStore.PushState);
+        gameStore.PushState = undefined;
     }
 
     if (gameStore.backToMenu) {
@@ -31,7 +31,7 @@ export async function afterFrameStep(actions: ITransitionActions) {
     }
 }
 
-export async function beforeFrameStep(actions: ITransitionActions) {
+export async function beforeFrameHandler(actions: ITransitionActions) {
     const gameStore = actions.getResource(GameStore);
 
     { // Update info

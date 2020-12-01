@@ -1,11 +1,12 @@
 import IPushDownAutomaton from "./pda.spec";
+import {TTypeProto} from "./_.spec";
 
 type TStateNode<T> = {
     state: T,
     prevNode?: TStateNode<T>,
 };
 
-export class PushDownAutomaton<T> implements IPushDownAutomaton<T> {
+export class PushDownAutomaton<T, P extends TTypeProto<T>> implements IPushDownAutomaton<T, P> {
     protected currentState?: T;
     protected statesTail?: TStateNode<T>;
 
@@ -29,11 +30,11 @@ export class PushDownAutomaton<T> implements IPushDownAutomaton<T> {
         return oldTail.state;
     }
 
-    push(state: T): void {
-        this.currentState = state;
+    push(State: P): void {
+        this.currentState = new State();
         this.statesTail = {
             prevNode: this.statesTail,
-            state,
+            state: this.currentState,
         };
     }
 }

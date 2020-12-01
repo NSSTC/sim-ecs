@@ -30,14 +30,14 @@ export class World implements IWorld {
     protected dirty = false;
     protected entityInfos: Map<IEntity, TEntityInfo> = new Map();
     protected entityWorld: IEntityWorld;
-    protected pda = new PushDownAutomaton<IState>();
+    protected pda = new PushDownAutomaton<IState, TStateProto>();
     protected prefabs = {
         nextHandle: 0,
         entityLinks: new Map<number, IEntity[]>(),
     };
     protected resources = new Map<{ new(): Object }, Object>();
     protected runExecutionPipeline: Set<TSystemInfo<TSystemData>>[] = [];
-    protected runExecutionPipelineCache: Map<IState, Set<TSystemInfo<TSystemData>>[]> = new Map();
+    protected runExecutionPipelineCache: Map<TStateProto, Set<TSystemInfo<TSystemData>>[]> = new Map();
     protected runPromise?: Promise<void> = undefined;
     protected _saveFormat?: ISaveFormat;
     protected shouldRunSystems = false;
@@ -316,7 +316,7 @@ export class World implements IWorld {
         }
 
         await newState.activate(this.transitionWorld);
-        this.runExecutionPipeline = this.runExecutionPipelineCache.get(newState) ?? [];
+        this.runExecutionPipeline = this.runExecutionPipelineCache.get(newState.constructor as TStateProto) ?? [];
     }
 
     // todo: improve logic which sets up the groups (tracked by #13)
@@ -356,15 +356,18 @@ export class World implements IWorld {
         return result;
     }
 
-    protected async pushState(newState: IState): Promise<void> {
+    protected async pushState(NewState: TStateProto): Promise<void> {
         await this.pda.state?.deactivate(this.transitionWorld);
-        this.pda.push(newState);
-        if (this.runExecutionPipelineCache.has(newState)) {
-            this.runExecutionPipeline = this.runExecutionPipelineCache.get(newState) ?? [];
+        this.pda.push(NewState);
+
+        const newState = this.pda.state!;
+
+        if (this.runExecutionPipelineCache.has(NewState)) {
+            this.runExecutionPipeline = this.runExecutionPipelineCache.get(NewState) ?? [];
         } else {
             newState.create(this.transitionWorld);
             this.runExecutionPipeline = this.prepareExecutionPipeline(newState);
-            this.runExecutionPipelineCache.set(newState, this.runExecutionPipeline);
+            this.runExecutionPipelineCache.set(NewState, this.runExecutionPipeline);
         }
 
         await newState.activate(this.transitionWorld);
