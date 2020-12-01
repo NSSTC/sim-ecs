@@ -31,6 +31,7 @@ export class World implements IWorld {
     protected entityInfos: Map<IEntity, TEntityInfo> = new Map();
     protected entityWorld: IEntityWorld;
     protected pda = new PushDownAutomaton<IState, TStateProto>();
+    private lastRunPreparation?: IStaticRunConfiguration;
     protected prefabs = {
         nextHandle: 0,
         entityLinks: new Map<number, IEntity[]>(),
@@ -373,6 +374,43 @@ export class World implements IWorld {
         await newState.activate(this.transitionWorld);
     }
 
+    public async prepareRun(configuration?: IRunConfiguration): Promise<IStaticRunConfiguration> {
+        if (this.runPromise) {
+            throw new Error('The dispatch loop is already running!');
+        }
+
+        if (this.dirty) {
+            this.maintain();
+        }
+
+        configuration ||= {};
+
+        const initialState = configuration.initialState
+            ? configuration.initialState
+            : State.bind(undefined, Array.from(this.systemInfos.keys()).map(system => system.constructor as TSystemProto<TSystemData>));
+        const runConfig: IStaticRunConfiguration = {
+            afterStepHandler: configuration.afterStepHandler ?? (_action => {}),
+            beforeStepHandler: configuration.beforeStepHandler ?? (_action => {}),
+            executionFunction: configuration.executionFunction ?? (typeof requestAnimationFrame == 'function'
+                ? requestAnimationFrame
+                : setTimeout),
+            initialState,
+        };
+
+        this.pda.clear();
+        this.shouldRunSystems = true;
+
+        for (const system of this.systemInfos.keys()) {
+            await system.setup(this.systemWorld);
+        }
+
+        await this.pushState(initialState);
+        this.runExecutionPipeline = this.prepareExecutionPipeline(this.pda.state!);
+
+        this.lastRunPreparation = runConfig;
+        return runConfig;
+    }
+
     removeEntity(entity: IEntity): void {
         if (this.entityInfos.has(entity)) {
             this.entityInfos.delete(entity);
@@ -419,50 +457,32 @@ export class World implements IWorld {
         this.resources.delete(type);
     }
 
-    run(configuration?: IRunConfiguration): Promise<void> {
-        if (this.runPromise) {
-            throw new Error('The dispatch loop is already running!');
-        }
-
-        if (this.dirty) {
-            this.maintain();
-        }
-
-        configuration ||= {};
-
-        const initialState = configuration.initialState
-            ? new configuration.initialState()
-            : new State(Array.from(this.systemInfos.keys()).map(system => system.constructor as TSystemProto<TSystemData>));
-        const runConfig: IStaticRunConfiguration = {
-            afterStepHandler: configuration.afterStepHandler ?? (_action => {
-            }),
-            beforeStepHandler: configuration.beforeStepHandler ?? (_action => {
-            }),
-            executionFunction: configuration.executionFunction ?? (typeof requestAnimationFrame == 'function'
-                ? requestAnimationFrame
-                : setTimeout),
-            initialState,
-        };
-
-        this.pda.clear();
-        this.shouldRunSystems = true;
-
+    run(configuration?: IRunConfiguration, skipPreparation: boolean = false): Promise<void> {
         this.runPromise = new Promise(async resolver => {
-            for (const system of this.systemInfos.keys()) {
-                await system.setup(this.systemWorld);
+            let preparedConfig: IStaticRunConfiguration;
+
+            if (!skipPreparation) {
+                preparedConfig = await this.prepareRun(configuration);
+                this.lastRunPreparation = preparedConfig;
+            }
+            else {
+                preparedConfig = this.lastRunPreparation!;
             }
 
-            await this.pushState(initialState);
+            if (!preparedConfig) {
+                throw new Error('Cannot run without preparing the run!');
+            }
 
-            const execFn = runConfig.executionFunction;
+            const afterStepHandler = preparedConfig.afterStepHandler;
+            const beforeStepHandler = preparedConfig.beforeStepHandler;
+            const execFn = preparedConfig.executionFunction;
             let executionGroup;
-            this.runExecutionPipeline = this.prepareExecutionPipeline(this.pda.state ?? initialState);
             let systemInfo;
             let systemPromises;
 
             const cleanUp = async () => {
                 await this.pda.state?.deactivate(this.transitionWorld);
-                for (const state of this.runExecutionPipelineCache.keys()) {
+                for (let state = this.pda.pop(); !!state; state = this.pda.pop()) {
                     await state.destroy(this.transitionWorld);
                 }
 
@@ -481,7 +501,7 @@ export class World implements IWorld {
                     return;
                 }
 
-                await runConfig.beforeStepHandler(this.transitionWorld);
+                await beforeStepHandler(this.transitionWorld);
 
                 for (executionGroup of this.runExecutionPipeline) {
                     systemPromises = [];
@@ -492,7 +512,7 @@ export class World implements IWorld {
                     await Promise.all(systemPromises);
                 }
 
-                await runConfig.afterStepHandler(this.transitionWorld);
+                await afterStepHandler(this.transitionWorld);
                 execFn(mainLoop);
             }
 
