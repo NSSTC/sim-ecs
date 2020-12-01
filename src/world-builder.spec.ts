@@ -23,7 +23,7 @@ export interface IWorldBuilder {
      * @param json
      * @param deserializer
      */
-    fromJSON(json: string, deserializer: TDeserializer): IWorldBuilder
+    fromJSON(json: string, deserializer?: TDeserializer): IWorldBuilder
 
     /**
      * Add system to the world
