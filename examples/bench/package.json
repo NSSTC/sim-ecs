@@ -1,0 +1,19 @@
+{
+  "name": "ecs-bench",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/fs-extra": "^9.0.4",
+    "ape-ecs": "^1.1.0",
+    "benny": "^3.6.15",
+    "fs-extra": "^9.0.1",
+    "sim-ecs": "file://../..",
+    "tick-knock": "^2.1.0",
+    "ts-node": "latest",
+    "tslib": "latest",
+    "typescript": "latest"
+  },
+  "scripts": {
+    "bench": "ts-node src/index.ts"
+  }
+}
