@@ -184,6 +184,10 @@ In the case of sim-ecs, prefabs can be used to load entities with their componen
 Contrary to a save, for example using `world.toJSON()`, prefabs are made with work-flow in mind.
 Their format is easy to understand, even by non-programmers, and they can be enriched with types easily (see Pong example).
 
+Another advantage of prefabs in sim-ecs is that all loaded entities are tracked and can be unloaded when not needed anymore.
+This means that prefabs can be used to design menus, levels, GUIs, etc. which are only loaded when needed
+and discarded after use. After all, who needs level1 data when they switched over to level2?
+
 ```typescript
 // loading a prefab, the prefab might be in a different file, even maybe just JSON data!
 const prefab = [
@@ -196,7 +200,17 @@ const prefab = [
             name: 'Jane',
             health: 100,
         }
-    }
+    },
+    {
+      Position: {
+        x: 0,
+        y: 1,
+      },
+      Monster: {
+          type: MonsterTypes.Tiger,
+          health: 250,
+      }
+    }, 
 ];
 
 const prefabHJandle = world.loadPrefab(prefab);
@@ -297,6 +311,8 @@ tick-knock      v2.1.0
 | | Ape-ECS | sim-ecs | tick-knock |
 | ---: | :---: | :---: | :---: |
 | Simple Insert | 80 ops/s | 205 ops/s | **296 ops/s** |
-| Simple Iteration | 199,094 ops/s | **439,748 ops/s** | 8,277 ops/s |
+| Simple Iteration (1000) | 199,094 ops/s | **439,748 ops/s** | 8,277 ops/s |
+| Simple Iteration (10000) | 20,258 ops/s | **467,961 ops/s** | 1,035 ops/s |
+| Simple Iteration (100000) | 2,216 ops/s | **524,580 ops/s** | 98 ops/s |
 | De-/Serialize Prefab | 68 ops/s | **134 ops/s** | - |
 | De-/Serialize Save | 57 ops/s (366.21KB) | **137 ops/s** (**75.20KB**) | - |
