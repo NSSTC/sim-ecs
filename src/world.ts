@@ -463,7 +463,6 @@ export class World implements IWorld {
 
             if (!skipPreparation) {
                 preparedConfig = await this.prepareRun(configuration);
-                this.lastRunPreparation = preparedConfig;
             }
             else {
                 preparedConfig = this.lastRunPreparation!;
