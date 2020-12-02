@@ -266,20 +266,22 @@ Please open a PR for any information improvement!
 
 | Feature | sim-ecs | tick-knock | ape-ecs |
 | ---: | :---: | :---: | :---: |
-| Components first | x | | |
-| Query first | | x | |
-| Entity first | | | x |
+| Data first | x | | |
 | Everything is a Component | x | x | |
 | Full async-support | x | | |
 | Functional Systems | | | |
 | Query-objects | | x | x |
 | Save / Load world | x | | x |
 | Load prefabs | x | | x |
+| State Management | x | | |
 
 
 ### Performance
 
-Date: 1st December 2020
+Please take the results with a grain of salt. These are benchmarks, so they are synthetic.
+An actual application will use a mix out of everything and more, and depending on that may have a different experience.
+
+Date: 2nd December 2020
 
 ```
 --------------------------------------------------------------------------------
@@ -294,16 +296,15 @@ TypeScript      v4.1.2
 TS-Lib          v2.0.3
 TS-Node         v9.0.0
 
-Ape-ECS         v1.1.0
+Ape-ECS         v1.3.0
 sim-ecs         v0.3.0
 tick-knock      v2.1.0
 ```
 
 | | Ape-ECS | sim-ecs | tick-knock |
 | ---: | :---: | :---: | :---: |
-| Simple Insert | 80 ops/s | 205 ops/s | **296 ops/s** |
-| Simple Iteration (1000) | 199,094 ops/s | **439,748 ops/s** | 8,277 ops/s |
-| Simple Iteration (10000) | 20,258 ops/s | **467,961 ops/s** | 1,035 ops/s |
-| Simple Iteration (100000) | 2,216 ops/s | **524,580 ops/s** | 98 ops/s |
-| De-/Serialize Prefab | 68 ops/s | **134 ops/s** | - |
-| De-/Serialize Save | 57 ops/s (366.21KB) | **137 ops/s** (**75.20KB**) | - |
+| Simple Insert | 80 ops/s, ±6.16% | 208 ops/s, ±2.79% | **296 ops/s, ±23.93%** |
+| Simple Iteration | 136 811 ops/s, ±24.00% | **1 801 033 ops/s, ±5.02%** | 22 418 ops/s, ±0.18% |
+| Schedule | 417 ops/s, ±0.83% | **1 150 841 ops/s, ±5.68%** | 89 ops/s, ±0.53% |
+| De-/Serialize Prefab | 75 ops/s, ±0.61% | **138 ops/s, ±4.80%** | - |
+| De-/Serialize Save | 66 ops/s, ±2.79% (445.31KB) | **137 ops/s, ±0.19%** (**75.20KB**) | - |

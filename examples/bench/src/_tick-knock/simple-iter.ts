@@ -9,10 +9,6 @@ class Velocity { x = 1 }
 class SimpleIterSystem extends System {
     query = new Query(entity => entity.hasAll(Position, Velocity));
 
-    constructor() {
-        super();
-    }
-
     update() {
         let entity;
         for (entity of this.query.entities) {
@@ -37,10 +33,10 @@ export class Benchmark extends ABenchmark {
 
         for (let i = 0; i < 1000; i++) {
             this.world.addEntity(new Entity()
-                .add(Transform)
-                .add(Position)
-                .add(Rotation)
-                .add(Velocity));
+                .add(new Transform())
+                .add(new Position())
+                .add(new Rotation())
+                .add(new Velocity()));
         }
     }
 

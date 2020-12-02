@@ -24,10 +24,10 @@ export class Benchmark extends ABenchmark {
     run() {
         for (let i = 0; i < this.iterCount; i++) {
             this.world.addEntity(new Entity()
-                .add(Transform)
-                .add(Position)
-                .add(Rotation)
-                .add(Velocity));
+                .add(new Transform())
+                .add(new Position())
+                .add(new Rotation())
+                .add(new Velocity()));
         }
     }
 }

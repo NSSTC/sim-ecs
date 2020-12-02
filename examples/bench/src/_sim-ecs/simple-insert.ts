@@ -41,5 +41,7 @@ export class Benchmark extends ABenchmark {
                 .with(Velocity)
                 .build();
         }
+
+        this.world.maintain();
     }
 }

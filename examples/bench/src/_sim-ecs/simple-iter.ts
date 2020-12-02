@@ -1,4 +1,4 @@
-import {ECS, Read, State, System, SystemData, World, Write} from 'sim-ecs';
+import {ECS, Read, System, SystemData, World, Write} from 'sim-ecs';
 import {ABenchmark, IBenchmark} from "../benchmark.spec";
 
 class Transform {
@@ -30,9 +30,6 @@ class SimpleIterSystem extends System<Data> {
             pos.x += vel.x;
         }
     }
-}
-
-class SimpleIterState extends State {
 }
 
 export class Benchmark extends ABenchmark {
@@ -70,19 +67,16 @@ export class Benchmark extends ABenchmark {
     }
 
     async init(): Promise<void> {
-        let counter = 0;
         await this.world.prepareRun({
             afterStepHandler: (actions) => {
-                if (counter++ == this.iterCount) {
-                    actions.stopRun();
-                }
+                actions.stopRun();
             },
+            // to make the comparison fair, we will iterate in a sync loop over the steps, just like the others do
             executionFunction: (fn: Function) => fn(),
-            initialState: SimpleIterState,
         });
     }
 
-    async run() {
+    run() {
         return this.world.run({}, true);
     }
 }

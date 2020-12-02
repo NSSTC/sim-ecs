@@ -4,11 +4,11 @@ import {SimpleIter as SimECS} from '../_sim-ecs';
 import {SimpleIter as TickKnock} from '../_tick-knock';
 import {testImplementations} from "../util";
 
-export const iterCount = 100000;
+export const iterCounts = [1];
 
-export const bench = () => new Promise((resolve, reject) => {
-    setTimeout(async () => {
-        suite(`Simple Iter (${iterCount} iterations)`,
+export const bench = async () => {
+    const doBench = async (iterCount: number) => {
+        await suite(`Simple Iter (${iterCount} iterations)`,
             ...testImplementations(iterCount,
                 ['ape-ecs', ApeECS],
                 ['sim-ecs', SimECS],
@@ -16,6 +16,10 @@ export const bench = () => new Promise((resolve, reject) => {
             ),
             cycle(),
             complete(),
-        ).catch(reject).then(resolve);
-    });
-});
+        );
+    };
+
+    for (const iterCount of iterCounts) {
+        await doBench(iterCount);
+    }
+};
