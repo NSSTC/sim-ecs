@@ -362,6 +362,14 @@ export class World implements IWorld {
         this.pda.push(NewState);
 
         const newState = this.pda.state!;
+        const registeredSystemNames = Array.from(this.systemInfos.keys()).map(nfo => nfo.constructor.name);
+
+        for (const system of newState.systems) {
+            if (!registeredSystemNames.includes(system.name)) {
+                // cannot infer dependencies, so we have to throw :/
+                throw new Error(`Did you forget to register System ${system.name}?`);
+            }
+        }
 
         if (this.runExecutionPipelineCache.has(NewState)) {
             this.runExecutionPipeline = this.runExecutionPipelineCache.get(NewState) ?? [];
