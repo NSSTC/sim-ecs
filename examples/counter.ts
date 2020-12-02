@@ -7,6 +7,7 @@ class GlobalStorage {
     exit = false;
 }
 
+/// a component.
 /// holds our counter and a limit to how far we want to count before stopping
 class CounterInfo {
     count = 0;
@@ -65,14 +66,14 @@ const world = ecs
 
 /// let's add out global storage as resource to the world. The ECS can do the object instantiation for you,
 /// however you may also pass an object instead
-world.addResource(new GlobalStorage());
+world.addResource(GlobalStorage);
 
 /// in order to do something, we still need to add data, which can be processed.
 /// think of this like filling up your database, whereas each entity is a row and each component is a column
 world
     /// building an entity is a comfy way to add all components to it and have it in the world in one chain
     .buildEntity()
-    .with(new CounterInfo())
+    .with(CounterInfo)
     .build();
 
 /// when everything is added, it's time to run the simulation
@@ -81,7 +82,7 @@ world
 world.run({
     /// this callback is executed after every complete run of all requested systems
     /// use it in order to do changes to the world, like adding, deleting or modifying entities
-    transitionHandler: async actions => {
+    afterStepHandler: async actions => {
         /// in this example, though, we use it to stop the simulation
         if (actions.getResource(GlobalStorage).exit) {
             actions.stopRun();
