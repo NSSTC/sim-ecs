@@ -1,5 +1,5 @@
 import {ISystemActions, Read, System, SystemData, With} from "../ecs";
-import {GameStore} from "../app/game-store";
+import {GameStore} from "../models/game-store";
 import {GameState} from "../states/game";
 import {PauseState} from "../states/pause";
 import {PauseItem} from "../components/_markers";

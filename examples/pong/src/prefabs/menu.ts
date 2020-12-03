@@ -47,12 +47,23 @@ export const menuPrefab: TPrefab = [
     {
         MenuItem: {},
         UIItem: {
+            action: EActions.Continue,
+            color: '#ddd',
+            caption: 'Continue',
+            fontSize: 32,
+            left: 120,
+            top: 320,
+        },
+    },
+    {
+        MenuItem: {},
+        UIItem: {
             action: EActions.Exit,
             color: '#ddd',
             caption: 'Exit',
             fontSize: 32,
             left: 120,
-            top: 320,
+            top: 370,
         },
     },
 ];

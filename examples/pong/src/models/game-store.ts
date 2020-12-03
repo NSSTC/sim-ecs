@@ -9,6 +9,7 @@ export enum EMovement {
 
 export class GameStore {
     backToMenu = false
+    continue = false
     ctx!: CanvasRenderingContext2D
     currentState?: IState
     exit = false

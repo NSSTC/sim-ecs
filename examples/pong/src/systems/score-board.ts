@@ -1,7 +1,7 @@
 import {ISystemActions, Read, System, SystemData, With} from "../ecs";
 import {ScoreItem} from "../components/_markers";
 import {UIItem} from "../components/ui-item";
-import {GameStore} from "../app/game-store";
+import {GameStore} from "../models/game-store";
 
 export class Data extends SystemData {
     _scoreItem = With(ScoreItem)

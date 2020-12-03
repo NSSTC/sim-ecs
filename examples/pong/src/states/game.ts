@@ -1,4 +1,4 @@
-import {ITransitionActions, State, TPrefabHandle, With} from "../ecs";
+import {ECS, ITransitionActions, State, TPrefabHandle, With} from "../ecs";
 import {InputSystem} from "../systems/input";
 import {PauseSystem} from "../systems/pause";
 import {PaddleSystem} from "../systems/paddle";
@@ -6,7 +6,7 @@ import {gamePrefab} from "../prefabs/game";
 import {Paddle} from "../components/paddle";
 import {Position} from "../components/position";
 import {Ball} from "../components/ball";
-import {GameStore} from "../app/game-store";
+import {GameStore} from "../models/game-store";
 import {BallSystem} from "../systems/ball";
 import {Direction} from "../components/direction";
 import {ScoreSystem} from "../systems/score";
@@ -17,6 +17,14 @@ export class GameState extends State {
 
     create(actions: ITransitionActions) {
         const gameStore = actions.getResource(GameStore);
+
+        if (gameStore.continue) {
+            actions.fromJSON(localStorage.getItem('save')!);
+            actions.maintain();
+            actions.getResource(GameStore).pointsLeft = parseInt(localStorage.getItem('savePointsLeft')!);
+            actions.getResource(GameStore).pointsRight = parseInt(localStorage.getItem('savePointsRight')!);
+            return;
+        }
 
         this.prefabHandle = actions.loadPrefab(gamePrefab);
         for (const entity of actions.getEntities([With(Paddle)])) {

@@ -1,6 +1,6 @@
 import {ISystemActions, Read, System, SystemData, With} from "../ecs";
 import {UIItem} from "../components/ui-item";
-import {EMovement, GameStore} from "../app/game-store";
+import {EMovement, GameStore} from "../models/game-store";
 import {EActions} from "../app/actions";
 import {GameState} from "../states/game";
 import {MenuItem} from "../components/_markers";
@@ -20,10 +20,26 @@ export class MenuSystem extends System<Data> {
     }
 
     run(dataSet: Set<Data>) {
-        if (this.gameStore.input.actions.menuMovement != EMovement.halt) {
-            this.menuAction = this.menuAction == EActions.Play
-                ? EActions.Exit
-                : EActions.Play;
+        // todo: use index
+        if (this.gameStore.input.actions.menuMovement == EMovement.down) {
+            switch (this.menuAction) {
+                case EActions.Play: this.menuAction = EActions.Continue; break;
+                case EActions.Continue: this.menuAction = EActions.Exit; break;
+                case EActions.Exit: this.menuAction = EActions.Play; break;
+                default: {
+                    throw new Error(`Action ${this.menuAction} not implemented!`);
+                }
+            }
+        }
+        else if (this.gameStore.input.actions.menuMovement == EMovement.up) {
+            switch (this.menuAction) {
+                case EActions.Play: this.menuAction = EActions.Exit; break;
+                case EActions.Continue: this.menuAction = EActions.Play; break;
+                case EActions.Exit: this.menuAction = EActions.Continue; break;
+                default: {
+                    throw new Error(`Action ${this.menuAction} not implemented!`);
+                }
+            }
         }
 
         for (const {uiItem} of dataSet) {
@@ -32,6 +48,14 @@ export class MenuSystem extends System<Data> {
 
         if (this.gameStore.input.actions.menuConfirm) {
             if (this.menuAction == EActions.Play) {
+                this.gameStore.PushState = GameState;
+            }
+            else if (this.menuAction == EActions.Continue) {
+                if (localStorage.getItem('save') == null) {
+                    return;
+                }
+
+                this.gameStore.continue = true;
                 this.gameStore.PushState = GameState;
             }
             else {

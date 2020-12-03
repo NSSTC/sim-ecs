@@ -2,7 +2,7 @@ import {ITransitionActions, State, TPrefabHandle, With} from "../ecs";
 import {scorePrefab} from "../prefabs/score";
 import {ScoreItem} from "../components/_markers";
 import {UIItem} from "../components/ui-item";
-import {GameStore} from "../app/game-store";
+import {GameStore} from "../models/game-store";
 import {ScoreBoardSystem} from "../systems/score-board";
 
 export class ScoreBoardState extends State {

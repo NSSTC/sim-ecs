@@ -3,7 +3,7 @@ import {InputSystem} from "../systems/input";
 import {PauseSystem} from "../systems/pause";
 import {pausePrefab} from "../prefabs/pause";
 import {PaddleSystem} from "../systems/paddle";
-import {GameStore} from "../app/game-store";
+import {GameStore} from "../models/game-store";
 import {BallSystem} from "../systems/ball";
 
 export class PauseState extends State {
@@ -13,6 +13,9 @@ export class PauseState extends State {
 
     activate(actions: ITransitionActions): void | Promise<void> {
         actions.getResource(GameStore).pause = true;
+        localStorage.setItem('save', actions.toJSON());
+        localStorage.setItem('savePointsLeft', actions.getResource(GameStore).pointsLeft.toString());
+        localStorage.setItem('savePointsRight', actions.getResource(GameStore).pointsRight.toString());
     }
 
     create(actions: ITransitionActions) {

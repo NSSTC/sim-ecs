@@ -1,4 +1,4 @@
-import {GameStore} from "./game-store";
+import {GameStore} from "../models/game-store";
 import {ITransitionActions} from "../ecs";
 import {MenuState} from "../states/menu";
 

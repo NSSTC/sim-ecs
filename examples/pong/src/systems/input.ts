@@ -1,5 +1,5 @@
 import {ISystemActions, NoData, System} from "../ecs";
-import {EMovement, GameStore} from "../app/game-store";
+import {EMovement, GameStore} from "../models/game-store";
 
 export enum EKeyState {
     Down,

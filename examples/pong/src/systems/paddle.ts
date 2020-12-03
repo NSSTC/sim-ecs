@@ -1,5 +1,5 @@
 import {ISystemActions, Read, System, SystemData, Write} from "../ecs";
-import {EMovement, GameStore} from "../app/game-store";
+import {EMovement, GameStore} from "../models/game-store";
 import {EPaddleSide, Paddle} from "../components/paddle";
 import {Position} from "../components/position";
 

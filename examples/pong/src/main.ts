@@ -2,7 +2,7 @@ import {ECS, IWorld} from "./ecs";
 import {PaddleSystem} from "./systems/paddle";
 import {afterFrameHandler, beforeFrameHandler} from "./app/frame-transition-handlers";
 import {InputSystem} from "./systems/input";
-import {GameStore} from "./app/game-store";
+import {GameStore} from "./models/game-store";
 import {MenuState} from "./states/menu";
 import {UIItem} from "./components/ui-item";
 import {MenuSystem} from "./systems/menu";
@@ -15,6 +15,7 @@ import {BallSystem} from "./systems/ball";
 import {ScoreSystem} from "./systems/score";
 import {GameItem} from "./components/game-item";
 import {ScoreBoardSystem} from "./systems/score-board";
+import {Direction} from "./components/direction";
 
 
 const cleanup = () => {
@@ -37,10 +38,11 @@ const createWorld = () => {
         .withSystem(MenuSystem, [InputSystem])
         .withSystem(PaddleSystem, [InputSystem])
         .withSystem(PauseSystem, [InputSystem])
-        .withSystem(ScoreBoardSystem) // todo: throw if a system was not registered but is supposed to run
+        .withSystem(ScoreBoardSystem)
         .withSystem(ScoreSystem, [InputSystem])
-        .withComponents([
+        .withComponents(
             Ball,
+            Direction,
             GameItem,
             MenuItem,
             Paddle,
@@ -48,7 +50,7 @@ const createWorld = () => {
             Position,
             ScoreItem,
             UIItem,
-        ])
+        )
         .build();
 };
 
