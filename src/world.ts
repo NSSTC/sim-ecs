@@ -76,6 +76,7 @@ export class World implements IWorld {
             },
             addResource: this.addResource.bind(this),
             buildEntity: () => this.buildEntity.call(this, this.transitionWorld),
+            clearEntities: this.clearEntities.bind(this),
             createEntity: this.createEntity.bind(this),
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
@@ -89,6 +90,7 @@ export class World implements IWorld {
                 this.removeEntity(entity);
             },
             removeResource: this.removeResource.bind(this),
+            replaceEntitiesWith: this.replaceEntitiesWith.bind(this),
             replaceResource: this.replaceResource.bind(this),
             stopRun: this.stopRun.bind(this),
             toJSON: this.toJSON.bind(this),
@@ -110,6 +112,7 @@ export class World implements IWorld {
             addResource: this.addResource.bind(this),
             assignEntityToSystems: this.assignEntityToSystems.bind(this),
             buildEntity: () => this.buildEntity.call(this, this.transitionWorld),
+            clearEntities: this.clearEntities.bind(this),
             createEntity: this.createEntity.bind(this),
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
@@ -119,6 +122,7 @@ export class World implements IWorld {
             removeEntity: this.removeEntity.bind(this),
             removeEntityFromSystems: this.removeEntityFromSystems.bind(this),
             removeResource: this.removeResource.bind(this),
+            replaceEntitiesWith: this.replaceEntitiesWith.bind(this),
             replaceResource: this.replaceResource.bind(this),
             stopRun: this.stopRun.bind(this),
             toJSON: this.toJSON.bind(this),
@@ -221,6 +225,10 @@ export class World implements IWorld {
 
     buildEntity(world?: IPartialWorld): EntityBuilder {
         return new EntityBuilder(world ?? this);
+    }
+
+    clearEntities() {
+        this.entityInfos.clear();
     }
 
     createEntity(): Entity {
@@ -438,6 +446,11 @@ export class World implements IWorld {
                 }
             }
         }
+    }
+
+    replaceEntitiesWith(world: IWorld) {
+        this.clearEntities();
+        this.merge(world);
     }
 
     replaceResource<T extends Object>(obj: T | TTypeProto<T>, ...args: unknown[]) {

@@ -63,6 +63,11 @@ export interface IPartialWorld {
     buildEntity(): IEntityBuilder
 
     /**
+     * Remove all entities from this world
+     */
+    clearEntities(): void
+
+    /**
      * Create a new entity and add it to this world
      */
     createEntity(): IEntity
@@ -107,6 +112,12 @@ export interface IPartialWorld {
      * @param type
      */
     removeResource<T extends Object>(type: TTypeProto<T>): void
+
+    /**
+     * Replace all current entities with entities from another world
+     * @param world
+     */
+    replaceEntitiesWith(world: IWorld): void
 
     /**
      * Replace a resource from this world

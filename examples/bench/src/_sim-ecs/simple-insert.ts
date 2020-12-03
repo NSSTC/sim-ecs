@@ -25,10 +25,7 @@ export class Benchmark extends ABenchmark {
     }
 
     cleanUp(): IBenchmark {
-        for (const entity of this.world.getEntities()) {
-            this.world.removeEntity(entity);
-        }
-
+        this.world.clearEntities();
         return this;
     }
 
