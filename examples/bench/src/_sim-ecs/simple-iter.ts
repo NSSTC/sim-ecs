@@ -42,12 +42,12 @@ export class Benchmark extends ABenchmark {
         this.world = new ECS()
             .buildWorld()
             .withSystem(SimpleIterSystem)
-            .withComponents([
+            .withComponents(
                 Transform,
                 Position,
                 Rotation,
                 Velocity,
-            ])
+            )
             .build() as World;
 
         for (let i = 0; i < 1000; i++) {

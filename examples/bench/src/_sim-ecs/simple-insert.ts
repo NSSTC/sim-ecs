@@ -15,12 +15,12 @@ export class Benchmark extends ABenchmark {
         super();
         this.world = new ECS()
             .buildWorld()
-            .withComponents([
+            .withComponents(
                 Transform,
                 Position,
                 Rotation,
                 Velocity,
-            ])
+            )
             .build();
     }
 

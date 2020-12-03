@@ -16,22 +16,22 @@ export class Benchmark extends ABenchmark {
         super();
         this.world = new ECS()
             .buildWorld()
-            .withComponents([
+            .withComponents(
                 Transform,
                 Position,
                 Rotation,
                 Velocity,
-            ])
+            )
             .build();
 
         this.world2 = new ECS()
             .buildWorld()
-            .withComponents([
+            .withComponents(
                 Transform,
                 Position,
                 Rotation,
                 Velocity,
-            ])
+            )
             .build();
 
         for (let i = 0; i < 1000; i++) {

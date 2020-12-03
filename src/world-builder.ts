@@ -88,7 +88,7 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withComponents(Components: TObjectProto[]): IWorldBuilder {
+    withComponents(...Components: TObjectProto[]): IWorldBuilder {
         for (const Component of Components) {
             this.withComponent(Component);
         }

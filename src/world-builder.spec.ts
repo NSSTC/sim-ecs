@@ -43,5 +43,5 @@ export interface IWorldBuilder {
      * Register several components with default options in the world
      * @param Components
      */
-    withComponents(Components: TObjectProto[]): IWorldBuilder
+    withComponents(...Components: TObjectProto[]): IWorldBuilder
 }

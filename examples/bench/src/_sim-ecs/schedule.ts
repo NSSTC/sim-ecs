@@ -68,7 +68,7 @@ export class Benchmark extends ABenchmark {
             .withSystem(ABSystem)
             .withSystem(CDSystem)
             .withSystem(CESystem)
-            .withComponents([A, B, C, D, E])
+            .withComponents(A, B, C, D, E)
             .build() as World;
 
         for (let i = 0; i < 10000; i++) {
