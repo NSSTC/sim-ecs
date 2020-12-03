@@ -8,11 +8,17 @@ export interface IEntityBuilder {
     build(): IEntity
 
     /**
-     * Associate component with target entity
+     * Add component to target entity
      * @param component
      * @param args
      */
     with(component: Object | TObjectProto, ...args: unknown[]): IEntityBuilder
+
+    /**
+     * Add all components to target entity
+     * @param component
+     */
+    withAll(...component: (Object | TObjectProto)[]): IEntityBuilder
 }
 
 export type TEntityBuilderProto = { new(): TEntityBuilderProto };

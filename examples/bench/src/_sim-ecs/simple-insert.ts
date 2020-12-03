@@ -32,10 +32,12 @@ export class Benchmark extends ABenchmark {
     run() {
         for (let i = 0; i < this.iterCount; i++) {
             this.world.buildEntity()
-                .with(Transform)
-                .with(Position)
-                .with(Rotation)
-                .with(Velocity)
+                .withAll(
+                    Transform,
+                    Position,
+                    Rotation,
+                    Velocity,
+                )
                 .build();
         }
 
