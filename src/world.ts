@@ -40,7 +40,6 @@ export class World implements IWorld {
     protected runExecutionPipeline: Set<TSystemInfo<TSystemData>>[] = [];
     protected runExecutionPipelineCache: Map<TStateProto, Set<TSystemInfo<TSystemData>>[]> = new Map();
     protected runPromise?: Promise<void> = undefined;
-    protected _saveFormat?: ISaveFormat;
     protected shouldRunSystems = false;
     protected sortedSystems: TSystemInfo<TSystemData>[];
     protected systemWorld: ISystemActions;
@@ -51,7 +50,8 @@ export class World implements IWorld {
     }
 
     constructor(
-        protected systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>>
+        protected systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>>,
+        protected _saveFormat: ISaveFormat,
     ) {
         const self = this;
 
@@ -78,6 +78,7 @@ export class World implements IWorld {
             buildEntity: () => this.buildEntity.call(this, this.transitionWorld),
             clearEntities: this.clearEntities.bind(this),
             createEntity: this.createEntity.bind(this),
+            fromJSON: this.fromJSON.bind(this),
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
             loadPrefab: this.loadPrefab.bind(this),
@@ -114,6 +115,7 @@ export class World implements IWorld {
             buildEntity: () => this.buildEntity.call(this, this.transitionWorld),
             clearEntities: this.clearEntities.bind(this),
             createEntity: this.createEntity.bind(this),
+            fromJSON: this.fromJSON.bind(this),
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
             loadPrefab: this.loadPrefab.bind(this),
@@ -245,6 +247,18 @@ export class World implements IWorld {
             initialState: state,
             afterStepHandler: actions => actions.stopRun(),
         });
+    }
+
+    fromJSON(json: string, deserializer?: TDeserializer) {
+        this.clearEntities();
+        this.saveFormat.loadJSON(json);
+
+        {
+            let entity;
+            for (entity of this.saveFormat.getEntities(deserializer)) {
+                this.addEntity(entity);
+            }
+        }
     }
 
     getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IterableIterator<IEntity> {

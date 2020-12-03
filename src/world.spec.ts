@@ -36,7 +36,7 @@ export type TSystemInfo<D extends TSystemData> = {
 export type TSystemNode = { system: ISystem<TSystemData>, dependencies: TSystemProto<TSystemData>[]};
 
 export interface IPartialWorld {
-    readonly saveFormat?: ISaveFormat
+    readonly saveFormat: ISaveFormat
 
     /**
      * Get a resource which was previously stored
@@ -71,6 +71,13 @@ export interface IPartialWorld {
      * Create a new entity and add it to this world
      */
     createEntity(): IEntity
+
+    /**
+     * Load a JSON save file, replacing all current entities
+     * @param json
+     * @param deserializer
+     */
+    fromJSON(json: string, deserializer?: TDeserializer): void
 
     /**
      * Query entities and find the ones with a certain combination of component

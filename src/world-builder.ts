@@ -21,7 +21,7 @@ export class WorldBuilder implements IWorldBuilder {
     }
 
     build(): IWorld {
-        const world = new World(this.systemInfos);
+        const world = new World(this.systemInfos, this.save);
 
         world.setSaveFormat(this.save);
 
@@ -38,7 +38,7 @@ export class WorldBuilder implements IWorldBuilder {
 
     fromJSON(json: string, deserializer?: TDeserializer): WorldBuilder {
         this.save.loadJSON(json);
-        this.fromWorld = new World(new Map());
+        this.fromWorld = new World(new Map(), this.save);
         let entity;
 
         for (entity of this.save.getEntities(deserializer)) {
