@@ -7,6 +7,7 @@ export * from './entity.spec';
 
 export class Entity implements IEntity {
     protected components: Map<TObjectProto, Object> = new Map();
+    protected tags: Set<unknown> = new Set();
 
     constructor(
         protected world?: IEntityWorld
@@ -18,6 +19,11 @@ export class Entity implements IEntity {
         }
 
         this.components.set(component.constructor as TObjectProto, component);
+        return this;
+    }
+
+    addTag(tag: unknown): Entity {
+        this.tags.add(tag);
         return this;
     }
 
@@ -39,8 +45,16 @@ export class Entity implements IEntity {
         return this.components.values();
     }
 
+    getTags(): IterableIterator<unknown> {
+        return this.tags.values();
+    }
+
     hasComponent(component: typeof Object | TObjectProto): boolean {
         return this.components.has(component);
+    }
+
+    hasTag(tag: unknown): boolean {
+        return this.tags.has(tag);
     }
 
     matchesQueue<C extends Object, T extends TComponentAccess<C>>(query: T[]): boolean {
@@ -69,6 +83,11 @@ export class Entity implements IEntity {
         // todo: improve cache-propagation to be more efficient and transparent
         this.changeWorldTo(this.world);
 
+        return this;
+    }
+
+    removeTag(tag: unknown): Entity {
+        this.tags.delete(tag);
         return this;
     }
 }
