@@ -175,7 +175,7 @@ describe('Delete Entities', () => {
         const entity = world.buildEntity().with(Components.C1).build();
 
         await world.run({
-            transitionHandler: async actions => {
+            afterStepHandler: async actions => {
                 if (counter == 0) {
                     counter++;
                     actions.removeEntity(entity);

@@ -5,7 +5,7 @@ import {SaveFormat} from "./save-format";
 describe('Test World', () => {
     it('Load Prefabs', () => {
         const saveFormat = new SaveFormat();
-        const world = new World(new Map());
+        const world = new World(new Map(), new SaveFormat());
 
         saveFormat.registerComponent(
             Date, data => new Date(data as number), date => (date as Date).getTime().toString());

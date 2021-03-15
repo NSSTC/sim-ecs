@@ -1,12 +1,12 @@
 // todo: this PushDownAutomaton could get its own package on npm
 import {TTypeProto} from "./_.spec";
 
-export interface IPushDownAutomaton<T, P extends TTypeProto<T>> {
+export interface IPushDownAutomaton<T> {
     readonly state?: T
     clear(): void
     pop(): T | undefined
-    push(state: P): void
+    push<P extends TTypeProto<T>>(state: P): void
 }
 
-export type TPushDownAutomatonProto<T, P> = { new(): IPushDownAutomaton<T, TTypeProto<T>> };
+export type TPushDownAutomatonProto<T> = { new(): IPushDownAutomaton<T> };
 export default IPushDownAutomaton;

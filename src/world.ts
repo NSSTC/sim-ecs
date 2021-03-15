@@ -30,7 +30,7 @@ export class World implements IWorld {
     protected dirty = false;
     protected entityInfos: Map<IEntity, TEntityInfo> = new Map();
     protected entityWorld: IEntityWorld;
-    protected pda = new PushDownAutomaton<IState, TStateProto>();
+    protected pda = new PushDownAutomaton<IState>();
     private lastRunPreparation?: IStaticRunConfiguration;
     protected prefabs = {
         nextHandle: 0,

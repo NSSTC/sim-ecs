@@ -6,7 +6,7 @@ type TStateNode<T> = {
     prevNode?: TStateNode<T>,
 };
 
-export class PushDownAutomaton<T, P extends TTypeProto<T>> implements IPushDownAutomaton<T, P> {
+export class PushDownAutomaton<T> implements IPushDownAutomaton<T> {
     protected currentState?: T;
     protected statesTail?: TStateNode<T>;
 
@@ -30,7 +30,7 @@ export class PushDownAutomaton<T, P extends TTypeProto<T>> implements IPushDownA
         return oldTail.state;
     }
 
-    push(State: P): void {
+    push<P extends TTypeProto<T>>(State: P): void {
         this.currentState = new State();
         this.statesTail = {
             prevNode: this.statesTail,
