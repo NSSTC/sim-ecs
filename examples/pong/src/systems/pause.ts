@@ -2,11 +2,9 @@ import {ISystemActions, Read, System, SystemData, With} from "sim-ecs";
 import {GameStore} from "../models/game-store";
 import {GameState} from "../states/game";
 import {PauseState} from "../states/pause";
-import {PauseItem} from "../components/_markers";
 import {UIItem} from "../components/ui-item";
 
 class Data extends SystemData {
-    _pauseItem = With(PauseItem)
     readonly uiItem = Read(UIItem)
 }
 
@@ -25,11 +23,6 @@ export class PauseSystem extends System<Data> {
 
         if (!isGameState && !isPauseState) {
             return;
-        }
-        else if (isPauseState) {
-            for (const {uiItem} of dataSet) {
-                uiItem.draw(this.gameStore.ctx);
-            }
         }
 
         if (this.gameStore.input.actions.togglePause) {

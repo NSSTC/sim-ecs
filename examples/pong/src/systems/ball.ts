@@ -1,42 +1,60 @@
-import {ISystemActions, Read, System, SystemData, Write} from "sim-ecs";
-import {GameStore} from "../models/game-store";
-import {Position} from "../components/position";
+import {ISystemActions, Read, System, SystemData, With, Write} from "sim-ecs";
 import {Ball} from "../components/ball";
-import {Direction} from "../components/direction";
+import {Velocity} from "../components/velocity";
+import {PaddleTransforms} from "../models/paddle-transforms";
+import {Collision} from "../components/collision";
+import {EWallSide, EWallType, Wall} from "../components/wall";
+import {Paddle} from "../components/paddle";
+import {ScoreBoard} from "../models/score-board";
 
 class Data extends SystemData {
-    readonly ball = Read(Ball)
-    dir = Write(Direction)
-    pos = Write(Position)
+    readonly _ball = With(Ball)
+    readonly collisionData = Read(Collision)
+    vel = Write(Velocity)
 }
 
 export class BallSystem extends System<Data> {
     readonly SystemDataType = Data;
     canvas!: HTMLCanvasElement;
-    gameStore!: GameStore;
+    paddleTrans!: PaddleTransforms;
+    scoreBoard!: ScoreBoard;
 
     setup(actions: ISystemActions) {
-        this.gameStore = actions.getResource(GameStore);
-        this.canvas = this.gameStore.ctx.canvas;
+        this.canvas = actions.getResource(CanvasRenderingContext2D).canvas;
+        this.paddleTrans = actions.getResource(PaddleTransforms);
+        this.scoreBoard = actions.getResource(ScoreBoard);
     }
 
     run(dataSet: Set<Data>) {
-        for (const {ball, dir, pos} of dataSet) {
-            if (!this.gameStore.pause) {
-                const normDir = dir.normalized();
-                pos.x += normDir.x * this.gameStore.lastFrameDeltaTime * .8;
-                pos.y += normDir.y * this.gameStore.lastFrameDeltaTime * .8;
+        for (const {vel, collisionData} of dataSet) {
+            if (collisionData.occurred) {
+                for (const obj of collisionData.collisionObjects) {
+                    if (obj.hasComponent(Wall)) {
+                        if (obj.getComponent(Wall)!.wallType == EWallType.Horizontal) {
+                            vel.y *= -1;
+                        } else {
+                            // Point for one side, restart
+                            switch (obj.getComponent(Wall)!.wallSide) {
+                                case EWallSide.Left: {
+                                    this.scoreBoard.left++;
+                                    break;
+                                }
+                                case EWallSide.None: {
+                                    break;
+                                }
+                                case EWallSide.Right: {
+                                    this.scoreBoard.right++;
+                                    break;
+                                }
+                            }
 
-                if (pos.y < 0) {
-                    pos.y *= -1;
-                    dir.y *= -1;
-                } else if (pos.y > this.canvas.height - ball.size) {
-                    pos.y = 2 * this.canvas.height - ball.size - pos.y;
-                    dir.y *= -1;
+                            //
+                        }
+                    } else if (obj.hasComponent(Paddle)) {
+                        vel.x *= -1;
+                    }
                 }
             }
-
-            ball.draw(this.gameStore.ctx, pos);
         }
     }
 }

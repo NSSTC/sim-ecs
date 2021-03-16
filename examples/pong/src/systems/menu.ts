@@ -3,10 +3,8 @@ import {UIItem} from "../components/ui-item";
 import {EMovement, GameStore} from "../models/game-store";
 import {EActions} from "../app/actions";
 import {GameState} from "../states/game";
-import {MenuItem} from "../components/_markers";
 
 class Data extends SystemData {
-    _menuItem = With(MenuItem)
     readonly uiItem = Read(UIItem)
 }
 
@@ -42,10 +40,6 @@ export class MenuSystem extends System<Data> {
             }
         }
 
-        for (const {uiItem} of dataSet) {
-            uiItem.draw(this.gameStore.ctx, uiItem.action === this.menuAction);
-        }
-
         if (this.gameStore.input.actions.menuConfirm) {
             if (this.menuAction == EActions.Play) {
                 this.gameStore.PushState = GameState;
@@ -61,6 +55,12 @@ export class MenuSystem extends System<Data> {
             else {
                 this.gameStore.exit = true;
             }
+
+            return;
+        }
+
+        for (const {uiItem} of dataSet) {
+            uiItem.active = uiItem.action == this.menuAction;
         }
     }
 }
