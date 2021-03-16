@@ -6,16 +6,22 @@ import {GameStore} from "./models/game-store";
 import {MenuState} from "./states/menu";
 import {UIItem} from "./components/ui-item";
 import {MenuSystem} from "./systems/menu";
-import {MenuItem, PauseItem, ScoreItem} from "./components/_markers";
 import {PauseSystem} from "./systems/pause";
 import {Paddle} from "./components/paddle";
 import {Position} from "./components/position";
 import {Ball} from "./components/ball";
 import {BallSystem} from "./systems/ball";
-import {ScoreSystem} from "./systems/score";
-import {GameItem} from "./components/game-item";
-import {ScoreBoardSystem} from "./systems/score-board";
-import {Direction} from "./components/direction";
+import {Velocity} from "./components/velocity";
+import {RenderUISystem} from "./systems/render-ui";
+import {RenderGameSystem} from "./systems/render-game";
+import {Shape} from "./components/shape";
+import {AnimationSystem} from "./systems/animation";
+import {ScoreBoard} from "./models/score-board";
+import {PaddleTransforms} from "./models/paddle-transforms";
+import {Dimensions} from "./models/dimensions";
+import {CollisionSystem} from "./systems/collision";
+import {Collision} from "./components/collision";
+import { Wall } from "./components/wall";
 
 
 const cleanup = () => {
@@ -33,23 +39,24 @@ const cleanup = () => {
 const createWorld = () => {
     return new ECS()
         .buildWorld()
-        .withSystem(BallSystem, [InputSystem])
+        .withSystem(AnimationSystem, [BallSystem, PaddleSystem])
+        .withSystem(BallSystem, [CollisionSystem, InputSystem, PaddleSystem])
+        .withSystem(CollisionSystem, [InputSystem])
         .withSystem(InputSystem)
         .withSystem(MenuSystem, [InputSystem])
         .withSystem(PaddleSystem, [InputSystem])
         .withSystem(PauseSystem, [InputSystem])
-        .withSystem(ScoreBoardSystem)
-        .withSystem(ScoreSystem, [InputSystem])
+        .withSystem(RenderGameSystem, [AnimationSystem, BallSystem, PaddleSystem])
+        .withSystem(RenderUISystem, [AnimationSystem, MenuSystem, PauseSystem])
         .withComponents(
             Ball,
-            Direction,
-            GameItem,
-            MenuItem,
+            Collision,
             Paddle,
-            PauseItem,
             Position,
-            ScoreItem,
+            Shape,
             UIItem,
+            Velocity,
+            Wall,
         )
         .build();
 };
@@ -70,8 +77,19 @@ const initGame = (world: IWorld) => {
     renderContext.imageSmoothingEnabled = true;
     renderContext.imageSmoothingQuality = 'high';
 
-    gameStore.ctx = renderContext;
+    world.addResource(renderContext);
+    world.addResource(ScoreBoard);
     world.addResource(gameStore);
+    world.addResource(
+        PaddleTransforms,
+        {
+            dimensions: new Dimensions(0, 0),
+            position: new Position(0, 0),
+        },
+        {
+            dimensions: new Dimensions(0, 0),
+            position: new Position(0, 0),
+        });
 };
 
 const runGame = (world: IWorld) => {

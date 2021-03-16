@@ -10,7 +10,6 @@ export enum EMovement {
 export class GameStore {
     backToMenu = false
     continue = false
-    ctx!: CanvasRenderingContext2D
     currentState?: IState
     exit = false
     lastFrameDeltaTime = 0
@@ -37,8 +36,6 @@ export class GameStore {
     }
     pause = false
     readonly pointLimit = 10
-    pointsLeft = 0
-    pointsRight = 0
     popState = false
     PushState?: TStateProto
 }

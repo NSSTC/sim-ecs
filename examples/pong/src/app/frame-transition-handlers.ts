@@ -32,22 +32,17 @@ export async function afterFrameHandler(actions: ITransitionActions) {
 }
 
 export async function beforeFrameHandler(actions: ITransitionActions) {
-    const gameStore = actions.getResource(GameStore);
-
-    { // Update info
-        gameStore.currentState = actions.currentState;
-    }
-
     { // Update delta time
+        const gameStore = actions.getResource(GameStore);
         const now = Date.now();
         gameStore.lastFrameDeltaTime = now - lastTransition;
         lastTransition = now;
     }
 
     { // Clear canvas
-        gameStore.ctx.beginPath();
-        gameStore.ctx.fillStyle = '#222';
-        gameStore.ctx.fillRect(0, 0, gameStore.ctx.canvas.width, gameStore.ctx.canvas.height);
-        gameStore.ctx.stroke();
+        const ctx = actions.getResource(CanvasRenderingContext2D);
+        ctx.beginPath();
+        ctx.fillStyle = '#222';
+        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
 }

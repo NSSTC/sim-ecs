@@ -2,40 +2,84 @@ import {ISystemActions, Read, System, SystemData, Write} from "sim-ecs";
 import {EMovement, GameStore} from "../models/game-store";
 import {EPaddleSide, Paddle} from "../components/paddle";
 import {Position} from "../components/position";
+import {Velocity} from "../components/velocity";
+import {Shape} from "../components/shape";
+import {PaddleTransforms} from "../models/paddle-transforms";
+import {Dimensions} from "../models/dimensions";
+import {Transform} from "../models/transform";
 
 class Data extends SystemData {
     readonly paddle = Read(Paddle)
-    pos = Write(Position)
+    readonly pos = Read(Position)
+    readonly shape = Read(Shape)
+    vel = Write(Velocity)
 }
 
 export class PaddleSystem extends System<Data> {
     readonly SystemDataType = Data;
     gameStore!: GameStore;
+    ctx!: CanvasRenderingContext2D;
+    paddleTrans!: PaddleTransforms;
 
     setup(actions: ISystemActions) {
         this.gameStore = actions.getResource(GameStore);
+        this.ctx = actions.getResource(CanvasRenderingContext2D);
+        this.paddleTrans = actions.getResource(PaddleTransforms);
     }
 
-    updatePosition(paddle: Paddle, pos: Position, deltaTime: number, movement: EMovement) {
-        if (movement == EMovement.up) {
-            pos.y -= Math.min(pos.y, deltaTime);
+    updateTransformationResource(side: EPaddleSide, pos: Position, dim: Dimensions) {
+        const update = (trans: Transform) => {
+            trans.position.x = pos.x;
+            trans.position.y = pos.y;
+            trans.dimensions.height = dim.height;
+            trans.dimensions.width = dim.width;
         }
-        else if (movement == EMovement.down) {
-            pos.y += Math.min(this.gameStore.ctx.canvas.height - pos.y - paddle.height, deltaTime);
+
+        switch (side) {
+            case EPaddleSide.Left: {
+                update(this.paddleTrans.left);
+                break;
+            }
+            case EPaddleSide.Right: {
+                update(this.paddleTrans.right);
+                break;
+            }
+        }
+    }
+
+    updateVelocity(pos: Position, vel: Velocity, paddleHeight: number, deltaTime: number, movement: EMovement) {
+        switch (movement) {
+            case EMovement.down: {
+                vel.y = Math.min(this.ctx.canvas.height - pos.y - paddleHeight, deltaTime);
+                break;
+            }
+            case EMovement.halt: {
+                vel.y = 0;
+                break;
+            }
+            case EMovement.up: {
+                vel.y = -Math.min(pos.y, deltaTime);
+                break;
+            }
         }
     }
 
     run(dataSet: Set<Data>) {
-        for (const {paddle, pos} of dataSet) {
-            paddle.draw(this.gameStore.ctx, pos.y);
-
+        for (const {paddle, pos, shape, vel} of dataSet) {
             if (this.gameStore.pause) {
                 continue;
             }
 
-            this.updatePosition(paddle, pos, this.gameStore.lastFrameDeltaTime, paddle.side == EPaddleSide.Left
-                ? this.gameStore.input.actions.leftPaddleMovement
-                : this.gameStore.input.actions.rightPaddleMovement);
+            this.updateTransformationResource(paddle.side, pos, shape.dimensions);
+            this.updateVelocity(
+                pos,
+                vel,
+                shape.dimensions.height ?? shape.dimensions.width,
+                this.gameStore.lastFrameDeltaTime,
+                paddle.side == EPaddleSide.Left
+                    ? this.gameStore.input.actions.leftPaddleMovement
+                    : this.gameStore.input.actions.rightPaddleMovement
+            );
         }
     }
 }
