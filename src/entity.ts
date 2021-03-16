@@ -63,11 +63,10 @@ export class Entity implements IEntity {
     }
 
     removeComponent(component: Object): Entity {
-        if (this.components.has(component.constructor as TObjectProto)) {
-            this.components.delete(component.constructor as TObjectProto);
-        }
+        this.components.delete(component.constructor as TObjectProto);
 
         // this will refresh the entity in the world
+        // todo: improve cache-propagation to be more efficient and transparent
         this.changeWorldTo(this.world);
 
         return this;
