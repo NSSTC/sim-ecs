@@ -22,14 +22,18 @@ Type-based, Components-first ECS, which is optimized for simulation needs. Will 
 
 ## Considerations
 
-This ECS is inspired by SPECS and Legion (two rust ECS libraries), however optimized for JS.
+This ECS is inspired by SPECS, Legion and bevy-ecs (three Rust ECS libraries), however optimized for JS.
 It is built for easy usage (DX) and high iteration speed.
 The trade-off is that insertion and deletion are slow,
 however there are optimizations and opinionations in place to still make it fast.
 I recommend doing insertions and deletions at defined points (for example loading screens)
 and batching these operations.
 For on-the-fly changes, there is a way to register a callback which does the work
-in between system executions, so that all systems can work on the same dataset per iteration. 
+in between system executions, so that all systems can work on the same dataset per iteration.
+
+In order to allow reproducible simulations, all systems operate on cached data-sets.
+Changes to entities are propagated on the next system execution (for example one frame lagging behind creation).
+It is hence not recommended to use entities to propagate messages in between systems.
 
 
 ## Examples
