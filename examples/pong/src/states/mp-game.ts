@@ -1,5 +1,5 @@
 import {GameState} from "./game";
-import {ITransitionActions} from "../ecs";
+import {ITransitionActions} from "sim-ecs";
 import {GameStore} from "../models/game-store";
 
 export class MultiplayerGameState extends GameState {

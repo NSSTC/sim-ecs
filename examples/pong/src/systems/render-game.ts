@@ -1,4 +1,4 @@
-import {ISystemActions, Read, System, SystemData} from "../ecs";
+import {ISystemActions, Read, System, SystemData} from "sim-ecs";
 import {Position} from "../components/position";
 import {Shape} from "../components/shape";
 import {relToScreenCoords} from "../app/util";

@@ -1,4 +1,4 @@
-import {Read, ReadEntity, System, SystemData, With, Write} from "../ecs";
+import {Read, ReadEntity, System, SystemData, With, Write} from "sim-ecs";
 import {Shape} from "../components/shape";
 import {Collision} from "../components/collision";
 import {Position} from "../components/position";
