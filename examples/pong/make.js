@@ -2,9 +2,7 @@ const arg = require('arg');
 const webpack = require('webpack');
 const fs = require('fs-extra');
 const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const ts = require('typescript');
 
 // arg handling
 const args = arg({
@@ -25,7 +23,7 @@ const watch = !!args['--watch'];
 
 
 // build helpers
-const log = (...strs) => console.log.apply(console.log,['[make]'].concat(strs));
+const log = (...strs) => console.log.apply(console.log, ['[make]'].concat(strs));
 
 
 // build website

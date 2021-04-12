@@ -30,8 +30,7 @@ export class BallSystem extends System<Data> {
                 if (pos.y < 0) {
                     pos.y *= -1;
                     dir.y *= -1;
-                }
-                else if (pos.y > this.canvas.height - ball.size) {
+                } else if (pos.y > this.canvas.height - ball.size) {
                     pos.y = 2 * this.canvas.height - ball.size - pos.y;
                     dir.y *= -1;
                 }
