@@ -1,5 +1,6 @@
-import {Entity, IEntity} from "./entity";
+import {Entity, IEntity, TTag} from "./entity";
 import {
+    CTagMarker,
     ISaveFormat,
     TComponent,
     TCustomDeserializer,
@@ -57,7 +58,17 @@ export class SaveFormat implements ISaveFormat {
                     entity = new Entity();
 
                     for (component of entityData) {
-                        entity.addComponent(self.deserialize(component[0], component[1], deserializer));
+                        switch (component[0][0]) {
+                            case CTagMarker: {
+                                for (const tag of component[1] as TTag[]) {
+                                    entity.addTag(tag);
+                                }
+                                break;
+                            }
+                            default: {
+                                entity.addComponent(self.deserialize(component[0], component[1], deserializer));
+                            }
+                        }
                     }
 
                     yield entity;
@@ -76,6 +87,7 @@ export class SaveFormat implements ISaveFormat {
         let components: TComponent[];
         let component;
         let saveComponent: string;
+        let tag;
 
         this.entities.length = 0;
 
@@ -92,6 +104,10 @@ export class SaveFormat implements ISaveFormat {
                 else throw new Error(`No serializer provided for component of type "${component.constructor.name}"!`);
 
                 components.push([component.constructor.name, JSON.parse(saveComponent)]);
+            }
+
+            for (tag of entity.getTags()) {
+                components.push([CTagMarker + tag.toString(), typeof tag]);
             }
 
             this.entities.push(components);

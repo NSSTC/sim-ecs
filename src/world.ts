@@ -1,4 +1,4 @@
-import {Entity} from "./entity";
+import {Entity, TTag} from "./entity";
 import {EntityBuilder} from "./entity-builder";
 import {
     IEntityWorld,
@@ -21,7 +21,7 @@ import {IState, State, TStateProto} from "./state";
 import {TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
 import {getDefaultDeserializer, SaveFormat} from "./save-format";
-import {ISaveFormat, TDeserializer, TSerializer} from "./save-format.spec";
+import {CTagMarker, ISaveFormat, TDeserializer, TSerializer} from "./save-format.spec";
 import {access, EAccess, TComponentAccess} from "./queue.spec";
 
 export * from './world.spec';
@@ -303,7 +303,17 @@ export class World implements IWorld {
             entities.push(entity);
 
             for (const rawComponent of Object.entries(rawEntity)) {
-                entity.addComponent(saveFormat.deserialize(rawComponent[0], rawComponent[1], getDefaultDeserializer(customDeserializer)));
+                switch (rawComponent[0][0]) {
+                    case CTagMarker: {
+                        for (const tag of rawComponent[1] as TTag[]) {
+                            entity.addTag(tag);
+                        }
+                        break;
+                    }
+                    default: {
+                        entity.addComponent(saveFormat.deserialize(rawComponent[0], rawComponent[1], getDefaultDeserializer(customDeserializer)));
+                    }
+                }
             }
 
             this.addEntity(entity);

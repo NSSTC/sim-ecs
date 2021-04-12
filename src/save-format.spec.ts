@@ -24,3 +24,5 @@ export interface ISaveFormat {
     setEntities(entities?: IterableIterator<IEntity>, serializer?: TSerializer): void
     toJSON(): string
 }
+
+export const CTagMarker = '#';
