@@ -1,4 +1,4 @@
-import {ISystemActions, NoData, System} from "../ecs";
+import {ISystemActions, NoData, System} from "sim-ecs";
 import {EMovement, GameStore} from "../models/game-store";
 
 export enum EKeyState {

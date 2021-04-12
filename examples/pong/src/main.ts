@@ -1,4 +1,4 @@
-import {ECS, IWorld} from "./ecs";
+import {ECS, IWorld} from "sim-ecs";
 import {PaddleSystem} from "./systems/paddle";
 import {afterFrameHandler, beforeFrameHandler} from "./app/frame-transition-handlers";
 import {InputSystem} from "./systems/input";

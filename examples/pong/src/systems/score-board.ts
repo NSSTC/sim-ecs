@@ -1,4 +1,4 @@
-import {ISystemActions, Read, System, SystemData, With} from "../ecs";
+import {ISystemActions, Read, System, SystemData, With} from "sim-ecs";
 import {ScoreItem} from "../components/_markers";
 import {UIItem} from "../components/ui-item";
 import {GameStore} from "../models/game-store";

@@ -1,5 +1,5 @@
 import { EKeyState } from '../systems/input'
-import {IState, TStateProto} from "../ecs";
+import {IState, TStateProto} from "sim-ecs";
 
 export enum EMovement {
     up,

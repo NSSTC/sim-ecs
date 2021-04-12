@@ -1,4 +1,4 @@
-import {IEntity, ISystemActions, System, SystemData, TComponentAccess, With, Write} from "../ecs";
+import {IEntity, ISystemActions, System, SystemData, TComponentAccess, With, Write} from "sim-ecs";
 import {Position} from "../components/position";
 import {Ball} from "../components/ball";
 import {Direction} from "../components/direction";

@@ -1,4 +1,4 @@
-import {ITransitionActions, State, TPrefabHandle, With} from "../ecs";
+import {ITransitionActions, State, TPrefabHandle, With} from "sim-ecs";
 import {scorePrefab} from "../prefabs/score";
 import {ScoreItem} from "../components/_markers";
 import {UIItem} from "../components/ui-item";

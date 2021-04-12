@@ -1,4 +1,4 @@
-import {ISystemActions, Read, System, SystemData, With} from "../ecs";
+import {ISystemActions, Read, System, SystemData, With} from "sim-ecs";
 import {UIItem} from "../components/ui-item";
 import {EMovement, GameStore} from "../models/game-store";
 import {EActions} from "../app/actions";

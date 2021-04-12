@@ -1,4 +1,4 @@
-import {ITransitionActions, State, TPrefabHandle} from "../ecs";
+import {ITransitionActions, State, TPrefabHandle} from "sim-ecs";
 import {InputSystem} from "../systems/input";
 import {PauseSystem} from "../systems/pause";
 import {pausePrefab} from "../prefabs/pause";

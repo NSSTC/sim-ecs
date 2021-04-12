@@ -1,4 +1,4 @@
-import {ISystemActions, Read, System, SystemData, Write} from "../ecs";
+import {ISystemActions, Read, System, SystemData, Write} from "sim-ecs";
 import {EMovement, GameStore} from "../models/game-store";
 import {EPaddleSide, Paddle} from "../components/paddle";
 import {Position} from "../components/position";

@@ -1,4 +1,4 @@
-import {ISystemActions, Read, System, SystemData, With} from "../ecs";
+import {ISystemActions, Read, System, SystemData, With} from "sim-ecs";
 import {GameStore} from "../models/game-store";
 import {GameState} from "../states/game";
 import {PauseState} from "../states/pause";

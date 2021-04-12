@@ -1,5 +1,5 @@
 import {GameStore} from "../models/game-store";
-import {ITransitionActions} from "../ecs";
+import {ITransitionActions} from "sim-ecs";
 import {MenuState} from "../states/menu";
 
 let lastTransition = Date.now();

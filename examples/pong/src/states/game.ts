@@ -1,4 +1,4 @@
-import {ECS, ITransitionActions, State, TPrefabHandle, With} from "../ecs";
+import {ECS, ITransitionActions, State, TPrefabHandle, With} from "sim-ecs";
 import {InputSystem} from "../systems/input";
 import {PauseSystem} from "../systems/pause";
 import {PaddleSystem} from "../systems/paddle";
