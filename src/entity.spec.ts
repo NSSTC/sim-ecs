@@ -2,6 +2,8 @@ import {IEntityWorld} from "./world.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
 import {TComponentAccess} from "./queue.spec";
 
+export type TTag = number | string;
+
 export interface IEntity {
     /**
      * Add a component to this entity
@@ -16,7 +18,7 @@ export interface IEntity {
      * and should be implemented and used as lean and light-weight as possible.
      * @param tag
      */
-    addTag(tag: unknown): IEntity
+    addTag(tag: TTag): IEntity
 
     /**
      * Relocate this entity to a new world
@@ -38,7 +40,7 @@ export interface IEntity {
     /**
      * Get all tags
      */
-    getTags(): IterableIterator<unknown>
+    getTags(): IterableIterator<TTag>
 
     /**
      * Check if a certain component is associated with this entity
@@ -50,7 +52,7 @@ export interface IEntity {
      * Check if this entity has a given tag
      * @param tag
      */
-    hasTag(tag: unknown): boolean
+    hasTag(tag: TTag): boolean
 
     /**
      * Check if this entity matches a queue for components
@@ -67,7 +69,7 @@ export interface IEntity {
      * Remove a tag from this entity
      * @param tag
      */
-    removeTag(tag: unknown): IEntity
+    removeTag(tag: TTag): IEntity
 }
 
 export type TEntityProto = { new(): IEntity };

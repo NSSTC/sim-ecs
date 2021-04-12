@@ -9,6 +9,9 @@ const serializedWorld = JSON.stringify([
     [
         ["Date", "1970-01-01T00:00:01.337Z"],
         ["C1", {"a": 0}],
+    ],
+    [
+        ['#', [0, 'hello!']],
     ]
 ]);
 const serializedWorldBasic = '[[]]';
@@ -25,6 +28,12 @@ const serializedWorldDefault = JSON.stringify([
         ["Set", [1, 2, 3]],
         ["String", "Foo"],
     ],
+]);
+const entityWithTags = JSON.stringify([
+    [
+        ["Date", "1970-01-01T00:00:00.000Z"],
+        ['#', [0, 'hello!']],
+    ]
 ]);
 
 describe('Test SaveFormat', () => {
@@ -84,5 +93,20 @@ describe('Test SaveFormat', () => {
         const components = Array.from(entities[0].getComponents());
         expect(components.length).eq(1);
         expect(components[0] instanceof C1).eq(true);
+    });
+
+    it('load/save with tags', () => {
+        const entities = Array.from(SaveFormat.fromJSON(entityWithTags).getEntities(getDefaultDeserializer()));
+        expect(entities.length).eq(1);
+
+        const components = Array.from(entities[0].getComponents());
+        expect(components.length).eq(1);
+
+        const tags = Array.from(entities[0].getTags());
+        expect(tags.length).eq(2);
+
+        expect(tags.includes(0)).eq(true);
+        expect(tags.includes('hello!')).eq(true);
+        expect
     });
 });

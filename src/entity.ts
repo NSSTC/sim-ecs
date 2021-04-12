@@ -1,5 +1,5 @@
 import {IEntityWorld} from "./world.spec";
-import IEntity from "./entity.spec";
+import IEntity, {TTag} from "./entity.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
 import {access, EAccess, TComponentAccess} from "./queue.spec";
 
@@ -7,7 +7,7 @@ export * from './entity.spec';
 
 export class Entity implements IEntity {
     protected components: Map<TObjectProto, Object> = new Map();
-    protected tags: Set<unknown> = new Set();
+    protected tags: Set<TTag> = new Set();
 
     constructor(
         protected world?: IEntityWorld
@@ -22,7 +22,7 @@ export class Entity implements IEntity {
         return this;
     }
 
-    addTag(tag: unknown): Entity {
+    addTag(tag: TTag): Entity {
         this.tags.add(tag);
         return this;
     }
@@ -45,7 +45,7 @@ export class Entity implements IEntity {
         return this.components.values();
     }
 
-    getTags(): IterableIterator<unknown> {
+    getTags(): IterableIterator<TTag> {
         return this.tags.values();
     }
 
@@ -53,7 +53,7 @@ export class Entity implements IEntity {
         return this.components.has(component);
     }
 
-    hasTag(tag: unknown): boolean {
+    hasTag(tag: TTag): boolean {
         return this.tags.has(tag);
     }
 
@@ -86,7 +86,7 @@ export class Entity implements IEntity {
         return this;
     }
 
-    removeTag(tag: unknown): Entity {
+    removeTag(tag: TTag): Entity {
         this.tags.delete(tag);
         return this;
     }
