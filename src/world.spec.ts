@@ -92,6 +92,11 @@ export interface IPartialWorld {
     getResource<T extends Object>(type: TTypeProto<T>): T
 
     /**
+     * Get all resources stored in this world. Useful for debugging
+     */
+    getResources(): IterableIterator<unknown>
+
+    /**
      * Load entities with components from a prefab file
      * @param rawPrefab
      */

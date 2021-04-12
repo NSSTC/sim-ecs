@@ -81,6 +81,7 @@ export class World implements IWorld {
             fromJSON: this.fromJSON.bind(this),
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
+            getResources: this.getResources.bind(this),
             loadPrefab: this.loadPrefab.bind(this),
             maintain: this.maintain.bind(this),
             merge: this.merge.bind(this),
@@ -118,6 +119,7 @@ export class World implements IWorld {
             fromJSON: this.fromJSON.bind(this),
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
+            getResources: this.getResources.bind(this),
             loadPrefab: this.loadPrefab.bind(this),
             maintain: this.maintain.bind(this),
             merge: this.merge.bind(this),
@@ -284,6 +286,10 @@ export class World implements IWorld {
         }
 
         return this.resources.get(type) as T;
+    }
+
+    getResources(): IterableIterator<unknown> {
+        return this.resources.values();
     }
 
     loadPrefab(rawPrefab: TPrefab, customDeserializer?: TDeserializer): TPrefabHandle {
