@@ -10,12 +10,12 @@ class E { constructor(public val: number) {} }
 class ABSystem extends System {
     query = new Query(entity => entity.hasAll(A, B));
 
-    onAddedToEngine(engine: Engine) {
+    onAddedToEngine() {
         this.engine.addQuery(this.query);
     }
 
-    onRemovedFromEngine(engine: Engine) {
-        engine.removeQuery(this.query);
+    onRemovedFromEngine() {
+        this.engine.removeQuery(this.query);
     }
 
     update() {
@@ -31,12 +31,12 @@ class ABSystem extends System {
 class CDSystem extends System {
     query = new Query(entity => entity.hasAll(C, D));
 
-    onAddedToEngine(engine: Engine) {
-        engine.addQuery(this.query);
+    onAddedToEngine() {
+        this.engine.addQuery(this.query);
     }
 
-    onRemovedFromEngine(engine: Engine) {
-        engine.removeQuery(this.query);
+    onRemovedFromEngine() {
+        this.engine.removeQuery(this.query);
     }
 
     update() {
@@ -52,12 +52,12 @@ class CDSystem extends System {
 class CESystem extends System {
     query = new Query(entity => entity.hasAll(C, E));
 
-    onAddedToEngine(engine: Engine) {
-        engine.addQuery(this.query);
+    onAddedToEngine() {
+        this.engine.addQuery(this.query);
     }
 
-    onRemovedFromEngine(engine: Engine) {
-        engine.removeQuery(this.query);
+    onRemovedFromEngine() {
+        this.engine.removeQuery(this.query);
     }
 
     update() {

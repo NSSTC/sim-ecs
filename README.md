@@ -285,30 +285,30 @@ Please open a PR for any information improvement!
 Please take the results with a grain of salt. These are benchmarks, so they are synthetic.
 An actual application will use a mix out of everything and more, and depending on that may have a different experience.
 
-Date: 2nd December 2020
+Date: 12th April 2021
 
 ```
 --------------------------------------------------------------------------------
 TypeScript ECS Bench
 --------------------------------------------------------------------------------
 
-Platform: Windows_NT win32 x64 v10.0.19041
+Platform: Windows_NT win32 x64 v10.0.19042
 CPU: AMD Ryzen 7 3700X 8-Core Processor@3600MHz
 
 Bench           v0.1.0
-TypeScript      v4.1.2
-TS-Lib          v2.0.3
-TS-Node         v9.0.0
+TypeScript      v4.2.4
+TS-Lib          v2.2.0
+TS-Node         v9.1.1
 
-Ape-ECS         v1.3.0
+Ape-ECS         v1.3.1
 sim-ecs         v0.3.0
-tick-knock      v2.1.0
+tick-knock      v3.0.1
 ```
 
 | | Ape-ECS | sim-ecs | tick-knock |
 | ---: | :---: | :---: | :---: |
-| Simple Insert | 80 ops/s, ±6.16% | 208 ops/s, ±2.79% | **296 ops/s, ±23.93%** |
-| Simple Iteration | 136 811 ops/s, ±24.00% | **1 801 033 ops/s, ±5.02%** | 22 418 ops/s, ±0.18% |
-| Schedule | 417 ops/s, ±0.83% | **1 150 841 ops/s, ±5.68%** | 89 ops/s, ±0.53% |
-| De-/Serialize Prefab | 75 ops/s, ±0.61% | **138 ops/s, ±4.80%** | - |
-| De-/Serialize Save | 66 ops/s, ±2.79% (445.31KB) | **137 ops/s, ±0.19%** (**75.20KB**) | - |
+| Simple Insert | 66 ops/s, ±4.87% | 203 ops/s, ±4.35% | **297 ops/s, ±40.74%** |
+| Simple Iteration | 144 191 ops/s, ±13.81% | **1 921 343 ops/s, ±4.47%** | 32 900 ops/s, ±0.19% |
+| Schedule | 673 ops/s, ±0.61%  | **1 294 092 ops/s, ±6.65%** | 304 ops/s, ±1.96% |
+| De-/Serialize Prefab | 75 ops/s, ±3.21% | **143 ops/s, ±1.51%** | - |
+| De-/Serialize Save | 67 ops/s, ±5.20% (445.31KB) | **143 ops/s, ±0.23%** (**75.20KB**) | - |

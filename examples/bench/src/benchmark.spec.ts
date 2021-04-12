@@ -23,5 +23,4 @@ export abstract class ABenchmark implements IBenchmark {
     abstract run(): void | Promise<void>;
 }
 
-
-    export type TBenchProto = new (...args: any[]) => IBenchmark;
+export type TBenchProto = new (...args: any[]) => IBenchmark;
