@@ -1,5 +1,5 @@
 import { Position } from "../components/position";
-import {ISystemActions, Read, System, SystemData} from "../ecs";
+import {ISystemActions, Read, System, SystemData} from "sim-ecs";
 import {UIItem} from "../components/ui-item";
 import {relToScreenCoords} from "../app/util";
 

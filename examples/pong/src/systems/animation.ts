@@ -1,5 +1,5 @@
 import { Position } from "../components/position";
-import {Read, System, SystemData, Write} from "../ecs";
+import {Read, System, SystemData, Write} from "sim-ecs";
 import {Velocity} from "../components/velocity";
 
 class Data extends SystemData {

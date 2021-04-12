@@ -1,4 +1,4 @@
-import {ITransitionActions} from "../ecs";
+import {ITransitionActions} from "sim-ecs";
 import {ScoreBoard} from "../models/score-board";
 
 

@@ -1,4 +1,4 @@
-import { IEntity } from "../ecs";
+import { IEntity } from "sim-ecs";
 
 export class Collision {
     collisionObjects: Set<IEntity> = new Set();
