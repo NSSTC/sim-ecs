@@ -30,6 +30,7 @@ export class World implements IWorld {
     protected _commandsAggregator: CommandsAggregator;
     protected _commands: Commands;
     protected _dirty = false;
+    protected _isRunning = false;
     public entityInfos: Map<IEntity, TEntityInfo> = new Map();
     protected pda = new PushDownAutomaton<IState>();
     private lastRunPreparation?: IStaticRunConfiguration;
@@ -40,7 +41,6 @@ export class World implements IWorld {
     public resources = new Map<{ new(): Object }, Object>();
     protected runExecutionPipeline: Set<TSystemInfo<TSystemData>>[] = [];
     protected runExecutionPipelineCache: Map<TStateProto, Set<TSystemInfo<TSystemData>>[]> = new Map();
-    protected runPromise?: Promise<void> = undefined;
     protected shouldRunSystems = false;
     protected sortedSystems: TSystemInfo<TSystemData>[];
     protected systemWorld: ISystemActions;
@@ -85,7 +85,6 @@ export class World implements IWorld {
             maintain: this.maintain.bind(this),
             save: this.save.bind(this),
         });
-
         for (const system of systemInfos.keys()) {
             this.addResource(system);
         }
@@ -217,10 +216,10 @@ export class World implements IWorld {
     }
 
     async dispatch(state?: TStateProto): Promise<void> {
-        await this.run({
-            initialState: state,
-            afterStepHandler: actions => actions.commands.stopRun(),
-        });
+        const stepper = this.runStepped({initialState: state});
+        for await (const step of stepper) {
+            this.stopRun();
+        }
     }
 
     flushCommands() {
@@ -374,8 +373,25 @@ export class World implements IWorld {
         await newState.activate(this.transitionWorld);
     }
 
-    public async prepareRun(configuration?: IRunConfiguration): Promise<IStaticRunConfiguration> {
-        if (this.runPromise) {
+    async prepareConfig(configuration?: IRunConfiguration, skipPreparation = false, skipRunCheck = false): Promise<IStaticRunConfiguration> {
+        let preparedConfig: IStaticRunConfiguration;
+
+        if (!skipPreparation) {
+            preparedConfig = await this.prepareRun(configuration, skipRunCheck);
+        }
+        else {
+            preparedConfig = this.lastRunPreparation!;
+        }
+
+        if (!preparedConfig) {
+            throw new Error('Cannot run without preparing the run!');
+        }
+
+        return preparedConfig;
+    }
+
+    public async prepareRun(configuration?: IRunConfiguration, skipRunCheck = false): Promise<IStaticRunConfiguration> {
+        if (this._isRunning && !skipRunCheck) {
             throw new Error('The dispatch loop is already running!');
         }
 
@@ -462,53 +478,45 @@ export class World implements IWorld {
         this.resources.delete(type);
     }
 
-    run(configuration?: IRunConfiguration, skipPreparation: boolean = false): Promise<void> {
-        const runPromise = new Promise<void>(async resolver => {
-            let preparedConfig: IStaticRunConfiguration;
+    async run(configuration?: IRunConfiguration, skipPreparation: boolean = false): Promise<void> {
+        return await new Promise(async (resolve, reject) => {
+            try {
+                await this._commandsAggregator.executeAll();
+                
+                const preparedConfig = await this.prepareConfig(configuration, skipPreparation);
+                const execFn = preparedConfig.executionFunction;
+                const step = this.runStepped(undefined, true);
+                let stepResult;
 
-            await this._commandsAggregator.executeAll();
+                const mainLoop = async () => {
+                    stepResult = await step.next();
 
-            if (!skipPreparation) {
-                preparedConfig = await this.prepareRun(configuration);
+                    if (!stepResult.done) {
+                        execFn(mainLoop);
+                    } else {
+                        resolve();
+                    }
+                };
+
+                execFn(mainLoop);
+            } catch (err) {
+                reject(err);
             }
-            else {
-                preparedConfig = this.lastRunPreparation!;
-            }
+        });
+    }
 
-            if (!preparedConfig) {
-                throw new Error('Cannot run without preparing the run!');
-            }
+    async *runStepped(configuration?: IRunConfiguration, skipPreparation: boolean = false): AsyncGenerator<void> {
+        this._isRunning = true;
 
-            this.runPromise = runPromise;
-
+        try {
+            const preparedConfig = await this.prepareConfig(configuration, skipPreparation, true);
             const afterStepHandler = preparedConfig.afterStepHandler;
             const beforeStepHandler = preparedConfig.beforeStepHandler;
-            const execFn = preparedConfig.executionFunction;
             let executionGroup;
             let systemInfo;
             let systemPromises;
 
-            const cleanUp = async () => {
-                await this.pda.state?.deactivate(this.transitionWorld);
-                for (let state = this.pda.pop(); !!state; state = this.pda.pop()) {
-                    await state.destroy(this.transitionWorld);
-                }
-
-                for (const system of this.systemInfos.keys()) {
-                    await system.destroy(this.systemWorld);
-                }
-
-                this.runExecutionPipelineCache.clear();
-                this.runPromise = undefined;
-                resolver();
-            };
-
-            const mainLoop = async () => {
-                if (!this.shouldRunSystems) {
-                    await cleanUp();
-                    return;
-                }
-
+            while(this.shouldRunSystems) {
                 await beforeStepHandler(this.transitionWorld);
 
                 for (executionGroup of this.runExecutionPipeline) {
@@ -522,13 +530,23 @@ export class World implements IWorld {
 
                 await afterStepHandler(this.transitionWorld);
                 await this._commandsAggregator.executeAll();
-                execFn(mainLoop);
+                yield;
+            }
+        } catch (err) {
+            throw err;
+        } finally {
+            await this.pda.state?.deactivate(this.transitionWorld);
+            for (let state = this.pda.pop(); !!state; state = this.pda.pop()) {
+                await state.destroy(this.transitionWorld);
             }
 
-            execFn(mainLoop);
-        });
+            for (const system of this.systemInfos.keys()) {
+                await system.destroy(this.systemWorld);
+            }
 
-        return runPromise;
+            this.runExecutionPipelineCache.clear();
+            this._isRunning = false;
+        }
     }
 
     protected sortSystems(unsorted: TSystemNode[]): TSystemNode[] {
