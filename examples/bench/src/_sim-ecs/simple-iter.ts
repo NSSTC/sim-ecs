@@ -33,6 +33,7 @@ class SimpleIterSystem extends System<Data> {
 }
 
 export class Benchmark extends ABenchmark {
+    count = 0;
     world: World;
 
     constructor(
@@ -65,13 +66,14 @@ export class Benchmark extends ABenchmark {
     }
 
     cleanUp(): IBenchmark {
+        this.count = 0;
         return this;
     }
 
     async init(): Promise<void> {
         await this.world.prepareRun({
             afterStepHandler: (actions) => {
-                actions.stopRun();
+                if (this.count++ >= this.iterCount) { actions.stopRun(); }
             },
             // to make the comparison fair, we will iterate in a sync loop over the steps, just like the others do
             executionFunction: (fn: Function) => fn(),

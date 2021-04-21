@@ -119,9 +119,10 @@ export class Benchmark extends ABenchmark {
     }
 
     async init(): Promise<void> {
+        let count = 0;
         await this.world.prepareRun({
             afterStepHandler: (actions) => {
-                    actions.stopRun();
+                if (count++ >= this.iterCount) { actions.stopRun(); }
             },
             // to make the comparison fair, we will iterate in a sync loop over the steps, just like the others do
             executionFunction: (fn: Function) => fn(),

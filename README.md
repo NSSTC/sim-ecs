@@ -285,7 +285,7 @@ Please open a PR for any information improvement!
 Please take the results with a grain of salt. These are benchmarks, so they are synthetic.
 An actual application will use a mix out of everything and more, and depending on that may have a different experience.
 
-Date: 12th April 2021
+Date: 21th April 2021
 
 ```
 --------------------------------------------------------------------------------
@@ -307,8 +307,8 @@ tick-knock      v3.0.1
 
 | | Ape-ECS | sim-ecs | tick-knock |
 | ---: | :---: | :---: | :---: |
-| Simple Insert | 66 ops/s, ±4.87% | 203 ops/s, ±4.35% | **297 ops/s, ±40.74%** |
-| Simple Iteration | 144 191 ops/s, ±13.81% | **1 921 343 ops/s, ±4.47%** | 32 900 ops/s, ±0.19% |
-| Schedule | 673 ops/s, ±0.61%  | **1 294 092 ops/s, ±6.65%** | 304 ops/s, ±1.96% |
-| De-/Serialize Prefab | 75 ops/s, ±3.21% | **143 ops/s, ±1.51%** | - |
-| De-/Serialize Save | 67 ops/s, ±5.20% (445.31KB) | **143 ops/s, ±0.23%** (**75.20KB**) | - |
+| Simple Insert | 54 ops/s, ±10.48% | 204 ops/s, ±4.86% | **262 ops/s, ±23.95%** |
+| Simple Iteration | 97 899 ops/s, ±76.78% | **1 117 294 ops/s, ±25.04%** | 32 416 ops/s, ±0.14% |
+| Schedule | 603 ops/s, ±0.26%  | **1 223 274 ops/s, ±15.49%** | 267 ops/s, ±0.40% |
+| De-/Serialize Prefab | 69 ops/s, ±5.75% | **90 ops/s, ±21.67%** | - |
+| De-/Serialize Save | 62 ops/s, ±0.41% (445.31KB) | **83 ops/s, ±35.69%** (**75.20KB**) | - |
