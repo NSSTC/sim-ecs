@@ -206,6 +206,19 @@ export class World implements IWorld {
         this.entityInfos.clear();
     }
 
+    protected async cleanupRun() {
+        await this.pda.state?.deactivate(this.transitionWorld);
+        for (let state = this.pda.pop(); !!state; state = this.pda.pop()) {
+            await state.destroy(this.transitionWorld);
+        }
+
+        for (const system of this.systemInfos.keys()) {
+            await system.destroy(this.systemWorld);
+        }
+
+        this.runExecutionPipelineCache.clear();
+    }
+
     createEntity(): Entity {
         const entity = new Entity();
         this.entityInfos.set(entity, {
@@ -216,7 +229,7 @@ export class World implements IWorld {
     }
 
     async dispatch(state?: TStateProto): Promise<void> {
-        const stepper = this.runStepped({initialState: state});
+        const stepper = await this.runStepped({initialState: state});
         for await (const step of stepper) {
             this.stopRun();
         }
@@ -391,7 +404,7 @@ export class World implements IWorld {
     }
 
     public async prepareRun(configuration?: IRunConfiguration, skipRunCheck = false): Promise<IStaticRunConfiguration> {
-        if (this._isRunning && !skipRunCheck) {
+        if (this.shouldRunSystems && !skipRunCheck) {
             throw new Error('The dispatch loop is already running!');
         }
 
@@ -414,7 +427,6 @@ export class World implements IWorld {
         };
 
         this.pda.clear();
-        this.shouldRunSystems = true;
 
         for (const system of this.systemInfos.keys()) {
             await system.setup(this.systemWorld);
@@ -485,7 +497,7 @@ export class World implements IWorld {
                 
                 const preparedConfig = await this.prepareConfig(configuration, skipPreparation);
                 const execFn = preparedConfig.executionFunction;
-                const step = this.runStepped(undefined, true);
+                const step = await this.runStepped(undefined, true);
                 let stepResult;
 
                 const mainLoop = async () => {
@@ -505,48 +517,50 @@ export class World implements IWorld {
         });
     }
 
-    async *runStepped(configuration?: IRunConfiguration, skipPreparation: boolean = false): AsyncGenerator<void> {
-        this._isRunning = true;
+    async runStepped(configuration?: IRunConfiguration, skipPreparation: boolean = false): Promise<AsyncIterableIterator<void>> {
+        this.shouldRunSystems = true;
 
+        let preparedConfig;
         try {
-            const preparedConfig = await this.prepareConfig(configuration, skipPreparation, true);
-            const afterStepHandler = preparedConfig.afterStepHandler;
-            const beforeStepHandler = preparedConfig.beforeStepHandler;
-            let executionGroup;
-            let systemInfo;
-            let systemPromises;
+            preparedConfig = await this.prepareConfig(configuration, skipPreparation, true);
+        } catch (err) {
+            this.shouldRunSystems = false;
+            throw err;
+        }
 
-            while(this.shouldRunSystems) {
-                await beforeStepHandler(this.transitionWorld);
+        const afterStepHandler = preparedConfig.afterStepHandler;
+        const beforeStepHandler = preparedConfig.beforeStepHandler;
+        const self = this;
+        let executionGroup;
+        let systemInfo;
+        let systemPromises;
 
-                for (executionGroup of this.runExecutionPipeline) {
-                    systemPromises = [];
-                    for (systemInfo of executionGroup) {
-                        systemPromises.push(systemInfo.system.run(systemInfo.dataSet));
+        return {
+            [Symbol.asyncIterator](): AsyncIterableIterator<void> {
+                return this as AsyncIterableIterator<void>;
+            },
+            async next(): Promise<IteratorResult<void>> {
+                if (self.shouldRunSystems) {
+                    await beforeStepHandler(self.transitionWorld);
+
+                    for (executionGroup of self.runExecutionPipeline) {
+                        systemPromises = [];
+                        for (systemInfo of executionGroup) {
+                            systemPromises.push(systemInfo.system.run(systemInfo.dataSet));
+                        }
+
+                        await Promise.all(systemPromises);
                     }
 
-                    await Promise.all(systemPromises);
+                    await afterStepHandler(self.transitionWorld);
+                    return { value: undefined, done: false };
+                } else {
+                    await self.cleanupRun();
+                    self.shouldRunSystems = false;
+                    return { value: undefined, done: true };
                 }
-
-                await afterStepHandler(this.transitionWorld);
-                await this._commandsAggregator.executeAll();
-                yield;
             }
-        } catch (err) {
-            throw err;
-        } finally {
-            await this.pda.state?.deactivate(this.transitionWorld);
-            for (let state = this.pda.pop(); !!state; state = this.pda.pop()) {
-                await state.destroy(this.transitionWorld);
-            }
-
-            for (const system of this.systemInfos.keys()) {
-                await system.destroy(this.systemWorld);
-            }
-
-            this.runExecutionPipelineCache.clear();
-            this._isRunning = false;
-        }
+        };
     }
 
     protected sortSystems(unsorted: TSystemNode[]): TSystemNode[] {

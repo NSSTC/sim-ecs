@@ -157,7 +157,7 @@ export interface IWorld extends IPartialWorld {
      * Contains performance benefits by pre-calculating and pre-scheduling the execution
      * @param configuration
      */
-    runStepped(configuration?: IRunConfiguration): AsyncGenerator<void>
+    runStepped(configuration?: IRunConfiguration): Promise<AsyncIterableIterator<void>>
 }
 
 export type TWorldProto = { new(): IWorld };
