@@ -177,6 +177,7 @@ export class World implements IWorld {
         }
 
         this.resources.set(type, instance);
+        return instance;
     }
 
     private static assignEntityToSystem(systemInfo: TSystemInfo<TSystemData>, entityInfo: TEntityInfo): boolean {

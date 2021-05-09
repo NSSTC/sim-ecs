@@ -51,11 +51,11 @@ export interface IPartialWorld {
     addEntity(entity: IEntity): void
 
     /**
-     * Add a resource to this world
+     * Add a resource to this world and returns the resource instance
      * @param type
      * @param args constructor parameters
      */
-    addResource<T extends Object>(type: T | TTypeProto<T>, ...args: unknown[]): void
+    addResource<T extends Object>(type: T | TTypeProto<T>, ...args: unknown[]): T
 
     /**
      * Build an entity and add it to this world using an entity builder
