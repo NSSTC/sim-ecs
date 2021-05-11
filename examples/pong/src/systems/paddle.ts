@@ -50,7 +50,12 @@ export class PaddleSystem extends System<Data> {
     updateVelocity(pos: Position, vel: Velocity, paddleHeight: number, deltaTime: number, movement: EMovement) {
         switch (movement) {
             case EMovement.down: {
-                vel.y = Math.min(this.ctx.canvas.height - pos.y - paddleHeight, deltaTime);
+                if (pos.y + paddleHeight >= 1) {
+                    pos.y = 1 - paddleHeight;
+                } else {
+                    vel.y = (1 - paddleHeight) * deltaTime / 500;
+                }
+
                 break;
             }
             case EMovement.halt: {
@@ -58,7 +63,12 @@ export class PaddleSystem extends System<Data> {
                 break;
             }
             case EMovement.up: {
-                vel.y = -Math.min(pos.y, deltaTime);
+                if (pos.y <= 0) {
+                    pos.y = 0;
+                } else {
+                    vel.y = -((1 - paddleHeight) * deltaTime / 500);
+                }
+
                 break;
             }
         }
@@ -66,10 +76,6 @@ export class PaddleSystem extends System<Data> {
 
     run(dataSet: Set<Data>) {
         for (const {paddle, pos, shape, vel} of dataSet) {
-            if (this.gameStore.pause) {
-                continue;
-            }
-
             this.updateTransformationResource(paddle.side, pos, shape.dimensions);
             this.updateVelocity(
                 pos,

@@ -1,6 +1,5 @@
 import {GameStore} from "../models/game-store";
 import {ITransitionActions} from "sim-ecs";
-import {MenuState} from "../states/menu";
 
 let lastTransition = Date.now();
 
@@ -20,14 +19,6 @@ export async function afterFrameHandler(actions: ITransitionActions) {
     if (gameStore.PushState) {
         await actions.pushState(gameStore.PushState);
         gameStore.PushState = undefined;
-    }
-
-    if (gameStore.backToMenu) {
-        while (actions.currentState?.constructor != MenuState) {
-            await actions.popState();
-        }
-
-        gameStore.backToMenu = false;
     }
 }
 

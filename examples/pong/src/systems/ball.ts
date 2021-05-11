@@ -6,10 +6,13 @@ import {Collision} from "../components/collision";
 import {EWallSide, EWallType, Wall} from "../components/wall";
 import {Paddle} from "../components/paddle";
 import {ScoreBoard} from "../models/score-board";
+import {Position} from "../components/position";
+import {defaultBallPositionX, defaultBallPositionY} from "../prefabs/game";
 
 class Data extends SystemData {
     readonly _ball = With(Ball)
     readonly collisionData = Read(Collision)
+    pos = Write(Position)
     vel = Write(Velocity)
 }
 
@@ -26,33 +29,44 @@ export class BallSystem extends System<Data> {
     }
 
     run(dataSet: Set<Data>) {
-        for (const {vel, collisionData} of dataSet) {
+        let wallCollisionHorizontal = false;
+        let wallCollisionVertical = EWallSide.None;
+        let paddleCollision = false;
+
+        for (const {collisionData, pos, vel} of dataSet) {
             if (collisionData.occurred) {
                 for (const obj of collisionData.collisionObjects) {
                     if (obj.hasComponent(Wall)) {
                         if (obj.getComponent(Wall)!.wallType == EWallType.Horizontal) {
-                            vel.y *= -1;
+                            wallCollisionHorizontal = true;
                         } else {
-                            // Point for one side, restart
-                            switch (obj.getComponent(Wall)!.wallSide) {
-                                case EWallSide.Left: {
-                                    this.scoreBoard.left++;
-                                    break;
-                                }
-                                case EWallSide.None: {
-                                    break;
-                                }
-                                case EWallSide.Right: {
-                                    this.scoreBoard.right++;
-                                    break;
-                                }
-                            }
-
-                            //
+                            wallCollisionVertical = obj.getComponent(Wall)!.wallSide;
                         }
                     } else if (obj.hasComponent(Paddle)) {
-                        vel.x *= -1;
+                        paddleCollision = true;
                     }
+                }
+
+                if (paddleCollision) {
+                    vel.x *= -1;
+                }
+
+                if (!paddleCollision && wallCollisionVertical != EWallSide.None) {
+                    // Point for one side, restart
+                    if (wallCollisionVertical == EWallSide.Left) {
+                        this.scoreBoard.left++;
+                    } else {
+                        this.scoreBoard.right++;
+                    }
+
+                    pos.x = defaultBallPositionX;
+                    pos.y = defaultBallPositionY;
+                    vel.x *= -1;
+                    vel.y *= Math.random() > .5 ? 1 : -1;
+                }
+
+                if (wallCollisionHorizontal) {
+                    vel.y *= -1;
                 }
             }
         }

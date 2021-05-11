@@ -8,7 +8,6 @@ export enum EMovement {
 }
 
 export class GameStore {
-    backToMenu = false
     continue = false
     currentState?: IState
     exit = false
@@ -34,8 +33,6 @@ export class GameStore {
         },
         keyStates: {},
     }
-    pause = false
-    readonly pointLimit = 10
     popState = false
     PushState?: TStateProto
 }

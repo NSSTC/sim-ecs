@@ -6,12 +6,21 @@ import {Velocity} from "../components/velocity";
 import {UIItem} from "../components/ui-item";
 import {Position} from "../components/position";
 import {Collision} from "../components/collision";
-import {EWallType} from "../components/wall";
+import {EWallSide, EWallType, Wall} from "../components/wall";
+
+
+export const defaultBallPositionX = 0.49;
+export const defaultBallPositionY = 0.49;
+export const defaultBallVelocityX = 0.005 / 2;
+export const defaultBallVelocityY = 0.007 / 2;
 
 // This could also be pure JSON, but in order to use TS types and have static checks it is recommended to write it as TS array.
 export const gamePrefab: TPrefab = [
     { // Left wall
-        Wall: { wallType: EWallType.Vertical },
+        Wall: <Wall>{
+            wallSide: EWallSide.Left,
+            wallType: EWallType.Vertical,
+        },
         Collision: <Collision>{},
         Position: <Position>{
             x: -1,
@@ -26,7 +35,10 @@ export const gamePrefab: TPrefab = [
         },
     },
     { // Right wall
-        Wall: { wallType: EWallType.Vertical },
+        Wall: <Wall>{
+            wallSide: EWallSide.Right,
+            wallType: EWallType.Vertical,
+        },
         Collision: <Collision>{},
         Position: <Position>{
             x: 1,
@@ -41,7 +53,7 @@ export const gamePrefab: TPrefab = [
         },
     },
     { // Top wall
-        Wall: { wallType: EWallType.Horizontal },
+        Wall: <Wall>{wallType: EWallType.Horizontal},
         Collision: <Collision>{},
         Position: <Position>{
             x: 0,
@@ -56,7 +68,7 @@ export const gamePrefab: TPrefab = [
         },
     },
     { // Bottom wall
-        Wall: { wallType: EWallType.Horizontal },
+        Wall: <Wall>{wallType: EWallType.Horizontal},
         Collision: <Collision>{},
         Position: <Position>{
             x: 0,
@@ -74,8 +86,8 @@ export const gamePrefab: TPrefab = [
         Ball: <Ball>{},
         Collision: <Collision>{},
         Position: <Position>{
-            x: 0.49,
-            y: 0.49,
+            x: defaultBallPositionX,
+            y: defaultBallPositionY,
         },
         Shape: <Shape>{
             color: 'red',
@@ -84,8 +96,8 @@ export const gamePrefab: TPrefab = [
             },
         },
         Velocity: <Velocity>{
-            x: 0.005,
-            y: 0.007,
+            x: defaultBallVelocityX,
+            y: defaultBallVelocityY,
         }
     },
     { // Left paddle
