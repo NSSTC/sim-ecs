@@ -1,4 +1,4 @@
-import {ISystemActions, Read, System, SystemData, With} from "sim-ecs";
+import {ISystemActions, Read, System, SystemData} from "sim-ecs";
 import {GameStore} from "../models/game-store";
 import {GameState} from "../states/game";
 import {PauseState} from "../states/pause";
@@ -28,8 +28,7 @@ export class PauseSystem extends System<Data> {
         if (this.gameStore.input.actions.togglePause) {
             if (isGameState) {
                 this.gameStore.PushState = PauseState;
-            }
-            else {
+            } else {
                 this.gameStore.popState = true;
             }
         }

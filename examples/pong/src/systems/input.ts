@@ -20,8 +20,8 @@ export class InputSystem extends System<NoData> {
     setup(actions: ISystemActions) {
         this.gameStore = actions.getResource(GameStore);
 
-        window.addEventListener('keydown', event => this.inputEvents.push({ key: event.key, type: EKeyState.Down }));
-        window.addEventListener('keyup', event => this.inputEvents.push({ key: event.key, type: EKeyState.Up }));
+        window.addEventListener('keydown', event => this.inputEvents.push({key: event.key, type: EKeyState.Down}));
+        window.addEventListener('keyup', event => this.inputEvents.push({key: event.key, type: EKeyState.Up}));
     }
 
     run() {
@@ -68,8 +68,7 @@ export class InputSystem extends System<NoData> {
                             break;
                         }
                     }
-                }
-                else {
+                } else {
                     switch (event.key) {
                         case 'w':
                         case 'W': {

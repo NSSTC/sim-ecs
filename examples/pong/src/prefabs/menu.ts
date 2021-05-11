@@ -19,7 +19,7 @@ export const menuPrefab: TPrefab = [
     { // Sub title
         Position: <Position>{
             x: 0.05,
-            y: 0.1,
+            y: 0.12,
         },
         UIItem: {
             caption: 'A sim-ecs usage demo',
@@ -30,10 +30,21 @@ export const menuPrefab: TPrefab = [
     {
         Position: <Position>{
             x: 0.05,
-            y: 0.15,
+            y: 0.2,
         },
         UIItem: <UIItem>{
-            caption: 'How to play: Left paddle: W/S  Right paddle: Up/Down',
+            caption: 'How to play: Left paddle: W/S ; Right paddle: Up/Down ; Pause: Escape',
+            color: '#ddd',
+            fontSize: 24,
+        }
+    },
+    {
+        Position: <Position>{
+            x: 0.05,
+            y: 0.24,
+        },
+        UIItem: <UIItem>{
+            caption: 'The game will be saved upon pausing!',
             color: '#ddd',
             fontSize: 24,
         }

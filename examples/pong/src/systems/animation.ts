@@ -1,4 +1,4 @@
-import { Position } from "../components/position";
+import {Position} from "../components/position";
 import {Read, System, SystemData, Write} from "sim-ecs";
 import {Velocity} from "../components/velocity";
 

@@ -21,7 +21,7 @@ import {PaddleTransforms} from "./models/paddle-transforms";
 import {Dimensions} from "./models/dimensions";
 import {CollisionSystem} from "./systems/collision";
 import {Collision} from "./components/collision";
-import { Wall } from "./components/wall";
+import {Wall} from "./components/wall";
 
 
 const cleanup = () => {
@@ -40,8 +40,8 @@ const createWorld = () => {
     return new ECS()
         .buildWorld()
         .withSystem(AnimationSystem, [BallSystem, PaddleSystem])
-        .withSystem(BallSystem, [CollisionSystem, InputSystem, PaddleSystem])
-        .withSystem(CollisionSystem, [InputSystem])
+        .withSystem(BallSystem, [CollisionSystem])
+        .withSystem(CollisionSystem, [PaddleSystem])
         .withSystem(InputSystem)
         .withSystem(MenuSystem, [InputSystem])
         .withSystem(PaddleSystem, [InputSystem])

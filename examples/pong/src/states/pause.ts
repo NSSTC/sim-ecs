@@ -17,7 +17,6 @@ export class PauseState extends State {
         save(actions);
 
         gameStore.currentState = this;
-        gameStore.pause = true;
         this.prefabHandle = actions.loadPrefab(pausePrefab);
         actions.maintain();
     }
@@ -25,6 +24,5 @@ export class PauseState extends State {
     deactivate(actions: ITransitionActions) {
         actions.unloadPrefab(this.prefabHandle);
         actions.maintain();
-        actions.getResource(GameStore).pause = false;
     }
 }

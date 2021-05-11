@@ -30,8 +30,7 @@ export class GameState extends State {
 
         if (gameStore.continue) {
             load(actions);
-        }
-        else {
+        } else {
             this.prefabHandle = createNewGame(actions);
         }
 
