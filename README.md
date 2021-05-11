@@ -1,6 +1,10 @@
 # sim-ecs
 Type-based, Components-first ECS, which is optimized for simulation needs. Will run in NodeJS and the browser.
 
+```
+npm install sim-ecs
+```
+
 
 - [Considerations](#considerations)
 - [Examples](#examples)
