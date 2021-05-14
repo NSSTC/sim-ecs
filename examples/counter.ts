@@ -33,9 +33,8 @@ class CounterSystem extends System<Data> {
     }
 
     /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
-    async run(dataSet: Set<Data>): Promise<void> {
-        let counterInfo;
-        for ({counterInfo} of dataSet) {
+    run(dataSet: Set<Data>) {
+        for (const {counterInfo} of dataSet) {
             counterInfo.count++;
 
             // after every ten steps, write out a log message
@@ -78,7 +77,7 @@ world
 
 /// when everything is added, it's time to run the simulation
 /// sim-ecs provides a main-loop, which is optimized for iteration speed of the systems and data
-/// it is highly recommended to use it
+/// it is highly recommended to use it:
 world.run({
     /// this callback is executed after every complete run of all requested systems
     /// use it in order to do changes to the world, like adding, deleting or modifying entities
@@ -88,4 +87,4 @@ world.run({
             actions.stopRun();
         }
     }
-}).catch(console.error);
+}).catch(console.error).then(() => console.log('Finished.'));

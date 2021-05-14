@@ -10,9 +10,9 @@ npm install sim-ecs
 - [Examples](#examples)
   - [Counter](#counter)
   - [Pong](#pong)  
-- [Defining Systems](#defining-systems)
 - [Creating the ECS and a World](#creating-the-ecs-and-a-world)
 - [Setting Resources](#setting-resources)
+- [Defining Systems](#defining-systems)
 - [Defining Components](#defining-components)
 - [Adding Entities](#adding-entities)
 - [Working with States](#working-with-states-optional)
@@ -67,26 +67,6 @@ You will need to build Pong from its directory.
 Then, you can open the `index.html` in the public folder to run the game.  
 
 
-## Defining Systems
-
-Systems are the logic, which operates on data sets (components).
-They are logic building blocks which separate concerns and make the world move.
-
-```typescript
-class Data extends SystemData{ counterObj = Write(Counter) }
-class CountSystem extends System<Data> {
-    readonly SystemData = Data;
-
-    // update() is called every time the world needs to be updated. Put your logic in there
-    async run(dataSet: Set<Data>): Promise<void> {
-        for (let data of dataSet) {
-            console.log(++data.counterObj.a);
-        }
-    }
-}
-```
-
-
 ## Creating the ECS and a World
 
 In an ECS, a world is like a container for entities.
@@ -106,6 +86,26 @@ Resources are objects, which can hold certain data, like the start DateTime.
 // you can pass arguments to the constructor by passing them as additional parameters here
 world.addResource(Date);
 console.log(world.getResource(Date).getDate());
+```
+
+
+## Defining Systems
+
+Systems are the logic, which operates on data sets (components).
+They are logic building blocks which separate concerns and make the world move.
+
+```typescript
+class Data extends SystemData{ counterObj = Write(Counter) }
+class CountSystem extends System<Data> {
+    readonly SystemData = Data;
+
+    // update() is called every time the world needs to be updated. Put your logic in there
+    run(dataSet: Set<Data>) {
+        for (const {counterObj} of dataSet) {
+            console.log(++counterObj.a);
+        }
+    }
+}
 ```
 
 
