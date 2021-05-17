@@ -18,7 +18,7 @@ export class RenderUISystem extends System<Data> {
         this.toScreenCoords = relToScreenCoords.bind(undefined, this.ctx.canvas);
     }
 
-    run(dataSet: Set<Data>): void | Promise<void> {
+    run(dataSet: Set<Data>) {
         this.ctx.textBaseline = 'top';
 
         for (const {pos, ui} of dataSet) {

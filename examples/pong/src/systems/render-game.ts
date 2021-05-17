@@ -18,7 +18,7 @@ export class RenderGameSystem extends System<Data> {
         this.toScreenCoords = relToScreenCoords.bind(undefined, this.ctx.canvas);
     }
 
-    run(dataSet: Set<Data>): void | Promise<void> {
+    run(dataSet: Set<Data>) {
         for (const {pos, shape} of dataSet) {
             const screenDim = this.toScreenCoords(shape.dimensions.width, shape.dimensions.height ?? 0);
             const screenPos = this.toScreenCoords(pos.x, pos.y);

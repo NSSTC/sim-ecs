@@ -10,7 +10,7 @@ class Data extends SystemData {
 export class AnimationSystem extends System<Data> {
     SystemDataType = Data;
 
-    run(dataSet: Set<Data>): void | Promise<void> {
+    run(dataSet: Set<Data>) {
         for (const {pos, vel} of dataSet) {
             pos.x += vel.x;
             pos.y += vel.y;
