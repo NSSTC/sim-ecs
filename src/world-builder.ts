@@ -5,14 +5,12 @@ import {
 import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import IWorld, {TSystemInfo} from "./world.spec";
 import {World} from "./world";
-import {TDeserializer} from "./save-format.spec";
 import {TObjectProto} from "./_.spec";
-import {SaveFormat} from "./save-format";
+import {SerDe} from "./serde/serde";
 
 export class WorldBuilder implements IWorldBuilder {
     protected callbacks: Set<(world: IWorld) => void> = new Set();
-    protected fromWorld?: World;
-    protected save = new SaveFormat();
+    protected serde = new SerDe();
     protected systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>> = new Map();
 
     addCallback(cb: (world: IWorld) => void): WorldBuilder {
@@ -21,13 +19,7 @@ export class WorldBuilder implements IWorldBuilder {
     }
 
     build(): IWorld {
-        const world = new World(this.systemInfos, this.save);
-
-        world.setSaveFormat(this.save);
-
-        if (this.fromWorld) {
-            world.merge(this.fromWorld);
-        }
+        const world = new World(this.systemInfos, this.serde);
 
         for (const cb of this.callbacks) {
             cb(world);
@@ -36,33 +28,18 @@ export class WorldBuilder implements IWorldBuilder {
         return world;
     }
 
-    fromJSON(json: string, deserializer?: TDeserializer): WorldBuilder {
-        this.save.loadJSON(json);
-        this.fromWorld = new World(new Map(), this.save);
-        let entity;
-
-        for (entity of this.save.getEntities(deserializer)) {
-            this.fromWorld.addEntity(entity);
-        }
-
-        return this;
-    }
-
     withSystem(System: TSystemProto<TSystemData>, options?: ISystemRegistrationOptions | TSystemProto<TSystemData>[]): WorldBuilder {
         if (Array.from(this.systemInfos.values()).find(info => info.system.constructor == System)) {
             throw new Error(`The system ${System.constructor.name} is already registered!`);
         }
 
         let dependencies;
-        // todo: read from options and thread to service workers if true in order spread a single system's workload
-        let parallelize = false;
 
         if (Array.isArray(options)) {
             dependencies = options;
         }
         else if (!!options) {
             dependencies = options.dependencies ?? [];
-            parallelize = !!options.parallelize;
         }
 
         const system = new System();
@@ -71,7 +48,6 @@ export class WorldBuilder implements IWorldBuilder {
             dataPrototype: system.SystemDataType,
             dataSet: new Set(),
             dependencies: new Set(dependencies),
-            parallelize,
             system,
         });
 
@@ -79,7 +55,7 @@ export class WorldBuilder implements IWorldBuilder {
     }
 
     withComponent(Component: TObjectProto, options?: IComponentRegistrationOptions): WorldBuilder {
-        this.save.registerComponent(
+        this.serde.registerTypeHandler(
             Component,
             options?.serDe?.deserializer ?? dataStructDeserializer.bind(undefined, Component),
             options?.serDe?.serializer ?? dataStructSerializer
@@ -100,7 +76,7 @@ export class WorldBuilder implements IWorldBuilder {
 // todo: read the Constructor parameters in order to throw early if a field is missing
 function dataStructDeserializer(Constructor: TObjectProto, data: unknown): Object {
     if (typeof data != 'object') {
-        throw new Error(`Cannot default-deserialize data of type ${typeof data}!`);
+        throw new Error(`Cannot default-deserialize ${Constructor.name}, because the data is of type ${typeof data}!`);
     }
 
     const obj: { [key: string]: any } = new Constructor();
@@ -112,8 +88,8 @@ function dataStructDeserializer(Constructor: TObjectProto, data: unknown): Objec
     return obj;
 }
 
-function dataStructSerializer(component: unknown): string {
-    return JSON.stringify(component);
+function dataStructSerializer(component: unknown): unknown {
+    return component;
 }
 
 export const _ = {

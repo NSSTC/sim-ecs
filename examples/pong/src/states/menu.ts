@@ -11,7 +11,7 @@ export class MenuState extends State {
 
     activate(actions: ITransitionActions): void | Promise<void> {
         actions.getResource(GameStore).currentState = this;
-        this.prefabHandle = actions.loadPrefab(menuPrefab);
+        this.prefabHandle = actions.load(menuPrefab);
         actions.maintain();
     }
 

@@ -1,4 +1,4 @@
-import {ECS, IWorld} from 'sim-ecs';
+import {ECS, IWorld, SerialFormat} from 'sim-ecs';
 import {ABenchmark, IBenchmark} from "../benchmark.spec";
 
 class Transform {}
@@ -8,12 +8,23 @@ class Velocity { x = 1 }
 
 export class Benchmark extends ABenchmark {
     world: IWorld;
+    world2: IWorld;
 
     constructor(
         protected iterCount: number
     ) {
         super();
         this.world = new ECS()
+            .buildWorld()
+            .withComponents(
+                Transform,
+                Position,
+                Rotation,
+                Velocity,
+            )
+            .build();
+
+        this.world2 = new ECS()
             .buildWorld()
             .withComponents(
                 Transform,
@@ -37,7 +48,7 @@ export class Benchmark extends ABenchmark {
         this.world.maintain();
 
         {
-            const json = this.world.toJSON();
+            const json = this.world.save().toJSON();
             console.log(`sim-ecs SerializeSave file size: ${new TextEncoder().encode(json).length / 1024} KB`);
         }
     }
@@ -47,8 +58,7 @@ export class Benchmark extends ABenchmark {
     }
 
     async run() {
-        const json = this.world.toJSON();
-        this.world.saveFormat!.loadJSON(json);
-        Array.from(this.world.saveFormat!.getEntities());
+        const json = this.world.save().toJSON();
+        this.world2.load(SerialFormat.fromJSON(json));
     }
 }

@@ -17,7 +17,7 @@ export class PauseState extends State {
         save(actions);
 
         gameStore.currentState = this;
-        this.prefabHandle = actions.loadPrefab(pausePrefab);
+        this.prefabHandle = actions.load(pausePrefab);
         actions.maintain();
     }
 

@@ -1,9 +1,9 @@
-import {TPrefab} from "sim-ecs";
+import {SerialFormat} from "sim-ecs";
 import {UIItem} from "../components/ui-item";
 import {Position} from "../components/position";
 
 // This could also be pure JSON, but in order to use TS types and have static checks it is recommended to write it as TS array.
-export const pausePrefab: TPrefab = [
+export const pausePrefab = new SerialFormat().fromArray([
     {
         Position: <Position>{
             x: 0.05,
@@ -15,4 +15,4 @@ export const pausePrefab: TPrefab = [
             fontSize: 64,
         }
     },
-];
+]);

@@ -46,7 +46,7 @@ export class GameState extends State {
 }
 
 const createNewGame = function (actions: ITransitionActions) {
-    const prefabHandle = actions.loadPrefab(gamePrefab);
+    const prefabHandle = actions.load(gamePrefab);
 
     for (const entity of actions.getEntities([With(Paddle), With(Shape)])) {
         entity

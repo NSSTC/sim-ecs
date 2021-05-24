@@ -1,10 +1,10 @@
-import {TPrefab} from "sim-ecs";
+import {SerialFormat} from "sim-ecs";
 import {EActions} from "../app/actions";
 import {Position} from "../components/position";
 import {UIItem} from "../components/ui-item";
 
 // This could also be pure JSON, but in order to use TS types and have static checks it is recommended to write it as TS array.
-export const menuPrefab: TPrefab = [
+export const menuPrefab = new SerialFormat().fromArray([
     { // Title
         Position: <Position>{
             x: 0.05,
@@ -86,4 +86,4 @@ export const menuPrefab: TPrefab = [
             fontSize: 32,
         },
     },
-];
+]);

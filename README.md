@@ -9,7 +9,8 @@ npm install sim-ecs
 - [Considerations](#considerations)
 - [Examples](#examples)
   - [Counter](#counter)
-  - [Pong](#pong)  
+  - [Pong](#pong)
+- [Where is the Documentation](#where-is-the-documentation)
 - [Creating the ECS and a World](#creating-the-ecs-and-a-world)
 - [Setting Resources](#setting-resources)
 - [Defining Systems](#defining-systems)
@@ -65,6 +66,13 @@ It is recommended to use readily available libraries for these parts for any rea
 
 You will need to build Pong from its directory.
 Then, you can open the `index.html` in the public folder to run the game.  
+
+
+## Where is the Documentation
+
+Anything which is not explained in detail enough in this README can be found in the code.
+You will notice that there are spec-files. These contain the specification for a certain class,
+which usually means an interface with comments on what the methods do.
 
 
 ## Creating the ECS and a World
@@ -184,7 +192,7 @@ and from within a transition-handler or the systems, certain actions can be call
 which influence how the runner acts. For example on transition, the state can be changed.
 
 
-## Using Prefabs
+## Saving and using Prefabs
 
 Prefabs, short for pre-fabrications, are ready-made files or objects,
 which can be loaded at runtime to initialize a certain part of the application.
@@ -195,6 +203,10 @@ Their format is easy to understand, even by non-programmers, and they can be enr
 Another advantage of prefabs in sim-ecs is that all loaded entities are tracked and can be unloaded when not needed anymore.
 This means that prefabs can be used to design menus, levels, GUIs, etc. which are only loaded when needed
 and discarded after use. After all, who needs level1 data when they switched over to level2?
+
+Saving and loading save-data works the same in sim-ecs, since the JSON format is identical.
+If you wish to work with the raw serializable data instead of writing it as JSON, the SaveFormat extends Array,
+so it can be used just like an `Array<TEntity>`.
 
 ```typescript
 enum MonsterTypes {
@@ -227,14 +239,15 @@ const prefab = [
     }, 
 ];
 
-const prefabHJandle = world.loadPrefab(prefab);
+// to load from JSON, use SerialFormat.fromJSON() instead!
+const prefabHandle = world.load(SerialFormat.fromArray(prefab));
 world.unloadPrefab(prefabHandle);
 ```
 
 ```typescript
 // saving a prefab from the current world. This may be used to write an editor
 // or export a PoC for game designers to improve on
-const jsonPrefab = JSON.stringify(world.toPrefab(), undefined, 4);
+const jsonPrefab = world.save().toJSON(4);
 saveToFile(jsonPrefab, 'prefab.json');
 ```
 
@@ -275,9 +288,8 @@ Please open a PR for any information improvement!
 | Feature | sim-ecs | tick-knock | ape-ecs |
 | ---: | :---: | :---: | :---: |
 | Data first | x | | |
-| Everything is a Component | x | x | |
+| Everything can be used as a Component | x | x | |
 | Full async-support | x | | |
-| Functional Systems | | | |
 | Query-objects | | x | x |
 | Save / Load world | x | | x |
 | Load prefabs | x | | x |
@@ -289,7 +301,7 @@ Please open a PR for any information improvement!
 Please take the results with a grain of salt. These are benchmarks, so they are synthetic.
 An actual application will use a mix out of everything and more, and depending on that may have a different experience.
 
-Date: 21th April 2021
+Date: 25th May 2021
 
 ```
 --------------------------------------------------------------------------------
@@ -302,17 +314,16 @@ CPU: AMD Ryzen 7 3700X 8-Core Processor@3600MHz
 Bench           v0.1.0
 TypeScript      v4.2.4
 TS-Lib          v2.2.0
-TS-Node         v9.1.1
+TS-Node         v10.0.0
 
 Ape-ECS         v1.3.1
-sim-ecs         v0.3.0
+sim-ecs         v0.4.0
 tick-knock      v3.0.1
 ```
 
 | | Ape-ECS | sim-ecs | tick-knock |
 | ---: | :---: | :---: | :---: |
-| Simple Insert | 54 ops/s, ±10.48% | 204 ops/s, ±4.86% | **262 ops/s, ±23.95%** |
-| Simple Iteration | 97 899 ops/s, ±76.78% | **1 117 294 ops/s, ±25.04%** | 32 416 ops/s, ±0.14% |
-| Schedule | 603 ops/s, ±0.26%  | **1 223 274 ops/s, ±15.49%** | 267 ops/s, ±0.40% |
-| De-/Serialize Prefab | 69 ops/s, ±5.75% | **90 ops/s, ±21.67%** | - |
-| De-/Serialize Save | 62 ops/s, ±0.41% (445.31KB) | **83 ops/s, ±35.69%** (**75.20KB**) | - |
+| Simple Insert | 54 ops/s, ±11.99% | 205 ops/s, ±2.27% | **244 ops/s, ±24.60%** |
+| Simple Iteration | 94 285 ops/s, ±38.17% | **1 064 272 ops/s, ±19.13%** | 32 265 ops/s, ±0.42% |
+| Schedule | 624 ops/s, ±0.64%  | **1 214 774 ops/s, ±17.19%** | 261 ops/s, ±0.63% |
+| De-/Serialize Save | 57 ops/s, ±9.98% (445.31KB) | **206 ops/s, ±1.02%** (**67.38KB**) | - |

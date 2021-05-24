@@ -1,4 +1,4 @@
-import {Entity, TTag} from "./entity";
+import {Entity} from "./entity";
 import {EntityBuilder} from "./entity-builder";
 import {
     IEntityWorld,
@@ -9,8 +9,6 @@ import {
     ITransitionActions,
     IWorld,
     TEntityInfo,
-    TPrefab,
-    TPrefabEntity,
     TPrefabHandle,
     TSystemInfo,
     TSystemNode
@@ -20,9 +18,11 @@ import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import {IState, State, TStateProto} from "./state";
 import {TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
-import {getDefaultDeserializer, SaveFormat} from "./save-format";
-import {CTagMarker, ISaveFormat, TDeserializer, TSerializer} from "./save-format.spec";
 import {access, EAccess, TComponentAccess} from "./queue.spec";
+import {TDeserializer, TSerDeOptions, TSerializer} from "./serde/serde.spec";
+import {SerDe} from "./serde/serde";
+import {SerialFormat} from "./serde/serial-format";
+import {ISerialFormat} from "./serde/serial-format.spec";
 
 export * from './world.spec';
 
@@ -45,13 +45,13 @@ export class World implements IWorld {
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
 
-    get saveFormat() {
-        return this._saveFormat;
+    get serde() {
+        return this._serde;
     }
 
     constructor(
         protected systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>>,
-        protected _saveFormat: ISaveFormat,
+        protected _serde: SerDe = new SerDe(),
     ) {
         const self = this;
 
@@ -67,8 +67,8 @@ export class World implements IWorld {
             get currentState() {
                 return self.pda.state;
             },
-            get saveFormat() {
-                return self.saveFormat;
+            get serde() {
+                return self.serde;
             },
             addEntity: (entity) => {
                 self.addEntity(entity);
@@ -78,11 +78,10 @@ export class World implements IWorld {
             buildEntity: () => this.buildEntity.call(this, this.transitionWorld),
             clearEntities: this.clearEntities.bind(this),
             createEntity: this.createEntity.bind(this),
-            fromJSON: this.fromJSON.bind(this),
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
             getResources: this.getResources.bind(this),
-            loadPrefab: this.loadPrefab.bind(this),
+            load: this.load.bind(this),
             maintain: this.maintain.bind(this),
             merge: this.merge.bind(this),
             popState: this.popState.bind(this),
@@ -94,9 +93,8 @@ export class World implements IWorld {
             removeResource: this.removeResource.bind(this),
             replaceEntitiesWith: this.replaceEntitiesWith.bind(this),
             replaceResource: this.replaceResource.bind(this),
+            save: this.save.bind(this),
             stopRun: this.stopRun.bind(this),
-            toJSON: this.toJSON.bind(this),
-            toPrefab: this.toPrefab.bind(this),
             unloadPrefab: this.unloadPrefab.bind(this),
         });
 
@@ -107,8 +105,8 @@ export class World implements IWorld {
             get isRunning() {
                 return !!self.runPromise;
             },
-            get saveFormat() {
-                return self.saveFormat;
+            get serde() {
+                return self.serde;
             },
             addEntity: this.addEntity.bind(this),
             addResource: this.addResource.bind(this),
@@ -116,11 +114,10 @@ export class World implements IWorld {
             buildEntity: () => this.buildEntity.call(this, this.transitionWorld),
             clearEntities: this.clearEntities.bind(this),
             createEntity: this.createEntity.bind(this),
-            fromJSON: this.fromJSON.bind(this),
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
             getResources: this.getResources.bind(this),
-            loadPrefab: this.loadPrefab.bind(this),
+            load: this.load.bind(this),
             maintain: this.maintain.bind(this),
             merge: this.merge.bind(this),
             removeEntity: this.removeEntity.bind(this),
@@ -128,9 +125,8 @@ export class World implements IWorld {
             removeResource: this.removeResource.bind(this),
             replaceEntitiesWith: this.replaceEntitiesWith.bind(this),
             replaceResource: this.replaceResource.bind(this),
+            save: this.save.bind(this),
             stopRun: this.stopRun.bind(this),
-            toJSON: this.toJSON.bind(this),
-            toPrefab: this.toPrefab.bind(this),
             unloadPrefab: this.unloadPrefab.bind(this),
         });
 
@@ -252,18 +248,6 @@ export class World implements IWorld {
         });
     }
 
-    fromJSON(json: string, deserializer?: TDeserializer) {
-        this.clearEntities();
-        this.saveFormat.loadJSON(json);
-
-        {
-            let entity;
-            for (entity of this.saveFormat.getEntities(deserializer)) {
-                this.addEntity(entity);
-            }
-        }
-    }
-
     getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IterableIterator<IEntity> {
         if (!query) {
             return this.entityInfos.keys();
@@ -293,30 +277,13 @@ export class World implements IWorld {
         return this.resources.values();
     }
 
-    loadPrefab(rawPrefab: TPrefab, customDeserializer?: TDeserializer): TPrefabHandle {
+    load(prefab: ISerialFormat, options?: TSerDeOptions<TDeserializer>): TPrefabHandle {
         const entities = [];
-        const saveFormat = this._saveFormat ?? new SaveFormat();
+        let entity;
 
-        let entity: IEntity;
-        for (const rawEntity of rawPrefab) {
-            entity = this.createEntity();
-            entities.push(entity);
-
-            for (const rawComponent of Object.entries(rawEntity)) {
-                switch (rawComponent[0][0]) {
-                    case CTagMarker: {
-                        for (const tag of rawComponent[1] as TTag[]) {
-                            entity.addTag(tag);
-                        }
-                        break;
-                    }
-                    default: {
-                        entity.addComponent(saveFormat.deserialize(rawComponent[0], rawComponent[1], getDefaultDeserializer(customDeserializer)));
-                    }
-                }
-            }
-
+        for (entity of this._serde.deserialize(prefab, options).entities) {
             this.addEntity(entity);
+            entities.push(entity);
         }
 
         this.prefabs.entityLinks.set(this.prefabs.nextHandle, entities);
@@ -573,10 +540,6 @@ export class World implements IWorld {
         return this.runPromise;
     }
 
-    setSaveFormat(saveFormat: ISaveFormat) {
-        this._saveFormat = saveFormat;
-    }
-
     protected sortSystems(unsorted: TSystemNode[]): TSystemNode[] {
         const graph = new Map(unsorted.map(node => [node.system.constructor as TSystemProto<TSystemData>, Array.from(node.dependencies)]));
         let edges: TSystemProto<TSystemData>[];
@@ -628,43 +591,8 @@ export class World implements IWorld {
         this.shouldRunSystems = false;
     }
 
-    toJSON(serializer?: TSerializer): string {
-        let save;
-
-        if (this._saveFormat) {
-            save = this._saveFormat;
-            save.setEntities(this.entityInfos.keys(), serializer);
-        } else {
-            save = new SaveFormat({
-                entities: this.entityInfos.keys(),
-            });
-        }
-
-        return save.toJSON();
-    }
-
-    toPrefab(): TPrefab {
-        const entities = [];
-        const saveFormat = this._saveFormat ?? new SaveFormat();
-
-        saveFormat.setEntities(this.getEntities());
-
-        {
-            let component;
-            let entity;
-            let entityPrefab: TPrefabEntity;
-            for (entity of saveFormat.rawEntities) {
-                entityPrefab = {};
-
-                for (component of entity) {
-                    entityPrefab[component[0]] = component[1];
-                }
-
-                entities.push(entityPrefab);
-            }
-        }
-
-        return entities;
+    save(options?: TSerDeOptions<TSerializer>): SerialFormat {
+        return this.serde.serialize({entities: this.entityInfos.keys()});
     }
 
     unloadPrefab(handle: TPrefabHandle) {

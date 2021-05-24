@@ -1,4 +1,4 @@
-import {ITransitionActions} from "sim-ecs";
+import {ITransitionActions, SerialFormat} from "sim-ecs";
 import {ScoreBoard} from "../models/score-board";
 
 
@@ -16,13 +16,14 @@ export function load(actions: ITransitionActions) {
 
     const score = JSON.parse(scoreSave);
 
-    actions.fromJSON(save);
+    actions.clearEntities();
+    actions.load(SerialFormat.fromJSON(save));
     scoreBoard.left = score.left;
     scoreBoard.right = score.right;
     actions.maintain();
 }
 
 export function save(actions: ITransitionActions) {
-    localStorage.setItem(saveKey, actions.toJSON());
+    localStorage.setItem(saveKey, actions.save().toJSON());
     localStorage.setItem(scoreSaveKey, JSON.stringify(actions.getResource(ScoreBoard)));
 }

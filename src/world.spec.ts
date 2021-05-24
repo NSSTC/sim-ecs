@@ -3,8 +3,9 @@ import IEntityBuilder from "./entity-builder.spec";
 import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import IState, {TStateProto} from "./state.spec";
 import {TTypeProto} from "./_.spec";
-import {ISaveFormat, TDeserializer, TSerializer} from "./save-format.spec";
 import {TComponentAccess} from "./queue.spec";
+import {ISerDe, TDeserializer, TSerDeOptions, TSerializer} from "./serde/serde.spec";
+import {ISerialFormat} from "./serde/serial-format.spec";
 
 export type TEntityInfo = {
     entity: IEntity
@@ -13,30 +14,32 @@ export type TEntityInfo = {
 export type TExecutionFunction = ((callback: Function) => any) | typeof setTimeout | typeof requestAnimationFrame;
 export type TPrefabEntity = { [Component: string]: unknown };
 export type TPrefabHandle = number;
-export type TPrefab = TPrefabEntity[];
+export type TSerialFormat = TPrefabEntity[];
+
 export interface IRunConfiguration {
     afterStepHandler?: (actions: ITransitionActions) => Promise<void> | void
     beforeStepHandler?: (actions: ITransitionActions) => Promise<void> | void
     executionFunction?: TExecutionFunction
     initialState?: TStateProto
 }
+
 export interface IStaticRunConfiguration {
     afterStepHandler: (actions: ITransitionActions) => Promise<void> | void
     beforeStepHandler: (actions: ITransitionActions) => Promise<void> | void
     executionFunction: TExecutionFunction
     initialState: TStateProto,
 }
+
 export type TSystemInfo<D extends TSystemData> = {
     dataPrototype: TTypeProto<D>
     dataSet: Set<D>
     dependencies: Set<TSystemProto<TSystemData>>
-    parallelize: boolean
     system: ISystem<D>
 };
-export type TSystemNode = { system: ISystem<TSystemData>, dependencies: TSystemProto<TSystemData>[]};
+export type TSystemNode = { system: ISystem<TSystemData>, dependencies: TSystemProto<TSystemData>[] };
 
 export interface IPartialWorld {
-    readonly saveFormat: ISaveFormat
+    readonly serde: ISerDe
 
     /**
      * Get a resource which was previously stored
@@ -73,13 +76,6 @@ export interface IPartialWorld {
     createEntity(): IEntity
 
     /**
-     * Load a JSON save file, replacing all current entities
-     * @param json
-     * @param deserializer
-     */
-    fromJSON(json: string, deserializer?: TDeserializer): void
-
-    /**
      * Query entities and find the ones with a certain combination of component
      * @param query
      */
@@ -97,10 +93,11 @@ export interface IPartialWorld {
     getResources(): IterableIterator<unknown>
 
     /**
-     * Load entities with components from a prefab file
-     * @param rawPrefab
+     * Load entities with components from a prefab or save
+     * @param rawObj
+     * @param options
      */
-    loadPrefab(rawPrefab: TPrefab, customDeserializer?: TDeserializer): TPrefabHandle
+    load(rawObj: ISerialFormat, options?: TSerDeOptions<TDeserializer>): TPrefabHandle
 
     /**
      * Re-calculate all entity, component and system dependencies and connections
@@ -139,20 +136,15 @@ export interface IPartialWorld {
     replaceResource<T extends Object>(type: T | TTypeProto<T>, ...args: unknown[]): void
 
     /**
+     * Prepare a save-able version of the current world
+     * @param options
+     */
+    save(options?: TSerDeOptions<TSerializer>): ISerialFormat
+
+    /**
      * Signal the world to stop its dispatch-loop
      */
     stopRun(): void
-
-    /**
-     * Save this world to a JSON string (entities and their components)
-     * @param serializer
-     */
-    toJSON(serializer?: TSerializer): string
-
-    /**
-     * Save this world to a JSON string as human-readable prefab
-     */
-    toPrefab(): TPrefab
 
     /**
      * Remove entities with data-components from a prefab file
@@ -216,19 +208,14 @@ export interface IWorld extends IPartialWorld {
      * @param configuration
      */
     run(configuration?: IRunConfiguration): Promise<void>
-
-    /**
-     * Set a save-format object, which will be used for saving/loading
-     * This is useful for when you want to manage de-/serialization
-     * @param saveFormat
-     */
-    setSaveFormat(saveFormat: ISaveFormat): void
 }
 
 export interface IEntityWorld extends IPartialWorld {
     readonly isDirty: boolean
     readonly isRunning: boolean
+
     assignEntityToSystems(entity: IEntity): void
+
     removeEntityFromSystems(entity: IEntity): void
 }
 

@@ -1,4 +1,4 @@
-import {TPrefab} from "sim-ecs";
+import {SerialFormat} from "sim-ecs";
 import {EPaddleSide, Paddle} from "../components/paddle";
 import {Shape} from "../components/shape";
 import {Ball} from "../components/ball";
@@ -15,7 +15,7 @@ export const defaultBallVelocityX = 0.005 / 2;
 export const defaultBallVelocityY = 0.007 / 2;
 
 // This could also be pure JSON, but in order to use TS types and have static checks it is recommended to write it as TS array.
-export const gamePrefab: TPrefab = [
+export const gamePrefab = new SerialFormat().fromArray([
     { // Left wall
         Wall: <Wall>{
             wallSide: EWallSide.Left,
@@ -154,4 +154,4 @@ export const gamePrefab: TPrefab = [
             y: 0.15,
         },
     },
-];
+]);
