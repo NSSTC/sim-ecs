@@ -32,7 +32,7 @@ export class World implements IWorld {
     protected entityWorld: IEntityWorld;
     protected pda = new PushDownAutomaton<IState>();
     private lastRunPreparation?: IStaticRunConfiguration;
-    protected prefabs = {
+    protected groups = {
         nextHandle: 0,
         entityLinks: new Map<number, IEntity[]>(),
     };
@@ -286,8 +286,8 @@ export class World implements IWorld {
             entities.push(entity);
         }
 
-        this.prefabs.entityLinks.set(this.prefabs.nextHandle, entities);
-        return this.prefabs.nextHandle++;
+        this.groups.entityLinks.set(this.groups.nextHandle, entities);
+        return this.groups.nextHandle++;
     }
 
     // todo: add parameter which only maintains for a specific state
@@ -596,15 +596,15 @@ export class World implements IWorld {
     }
 
     unloadPrefab(handle: TPrefabHandle) {
-        if (!this.prefabs.entityLinks.has(handle)) {
+        if (!this.groups.entityLinks.has(handle)) {
             throw new Error(`Could not find any loaded prefab under handle "${handle}"!`)
         }
 
         let entity;
-        for (entity of this.prefabs.entityLinks.get(handle)!) {
+        for (entity of this.groups.entityLinks.get(handle)!) {
             this.removeEntity(entity);
         }
 
-        this.prefabs.entityLinks.delete(handle);
+        this.groups.entityLinks.delete(handle);
     }
 }
