@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const fs = require('fs-extra');
 const path = require('path');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 
 // arg handling
 const args = arg({
@@ -50,6 +51,14 @@ const log = (...strs) => console.log.apply(console.log, ['[make]'].concat(strs))
             output: {
                 path: outDir,
                 filename: 'bundle.js'
+            },
+            optimization: {
+                minimize: true,
+                minimizer: [new TerserPlugin({
+                    terserOptions: {
+                        keep_classnames: true,
+                    },
+                })],
             },
             resolve: {
                 extensions: ['.js', '.ts'],

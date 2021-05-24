@@ -20,6 +20,7 @@
     "sass-loader": "^11.0.1",
     "sim-ecs": "file://../..",
     "style-loader": "^2.0.0",
+    "terser-webpack-plugin": "^5.1.2",
     "to-string-loader": "^1.1.6",
     "ts-loader": "^8.1.0",
     "tslib": "latest",

@@ -18,8 +18,9 @@ npm install sim-ecs
 - [Adding Entities](#adding-entities)
 - [Working with States](#working-with-states-optional)
 - [Update loop](#Update-loop)
-- [Using Prefabs](#using-prefabs)  
+- [Saving and using Prefabs](#saving-and-using-prefabs)  
 - [Save and Load a World](#save-and-load-a-world)
+- [Building for Production](#building-for-production)
 - [Comparison with other TS ECS libs](#comparison-with-other-ts-ecs-libs)
   - [Features](#features)
   - [Performance](#performance)  
@@ -273,6 +274,13 @@ new ECS().buildWorld().fromJSON(localStorage.getItem('save0')).build();
 In order to correctly initialize all components, a deserializer-function may be provided.
 At this point, the data can also be manipulated, for example updating timestamps in components.
 Usually, though, registering the Components is enough for sim-ecs to correctly handle deserialization.
+
+
+## Building for Production
+
+When building for production, it is important to keep class names.
+Some minimizers need to be adjusted. For example WebPack (using Terser) needs to pass this as configuration.
+The Pong example uses WebPack and demonstrates how to set up WebPack for proper production usage (in `make.js`).
 
 
 ## Comparison with other TS ECS libs
