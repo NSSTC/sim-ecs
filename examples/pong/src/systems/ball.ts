@@ -1,5 +1,4 @@
-import {ISystemActions, Read, System, SystemData, With, Write} from "sim-ecs";
-import {Ball} from "../components/ball";
+import {ISystemActions, Read, System, SystemData, WithTag, Write} from "sim-ecs";
 import {Velocity} from "../components/velocity";
 import {PaddleTransforms} from "../models/paddle-transforms";
 import {Collision} from "../components/collision";
@@ -8,9 +7,10 @@ import {Paddle} from "../components/paddle";
 import {ScoreBoard} from "../models/score-board";
 import {Position} from "../components/position";
 import {defaultBallPositionX, defaultBallPositionY} from "../prefabs/game";
+import {ETags} from "../models/tags";
 
 class Data extends SystemData {
-    readonly _ball = With(Ball)
+    readonly _ball = WithTag(ETags.ball)
     readonly collisionData = Read(Collision)
     pos = Write(Position)
     vel = Write(Velocity)

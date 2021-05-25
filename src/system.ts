@@ -2,7 +2,7 @@ import {ISystemActions} from "./world.spec";
 import {ISystem, NoData, TSystemData} from "./system.spec";
 import {TTypeProto} from "./_.spec";
 import IEntity from "./entity.spec";
-import {TComponentAccess} from "./queue.spec";
+import {TAccessDescriptor} from "./query.spec";
 
 export * from './system.spec';
 
@@ -16,7 +16,7 @@ export abstract class System<D extends TSystemData> implements ISystem<D> {
         }
 
         this.systemDataBlueprint ||= new this.SystemDataType();
-        return entity.matchesQueue(Object.values(this.systemDataBlueprint) as TComponentAccess<any>[]);
+        return entity.matchesQueue(Object.values(this.systemDataBlueprint) as TAccessDescriptor<any>[]);
     }
 
     destroy(actions: ISystemActions): void | Promise<void> {}

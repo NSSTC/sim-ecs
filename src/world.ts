@@ -18,7 +18,7 @@ import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import {IState, State, TStateProto} from "./state";
 import {TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
-import {access, EAccess, TComponentAccess} from "./queue.spec";
+import {access, EAccess, ETargetType, TAccessDescriptor} from "./query.spec";
 import {TDeserializer, TSerDeOptions, TSerializer} from "./serde/serde.spec";
 import {SerDe} from "./serde/serde";
 import {SerialFormat} from "./serde/serial-format";
@@ -199,25 +199,28 @@ export class World implements IWorld {
     private static buildDataObject<T extends TSystemData>(dataProto: TTypeProto<TSystemData>, entity: IEntity): T {
         const dataObj = new dataProto() as T;
         let accessType: EAccess;
-        let component;
+        let target;
+        let targetType;
 
         for (const entry of Object.entries(dataObj)) {
             // @ts-ignore
             accessType = entry[1][access].type;
             // @ts-ignore
-            component = entry[1][access].component;
+            target = entry[1][access].target;
+            // @ts-ignore
+            targetType = entry[1][access].targetType;
 
-            if (accessType == EAccess.META) {
-                switch (component) {
+            if (accessType == EAccess.meta) {
+                switch (target) {
                     case Entity: {
                         // @ts-ignore
                         dataObj[entry[0]] = entity;
                         break;
                     }
                 }
-            } else {
+            } else if (targetType == ETargetType.component) {
                 // @ts-ignore
-                dataObj[entry[0]] = entity.getComponent(component);
+                dataObj[entry[0]] = entity.getComponent(target);
             }
         }
 
@@ -248,7 +251,7 @@ export class World implements IWorld {
         });
     }
 
-    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IterableIterator<IEntity> {
+    getEntities<C extends Object, T extends TAccessDescriptor<C>>(query?: T[]): IterableIterator<IEntity> {
         if (!query) {
             return this.entityInfos.keys();
         }
@@ -591,8 +594,8 @@ export class World implements IWorld {
         this.shouldRunSystems = false;
     }
 
-    save(options?: TSerDeOptions<TSerializer>): SerialFormat {
-        return this.serde.serialize({entities: this.entityInfos.keys()});
+    save<C extends Object, T extends TAccessDescriptor<C>>(query?: T[], options?: TSerDeOptions<TSerializer>): ISerialFormat {
+        return this.serde.serialize({entities: this.getEntities(query)}, options);
     }
 
     unloadPrefab(handle: TPrefabHandle) {

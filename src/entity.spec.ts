@@ -1,6 +1,6 @@
 import {IEntityWorld} from "./world.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
-import {TComponentAccess} from "./queue.spec";
+import {TAccessDescriptor} from "./query.spec";
 
 export type TTag = number | string;
 
@@ -57,7 +57,7 @@ export interface IEntity {
     /**
      * Check if this entity matches a queue for components
      */
-    matchesQueue<C extends Object, T extends TComponentAccess<C>>(query: T[]): boolean
+    matchesQueue<C extends Object, T extends TAccessDescriptor<C>>(query: T[]): boolean
 
     /**
      * Un-associate a component from this entity

@@ -1,7 +1,7 @@
 import {IEntityWorld} from "./world.spec";
 import IEntity, {TTag} from "./entity.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
-import {access, EAccess, TComponentAccess} from "./queue.spec";
+import {access, EAccess, ETargetType, TAccessDescriptor} from "./query.spec";
 
 export * from './entity.spec';
 
@@ -57,19 +57,32 @@ export class Entity implements IEntity {
         return this.tags.has(tag);
     }
 
-    matchesQueue<C extends Object, T extends TComponentAccess<C>>(query: T[]): boolean {
-        let requirement: TComponentAccess<C>;
-        let componentAccess;
+    matchesQueue<C extends Object, T extends TAccessDescriptor<C>>(query: T[]): boolean {
+        let requirement: TAccessDescriptor<C>;
+        let accessDesc;
 
         for (requirement of query) {
-            componentAccess = requirement[access];
+            accessDesc = requirement[access];
 
-            if (componentAccess.type == EAccess.META) {
+            if (accessDesc.type == EAccess.meta) {
                 continue;
             }
 
-            if (this.components.has(componentAccess.component) == (componentAccess.type == EAccess.UNSET)) {
-                return false;
+            switch (accessDesc.targetType) {
+                case ETargetType.component: {
+                    if (this.components.has(accessDesc.target as TTypeProto<C>) == (accessDesc.type == EAccess.unset)) {
+                        return false;
+                    }
+
+                    break;
+                }
+                case ETargetType.tag: {
+                    if (this.tags.has(accessDesc.target as TTag) == (accessDesc.type == EAccess.unset)) {
+                        return false;
+                    }
+
+                    break;
+                }
             }
         }
 

@@ -3,7 +3,7 @@ import IEntityBuilder from "./entity-builder.spec";
 import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import IState, {TStateProto} from "./state.spec";
 import {TTypeProto} from "./_.spec";
-import {TComponentAccess} from "./queue.spec";
+import {TAccessDescriptor} from "./query.spec";
 import {ISerDe, TDeserializer, TSerDeOptions, TSerializer} from "./serde/serde.spec";
 import {ISerialFormat} from "./serde/serial-format.spec";
 
@@ -79,7 +79,7 @@ export interface IPartialWorld {
      * Query entities and find the ones with a certain combination of component
      * @param query
      */
-    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IterableIterator<IEntity>
+    getEntities<C extends Object, T extends TAccessDescriptor<C>>(query?: T[]): IterableIterator<IEntity>
 
     /**
      * Get a resource which was previously stored
@@ -136,10 +136,12 @@ export interface IPartialWorld {
     replaceResource<T extends Object>(type: T | TTypeProto<T>, ...args: unknown[]): void
 
     /**
-     * Prepare a save-able version of the current world
+     * Prepare a savable version of the current world.
+     * The query can be used to only save a sub-set with specific conditions
+     * @param query
      * @param options
      */
-    save(options?: TSerDeOptions<TSerializer>): ISerialFormat
+    save<C extends Object, T extends TAccessDescriptor<C>>(query?: T[], options?: TSerDeOptions<TSerializer>): ISerialFormat
 
     /**
      * Signal the world to stop its dispatch-loop
@@ -163,7 +165,7 @@ export interface ISystemActions {
      * Query entities and find the ones with a certain combination of component
      * @param query
      */
-    getEntities<C extends Object, T extends TComponentAccess<C>>(query?: T[]): IterableIterator<IEntity>
+    getEntities<C extends Object, T extends TAccessDescriptor<C>>(query?: T[]): IterableIterator<IEntity>
 
     /**
      * Get a resource which was previously stored

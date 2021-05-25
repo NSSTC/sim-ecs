@@ -1,4 +1,4 @@
-import {ITransitionActions, State, TPrefabHandle} from "sim-ecs";
+import {ITransitionActions, SerialFormat, State, TPrefabHandle} from "sim-ecs";
 import {menuPrefab} from "../prefabs/menu";
 import {InputSystem} from "../systems/input";
 import {MenuSystem} from "../systems/menu";
@@ -11,7 +11,7 @@ export class MenuState extends State {
 
     activate(actions: ITransitionActions): void | Promise<void> {
         actions.getResource(GameStore).currentState = this;
-        this.prefabHandle = actions.load(menuPrefab);
+        this.prefabHandle = actions.load(SerialFormat.fromArray(menuPrefab));
         actions.maintain();
     }
 

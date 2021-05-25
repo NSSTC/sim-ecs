@@ -4,7 +4,7 @@ import * as Systems from "./test-data/systems";
 import {S1Data, S2Data, THandlerFn1, THandlerFn2} from "./test-data/systems";
 import ECS from "./ecs";
 import IWorld from "./world.spec";
-import {With, Without} from "./queue.spec";
+import {With, Without} from "./query.spec";
 
 
 describe('Manage Resources', () => {

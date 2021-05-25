@@ -1,4 +1,4 @@
-import {ITransitionActions, State, TPrefabHandle, With} from "sim-ecs";
+import {ITransitionActions, SerialFormat, State, TPrefabHandle, With} from "sim-ecs";
 import {InputSystem} from "../systems/input";
 import {PauseSystem} from "../systems/pause";
 import {PaddleSystem} from "../systems/paddle";
@@ -16,10 +16,12 @@ import {AnimationSystem} from "../systems/animation";
 import {UIItem} from "../components/ui-item";
 import {ScoreBoard} from "../models/score-board";
 import {CollisionSystem} from "../systems/collision";
+import {savablePrefab} from "../prefabs/savable";
 
 export class GameState extends State {
     _systems = [AnimationSystem, BallSystem, CollisionSystem, InputSystem, PaddleSystem, PauseSystem, RenderGameSystem, RenderUISystem];
-    prefabHandle?: TPrefabHandle;
+    saveDataPrefabHandle?: TPrefabHandle;
+    staticDataPrefabHandle?: TPrefabHandle;
 
     activate(actions: ITransitionActions) {
         actions.getResource(GameStore).currentState = this;
@@ -28,10 +30,11 @@ export class GameState extends State {
     create(actions: ITransitionActions) {
         const gameStore = actions.getResource(GameStore);
 
+        this.staticDataPrefabHandle = createNewGame(actions);
         if (gameStore.continue) {
-            load(actions);
+            this.saveDataPrefabHandle = load(actions);
         } else {
-            this.prefabHandle = createNewGame(actions);
+            this.saveDataPrefabHandle = createNewSaveData(actions);
         }
 
         setScoreCaptionMod(actions);
@@ -39,14 +42,22 @@ export class GameState extends State {
     }
 
     destroy(actions: ITransitionActions) {
-        if (this.prefabHandle) {
-            actions.unloadPrefab(this.prefabHandle);
+        if (this.staticDataPrefabHandle) {
+            actions.unloadPrefab(this.staticDataPrefabHandle);
+        }
+
+        if (this.saveDataPrefabHandle) {
+            actions.unloadPrefab(this.saveDataPrefabHandle);
         }
     }
 }
 
 const createNewGame = function (actions: ITransitionActions) {
-    const prefabHandle = actions.load(gamePrefab);
+    return actions.load(SerialFormat.fromArray(gamePrefab));
+};
+
+const createNewSaveData = function (actions: ITransitionActions) {
+    const prefabHandle = actions.load(SerialFormat.fromArray(savablePrefab));
 
     for (const entity of actions.getEntities([With(Paddle), With(Shape)])) {
         entity
@@ -59,7 +70,7 @@ const createNewGame = function (actions: ITransitionActions) {
     }
 
     return prefabHandle;
-}
+};
 
 const setScoreCaptionMod = function (actions: ITransitionActions) {
     const score = actions.getResource(ScoreBoard);
@@ -74,4 +85,4 @@ const setScoreCaptionMod = function (actions: ITransitionActions) {
             ui.captionMod = strIn => strIn.replace('{}', score.right.toString());
         }
     }
-}
+};

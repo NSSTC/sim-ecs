@@ -9,7 +9,6 @@ import {MenuSystem} from "./systems/menu";
 import {PauseSystem} from "./systems/pause";
 import {Paddle} from "./components/paddle";
 import {Position} from "./components/position";
-import {Ball} from "./components/ball";
 import {BallSystem} from "./systems/ball";
 import {Velocity} from "./components/velocity";
 import {RenderUISystem} from "./systems/render-ui";
@@ -49,7 +48,6 @@ const createWorld = () => {
         .withSystem(RenderGameSystem, [AnimationSystem, BallSystem, PaddleSystem])
         .withSystem(RenderUISystem, [AnimationSystem, MenuSystem, PauseSystem])
         .withComponents(
-            Ball,
             Collision,
             Paddle,
             Position,

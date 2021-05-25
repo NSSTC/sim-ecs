@@ -242,6 +242,7 @@ const prefab = [
 
 // to load from JSON, use SerialFormat.fromJSON() instead!
 const prefabHandle = world.load(SerialFormat.fromArray(prefab));
+// unloading is also easily possible to clean up the world
 world.unloadPrefab(prefabHandle);
 ```
 
@@ -250,6 +251,13 @@ world.unloadPrefab(prefabHandle);
 // or export a PoC for game designers to improve on
 const jsonPrefab = world.save().toJSON(4);
 saveToFile(jsonPrefab, 'prefab.json');
+```
+
+```typescript
+// filtering what should be saved is also possible,
+// so that only certain data is saved and not all data of the whole world
+const saveData = world.save([With(Player)]).toJSON();
+localStorage.setItem('save', saveData);
 ```
 
 

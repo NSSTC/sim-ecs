@@ -1,4 +1,4 @@
-import {ITransitionActions, State, TPrefabHandle} from "sim-ecs";
+import {ITransitionActions, SerialFormat, State, TPrefabHandle} from "sim-ecs";
 import {InputSystem} from "../systems/input";
 import {PauseSystem} from "../systems/pause";
 import {pausePrefab} from "../prefabs/pause";
@@ -17,7 +17,7 @@ export class PauseState extends State {
         save(actions);
 
         gameStore.currentState = this;
-        this.prefabHandle = actions.load(pausePrefab);
+        this.prefabHandle = actions.load(SerialFormat.fromArray(pausePrefab));
         actions.maintain();
     }
 
