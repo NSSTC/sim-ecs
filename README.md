@@ -261,29 +261,6 @@ localStorage.setItem('save', saveData);
 ```
 
 
-## Save and Load a World
-
-It is possible to save and load entities of an entire world.
-Saving a world is as simple as calling `toJSON()` on it in order to receive a JSON string representing the world.
-This string can be saved to the file system, browser storage or sent over the network.
-
-```typescript
-localStorage.setItem('save0', world.toJSON());
-```
-
-There is no version or upgrade management done by the ECS, though, and we highly recommend to implement it based on your needs.
-
-In order to load a saved world, the json string can be fed to the world builder during creation:
-
-```typescript
-new ECS().buildWorld().fromJSON(localStorage.getItem('save0')).build();
-```
-
-In order to correctly initialize all components, a deserializer-function may be provided.
-At this point, the data can also be manipulated, for example updating timestamps in components.
-Usually, though, registering the Components is enough for sim-ecs to correctly handle deserialization.
-
-
 ## Building for Production
 
 When building for production, it is important to keep class names.
