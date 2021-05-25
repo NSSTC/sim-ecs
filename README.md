@@ -5,6 +5,8 @@ Type-based, Components-first ECS, which is optimized for simulation needs. Will 
 npm install sim-ecs
 ```
 
+---
+
 
 - [Considerations](#considerations)
 - [Examples](#examples)
@@ -18,12 +20,11 @@ npm install sim-ecs
 - [Adding Entities](#adding-entities)
 - [Working with States](#working-with-states-optional)
 - [Update loop](#Update-loop)
-- [Saving and using Prefabs](#saving-and-using-prefabs)  
-- [Save and Load a World](#save-and-load-a-world)
+- [Saving and using Prefabs](#saving-and-using-prefabs)
 - [Building for Production](#building-for-production)
 - [Comparison with other TS ECS libs](#comparison-with-other-ts-ecs-libs)
   - [Features](#features)
-  - [Performance](#performance)  
+  - [Performance](#performance)
 
 
 ## Considerations
