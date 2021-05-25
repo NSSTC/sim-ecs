@@ -54,4 +54,4 @@ export interface ISerDe {
 }
 
 
-export const CTagMarker = '#';
+export const CTagMarker = '#Tags';

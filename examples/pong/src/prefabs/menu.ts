@@ -1,4 +1,3 @@
-import {SerialFormat} from "sim-ecs";
 import {EActions} from "../app/actions";
 import {Position} from "../components/position";
 import {UIItem} from "../components/ui-item";

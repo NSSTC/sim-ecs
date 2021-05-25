@@ -1,4 +1,3 @@
-import {SerialFormat} from "sim-ecs";
 import {EPaddleSide, Paddle} from "../components/paddle";
 import {Shape} from "../components/shape";
 import {UIItem} from "../components/ui-item";

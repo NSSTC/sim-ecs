@@ -5,10 +5,11 @@ import {Shape} from "../components/shape";
 import {Velocity} from "../components/velocity";
 import {EPaddleSide, Paddle} from "../components/paddle";
 import {defaultBallPositionX, defaultBallPositionY, defaultBallVelocityX, defaultBallVelocityY} from "./game";
+import {CTagMarker} from 'sim-ecs';
 
 export const savablePrefab = [
     { // Ball
-        '#': [ETags.ball, ETags.save],
+        [CTagMarker]: [ETags.ball, ETags.save],
         Collision: <Collision>{},
         Position: <Position>{
             x: defaultBallPositionX,
@@ -26,7 +27,7 @@ export const savablePrefab = [
         }
     },
     { // Left paddle
-        '#': [ETags.save],
+        [CTagMarker]: [ETags.save],
         Collision: <Collision>{},
         Paddle: <Paddle>{
             side: EPaddleSide.Left,
@@ -40,7 +41,7 @@ export const savablePrefab = [
         }
     },
     { // Right paddle
-        '#': [ETags.save],
+        [CTagMarker]: [ETags.save],
         Collision: <Collision>{},
         Paddle: <Paddle>{
             side: EPaddleSide.Right,
