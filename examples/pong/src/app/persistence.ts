@@ -1,4 +1,4 @@
-import {ITransitionActions, SerialFormat, TPrefabHandle, WithTag} from "sim-ecs";
+import {ITransitionActions, SerialFormat, TGroupHandle, WithTag} from "sim-ecs";
 import {ScoreBoard} from "../models/score-board";
 import {ETags} from "../models/tags";
 
@@ -6,7 +6,7 @@ import {ETags} from "../models/tags";
 const saveKey = 'save';
 const scoreSaveKey = 'saveScore';
 
-export function load(actions: ITransitionActions): TPrefabHandle {
+export function load(actions: ITransitionActions): TGroupHandle {
     const save = localStorage.getItem(saveKey);
     const scoreSave = localStorage.getItem(scoreSaveKey);
     const scoreBoard = actions.getResource(ScoreBoard);
@@ -17,7 +17,7 @@ export function load(actions: ITransitionActions): TPrefabHandle {
 
     const score = JSON.parse(scoreSave);
 
-    const handle = actions.load(SerialFormat.fromJSON(save));
+    const handle = actions.commands.load(SerialFormat.fromJSON(save));
     scoreBoard.left = score.left;
     scoreBoard.right = score.right;
 

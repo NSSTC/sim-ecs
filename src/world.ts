@@ -1,15 +1,13 @@
 import {Entity} from "./entity";
 import {EntityBuilder} from "./entity-builder";
 import {
-    IEntityWorld,
-    IPartialWorld,
     IRunConfiguration,
     IStaticRunConfiguration,
     ISystemActions,
     ITransitionActions,
     IWorld,
     TEntityInfo,
-    TPrefabHandle,
+    TGroupHandle,
     TSystemInfo,
     TSystemNode
 } from "./world.spec";
@@ -21,22 +19,25 @@ import {PushDownAutomaton} from "./pda";
 import {access, EAccess, ETargetType, TAccessDescriptor} from "./query.spec";
 import {TDeserializer, TSerDeOptions, TSerializer} from "./serde/serde.spec";
 import {SerDe} from "./serde/serde";
-import {SerialFormat} from "./serde/serial-format";
 import {ISerialFormat} from "./serde/serial-format.spec";
+import ECS from "./ecs";
+import {Commands} from "./commands/commands";
+import {CommandsAggregator} from "./commands/commands-aggregator";
 
 export * from './world.spec';
 
 export class World implements IWorld {
-    protected dirty = false;
-    protected entityInfos: Map<IEntity, TEntityInfo> = new Map();
-    protected entityWorld: IEntityWorld;
+    protected _commandsAggregator: CommandsAggregator;
+    protected _commands: Commands;
+    protected _dirty = false;
+    public entityInfos: Map<IEntity, TEntityInfo> = new Map();
     protected pda = new PushDownAutomaton<IState>();
     private lastRunPreparation?: IStaticRunConfiguration;
-    protected groups = {
+    public groups = {
         nextHandle: 0,
         entityLinks: new Map<number, IEntity[]>(),
     };
-    protected resources = new Map<{ new(): Object }, Object>();
+    public resources = new Map<{ new(): Object }, Object>();
     protected runExecutionPipeline: Set<TSystemInfo<TSystemData>>[] = [];
     protected runExecutionPipelineCache: Map<TStateProto, Set<TSystemInfo<TSystemData>>[]> = new Map();
     protected runPromise?: Promise<void> = undefined;
@@ -45,17 +46,20 @@ export class World implements IWorld {
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
 
-    get serde() {
-        return this._serde;
-    }
-
     constructor(
+        public ecs: ECS,
         protected systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>>,
         protected _serde: SerDe = new SerDe(),
     ) {
         const self = this;
 
+        this._commandsAggregator = new CommandsAggregator(this);
+        this._commands = new Commands(this, this._commandsAggregator);
+
         this.systemWorld = Object.freeze({
+            get commands() {
+                return self._commands;
+            },
             get currentState(): IState | undefined {
                 return self.pda.state;
             },
@@ -64,70 +68,22 @@ export class World implements IWorld {
         });
 
         this.transitionWorld = Object.freeze({
+            get commands() {
+                return self._commands;
+            },
             get currentState() {
                 return self.pda.state;
             },
             get serde() {
                 return self.serde;
             },
-            addEntity: (entity) => {
-                self.addEntity(entity);
-                self.assignEntityToSystems(entity);
-            },
-            addResource: this.addResource.bind(this),
-            buildEntity: () => this.buildEntity.call(this, this.transitionWorld),
-            clearEntities: this.clearEntities.bind(this),
-            createEntity: this.createEntity.bind(this),
+            buildEntity: this.buildEntity.bind(this),
+            flushCommands: this.flushCommands.bind(this),
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
             getResources: this.getResources.bind(this),
-            load: this.load.bind(this),
             maintain: this.maintain.bind(this),
-            merge: this.merge.bind(this),
-            popState: this.popState.bind(this),
-            pushState: this.pushState.bind(this),
-            removeEntity: (entity) => {
-                this.removeEntityFromSystems(entity);
-                this.removeEntity(entity);
-            },
-            removeResource: this.removeResource.bind(this),
-            replaceEntitiesWith: this.replaceEntitiesWith.bind(this),
-            replaceResource: this.replaceResource.bind(this),
             save: this.save.bind(this),
-            stopRun: this.stopRun.bind(this),
-            unloadPrefab: this.unloadPrefab.bind(this),
-        });
-
-        this.entityWorld = Object.freeze({
-            get isDirty() {
-                return self.dirty;
-            },
-            get isRunning() {
-                return !!self.runPromise;
-            },
-            get serde() {
-                return self.serde;
-            },
-            addEntity: this.addEntity.bind(this),
-            addResource: this.addResource.bind(this),
-            assignEntityToSystems: this.assignEntityToSystems.bind(this),
-            buildEntity: () => this.buildEntity.call(this, this.transitionWorld),
-            clearEntities: this.clearEntities.bind(this),
-            createEntity: this.createEntity.bind(this),
-            getEntities: this.getEntities.bind(this),
-            getResource: this.getResource.bind(this),
-            getResources: this.getResources.bind(this),
-            load: this.load.bind(this),
-            maintain: this.maintain.bind(this),
-            merge: this.merge.bind(this),
-            removeEntity: this.removeEntity.bind(this),
-            removeEntityFromSystems: this.removeEntityFromSystems.bind(this),
-            removeResource: this.removeResource.bind(this),
-            replaceEntitiesWith: this.replaceEntitiesWith.bind(this),
-            replaceResource: this.replaceResource.bind(this),
-            save: this.save.bind(this),
-            stopRun: this.stopRun.bind(this),
-            unloadPrefab: this.unloadPrefab.bind(this),
         });
 
         for (const system of systemInfos.keys()) {
@@ -140,6 +96,22 @@ export class World implements IWorld {
         }))).map(node => this.systemInfos.get(node.system) as TSystemInfo<TSystemData>);
     }
 
+    get commands() {
+        return this._commands;
+    }
+
+    get dirty() {
+        return this._dirty;
+    }
+
+    get running() {
+        return this.shouldRunSystems;
+    }
+
+    get serde() {
+        return this._serde;
+    }
+
     get systems(): ISystem<TSystemData>[] {
         return Array.from(this.systemInfos.keys());
     }
@@ -150,9 +122,9 @@ export class World implements IWorld {
                 entity,
                 usage: new Map(),
             });
-            this.dirty = true;
+            this._dirty = true;
 
-            entity.changeWorldTo(this.entityWorld);
+            entity.changeWorldTo(this);
         }
     }
 
@@ -186,7 +158,7 @@ export class World implements IWorld {
         return true;
     }
 
-    private assignEntityToSystems(entity: IEntity) {
+    assignEntityToSystems(entity: IEntity) {
         const entityInfo = this.entityInfos.get(entity);
         if (!entityInfo) return;
 
@@ -227,8 +199,8 @@ export class World implements IWorld {
         return dataObj;
     }
 
-    buildEntity(world?: IPartialWorld): EntityBuilder {
-        return new EntityBuilder(world ?? this);
+    buildEntity(): EntityBuilder {
+        return new EntityBuilder();
     }
 
     clearEntities() {
@@ -245,10 +217,15 @@ export class World implements IWorld {
     }
 
     async dispatch(state?: TStateProto): Promise<void> {
+
         await this.run({
             initialState: state,
-            afterStepHandler: actions => actions.stopRun(),
+            afterStepHandler: actions => actions.commands.stopRun(),
         });
+    }
+
+    flushCommands() {
+        return this._commandsAggregator.executeAll();
     }
 
     getEntities<C extends Object, T extends TAccessDescriptor<C>>(query?: T[]): IterableIterator<IEntity> {
@@ -280,8 +257,9 @@ export class World implements IWorld {
         return this.resources.values();
     }
 
-    load(prefab: ISerialFormat, options?: TSerDeOptions<TDeserializer>): TPrefabHandle {
+    load(prefab: ISerialFormat, options?: TSerDeOptions<TDeserializer>, intoGroup?: TGroupHandle): TGroupHandle {
         const entities = [];
+        const groupHandle = intoGroup ?? this.groups.nextHandle++;
         let entity;
 
         for (entity of this._serde.deserialize(prefab, options).entities) {
@@ -289,8 +267,8 @@ export class World implements IWorld {
             entities.push(entity);
         }
 
-        this.groups.entityLinks.set(this.groups.nextHandle, entities);
-        return this.groups.nextHandle++;
+        this.groups.entityLinks.set(groupHandle, entities);
+        return groupHandle;
     }
 
     // todo: add parameter which only maintains for a specific state
@@ -306,17 +284,23 @@ export class World implements IWorld {
             }
         }
 
-        this.dirty = false;
+        this._dirty = false;
     }
 
-    merge(elsewhere: IWorld) {
+    merge(elsewhere: IWorld, intoGroup?: TGroupHandle): [TGroupHandle, IEntity[]] {
+        const groupHandle = intoGroup ?? this.groups.nextHandle++;
+        const entities = [];
         let entity;
+
         for (entity of elsewhere.getEntities()) {
             this.addEntity(entity);
+            entities.push(entity);
         }
+
+        return [groupHandle, entities];
     }
 
-    protected async popState(): Promise<void> {
+    async popState(): Promise<void> {
         await this.pda.pop()?.deactivate(this.transitionWorld);
 
         const newState = this.pda.state;
@@ -343,7 +327,7 @@ export class World implements IWorld {
         let systemInfo: TSystemInfo<TSystemData>;
 
         // todo: system-sorting should not depend on entity-sorting!
-        if (this.dirty) {
+        if (this._dirty) {
             // this line is purely to satisfy my IDE
             this.sortedSystems = [];
             this.maintain();
@@ -366,7 +350,7 @@ export class World implements IWorld {
         return result;
     }
 
-    protected async pushState(NewState: TStateProto): Promise<void> {
+    async pushState(NewState: TStateProto): Promise<void> {
         await this.pda.state?.deactivate(this.transitionWorld);
         this.pda.push(NewState);
 
@@ -396,7 +380,7 @@ export class World implements IWorld {
             throw new Error('The dispatch loop is already running!');
         }
 
-        if (this.dirty) {
+        if (this._dirty) {
             this.maintain();
         }
 
@@ -435,7 +419,7 @@ export class World implements IWorld {
         }
     }
 
-    private removeEntityFromSystems(entity: IEntity): void {
+    removeEntityFromSystems(entity: IEntity): void {
         const usage = this.entityInfos.get(entity)?.usage;
         if (!usage) return;
 
@@ -480,8 +464,10 @@ export class World implements IWorld {
     }
 
     run(configuration?: IRunConfiguration, skipPreparation: boolean = false): Promise<void> {
-        this.runPromise = new Promise(async resolver => {
+        const runPromise = new Promise<void>(async resolver => {
             let preparedConfig: IStaticRunConfiguration;
+
+            await this._commandsAggregator.executeAll();
 
             if (!skipPreparation) {
                 preparedConfig = await this.prepareRun(configuration);
@@ -493,6 +479,8 @@ export class World implements IWorld {
             if (!preparedConfig) {
                 throw new Error('Cannot run without preparing the run!');
             }
+
+            this.runPromise = runPromise;
 
             const afterStepHandler = preparedConfig.afterStepHandler;
             const beforeStepHandler = preparedConfig.beforeStepHandler;
@@ -534,13 +522,14 @@ export class World implements IWorld {
                 }
 
                 await afterStepHandler(this.transitionWorld);
+                await this._commandsAggregator.executeAll();
                 execFn(mainLoop);
             }
 
             execFn(mainLoop);
         });
 
-        return this.runPromise;
+        return runPromise;
     }
 
     protected sortSystems(unsorted: TSystemNode[]): TSystemNode[] {
@@ -598,7 +587,7 @@ export class World implements IWorld {
         return this.serde.serialize({entities: this.getEntities(query)}, options);
     }
 
-    unloadPrefab(handle: TPrefabHandle) {
+    unloadPrefab(handle: TGroupHandle) {
         if (!this.groups.entityLinks.has(handle)) {
             throw new Error(`Could not find any loaded prefab under handle "${handle}"!`)
         }

@@ -33,9 +33,15 @@ export class Benchmark extends ABenchmark {
                 Velocity,
             )
             .build();
+    }
 
+    cleanUp(): IBenchmark {
+        return this;
+    }
+
+    async init(): Promise<void> {
         for (let i = 0; i < 1000; i++) {
-            this.world.buildEntity()
+            this.world.commands.buildEntity()
                 .withAll(
                     Transform,
                     Position,
@@ -45,6 +51,7 @@ export class Benchmark extends ABenchmark {
                 .build();
         }
 
+        await this.world.flushCommands();
         this.world.maintain();
 
         {
@@ -53,12 +60,9 @@ export class Benchmark extends ABenchmark {
         }
     }
 
-    cleanUp(): IBenchmark {
-        return this;
-    }
-
     async run() {
         const json = this.world.save().toJSON();
-        this.world2.load(SerialFormat.fromJSON(json));
+        this.world2.commands.load(SerialFormat.fromJSON(json));
+        await this.world2.flushCommands();
     }
 }

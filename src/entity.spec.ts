@@ -1,6 +1,6 @@
-import {IEntityWorld} from "./world.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
 import {TAccessDescriptor} from "./query.spec";
+import IWorld from "./world.spec";
 
 export type TTag = number | string;
 
@@ -24,7 +24,7 @@ export interface IEntity {
      * Relocate this entity to a new world
      * @param newWorld
      */
-    changeWorldTo(newWorld?: IEntityWorld): void
+    changeWorldTo(newWorld?: IWorld): void
 
     /**
      * Get a component of a certain type which is associated with this entity

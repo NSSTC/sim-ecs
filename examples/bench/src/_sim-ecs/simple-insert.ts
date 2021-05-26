@@ -1,5 +1,5 @@
 import {ECS, IWorld} from 'sim-ecs';
-import {ABenchmark, IBenchmark} from "../benchmark.spec";
+import {ABenchmark} from "../benchmark.spec";
 
 class Transform {}
 class Position { x = 0 }
@@ -24,8 +24,9 @@ export class Benchmark extends ABenchmark {
             .build();
     }
 
-    cleanUp(): IBenchmark {
-        this.world.clearEntities();
+    async cleanUp() {
+        this.world.commands.clearEntities();
+        await this.world.flushCommands();
         return this;
     }
 
@@ -40,7 +41,5 @@ export class Benchmark extends ABenchmark {
                 )
                 .build();
         }
-
-        this.world.maintain();
     }
 }

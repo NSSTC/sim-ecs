@@ -8,6 +8,7 @@ export const testImplementations = (iterCount: number, ...cases: [string, IBench
 
             await bench.init();
             await bench.burnIn();
+            await bench.cleanUp();
 
             return () => bench.run();
         });

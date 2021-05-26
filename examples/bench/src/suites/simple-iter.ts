@@ -4,7 +4,7 @@ import {SimpleIter as SimECS} from '../_sim-ecs';
 import {SimpleIter as TickKnock} from '../_tick-knock';
 import {testImplementations} from "../util";
 
-export const iterCounts = [1];
+export const iterCounts = [1000];
 
 export const bench = async () => {
     const doBench = async (iterCount: number) => {

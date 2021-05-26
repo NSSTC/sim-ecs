@@ -10,10 +10,11 @@ class Data extends SystemData {
 
 export class PauseSystem extends System<Data> {
     readonly SystemDataType = Data;
-
+    actions!: ISystemActions
     gameStore!: GameStore;
 
     setup(actions: ISystemActions) {
+        this.actions = actions;
         this.gameStore = actions.getResource(GameStore);
     }
 
@@ -27,9 +28,9 @@ export class PauseSystem extends System<Data> {
 
         if (this.gameStore.input.actions.togglePause) {
             if (isGameState) {
-                this.gameStore.PushState = PauseState;
+                this.actions.commands.pushState(PauseState);
             } else {
-                this.gameStore.popState = true;
+                this.actions.commands.popState();
             }
         }
     }

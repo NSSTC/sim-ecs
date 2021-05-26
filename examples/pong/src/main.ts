@@ -1,6 +1,6 @@
 import {ECS, IWorld} from "sim-ecs";
 import {PaddleSystem} from "./systems/paddle";
-import {afterFrameHandler, beforeFrameHandler} from "./app/frame-transition-handlers";
+import {beforeFrameHandler} from "./app/frame-transition-handlers";
 import {InputSystem} from "./systems/input";
 import {GameStore} from "./models/game-store";
 import {MenuState} from "./states/menu";
@@ -92,7 +92,6 @@ const initGame = (world: IWorld) => {
 
 const runGame = (world: IWorld) => {
     return world.run({
-        afterStepHandler: afterFrameHandler,
         beforeStepHandler: beforeFrameHandler,
         initialState: MenuState,
     });

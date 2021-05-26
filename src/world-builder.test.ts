@@ -1,6 +1,7 @@
 import {expect} from 'chai';
 import {WorldBuilder, _ as _WorldBuilder} from "./world-builder";
 import {NoData, System} from "./system";
+import ECS from "./ecs";
 
 class ASystem extends System<NoData> {
     readonly SystemDataType = NoData;
@@ -9,7 +10,8 @@ class ASystem extends System<NoData> {
 
 describe('Test WorldBuilder', () => {
     it('Unique Systems', () => {
-        const builder = new WorldBuilder();
+        const ecs = new ECS();
+        const builder = new WorldBuilder(ecs);
         builder.withSystem(ASystem);
         expect(builder.withSystem.bind(builder, ASystem)).to.throw();
     });

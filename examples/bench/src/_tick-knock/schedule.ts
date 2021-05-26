@@ -1,5 +1,5 @@
 import {ABenchmark, IBenchmark} from "../benchmark.spec";
-import {Engine, Entity, Query, QueryBuilder, System} from "tick-knock";
+import {Engine, Entity, Query, System} from "tick-knock";
 
 class A { constructor(public val: number) {} }
 class B { constructor(public val: number) {} }

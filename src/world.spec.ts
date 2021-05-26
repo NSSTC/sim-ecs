@@ -1,20 +1,19 @@
 import {IEntity} from "./entity.spec";
-import IEntityBuilder from "./entity-builder.spec";
 import ISystem, {TSystemData, TSystemProto} from "./system.spec";
 import IState, {TStateProto} from "./state.spec";
 import {TTypeProto} from "./_.spec";
 import {TAccessDescriptor} from "./query.spec";
-import {ISerDe, TDeserializer, TSerDeOptions, TSerializer} from "./serde/serde.spec";
+import {ISerDe, TSerDeOptions, TSerializer} from "./serde/serde.spec";
 import {ISerialFormat} from "./serde/serial-format.spec";
+import {ICommands} from "./commands/commands.spec";
+import IEntityBuilder from "./entity-builder.spec";
 
 export type TEntityInfo = {
     entity: IEntity
     usage: Map<TSystemInfo<TSystemData>, TSystemData>
 };
 export type TExecutionFunction = ((callback: Function) => any) | typeof setTimeout | typeof requestAnimationFrame;
-export type TPrefabEntity = { [Component: string]: unknown };
-export type TPrefabHandle = number;
-export type TSerialFormat = TPrefabEntity[];
+export type TGroupHandle = number;
 
 export interface IRunConfiguration {
     afterStepHandler?: (actions: ITransitionActions) => Promise<void> | void
@@ -39,41 +38,18 @@ export type TSystemInfo<D extends TSystemData> = {
 export type TSystemNode = { system: ISystem<TSystemData>, dependencies: TSystemProto<TSystemData>[] };
 
 export interface IPartialWorld {
+    readonly commands: ICommands
     readonly serde: ISerDe
 
     /**
-     * Get a resource which was previously stored
-     * @param type
-     */
-    getResource<T extends Object>(type: TTypeProto<T>): T
-
-    /**
-     * Add an entity to this world
-     * @param entity
-     */
-    addEntity(entity: IEntity): void
-
-    /**
-     * Add a resource to this world and returns the resource instance
-     * @param type
-     * @param args constructor parameters
-     */
-    addResource<T extends Object>(type: T | TTypeProto<T>, ...args: unknown[]): T
-
-    /**
-     * Build an entity and add it to this world using an entity builder
+     * Convenience builder to create a new Entity
      */
     buildEntity(): IEntityBuilder
 
     /**
-     * Remove all entities from this world
+     * Execute all commands NOW
      */
-    clearEntities(): void
-
-    /**
-     * Create a new entity and add it to this world
-     */
-    createEntity(): IEntity
+    flushCommands(): Promise<void>
 
     /**
      * Query entities and find the ones with a certain combination of component
@@ -93,47 +69,9 @@ export interface IPartialWorld {
     getResources(): IterableIterator<unknown>
 
     /**
-     * Load entities with components from a prefab or save
-     * @param rawObj
-     * @param options
-     */
-    load(rawObj: ISerialFormat, options?: TSerDeOptions<TDeserializer>): TPrefabHandle
-
-    /**
      * Re-calculate all entity, component and system dependencies and connections
      */
     maintain(): void
-
-    /**
-     * Merge entities from another world into this one
-     * @param world
-     */
-    merge(world: IWorld): void
-
-    /**
-     * Remove an entity from the world, deleting all of its components
-     * @param entity
-     */
-    removeEntity(entity: IEntity): void
-
-    /**
-     * Remove a resource from the world
-     * @param type
-     */
-    removeResource<T extends Object>(type: TTypeProto<T>): void
-
-    /**
-     * Replace all current entities with entities from another world
-     * @param world
-     */
-    replaceEntitiesWith(world: IWorld): void
-
-    /**
-     * Replace a resource from this world
-     * @param type
-     * @param args constructor parameters
-     */
-    replaceResource<T extends Object>(type: T | TTypeProto<T>, ...args: unknown[]): void
 
     /**
      * Prepare a savable version of the current world.
@@ -142,23 +80,13 @@ export interface IPartialWorld {
      * @param options
      */
     save<C extends Object, T extends TAccessDescriptor<C>>(query?: T[], options?: TSerDeOptions<TSerializer>): ISerialFormat
-
-    /**
-     * Signal the world to stop its dispatch-loop
-     */
-    stopRun(): void
-
-    /**
-     * Remove entities with data-components from a prefab file
-     * @param handle
-     */
-    unloadPrefab(handle: TPrefabHandle): void
 }
 
 /**
  * Actions which can be called from a system run
  */
 export interface ISystemActions {
+    readonly commands: ICommands
     readonly currentState: IState | undefined
 
     /**
@@ -179,17 +107,6 @@ export interface ISystemActions {
  */
 export interface ITransitionActions extends IPartialWorld {
     readonly currentState: IState | undefined
-
-    /**
-     * Revert the running world to a previous state
-     */
-    popState(): Promise<void>
-
-    /**
-     * Change the running world to a new state
-     * @param NewState
-     */
-    pushState(NewState: TStateProto): Promise<void>
 }
 
 export interface IWorld extends IPartialWorld {
@@ -199,10 +116,34 @@ export interface IWorld extends IPartialWorld {
     readonly systems: ISystem<TSystemData>[]
 
     /**
+     * Add an entity to this world
+     * @param entity
+     */
+    addEntity(entity: IEntity): void
+
+    /**
+     * Add a resource to this world and returns the resource instance
+     * @param type
+     * @param args constructor parameters
+     */
+    addResource<T extends Object>(type: T | TTypeProto<T>, ...args: unknown[]): T
+
+    /**
+     * Create a new entity and add it to this world
+     */
+    createEntity(): IEntity
+
+    /**
      * Execute all systems
      * @param state
      */
     dispatch(state?: TStateProto): Promise<void>
+
+    /**
+     * Merge entities from another world into this one
+     * @param world
+     */
+    merge(world: IWorld): [TGroupHandle, IEntity[]]
 
     /**
      * Execute all systems continuously in a dispatch-loop
@@ -210,15 +151,6 @@ export interface IWorld extends IPartialWorld {
      * @param configuration
      */
     run(configuration?: IRunConfiguration): Promise<void>
-}
-
-export interface IEntityWorld extends IPartialWorld {
-    readonly isDirty: boolean
-    readonly isRunning: boolean
-
-    assignEntityToSystems(entity: IEntity): void
-
-    removeEntityFromSystems(entity: IEntity): void
 }
 
 export type TWorldProto = { new(): IWorld };

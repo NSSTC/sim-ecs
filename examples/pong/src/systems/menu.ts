@@ -10,10 +10,12 @@ class Data extends SystemData {
 
 export class MenuSystem extends System<Data> {
     readonly SystemDataType = Data;
+    actions!: ISystemActions
     gameStore!: GameStore;
     menuAction = EActions.Play;
 
     setup(actions: ISystemActions) {
+        this.actions = actions;
         this.gameStore = actions.getResource(GameStore);
     }
 
@@ -42,7 +44,7 @@ export class MenuSystem extends System<Data> {
 
         if (this.gameStore.input.actions.menuConfirm) {
             if (this.menuAction == EActions.Play) {
-                this.gameStore.PushState = GameState;
+                this.actions.commands.pushState(GameState);
             }
             else if (this.menuAction == EActions.Continue) {
                 if (localStorage.getItem('save') == null) {
@@ -50,10 +52,10 @@ export class MenuSystem extends System<Data> {
                 }
 
                 this.gameStore.continue = true;
-                this.gameStore.PushState = GameState;
+                this.actions.commands.pushState(GameState);
             }
             else {
-                this.gameStore.exit = true;
+                this.actions.commands.stopRun();
             }
 
             return;

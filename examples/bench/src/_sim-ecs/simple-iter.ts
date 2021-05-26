@@ -17,8 +17,8 @@ class Velocity {
 
 
 class Data extends SystemData {
-    pos = Write(Position);
-    vel = Read(Velocity);
+    pos = Write(Position)
+    vel = Read(Velocity)
 }
 
 class SimpleIterSystem extends System<Data> {
@@ -61,8 +61,6 @@ export class Benchmark extends ABenchmark {
                 )
                 .build();
         }
-
-        this.world.maintain();
     }
 
     cleanUp(): IBenchmark {
@@ -71,9 +69,10 @@ export class Benchmark extends ABenchmark {
     }
 
     async init(): Promise<void> {
+        await this.world.flushCommands();
         await this.world.prepareRun({
             afterStepHandler: (actions) => {
-                if (this.count++ >= this.iterCount) { actions.stopRun(); }
+                if (this.count++ >= this.iterCount) { actions.commands.stopRun(); }
             },
             // to make the comparison fair, we will iterate in a sync loop over the steps, just like the others do
             executionFunction: (fn: Function) => fn(),

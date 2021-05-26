@@ -4,7 +4,7 @@ export interface IBenchmarkConstructor {
 
 export interface IBenchmark {
     burnIn(): IBenchmark | Promise<IBenchmark>
-    cleanUp(): IBenchmark
+    cleanUp(): IBenchmark | Promise<IBenchmark>
     init(): Promise<void>
     run(): void | Promise<void>
 }
@@ -16,7 +16,7 @@ export abstract class ABenchmark implements IBenchmark {
         return this;
     }
 
-    abstract cleanUp(): IBenchmark;
+    abstract cleanUp(): IBenchmark | Promise<IBenchmark>;
 
     async init(): Promise<void> {}
 

@@ -4,7 +4,7 @@ import {Schedule as SimECS} from '../_sim-ecs';
 import {Schedule as TickKnock} from '../_tick-knock';
 import {testImplementations} from "../util";
 
-export const iterCount = 1;
+export const iterCount = 1000;
 
 export const bench = () => new Promise((resolve, reject) => {
     setTimeout(async () => {

@@ -1,4 +1,4 @@
-import {IWorld} from "./world";
+import {IWorld, World} from "./world";
 import {IWorldBuilder} from "./world-builder.spec";
 import {WorldBuilder} from "./world-builder";
 
@@ -9,10 +9,14 @@ type TWorldInfo = {
 };
 
 export class ECS {
-    protected worlds: Set<TWorldInfo> = new Set();
+    protected worlds: Map<World, TWorldInfo> = new Map();
 
     buildWorld(name?: string): IWorldBuilder {
-        return (new WorldBuilder()).addCallback(world => this.worlds.add({ name, world }));
+        return new WorldBuilder(this).addCallback(world => this.worlds.set(world as World, { name, world }));
+    }
+
+    removeWorld(world: IWorld) {
+        this.worlds.delete(world as World);
     }
 }
 

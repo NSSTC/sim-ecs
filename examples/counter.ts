@@ -1,11 +1,6 @@
 import {ECS} from "..";
 import {ISystemActions, System, SystemData, Write} from "../src";
 
-/// we can define a global storage, which holds general information about the simulation run
-/// we will add it as a resource to the ecs world, so that we can access it from anywhere easily
-class GlobalStorage {
-    exit = false;
-}
 
 /// a component.
 /// holds our counter and a limit to how far we want to count before stopping
@@ -24,12 +19,12 @@ class Data extends SystemData {
 /// systems process data. We declare what kind of input we need in the above Data struct,
 /// and then define the processing code here
 class CounterSystem extends System<Data> {
-    protected globalStorage!: GlobalStorage;
     /// we have to link the prototype for JS explicitly
     readonly SystemDataType = Data;
+    actions!: ISystemActions;
 
     setup(actions: ISystemActions): void {
-        this.globalStorage = actions.getResource(GlobalStorage);
+        this.actions = actions;
     }
 
     /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
@@ -45,7 +40,7 @@ class CounterSystem extends System<Data> {
             // if the limit is reached, set the exit field to true
             if (counterInfo.count == counterInfo.limit) {
                 console.log('Time to exit!');
-                this.globalStorage.exit = true;
+                this.actions.commands.stopRun();
             }
         }
     }
@@ -63,14 +58,10 @@ const world = ecs
     .withComponent(CounterInfo)
     .build();
 
-/// let's add out global storage as resource to the world. The ECS can do the object instantiation for you,
-/// however you may also pass an object instead
-world.addResource(GlobalStorage);
-
 /// in order to do something, we still need to add data, which can be processed.
 /// think of this like filling up your database, whereas each entity is a row and each component is a column
 world
-    /// building an entity is a comfy way to add all components to it and have it in the world in one chain
+    .commands
     .buildEntity()
     .with(CounterInfo)
     .build();
@@ -78,13 +69,4 @@ world
 /// when everything is added, it's time to run the simulation
 /// sim-ecs provides a main-loop, which is optimized for iteration speed of the systems and data
 /// it is highly recommended to use it:
-world.run({
-    /// this callback is executed after every complete run of all requested systems
-    /// use it in order to do changes to the world, like adding, deleting or modifying entities
-    afterStepHandler: async actions => {
-        /// in this example, though, we use it to stop the simulation
-        if (actions.getResource(GlobalStorage).exit) {
-            actions.stopRun();
-        }
-    }
-}).catch(console.error).then(() => console.log('Finished.'));
+world.run().catch(console.error).then(() => console.log('Finished.'));

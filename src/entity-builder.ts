@@ -1,21 +1,13 @@
 import {Entity} from "./entity";
-import {IPartialWorld} from "./world.spec";
 import IEntityBuilder from "./entity-builder.spec";
 import {TObjectProto} from "./_.spec";
 
 export * from './entity-builder.spec';
 
 export class EntityBuilder implements IEntityBuilder {
-    protected entity: Entity;
-
-    constructor(
-        protected world: IPartialWorld
-    ) {
-        this.entity = new Entity();
-    }
+    protected entity = new Entity();
 
     build(): Entity {
-        this.world.addEntity(this.entity);
         return this.entity;
     }
 

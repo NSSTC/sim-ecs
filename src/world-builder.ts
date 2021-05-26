@@ -7,11 +7,16 @@ import IWorld, {TSystemInfo} from "./world.spec";
 import {World} from "./world";
 import {TObjectProto} from "./_.spec";
 import {SerDe} from "./serde/serde";
+import ECS from "./ecs";
 
 export class WorldBuilder implements IWorldBuilder {
     protected callbacks: Set<(world: IWorld) => void> = new Set();
     protected serde = new SerDe();
     protected systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>> = new Map();
+
+    constructor(
+        protected ecs: ECS,
+    ) {}
 
     addCallback(cb: (world: IWorld) => void): WorldBuilder {
         this.callbacks.add(cb);
@@ -19,7 +24,7 @@ export class WorldBuilder implements IWorldBuilder {
     }
 
     build(): IWorld {
-        const world = new World(this.systemInfos, this.serde);
+        const world = new World(this.ecs, this.systemInfos, this.serde);
 
         for (const cb of this.callbacks) {
             cb(world);

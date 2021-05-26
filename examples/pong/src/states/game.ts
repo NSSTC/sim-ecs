@@ -1,4 +1,4 @@
-import {ITransitionActions, SerialFormat, State, TPrefabHandle, With} from "sim-ecs";
+import {ITransitionActions, SerialFormat, State, TGroupHandle, With} from "sim-ecs";
 import {InputSystem} from "../systems/input";
 import {PauseSystem} from "../systems/pause";
 import {PaddleSystem} from "../systems/paddle";
@@ -20,44 +20,47 @@ import {savablePrefab} from "../prefabs/savable";
 
 export class GameState extends State {
     _systems = [AnimationSystem, BallSystem, CollisionSystem, InputSystem, PaddleSystem, PauseSystem, RenderGameSystem, RenderUISystem];
-    saveDataPrefabHandle?: TPrefabHandle;
-    staticDataPrefabHandle?: TPrefabHandle;
+    saveDataPrefabHandle?: TGroupHandle;
+    staticDataPrefabHandle?: TGroupHandle;
 
     activate(actions: ITransitionActions) {
         actions.getResource(GameStore).currentState = this;
     }
 
-    create(actions: ITransitionActions) {
+    async create(actions: ITransitionActions) {
         const gameStore = actions.getResource(GameStore);
 
         this.staticDataPrefabHandle = createNewGame(actions);
         if (gameStore.continue) {
             this.saveDataPrefabHandle = load(actions);
         } else {
-            this.saveDataPrefabHandle = createNewSaveData(actions);
+            this.saveDataPrefabHandle = await createGameFromSaveData(actions);
         }
 
-        setScoreCaptionMod(actions);
-        actions.maintain();
+        actions.commands.queueCommand(() => setScoreCaptionMod(actions));
+        actions.commands.maintain();
     }
 
     destroy(actions: ITransitionActions) {
         if (this.staticDataPrefabHandle) {
-            actions.unloadPrefab(this.staticDataPrefabHandle);
+            actions.commands.unloadPrefab(this.staticDataPrefabHandle);
         }
 
         if (this.saveDataPrefabHandle) {
-            actions.unloadPrefab(this.saveDataPrefabHandle);
+            actions.commands.unloadPrefab(this.saveDataPrefabHandle);
         }
+
+        actions.commands.maintain();
     }
 }
 
 const createNewGame = function (actions: ITransitionActions) {
-    return actions.load(SerialFormat.fromArray(gamePrefab));
+    return actions.commands.load(SerialFormat.fromArray(gamePrefab));
 };
 
-const createNewSaveData = function (actions: ITransitionActions) {
-    const prefabHandle = actions.load(SerialFormat.fromArray(savablePrefab));
+const createGameFromSaveData = async function (actions: ITransitionActions) {
+    const prefabHandle = actions.commands.load(SerialFormat.fromArray(savablePrefab));
+    await actions.flushCommands();
 
     for (const entity of actions.getEntities([With(Paddle), With(Shape)])) {
         entity

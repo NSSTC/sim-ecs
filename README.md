@@ -20,6 +20,7 @@ npm install sim-ecs
 - [Adding Entities](#adding-entities)
 - [Working with States](#working-with-states-optional)
 - [Update loop](#Update-loop)
+- [Commands](#commands)
 - [Saving and using Prefabs](#saving-and-using-prefabs)
 - [Building for Production](#building-for-production)
 - [Comparison with other TS ECS libs](#comparison-with-other-ts-ecs-libs)
@@ -143,7 +144,7 @@ Entities are automatically added to the world they are built in.
 You can think of entities like rows in a database.
 
 ```typescript
-world.buildEntity().withComponent(Counter).build();
+world.commands.buildEntity().withComponent(Counter).build();
 ```
 
 
@@ -155,8 +156,8 @@ States can be switched using a push-down automaton.
 States define which systems should run, so that a pause-state can run graphics updates, but not game-logic, for example.
 If no state is passed to the dispatcher, all systems are run by default.
 
-While the world is running (using `run()`), the state can be changed between every world dispatch
-using the handler function. Single calls to `dispatch()` do not offer the benefits of a PDA.
+While the world is running (using `run()`), the state can be changed using commands.
+Single calls to `dispatch()` do not offer the benefits of a PDA.
 
 ```typescript
 class InitState extends State { _systems = [InitSystem] }
@@ -194,19 +195,31 @@ and from within a transition-handler or the systems, certain actions can be call
 which influence how the runner acts. For example on transition, the state can be changed.
 
 
+## Commands
+
+Commands, accessible using `world.commands` and `actions.commands` in Systems, are a mechanism,
+which queues certain functionality, like adding entities.
+The queue is then worked on at certain sync points, usually at the end of every step.
+This is a safety and comfort mechanism, which guarantees that critical changes can be triggered comfortably,
+but still only run at times when it is actually safe to do them.
+
+Such sync points include any major transitions in a step's life-cycle, and sim-ecs will always trigger the execution
+of all queued commands at the end of the step.
+
+
 ## Saving and using Prefabs
 
 Prefabs, short for pre-fabrications, are ready-made files or objects,
 which can be loaded at runtime to initialize a certain part of the application.
 In the case of sim-ecs, prefabs can be used to load entities with their components.
-Contrary to a save, for example using `world.toJSON()`, prefabs are made with work-flow in mind.
-Their format is easy to understand, even by non-programmers, and they can be enriched with types easily (see Pong example).
 
-Another advantage of prefabs in sim-ecs is that all loaded entities are tracked and can be unloaded when not needed anymore.
-This means that prefabs can be used to design menus, levels, GUIs, etc. which are only loaded when needed
+All loaded entities are tracked and can be unloaded when not needed anymore. This is thanks to a grouping mechanism,
+ means that prefabs can be used to design menus, levels, GUIs, etc. which are only loaded when needed
 and discarded after use. After all, who needs level1 data when they switched over to level2?
 
-Saving and loading save-data works the same in sim-ecs, since the JSON format is identical.
+The same is true for save games, so that when going back to the menu or loading another save, this can be done cleanly.
+
+Saving and loading save-data works the same in sim-ecs, since they both use a shared mechanism
 If you wish to work with the raw serializable data instead of writing it as JSON, the SaveFormat extends Array,
 so it can be used just like an `Array<TEntity>`.
 
@@ -242,9 +255,9 @@ const prefab = [
 ];
 
 // to load from JSON, use SerialFormat.fromJSON() instead!
-const prefabHandle = world.load(SerialFormat.fromArray(prefab));
+const prefabHandle = world.commands.load(SerialFormat.fromArray(prefab));
 // unloading is also easily possible to clean up the world
-world.unloadPrefab(prefabHandle);
+world.commands.unloadPrefab(prefabHandle);
 ```
 
 ```typescript
@@ -274,7 +287,7 @@ The Pong example uses WebPack and demonstrates how to set up WebPack for proper 
 In an attempt to make sim-ecs best in class, it is important to compare it to other ECS libraries,
 identify differences and improve based on lessons others already learned.
 That's why a comparison to other libraries is tracked here, as fair as possible!
-Please open a PR for any information improvement!
+Please open a PR for any improvement!
 
 
 ### Features
@@ -295,7 +308,7 @@ Please open a PR for any information improvement!
 Please take the results with a grain of salt. These are benchmarks, so they are synthetic.
 An actual application will use a mix out of everything and more, and depending on that may have a different experience.
 
-Date: 25th May 2021
+Date: 26th May 2021
 
 ```
 --------------------------------------------------------------------------------
@@ -317,7 +330,7 @@ tick-knock      v3.0.1
 
 | | Ape-ECS | sim-ecs | tick-knock |
 | ---: | :---: | :---: | :---: |
-| Simple Insert | 54 ops/s, ±11.99% | 205 ops/s, ±2.27% | **244 ops/s, ±24.60%** |
-| Simple Iteration | 94 285 ops/s, ±38.17% | **1 064 272 ops/s, ±19.13%** | 32 265 ops/s, ±0.42% |
-| Schedule | 624 ops/s, ±0.64%  | **1 214 774 ops/s, ±17.19%** | 261 ops/s, ±0.63% |
-| De-/Serialize Save | 57 ops/s, ±9.98% (445.31KB) | **206 ops/s, ±1.02%** (**67.38KB**) | - |
+| Simple Insert | 55 ops/s, ±11.93% | 241 ops/s, ±0.35% | **306 ops/s, ±26.88%** |
+| Simple Iteration | 153 ops/s, ±0.53% | **664 604 ops/s, ±30.22%** | 32 ops/s, ±0.14% |
+| Schedule | 1 ops/s, ±2.04%  | **703 544 ops/s, ±26.33%** | 0 ops/s, ±0.45% |
+| De-/Serialize Save | 59 ops/s, ±10.20% (445.31KB) | **208 ops/s, ±1.10%** (**67.38KB**) | - |

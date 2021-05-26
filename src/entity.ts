@@ -1,7 +1,7 @@
-import {IEntityWorld} from "./world.spec";
 import IEntity, {TTag} from "./entity.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
 import {access, EAccess, ETargetType, TAccessDescriptor} from "./query.spec";
+import {World} from "./world";
 
 export * from './entity.spec';
 
@@ -10,7 +10,7 @@ export class Entity implements IEntity {
     protected tags: Set<TTag> = new Set();
 
     constructor(
-        protected world?: IEntityWorld
+        protected world?: World
     ) {}
 
     addComponent(component: Object): Entity {
@@ -27,8 +27,8 @@ export class Entity implements IEntity {
         return this;
     }
 
-    changeWorldTo(newWorld?: IEntityWorld): void {
-        const updateSystems = this.world?.isDirty && this.world?.isRunning;
+    changeWorldTo(newWorld?: World): void {
+        const updateSystems = this.world?.dirty && this.world?.running;
 
         updateSystems && this.world?.removeEntityFromSystems(this);
         this.world?.removeEntity(this);

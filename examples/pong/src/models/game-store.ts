@@ -10,7 +10,6 @@ export enum EMovement {
 export class GameStore {
     continue = false
     currentState?: IState
-    exit = false
     lastFrameDeltaTime = 0
     input: {
         actions: {
@@ -33,6 +32,4 @@ export class GameStore {
         },
         keyStates: {},
     }
-    popState = false
-    PushState?: TStateProto
 }

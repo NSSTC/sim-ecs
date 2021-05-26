@@ -9,18 +9,18 @@ class E { constructor(public val: number) {} }
 
 
 class ABData extends SystemData {
-    a = Write(A);
-    b = Write(B);
+    a = Write(A)
+    b = Write(B)
 }
 
 class CDData extends SystemData {
-    c = Write(C);
-    d = Write(D);
+    c = Write(C)
+    d = Write(D)
 }
 
 class CEData extends SystemData {
-    c = Write(C);
-    e = Write(E);
+    c = Write(C)
+    e = Write(E)
 }
 
 class ABSystem extends System<ABData> {
@@ -110,8 +110,6 @@ export class Benchmark extends ABenchmark {
                 .with(E, 0)
                 .build();
         }
-
-        this.world.maintain();
     }
 
     cleanUp(): IBenchmark {
@@ -120,9 +118,10 @@ export class Benchmark extends ABenchmark {
 
     async init(): Promise<void> {
         let count = 0;
+        await this.world.flushCommands();
         await this.world.prepareRun({
             afterStepHandler: (actions) => {
-                if (count++ >= this.iterCount) { actions.stopRun(); }
+                if (count++ >= this.iterCount) { actions.commands.stopRun(); }
             },
             // to make the comparison fair, we will iterate in a sync loop over the steps, just like the others do
             executionFunction: (fn: Function) => fn(),
