@@ -30,7 +30,6 @@ export class World implements IWorld {
     protected _commandsAggregator: CommandsAggregator;
     protected _commands: Commands;
     protected _dirty = false;
-    protected _isRunning = false;
     public entityInfos: Map<IEntity, TEntityInfo> = new Map();
     protected pda = new PushDownAutomaton<IState>();
     private lastRunPreparation?: IStaticRunConfiguration;
@@ -502,6 +501,7 @@ export class World implements IWorld {
 
                 const mainLoop = async () => {
                     stepResult = await step.next();
+                    await this._commandsAggregator.executeAll();
 
                     if (!stepResult.done) {
                         execFn(mainLoop);
