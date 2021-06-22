@@ -1,95 +1,58 @@
 import {TTypeProto} from "./_.spec";
-import {Entity, TTag} from "./entity";
+import {IEntity, TTag} from "./entity";
 
-export const access = Symbol();
+export type TAccessQueryField<C extends Object> = C & IAccessDescriptor<C>;
+export type TAccessQueryParameter<C extends TTypeProto<Object>> = C & IAccessDescriptor<InstanceType<C>>;
+export interface IAccessQuery<C extends TTypeProto<Object>> { [componentName: string]: TAccessQueryParameter<C> }
+export interface IAccessQueryResult<C extends Object> { [componentName: string]: TAccessQueryField<C> }
+
+export type TExistenceQueryField = IEntity;
+export type TExistenceQueryParameter<C extends TTypeProto<Object>> = IExistenceDescriptor<C>;
+export type TExistenceQuery<C extends TTypeProto<Object>> = Array<TExistenceQueryParameter<C>>;
+export type TExistenceQueryResult = Array<TExistenceQueryField>;
+
+export const setEntitiesSym = Symbol();
+export const accessDescSym: unique symbol = Symbol();
+export const existenceDescSym: unique symbol = Symbol();
 
 export enum EAccess {
     meta,
     read,
+    write,
+}
+
+export enum EExistence {
     set,
     unset,
-    write,
 }
 
 export enum ETargetType {
     component,
+    entity,
     tag,
 }
 
-export type TAccessDescriptor<C extends Object> = {
-    [access]: {
+export interface IAccessDescriptor<C extends Object> {
+    [accessDescSym]: {
         readonly target: TTypeProto<C> | TTag
         readonly targetType: ETargetType
         readonly type: EAccess
     }
 }
 
-export function ReadEntity(): Entity & TAccessDescriptor<Entity> {
-    return Object.assign({}, Entity.prototype, {
-        [access]: {
-            target: Entity,
-            targetType: ETargetType.component,
-            type: EAccess.meta,
-        },
-    });
+export interface IExistenceDescriptor<C extends TTypeProto<Object>> {
+    [existenceDescSym]: {
+        readonly target: C | TTag
+        readonly targetType: ETargetType
+        readonly type: EExistence
+    }
 }
 
-export function Read<C extends Object>(componentPrototype: TTypeProto<C>): C & TAccessDescriptor<C> {
-    return Object.assign({}, componentPrototype.prototype, {
-        [access]: {
-            target: componentPrototype,
-            targetType: ETargetType.component,
-            type: EAccess.read,
-        },
-    });
+/*
+export interface IQuery<D extends IAccessQueryResult<Object> | TExistenceQueryResult> {
+    iter(): IterableIterator<D extends Array<infer T> ? IEntity : { [P in keyof D]: Required<Omit<InstanceType<D[P]>, keyof IAccessDescriptor<Object>>> }>
+    matchesEntity(entity: IEntity): boolean
 }
 
-export function Write<C extends Object>(componentPrototype: TTypeProto<C>): C & TAccessDescriptor<C> {
-    return Object.assign({}, componentPrototype.prototype, {
-        [access]: {
-            target: componentPrototype,
-            targetType: ETargetType.component,
-            type: EAccess.write,
-        },
-    });
-}
-
-export function With<C extends Object>(componentPrototype: TTypeProto<C>): TAccessDescriptor<C> {
-    return {
-        [access]: {
-            target: componentPrototype,
-            targetType: ETargetType.component,
-            type: EAccess.set,
-        }
-    };
-}
-
-export function WithTag(tag: TTag): TAccessDescriptor<Object> {
-    return {
-        [access]: {
-            target: tag,
-            targetType: ETargetType.tag,
-            type: EAccess.set,
-        }
-    };
-}
-
-export function Without<C extends Object>(componentPrototype: TTypeProto<C>): TAccessDescriptor<C> {
-    return {
-        [access]: {
-            target: componentPrototype,
-            targetType: ETargetType.component,
-            type: EAccess.unset,
-        }
-    };
-}
-
-export function WithoutTaq(tag: TTag): TAccessDescriptor<Object> {
-    return {
-        [access]: {
-            target: tag,
-            targetType: ETargetType.tag,
-            type: EAccess.unset,
-        }
-    };
-}
+export type TQueryProto<D extends IAccessQueryResult<Object> | TExistenceQueryResult> = { new(): IQuery<D> };
+*/
