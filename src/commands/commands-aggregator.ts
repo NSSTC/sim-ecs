@@ -1,6 +1,8 @@
 import {ICommandsAggregator, TCommand} from "./commands-aggregator.spec";
 import IWorld from "../world.spec";
 
+export * from "./commands-aggregator.spec";
+
 export class CommandsAggregator implements ICommandsAggregator {
     commands: TCommand[] = [];
     doMaintain = false;

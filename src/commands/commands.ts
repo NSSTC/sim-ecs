@@ -9,10 +9,12 @@ import {World} from "../world";
 import {ICommandsAggregator, TCommand} from "./commands-aggregator.spec";
 import {CommandEntityBuilder} from "./command-entity-builder";
 
+export * from "./commands.spec";
+
 export class Commands implements ICommands {
     constructor(
-        public world: World,
-        public aggregator: ICommandsAggregator,
+        public readonly world: World,
+        public readonly aggregator: ICommandsAggregator,
     ) {}
 
     addEntity(entity: IEntity) {

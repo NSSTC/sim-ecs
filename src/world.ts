@@ -217,7 +217,6 @@ export class World implements IWorld {
     }
 
     async dispatch(state?: TStateProto): Promise<void> {
-
         await this.run({
             initialState: state,
             afterStepHandler: actions => actions.commands.stopRun(),
