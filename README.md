@@ -214,7 +214,7 @@ which can be loaded at runtime to initialize a certain part of the application.
 In the case of sim-ecs, prefabs can be used to load entities with their components.
 
 All loaded entities are tracked and can be unloaded when not needed anymore. This is thanks to a grouping mechanism,
- means that prefabs can be used to design menus, levels, GUIs, etc. which are only loaded when needed
+which means that prefabs can be used to design menus, levels, GUIs, etc. which are only loaded when needed
 and discarded after use. After all, who needs level1 data when they switched over to level2?
 
 The same is true for save games, so that when going back to the menu or loading another save, this can be done cleanly.
@@ -233,29 +233,41 @@ enum MonsterTypes {
 // loading a prefab, the prefab might be in a different file, even maybe just JSON data!
 const prefab = [
     {
-        Position: {
+        Position: <Position>{
             x: 0,
             y: 1,
         },
-        Player: {
+        Player: <Player>{
+            level: 1,
             name: 'Jane',
-            health: 100,
+        },
+        Health: <Health>{
+            current: 100,
+            max: 100,
         },
     },
     {
-      Position: {
-        x: 0,
-        y: 1,
-      },
-      Monster: {
-          type: MonsterTypes.Tiger,
-          health: 250,
-      },
+        Position: <Position>{
+            x: 0, 
+            y: 1,
+        }, 
+        Monster: <Monster>{
+            hostileToPlayer: true,
+            type: MonsterTypes.Tiger,
+        },
+        Health: <Health>{
+            current: 100,
+            max: 250,
+        }
     }, 
 ];
 
+
 // to load from JSON, use SerialFormat.fromJSON() instead!
 const prefabHandle = world.commands.load(SerialFormat.fromArray(prefab));
+
+// ...
+
 // unloading is also easily possible to clean up the world
 world.commands.unloadPrefab(prefabHandle);
 ```
