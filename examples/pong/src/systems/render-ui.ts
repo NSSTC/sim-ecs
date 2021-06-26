@@ -1,15 +1,14 @@
 import {Position} from "../components/position";
-import {ISystemActions, Read, System, SystemData} from "sim-ecs";
+import {ISystemActions, Query, Read, System} from "sim-ecs";
 import {UIItem} from "../components/ui-item";
 import {relToScreenCoords} from "../app/util";
 
-class Data extends SystemData {
-    readonly pos = Read(Position);
-    readonly ui = Read(UIItem);
-}
+export class RenderUISystem extends System {
+    readonly query = new Query({
+        pos: Read(Position),
+        ui: Read(UIItem)
+    });
 
-export class RenderUISystem extends System<Data> {
-    SystemDataType = Data;
     ctx!: CanvasRenderingContext2D;
     toScreenCoords!: (x: number, y: number) => [number, number];
 
@@ -18,10 +17,10 @@ export class RenderUISystem extends System<Data> {
         this.toScreenCoords = relToScreenCoords.bind(undefined, this.ctx.canvas);
     }
 
-    run(dataSet: Set<Data>) {
+    run(actions: ISystemActions) {
         this.ctx.textBaseline = 'top';
 
-        for (const {pos, ui} of dataSet) {
+        this.query.execute(({pos, ui}) => {
             const screenPos = this.toScreenCoords(pos.x, pos.y);
 
             this.ctx.fillStyle = ui.active
@@ -31,6 +30,6 @@ export class RenderUISystem extends System<Data> {
                 ? `${ui.fontSize * 1.2}px serif`
                 : `${ui.fontSize}px serif`;
             this.ctx.fillText(ui.finalCaption, screenPos[0], screenPos[1]);
-        }
+        });
     }
 }

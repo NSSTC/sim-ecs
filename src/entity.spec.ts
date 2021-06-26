@@ -1,6 +1,4 @@
 import {TObjectProto, TTypeProto} from "./_.spec";
-import {TAccessDescriptor} from "./query.spec";
-import IWorld from "./world.spec";
 
 export type TTag = number | string;
 
@@ -19,12 +17,6 @@ export interface IEntity {
      * @param tag
      */
     addTag(tag: TTag): IEntity
-
-    /**
-     * Relocate this entity to a new world
-     * @param newWorld
-     */
-    changeWorldTo(newWorld?: IWorld): void
 
     /**
      * Get a component of a certain type which is associated with this entity
@@ -55,11 +47,6 @@ export interface IEntity {
     hasTag(tag: TTag): boolean
 
     /**
-     * Check if this entity matches a queue for components
-     */
-    matchesQueue<C extends Object, T extends TAccessDescriptor<C>>(query: T[]): boolean
-
-    /**
      * Un-associate a component from this entity
      * @param component
      */
@@ -73,4 +60,3 @@ export interface IEntity {
 }
 
 export type TEntityProto = { new(): IEntity };
-export default IEntity;

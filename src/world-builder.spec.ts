@@ -1,14 +1,10 @@
-import {TSystemData, TSystemProto} from "./system.spec";
+import { TSystemProto} from "./system.spec";
 import IWorld from "./world.spec";
 import {TObjectProto} from "./_.spec";
 import {ISerDeOperations} from "./serde/serde.spec";
 
 export interface IComponentRegistrationOptions {
     serDe: ISerDeOperations
-}
-
-export interface ISystemRegistrationOptions {
-    dependencies?: TSystemProto<TSystemData>[]
 }
 
 export interface IWorldBuilder {
@@ -20,9 +16,9 @@ export interface IWorldBuilder {
     /**
      * Add system to the world
      * @param System
-     * @param optionsOrDependencies
+     * @param dependencies
      */
-    withSystem(System: TSystemProto<TSystemData>, optionsOrDependencies?: ISystemRegistrationOptions | TSystemProto<TSystemData>[]): IWorldBuilder
+    withSystem(System: TSystemProto, dependencies?: TSystemProto[]): IWorldBuilder
 
     /**
      * Register a component in the world

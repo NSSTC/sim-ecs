@@ -1,15 +1,15 @@
-import {ISystemActions, Read, System, SystemData} from "sim-ecs";
+import {ISystemActions, Query, System, Write} from "sim-ecs";
 import {UIItem} from "../components/ui-item";
 import {EMovement, GameStore} from "../models/game-store";
 import {EActions} from "../app/actions";
 import {GameState} from "../states/game";
 
-class Data extends SystemData {
-    readonly uiItem = Read(UIItem)
-}
 
-export class MenuSystem extends System<Data> {
-    readonly SystemDataType = Data;
+export class MenuSystem extends System {
+    readonly query = new Query({
+        uiItem: Write(UIItem)
+    });
+
     actions!: ISystemActions
     gameStore!: GameStore;
     menuAction = EActions.Play;
@@ -19,7 +19,7 @@ export class MenuSystem extends System<Data> {
         this.gameStore = actions.getResource(GameStore);
     }
 
-    run(dataSet: Set<Data>) {
+    run(actions: ISystemActions) {
         // todo: use index
         if (this.gameStore.input.actions.menuMovement == EMovement.down) {
             switch (this.menuAction) {
@@ -61,7 +61,7 @@ export class MenuSystem extends System<Data> {
             return;
         }
 
-        for (const {uiItem} of dataSet) {
+        for (const {uiItem} of this.query.iter()) {
             uiItem.active = uiItem.action == this.menuAction;
         }
     }

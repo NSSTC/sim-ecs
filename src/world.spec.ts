@@ -1,17 +1,14 @@
 import {IEntity} from "./entity.spec";
-import ISystem, {TSystemData, TSystemProto} from "./system.spec";
+import {TSystemProto, ISystem} from "./system.spec";
 import IState, {TStateProto} from "./state.spec";
 import {TTypeProto} from "./_.spec";
-import {TAccessDescriptor} from "./query.spec";
+import {IAccessDescriptor, IAccessQuery, TExistenceQuery} from "./query.spec";
 import {ISerDe, TSerDeOptions, TSerializer} from "./serde/serde.spec";
 import {ISerialFormat} from "./serde/serial-format.spec";
 import {ICommands} from "./commands/commands.spec";
 import IEntityBuilder from "./entity-builder.spec";
+import {Query} from "./query";
 
-export type TEntityInfo = {
-    entity: IEntity
-    usage: Map<TSystemInfo<TSystemData>, TSystemData>
-};
 export type TExecutionFunction = ((callback: Function) => any) | typeof setTimeout | typeof requestAnimationFrame;
 export type TGroupHandle = number;
 
@@ -29,13 +26,10 @@ export interface IStaticRunConfiguration {
     initialState: TStateProto,
 }
 
-export type TSystemInfo<D extends TSystemData> = {
-    dataPrototype: TTypeProto<D>
-    dataSet: Set<D>
-    dependencies: Set<TSystemProto<TSystemData>>
-    system: ISystem<D>
-};
-export type TSystemNode = { system: ISystem<TSystemData>, dependencies: TSystemProto<TSystemData>[] };
+export interface ISystemInfo {
+    dependencies: Set<TSystemProto>
+    system: ISystem
+}
 
 export interface IPartialWorld {
     readonly commands: ICommands
@@ -55,7 +49,7 @@ export interface IPartialWorld {
      * Query entities and find the ones with a certain combination of component
      * @param query
      */
-    getEntities<C extends Object, T extends TAccessDescriptor<C>>(query?: T[]): IterableIterator<IEntity>
+    getEntities(query?: Query<IAccessQuery<TTypeProto<Object>> | TExistenceQuery<TTypeProto<Object>>>): IterableIterator<IEntity>
 
     /**
      * Get a resource which was previously stored
@@ -79,7 +73,7 @@ export interface IPartialWorld {
      * @param query
      * @param options
      */
-    save<C extends Object, T extends TAccessDescriptor<C>>(query?: T[], options?: TSerDeOptions<TSerializer>): ISerialFormat
+    save<C extends Object, T extends IAccessDescriptor<C>>(query?: Query<TExistenceQuery<TTypeProto<Object>>>, options?: TSerDeOptions<TSerializer>): ISerialFormat
 }
 
 /**
@@ -93,7 +87,7 @@ export interface ISystemActions {
      * Query entities and find the ones with a certain combination of component
      * @param query
      */
-    getEntities<C extends Object, T extends TAccessDescriptor<C>>(query?: T[]): IterableIterator<IEntity>
+    getEntities(query?: Query<IAccessQuery<TTypeProto<Object>> | TExistenceQuery<TTypeProto<Object>>>): IterableIterator<IEntity>
 
     /**
      * Get a resource which was previously stored
@@ -113,7 +107,7 @@ export interface IWorld extends IPartialWorld {
     /**
      * Systems which are registered with this world
      */
-    readonly systems: ISystem<TSystemData>[]
+    readonly systemInfos: Set<ISystemInfo>
 
     /**
      * Add an entity to this world

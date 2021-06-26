@@ -1,20 +1,18 @@
-import {Read, ReadEntity, System, SystemData, Write} from "sim-ecs";
+import {ISystemActions, Query, Read, ReadEntity, System, Write} from "sim-ecs";
 import {Shape} from "../components/shape";
 import {Collision} from "../components/collision";
 import {Position} from "../components/position";
 
-class Data extends SystemData {
-    readonly collision = Write(Collision)
-    readonly entity = ReadEntity()
-    readonly position = Read(Position)
-    readonly shape = Read(Shape)
-}
+export class CollisionSystem extends System {
+    readonly query = new Query({
+        collision: Write(Collision),
+        entity: ReadEntity(),
+        position: Read(Position),
+        shape: Read(Shape)
+    });
 
-export class CollisionSystem extends System<Data> {
-    readonly SystemDataType = Data;
-
-    run(dataSet: Set<Data>) {
-        const rects = Array.from(dataSet).map(({collision, entity, position, shape}) => {
+    run(actions: ISystemActions) {
+        const rects = Array.from(this.query.iter()).map(({collision, entity, position, shape}) => {
             // ideally, this should be two separate steps,
             // but JS would loop twice.
             // As an optimization, I will include this data change into the map() function

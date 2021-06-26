@@ -1,19 +1,18 @@
 import {Position} from "../components/position";
-import {Read, System, SystemData, Write} from "sim-ecs";
+import {ISystemActions, Query, Read, System, Write} from "sim-ecs";
 import {Velocity} from "../components/velocity";
 
-class Data extends SystemData {
-    pos = Write(Position)
-    readonly vel = Read(Velocity)
-}
 
-export class AnimationSystem extends System<Data> {
-    SystemDataType = Data;
+export class AnimationSystem extends System {
+    readonly query = new Query({
+        pos: Write(Position),
+        vel: Read(Velocity),
+    });
 
-    run(dataSet: Set<Data>) {
-        for (const {pos, vel} of dataSet) {
+    run(actions: ISystemActions) {
+        this.query.execute(({pos, vel}) => {
             pos.x += vel.x;
             pos.y += vel.y;
-        }
+        });
     }
 }

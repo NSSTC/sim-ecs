@@ -101,6 +101,11 @@ const runGame = (world: IWorld) => {
 (async () => {
     const world = createWorld();
 
+    if (localStorage.getItem('dev') === 'true') {
+        // @ts-ignore
+        window.world = world;
+    }
+
     initGame(world);
     await runGame(world);
     cleanup();

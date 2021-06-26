@@ -1,4 +1,4 @@
-import {ISystemActions, NoData, System} from "sim-ecs";
+import {ISystemActions, System} from "sim-ecs";
 import {EMovement, GameStore} from "../models/game-store";
 
 export enum EKeyState {
@@ -11,9 +11,7 @@ interface IInputEvent {
     type: EKeyState
 }
 
-export class InputSystem extends System<NoData> {
-    readonly SystemDataType = NoData;
-
+export class InputSystem extends System {
     gameStore!: GameStore;
     inputEvents: IInputEvent[] = [];
 
@@ -24,7 +22,7 @@ export class InputSystem extends System<NoData> {
         window.addEventListener('keyup', event => this.inputEvents.push({key: event.key, type: EKeyState.Up}));
     }
 
-    run() {
+    run(actions: ISystemActions) {
         { // Reset input actions
             this.gameStore.input.actions.menuConfirm = false;
             this.gameStore.input.actions.menuMovement = EMovement.halt;

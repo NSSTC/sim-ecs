@@ -1,15 +1,10 @@
-import {ISystemActions, Read, System, SystemData} from "sim-ecs";
+import {ISystemActions, Query, Read, System} from "sim-ecs";
 import {GameStore} from "../models/game-store";
 import {GameState} from "../states/game";
 import {PauseState} from "../states/pause";
-import {UIItem} from "../components/ui-item";
 
-class Data extends SystemData {
-    readonly uiItem = Read(UIItem)
-}
 
-export class PauseSystem extends System<Data> {
-    readonly SystemDataType = Data;
+export class PauseSystem extends System {
     actions!: ISystemActions
     gameStore!: GameStore;
 
@@ -18,7 +13,7 @@ export class PauseSystem extends System<Data> {
         this.gameStore = actions.getResource(GameStore);
     }
 
-    run(dataSet: Set<Data>) {
+    run(actions: ISystemActions) {
         const isGameState = this.gameStore.currentState?.constructor == GameState;
         const isPauseState = this.gameStore.currentState?.constructor == PauseState;
 

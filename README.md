@@ -106,15 +106,14 @@ Systems are the logic, which operates on data sets (components).
 They are logic building blocks which separate concerns and make the world move.
 
 ```typescript
-class Data extends SystemData{ counterObj = Write(Counter) }
-class CountSystem extends System<Data> {
-    readonly SystemData = Data;
+class CountSystem extends System {
+    readonly query = new Query({ counterObj: Write(Counter) });
 
     // update() is called every time the world needs to be updated. Put your logic in there
-    run(dataSet: Set<Data>) {
-        for (const {counterObj} of dataSet) {
-            console.log(++counterObj.a);
-        }
+    run() {
+        this.query.execute(({counterObj}) => {
+          console.log(++counterObj.a);
+        });
     }
 }
 ```
@@ -282,7 +281,7 @@ saveToFile(jsonPrefab, 'prefab.json');
 ```typescript
 // filtering what should be saved is also possible,
 // so that only certain data is saved and not all data of the whole world
-const saveData = world.save([With(Player)]).toJSON();
+const saveData = world.save(new Query([With(Player)])).toJSON();
 localStorage.setItem('save', saveData);
 ```
 
@@ -307,9 +306,10 @@ Please open a PR for any improvement!
 | Feature | sim-ecs | tick-knock | ape-ecs |
 | ---: | :---: | :---: | :---: |
 | Data first | x | | |
+| Full typing/intention support | x | x | | 
 | Everything can be used as a Component | x | x | |
+| Consistency check at transpile time (thanks to typing) | x | | | 
 | Full async-support | x | | |
-| Query-objects | | x | x |
 | Save / Load world | x | | x |
 | Load prefabs | x | | x |
 | State Management | x | | |
@@ -320,29 +320,29 @@ Please open a PR for any improvement!
 Please take the results with a grain of salt. These are benchmarks, so they are synthetic.
 An actual application will use a mix out of everything and more, and depending on that may have a different experience.
 
-Date: 26th May 2021
+Date: 27th June 2021
 
 ```
 --------------------------------------------------------------------------------
 TypeScript ECS Bench
 --------------------------------------------------------------------------------
 
-Platform: Windows_NT win32 x64 v10.0.19042
+Platform: Windows_NT win32 x64 v10.0.19043
 CPU: AMD Ryzen 7 3700X 8-Core Processor@3600MHz
 
 Bench           v0.1.0
-TypeScript      v4.2.4
-TS-Lib          v2.2.0
+TypeScript      v4.3.4
+TS-Lib          v2.3.0
 TS-Node         v10.0.0
 
 Ape-ECS         v1.3.1
 sim-ecs         v0.4.0
-tick-knock      v3.0.1
+tick-knock      v4.0.0
 ```
 
-| | Ape-ECS | sim-ecs | tick-knock |
-| ---: | :---: | :---: | :---: |
-| Simple Insert | 55 ops/s, ±11.93% | 241 ops/s, ±0.35% | **306 ops/s, ±26.88%** |
-| Simple Iteration | 153 ops/s, ±0.53% | **664 604 ops/s, ±30.22%** | 32 ops/s, ±0.14% |
-| Schedule | 1 ops/s, ±2.04%  | **703 544 ops/s, ±26.33%** | 0 ops/s, ±0.45% |
-| De-/Serialize Save | 59 ops/s, ±10.20% (445.31KB) | **208 ops/s, ±1.10%** (**67.38KB**) | - |
+| | Ape-ECS | sim-ecs | sim-ecs with callbacks | tick-knock |
+| ---: | :---: | :---: | :---: | :---: |
+| Simple Insert | 59 ops/s, ±9.66% | **249 ops/s, ±0.34%** | **249 ops/s, ±0.34%** | 238 ops/s, ±34.51% |
+| Simple Iteration | 147 ops/s, ±1.67% | 24 001 ops/s, ±59.47% | **1 070 399 ops/s, ±26.58%** | 33 ops/s, ±0.23% |
+| Schedule | 1 ops/s, ±0.78%  | 192 309 ops/s, ±146.63% | 917 930 ops/s, ±20.31% | 0 ops/s, ±0.36% |
+| De-/Serialize Save | 61 ops/s, ±11.88% (445.31KB) | **203 ops/s, ±44.30%** (**67.38KB**) | **203 ops/s, ±44.30%** (**67.38KB**) | - |

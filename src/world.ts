@@ -3,26 +3,28 @@ import {EntityBuilder} from "./entity-builder";
 import {
     IRunConfiguration,
     IStaticRunConfiguration,
-    ISystemActions,
+    ISystemActions, ISystemInfo,
     ITransitionActions,
     IWorld,
-    TEntityInfo,
-    TGroupHandle,
-    TSystemInfo,
-    TSystemNode
+    TGroupHandle
 } from "./world.spec";
-import IEntity from "./entity.spec";
-import ISystem, {TSystemData, TSystemProto} from "./system.spec";
+import {IEntity} from "./entity.spec";
 import {IState, State, TStateProto} from "./state";
 import {TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
-import {access, EAccess, ETargetType, TAccessDescriptor} from "./query.spec";
-import {TDeserializer, TSerDeOptions, TSerializer} from "./serde/serde.spec";
-import {SerDe} from "./serde/serde";
-import {ISerialFormat} from "./serde/serial-format.spec";
+import {SerDe, TDeserializer, TSerDeOptions, TSerializer} from "./serde/serde";
+import {ISerialFormat} from "./serde/serial-format";
 import ECS from "./ecs";
 import {Commands} from "./commands/commands";
 import {CommandsAggregator} from "./commands/commands-aggregator";
+import {ISystem, System, TSystemProto} from "./system";
+import {
+    IAccessDescriptor,
+    IAccessQuery,
+    setEntitiesSym,
+    TExistenceQuery,
+    Query
+} from "./query";
 
 export * from './world.spec';
 
@@ -30,25 +32,26 @@ export class World implements IWorld {
     protected _commandsAggregator: CommandsAggregator;
     protected _commands: Commands;
     protected _dirty = false;
-    public entityInfos: Map<IEntity, TEntityInfo> = new Map();
+    public entities: Set<IEntity> = new Set();
     protected pda = new PushDownAutomaton<IState>();
     private lastRunPreparation?: IStaticRunConfiguration;
     public groups = {
         nextHandle: 0,
         entityLinks: new Map<number, IEntity[]>(),
     };
+    protected queries: Query<IAccessQuery<TTypeProto<Object>>>[] = [];
     public resources = new Map<{ new(): Object }, Object>();
-    protected runExecutionPipeline: Set<TSystemInfo<TSystemData>>[] = [];
-    protected runExecutionPipelineCache: Map<TStateProto, Set<TSystemInfo<TSystemData>>[]> = new Map();
+    protected runExecutionPipeline: Set<System>[] = [];
+    protected runExecutionPipelineCache: Map<TStateProto, Set<System>[]> = new Map();
     protected runPromise?: Promise<void> = undefined;
     protected shouldRunSystems = false;
-    protected sortedSystems: TSystemInfo<TSystemData>[];
+    protected sortedSystems: Set<ISystemInfo>;
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
 
     constructor(
         public ecs: ECS,
-        protected systemInfos: Map<ISystem<TSystemData>, TSystemInfo<TSystemData>>,
+        public systemInfos: Set<ISystemInfo> = new Set(),
         protected _serde: SerDe = new SerDe(),
     ) {
         const self = this;
@@ -86,14 +89,13 @@ export class World implements IWorld {
             save: this.save.bind(this),
         });
 
-        for (const system of systemInfos.keys()) {
-            this.addResource(system);
-        }
+        this.sortedSystems = this.sortSystems(this.systemInfos);
 
-        this.sortedSystems = this.sortSystems(Array.from(this.systemInfos.values()).map(info => ({
-            system: info.system,
-            dependencies: Array.from(info.dependencies),
-        }))).map(node => this.systemInfos.get(node.system) as TSystemInfo<TSystemData>);
+        for (const systemInfo of this.systemInfos) {
+            if (systemInfo.system.query) {
+                this.queries.push(systemInfo.system.query);
+            }
+        }
     }
 
     get commands() {
@@ -112,19 +114,10 @@ export class World implements IWorld {
         return this._serde;
     }
 
-    get systems(): ISystem<TSystemData>[] {
-        return Array.from(this.systemInfos.keys());
-    }
-
     addEntity(entity: IEntity) {
-        if (!this.entityInfos.has(entity)) {
-            this.entityInfos.set(entity, {
-                entity,
-                usage: new Map(),
-            });
+        if (!this.entities.has(entity)) {
+            this.entities.add(entity);
             this._dirty = true;
-
-            entity.changeWorldTo(this);
         }
     }
 
@@ -148,71 +141,18 @@ export class World implements IWorld {
         return instance;
     }
 
-    private static assignEntityToSystem(systemInfo: TSystemInfo<TSystemData>, entityInfo: TEntityInfo): boolean {
-        if (!systemInfo.system.canUseEntity(entityInfo.entity)) return false;
-
-        const data = World.buildDataObject(systemInfo.dataPrototype, entityInfo.entity);
-
-        systemInfo.dataSet.add(data);
-        entityInfo.usage.set(systemInfo, data);
-        return true;
-    }
-
-    assignEntityToSystems(entity: IEntity) {
-        const entityInfo = this.entityInfos.get(entity);
-        if (!entityInfo) return;
-
-        let systemInfo;
-        for (systemInfo of this.systemInfos.values()) {
-            World.assignEntityToSystem(systemInfo, entityInfo);
-        }
-    }
-
-    private static buildDataObject<T extends TSystemData>(dataProto: TTypeProto<TSystemData>, entity: IEntity): T {
-        const dataObj = new dataProto() as T;
-        let accessType: EAccess;
-        let target;
-        let targetType;
-
-        for (const entry of Object.entries(dataObj)) {
-            // @ts-ignore
-            accessType = entry[1][access].type;
-            // @ts-ignore
-            target = entry[1][access].target;
-            // @ts-ignore
-            targetType = entry[1][access].targetType;
-
-            if (accessType == EAccess.meta) {
-                switch (target) {
-                    case Entity: {
-                        // @ts-ignore
-                        dataObj[entry[0]] = entity;
-                        break;
-                    }
-                }
-            } else if (targetType == ETargetType.component) {
-                // @ts-ignore
-                dataObj[entry[0]] = entity.getComponent(target);
-            }
-        }
-
-        return dataObj;
-    }
-
     buildEntity(): EntityBuilder {
         return new EntityBuilder();
     }
 
     clearEntities() {
-        this.entityInfos.clear();
+        this.entities.clear();
     }
 
     createEntity(): Entity {
         const entity = new Entity();
-        this.entityInfos.set(entity, {
-            entity,
-            usage: new Map(),
-        });
+        this.entities.add(entity);
+        this._dirty = true;
         return entity;
     }
 
@@ -227,17 +167,17 @@ export class World implements IWorld {
         return this._commandsAggregator.executeAll();
     }
 
-    getEntities<C extends Object, T extends TAccessDescriptor<C>>(query?: T[]): IterableIterator<IEntity> {
+    getEntities(query?: Query<IAccessQuery<TTypeProto<Object>> | TExistenceQuery<TTypeProto<Object>>>): IterableIterator<IEntity> {
         if (!query) {
-            return this.entityInfos.keys();
+            return this.entities.keys();
         }
 
         const resultEntities = new Set<IEntity>();
-        let entityInfo;
+        let entity;
 
-        for (entityInfo of this.entityInfos.values()) {
-            if (entityInfo.entity.matchesQueue(query)) {
-                resultEntities.add(entityInfo.entity);
+        for (entity of this.entities.keys()) {
+            if (query.matchesEntity(entity)) {
+                resultEntities.add(entity);
             }
         }
 
@@ -259,7 +199,7 @@ export class World implements IWorld {
     load(prefab: ISerialFormat, options?: TSerDeOptions<TDeserializer>, intoGroup?: TGroupHandle): TGroupHandle {
         const entities = [];
         const groupHandle = intoGroup ?? this.groups.nextHandle++;
-        let entity;
+        let entity: IEntity;
 
         for (entity of this._serde.deserialize(prefab, options).entities) {
             this.addEntity(entity);
@@ -273,14 +213,9 @@ export class World implements IWorld {
     // todo: add parameter which only maintains for a specific state
     // todo: maybe use a change-log to only maintain real changes instead of everything
     maintain(): void {
-        let entityInfo;
-        let systemInfo;
-
-        for (systemInfo of this.systemInfos.values()) {
-            systemInfo.dataSet.clear();
-            for (entityInfo of this.entityInfos.values()) {
-                World.assignEntityToSystem(systemInfo, entityInfo);
-            }
+        let query;
+        for (query of this.queries) {
+            query[setEntitiesSym](this.entities.values());
         }
 
         this._dirty = false;
@@ -313,23 +248,20 @@ export class World implements IWorld {
     }
 
     // todo: improve logic which sets up the groups (tracked by #13)
-    protected prepareExecutionPipeline(state: IState): Set<TSystemInfo<TSystemData>>[] {
+    protected prepareExecutionPipeline(state: IState): Set<ISystem>[] {
         // todo: this could be further optimized by allowing systems with dependencies to run in parallel
         //    if all of their dependencies already ran
 
         // todo: also, if two systems depend on the same components, they may run in parallel
         //    if they only require READ access
-        const result: Set<TSystemInfo<TSystemData>>[] = [];
+        const result: Set<ISystem>[] = [];
         const stateSystems = state.systems;
-        let executionGroup: Set<TSystemInfo<TSystemData>> = new Set();
+        let executionGroup: Set<ISystem> = new Set();
         let shouldRunSystem;
-        let systemInfo: TSystemInfo<TSystemData>;
+        let systemInfo: ISystemInfo;
 
-        // todo: system-sorting should not depend on entity-sorting!
-        if (this._dirty) {
-            // this line is purely to satisfy my IDE
-            this.sortedSystems = [];
-            this.maintain();
+        if (this.sortedSystems.size == 0) {
+            this.sortSystems(this.systemInfos);
         }
 
         for (systemInfo of this.sortedSystems) {
@@ -338,10 +270,10 @@ export class World implements IWorld {
             if (shouldRunSystem) {
                 if (systemInfo.dependencies.size > 0) {
                     result.push(executionGroup);
-                    executionGroup = new Set<TSystemInfo<TSystemData>>();
+                    executionGroup = new Set<ISystem>();
                 }
 
-                executionGroup.add(systemInfo);
+                executionGroup.add(systemInfo.system);
             }
         }
 
@@ -354,7 +286,7 @@ export class World implements IWorld {
         this.pda.push(NewState);
 
         const newState = this.pda.state!;
-        const registeredSystemNames = Array.from(this.systemInfos.keys()).map(nfo => nfo.constructor.name);
+        const registeredSystemNames = Array.from(this.systemInfos).map(nfo => nfo.system.constructor.name);
 
         for (const system of newState.systems) {
             if (!registeredSystemNames.includes(system.name)) {
@@ -387,7 +319,7 @@ export class World implements IWorld {
 
         const initialState = configuration.initialState
             ? configuration.initialState
-            : State.bind(undefined, Array.from(this.systemInfos.keys()).map(system => system.constructor as TSystemProto<TSystemData>));
+            : State.bind(undefined, Array.from(this.systemInfos.values()).map(systemInfo => systemInfo.system.constructor as TSystemProto));
         const runConfig: IStaticRunConfiguration = {
             afterStepHandler: configuration.afterStepHandler ?? (_action => {}),
             beforeStepHandler: configuration.beforeStepHandler ?? (_action => {}),
@@ -400,8 +332,8 @@ export class World implements IWorld {
         this.pda.clear();
         this.shouldRunSystems = true;
 
-        for (const system of this.systemInfos.keys()) {
-            await system.setup(this.systemWorld);
+        for (const systemInfo of this.systemInfos) {
+            await systemInfo.system.setup(this.systemWorld);
         }
 
         await this.pushState(initialState);
@@ -412,24 +344,13 @@ export class World implements IWorld {
     }
 
     removeEntity(entity: IEntity): void {
-        if (this.entityInfos.has(entity)) {
-            this.entityInfos.delete(entity);
-            entity.changeWorldTo(undefined);
-        }
+        this.entities.delete(entity);
+        this._dirty = true;
     }
 
     removeEntityFromSystems(entity: IEntity): void {
-        const usage = this.entityInfos.get(entity)?.usage;
-        if (!usage) return;
-
-        let use;
-        for (use of usage.values()) {
-            for (const info of this.systemInfos.values()) {
-                if (info.dataSet.has(use)) {
-                    info.dataSet.delete(use);
-                }
-            }
-        }
+        this.removeEntity(entity);
+        this.maintain();
     }
 
     replaceEntitiesWith(world: IWorld) {
@@ -484,8 +405,6 @@ export class World implements IWorld {
             const afterStepHandler = preparedConfig.afterStepHandler;
             const beforeStepHandler = preparedConfig.beforeStepHandler;
             const execFn = preparedConfig.executionFunction;
-            let executionGroup;
-            let systemInfo;
             let systemPromises;
 
             const cleanUp = async () => {
@@ -494,8 +413,8 @@ export class World implements IWorld {
                     await state.destroy(this.transitionWorld);
                 }
 
-                for (const system of this.systemInfos.keys()) {
-                    await system.destroy(this.systemWorld);
+                for (const systemInfo of this.systemInfos) {
+                    await systemInfo.system.destroy(this.systemWorld);
                 }
 
                 this.runExecutionPipelineCache.clear();
@@ -511,13 +430,17 @@ export class World implements IWorld {
 
                 await beforeStepHandler(this.transitionWorld);
 
-                for (executionGroup of this.runExecutionPipeline) {
-                    systemPromises = [];
-                    for (systemInfo of executionGroup) {
-                        systemPromises.push(systemInfo.system.run(systemInfo.dataSet));
-                    }
+                {
+                    let executionGroup;
+                    let system;
+                    for (executionGroup of this.runExecutionPipeline) {
+                        systemPromises = [];
+                        for (system of executionGroup) {
+                            systemPromises.push(system.run(this.systemWorld));
+                        }
 
-                    await Promise.all(systemPromises);
+                        await Promise.all(systemPromises);
+                    }
                 }
 
                 await afterStepHandler(this.transitionWorld);
@@ -531,27 +454,28 @@ export class World implements IWorld {
         return runPromise;
     }
 
-    protected sortSystems(unsorted: TSystemNode[]): TSystemNode[] {
-        const graph = new Map(unsorted.map(node => [node.system.constructor as TSystemProto<TSystemData>, Array.from(node.dependencies)]));
-        let edges: TSystemProto<TSystemData>[];
+    protected sortSystems(unsorted: Set<ISystemInfo>): Set<ISystemInfo> {
+        const unsortedArr = Array.from(unsorted);
+        const graph = new Map(unsortedArr.map(node => [node.system.constructor as TSystemProto, Array.from(node.dependencies)]));
+        let edges: TSystemProto[];
 
         /// toposort with Kahn
         /// https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm
-        const L: TSystemProto<TSystemData>[] = []; // Empty list that will contain the sorted elements
+        const L: TSystemProto[] = []; // Empty list that will contain the sorted elements
         const S = Array.from(graph.entries()).filter(pair => pair[1].length === 0).map(pair => pair[0]); // Set of all nodes with no incoming edge
-        let n: TSystemProto<TSystemData>;
+        let n: TSystemProto;
 
         // while S is non-empty do
         while (S.length > 0) {
             // remove a node n from S
-            n = S.shift() as TSystemProto<TSystemData>;
+            n = S.shift() as TSystemProto;
             // add n to tail of L
             L.push(n);
 
             // for each node m with an edge e from n to m do
             for (let m of Array.from(graph.entries()).filter(pair => pair[1].includes(n)).map(pair => pair[0])) {
                 // remove edge e from the graph
-                edges = graph.get(m) as TSystemProto<TSystemData>[];
+                edges = graph.get(m) as TSystemProto[];
                 edges.splice(edges.indexOf(n), 1);
 
                 // if m has no other incoming edges then
@@ -567,22 +491,22 @@ export class World implements IWorld {
         }
 
         let obj;
-        return L.map(t => {
-            obj = unsorted.find(n => n.system.constructor == t);
+        return new Set(L.map(t => {
+            obj = unsortedArr.find(n => n.system.constructor == t);
 
             if (!obj) {
                 throw new Error(`The system ${t.name} was not registered!`);
             }
 
             return obj;
-        });
+        }));
     }
 
     stopRun() {
         this.shouldRunSystems = false;
     }
 
-    save<C extends Object, T extends TAccessDescriptor<C>>(query?: T[], options?: TSerDeOptions<TSerializer>): ISerialFormat {
+    save<C extends Object, T extends IAccessDescriptor<C>>(query?: Query<TExistenceQuery<TTypeProto<Object>>>, options?: TSerDeOptions<TSerializer>): ISerialFormat {
         return this.serde.serialize({entities: this.getEntities(query)}, options);
     }
 

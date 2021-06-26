@@ -1,5 +1,4 @@
-import {ECS} from "..";
-import {ISystemActions, System, SystemData, Write} from "../src";
+import {ECS, ISystemActions, Query, System, Write} from "..";
 
 
 /// a component.
@@ -9,40 +8,39 @@ class CounterInfo {
     limit = 100;
 }
 
-/// our data-structure we want to use to interact with the world
-/// we can define our own fields. The value is either Write() or Read() of a specific prototype.
-/// the fields will be filled with actual objects of the given prototypes during system execution
-class Data extends SystemData {
-    counterInfo = Write(CounterInfo);
-}
-
 /// systems process data. We declare what kind of input we need in the above Data struct,
 /// and then define the processing code here
-class CounterSystem extends System<Data> {
-    /// we have to link the prototype for JS explicitly
-    readonly SystemDataType = Data;
-    actions!: ISystemActions;
-
-    setup(actions: ISystemActions): void {
-        this.actions = actions;
-    }
+class CounterSystem extends System {
+    /// our data-structure we want to use to interact with the world
+    /// we can define our own fields. The value is either Write() or Read() of a specific prototype.
+    /// the fields will be filled with actual objects of the given prototypes during system execution
+    readonly query = new Query({
+        info: Write(CounterInfo),
+    });
 
     /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
-    run(dataSet: Set<Data>) {
-        for (const {counterInfo} of dataSet) {
-            counterInfo.count++;
+    run(actions: ISystemActions) {
+        /// there are two ways to go over the query result:
+        /// 1. you can use a callback function
+        this.query.execute(({info}) => {
+            info.count++;
 
             // after every ten steps, write out a log message
-            if (counterInfo.count % 10 == 0) {
-                console.log(`The current count is ${counterInfo.count} / ${counterInfo.limit}!`);
+            if (info.count % 10 == 0) {
+                console.log(`The current count is ${info.count} / ${info.limit}!`);
             }
 
             // if the limit is reached, set the exit field to true
-            if (counterInfo.count == counterInfo.limit) {
+            if (info.count == info.limit) {
                 console.log('Time to exit!');
-                this.actions.commands.stopRun();
+                actions.commands.stopRun();
             }
-        }
+        });
+
+        /// 2. you can use regular loops:
+        // for (const {info} of this.query.iter()) {
+        //     ...
+        // });
     }
 }
 

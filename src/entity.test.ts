@@ -1,6 +1,6 @@
 import {assert, expect} from 'chai';
 import {Entity} from "./entity";
-import {Read, ReadEntity, With, Without, Write} from "./query.spec";
+import {Read, ReadEntity, With, Without, Write} from "./query";
 
 describe('Test Entity', () => {
     it('addComponent', () => {

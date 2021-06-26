@@ -1,11 +1,11 @@
-import {TSystemData, TSystemProto} from "./system.spec";
+import {TSystemProto} from "./system.spec";
 import {ITransitionActions} from "./world.spec";
 
 export interface IState {
     /**
      * List of systems which should run when this state is active
      */
-    readonly systems: TSystemProto<TSystemData>[]
+    readonly systems: TSystemProto[]
 
     /**
      * Called to run tasks for state activation in the PDA

@@ -1,5 +1,5 @@
 import {ICommands} from "./commands.spec";
-import IEntity from "../entity.spec";
+import {IEntity} from "../entity.spec";
 import {TTypeProto} from "../_.spec";
 import {ISerialFormat} from "../serde/serial-format.spec";
 import {TDeserializer, TSerDeOptions} from "../serde/serde.spec";
@@ -53,7 +53,7 @@ export class Commands implements ICommands {
     }
 
     clearEntities(): void {
-        this.aggregator.addCommand(() => this.world.entityInfos.clear());
+        this.aggregator.addCommand(() => this.world.entities.clear());
     }
 
     load(prefab: ISerialFormat, options?: TSerDeOptions<TDeserializer>): TGroupHandle {
