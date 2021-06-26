@@ -127,14 +127,14 @@ export class Query<
     }
 }
 
-export function ReadEntity(): TAccessQueryParameter<TTypeProto<Readonly<Entity>>> {
-    return Object.assign({}, Entity.prototype, {
+export function ReadEntity(): TAccessQueryParameter<TTypeProto<Readonly<IEntity>>> {
+    return Object.assign({}, Entity, {
         [accessDescSym]: {
-            target: TTypeProto<Entity>,
+            target: Entity,
             targetType: ETargetType.entity,
             type: EAccess.meta,
         },
-    } as IAccessDescriptor<InstanceType<Entity>>);
+    } as IAccessDescriptor<Entity>);
 }
 
 export function Read<C extends Object>(componentPrototype: TTypeProto<C>): TAccessQueryParameter<TTypeProto<Readonly<C>>> {
