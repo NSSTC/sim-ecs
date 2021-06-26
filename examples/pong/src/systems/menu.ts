@@ -6,7 +6,7 @@ import {GameState} from "../states/game";
 
 
 export class MenuSystem extends System {
-    query = new Query({
+    readonly query = new Query({
         uiItem: Write(UIItem)
     });
 

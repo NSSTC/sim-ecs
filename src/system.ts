@@ -6,7 +6,7 @@ import {TTypeProto} from "./_.spec";
 export * from './system.spec';
 
 export abstract class System implements ISystem {
-    query?: Query<IAccessQuery<TTypeProto<Object>>>;
+    readonly query?: Query<IAccessQuery<TTypeProto<Object>>>;
 
     destroy(actions: ISystemActions): void | Promise<void> {}
 

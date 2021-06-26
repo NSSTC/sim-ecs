@@ -5,7 +5,7 @@ import {relToScreenCoords} from "../app/util";
 
 
 export class RenderGameSystem extends System {
-    query = new Query({
+    readonly query = new Query({
         pos: Read(Position),
         shape: Read(Shape)
     });

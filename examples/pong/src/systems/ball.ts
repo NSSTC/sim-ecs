@@ -10,7 +10,7 @@ import {defaultBallPositionX, defaultBallPositionY} from "../prefabs/game";
 import {ETags} from "../models/tags";
 
 export class BallSystem extends System {
-    query = new Query({
+    readonly query = new Query({
         _ball: WithTag(ETags.ball),
         collisionData: Read(Collision),
         pos: Write(Position),

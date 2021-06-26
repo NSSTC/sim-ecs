@@ -14,15 +14,15 @@ class CounterSystem extends System {
     /// our data-structure we want to use to interact with the world
     /// we can define our own fields. The value is either Write() or Read() of a specific prototype.
     /// the fields will be filled with actual objects of the given prototypes during system execution
-    query = new Query({
+    readonly query = new Query({
         info: Write(CounterInfo),
     });
 
     /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
     run(actions: ISystemActions) {
         /// there are two ways to go over the query result:
-        /// 1. you can use a regular loop
-        for (const {info} of this.query.iter()) {
+        /// 1. you can use a callback function
+        this.query.execute(({info}) => {
             info.count++;
 
             // after every ten steps, write out a log message
@@ -35,10 +35,10 @@ class CounterSystem extends System {
                 console.log('Time to exit!');
                 actions.commands.stopRun();
             }
-        }
+        });
 
-        /// 2. you can use a callback function:
-        // this.query.execute(({info}) => {
+        /// 2. you can use regular loops:
+        // for (const {info} of this.query.iter()) {
         //     ...
         // });
     }

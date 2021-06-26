@@ -10,7 +10,7 @@ import {Transform} from "../models/transform";
 
 
 export class PaddleSystem extends System {
-    query = new Query({
+    readonly query = new Query({
         paddle: Read(Paddle),
         pos: Read(Position),
         shape: Read(Shape),

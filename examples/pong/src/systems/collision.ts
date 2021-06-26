@@ -4,7 +4,7 @@ import {Collision} from "../components/collision";
 import {Position} from "../components/position";
 
 export class CollisionSystem extends System {
-    query = new Query({
+    readonly query = new Query({
         collision: Write(Collision),
         entity: ReadEntity(),
         position: Read(Position),

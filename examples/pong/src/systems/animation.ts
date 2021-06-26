@@ -4,7 +4,7 @@ import {Velocity} from "../components/velocity";
 
 
 export class AnimationSystem extends System {
-    query = new Query({
+    readonly query = new Query({
         pos: Write(Position),
         vel: Read(Velocity),
     });

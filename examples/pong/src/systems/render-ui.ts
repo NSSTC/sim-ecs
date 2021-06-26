@@ -4,7 +4,7 @@ import {UIItem} from "../components/ui-item";
 import {relToScreenCoords} from "../app/util";
 
 export class RenderUISystem extends System {
-    query = new Query({
+    readonly query = new Query({
         pos: Read(Position),
         ui: Read(UIItem)
     });

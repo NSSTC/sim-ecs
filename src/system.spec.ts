@@ -4,7 +4,7 @@ import {TTypeProto} from "./_.spec";
 
 
 export interface ISystem {
-    query?: Query<IAccessQuery<TTypeProto<Object>>>
+    readonly query?: Query<IAccessQuery<TTypeProto<Object>>>
 
     /**
      * Called after dispatching or running a world
