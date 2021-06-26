@@ -66,7 +66,7 @@ describe('Run Systems', () => {
 
     it('register', () => {
         const world = ecs.buildWorld().withSystem(Systems.S1.bind(undefined, () => {})).build();
-        assert.equal(world.systems.length, 1, 'System was not registered');
+        assert.equal(world.systemInfos.length, 1, 'System was not registered');
     });
 
     it('dispatch', async () => {

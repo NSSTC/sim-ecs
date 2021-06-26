@@ -53,7 +53,7 @@ export class Commands implements ICommands {
     }
 
     clearEntities(): void {
-        this.aggregator.addCommand(() => this.world.entityInfos.clear());
+        this.aggregator.addCommand(() => this.world.entities.clear());
     }
 
     load(prefab: ISerialFormat, options?: TSerDeOptions<TDeserializer>): TGroupHandle {

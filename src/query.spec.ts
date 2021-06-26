@@ -1,16 +1,15 @@
 import {TTypeProto} from "./_.spec";
 import {IEntity, TTag} from "./entity";
 
-export type TAccessQueryField<C extends Object> = C & IAccessDescriptor<C>;
 export type TAccessQueryParameter<C extends TTypeProto<Object>> = C & IAccessDescriptor<InstanceType<C>>;
 export interface IAccessQuery<C extends TTypeProto<Object>> { [componentName: string]: TAccessQueryParameter<C> }
-export interface IAccessQueryResult<C extends Object> { [componentName: string]: TAccessQueryField<C> }
 
-export type TExistenceQueryField = IEntity;
 export type TExistenceQueryParameter<C extends TTypeProto<Object>> = IExistenceDescriptor<C>;
 export type TExistenceQuery<C extends TTypeProto<Object>> = Array<TExistenceQueryParameter<C>>;
-export type TExistenceQueryResult = Array<TExistenceQueryField>;
 
+export const addEntitySym = Symbol();
+export const clearEntitiesSym = Symbol();
+export const removeEntitySym = Symbol();
 export const setEntitiesSym = Symbol();
 export const accessDescSym: unique symbol = Symbol();
 export const existenceDescSym: unique symbol = Symbol();

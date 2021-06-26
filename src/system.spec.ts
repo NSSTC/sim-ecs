@@ -1,9 +1,10 @@
 import {ISystemActions} from "./world.spec";
-import {IQuery} from "./query.spec";
+import {IAccessQuery, Query} from "./query";
+import {TTypeProto} from "./_.spec";
 
 
 export interface ISystem {
-    query: IQuery<any>
+    query: Query<IAccessQuery<TTypeProto<Object>>>
 
     /**
      * Called after dispatching or running a world

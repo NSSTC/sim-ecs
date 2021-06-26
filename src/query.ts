@@ -9,7 +9,7 @@ import {
     IAccessQuery,
     setEntitiesSym,
     TExistenceQuery,
-    TAccessQueryParameter, TExistenceQueryParameter
+    TAccessQueryParameter, TExistenceQueryParameter, addEntitySym, removeEntitySym, clearEntitiesSym
 } from "./query.spec";
 import {Entity, IEntity, TTag} from "./entity";
 import {TTypeProto} from "./_.spec";
@@ -25,21 +25,39 @@ export type TAccessQueryData<DESC extends IAccessQuery<TTypeProto<Object>>> = {
 // todo: ReadEntity() should also work
 export class Query<
     DESC extends IAccessQuery<TTypeProto<Object>> | TExistenceQuery<TTypeProto<Object>>,
-    DATA extends
+    DATA =
         DESC extends TExistenceQuery<TTypeProto<Object>>
             ? IEntity
             : DESC extends IAccessQuery<TTypeProto<Object>>
                 ? TAccessQueryData<DESC>
                 : never
 > {
-    queryResult: Set<DATA> = new Set();
+    queryResult: Map<IEntity, DATA> = new Map();
 
     constructor(
-        protected recordDesc: DESC
+        protected queryDescriptor: DESC
     ) {}
 
     public get descriptor() {
-        return this.recordDesc;
+        return this.queryDescriptor;
+    }
+
+    public [addEntitySym](entity: IEntity) {
+        if (this.matchesEntity(entity)) {
+            if (Array.isArray(this.queryDescriptor)) {
+                this.queryResult.set(entity, entity as unknown as DATA);
+            } else {
+                this.queryResult.set(entity, this.getDataFromEntity(entity, this.queryDescriptor));
+            }
+        }
+    }
+
+    public [clearEntitiesSym]() {
+        this.queryResult.clear();
+    }
+
+    public [removeEntitySym](entity: IEntity) {
+        this.queryResult.delete(entity)
     }
 
     public [setEntitiesSym](entities: IterableIterator<IEntity>) {
@@ -48,47 +66,54 @@ export class Query<
         this.queryResult.clear();
 
         for (entity of entities) {
-            if (this.matchesEntity(entity)) {
-                if (Array.isArray(this.recordDesc)) {
-                    // @ts-ignore if recordDesc is an array, it's a query for existence, which yields entities
-                    this.queryResult.add(entity);
-                } else {
-                    const components: Record<string, Object> = {};
-                    let componentDesc: [string, TAccessQueryParameter<TTypeProto<Object>>];
-
-                    for (componentDesc of Object.entries(this.recordDesc)) {
-                        if (componentDesc[1][accessDescSym].targetType == ETargetType.entity) {
-                            // @ts-ignore in this case, entity is what we want!
-                            components[componentDesc[0]] = entity;
-                        } else {
-                            components[componentDesc[0]] = entity.getComponent(componentDesc[1])!;
-                        }
-                    }
-
-                    // @ts-ignore else it is a query for access, which yields the components
-                    this.queryResult.add(components);
-                }
-            }
+            this[addEntitySym](entity);
         }
     }
 
     public execute(handler: (data: DATA) => void): void {
-        this.queryResult.forEach(handler);
+        let data: DATA;
+        for (data of this.queryResult.values()) {
+            handler(data);
+        }
+    }
+
+    protected getDataFromEntity<K extends keyof DESC>(entity: IEntity, descriptor: DESC): DATA {
+        const components: Record<string, K | IEntity> = {};
+        let componentDesc: [string, TAccessQueryParameter<TTypeProto<K>>];
+
+        for (componentDesc of Object.entries(descriptor)) {
+            if (componentDesc[1][accessDescSym].targetType == ETargetType.entity) {
+                components[componentDesc[0]] = entity;
+            } else {
+                components[componentDesc[0]] = entity.getComponent(componentDesc[1])!;
+            }
+        }
+
+        return components as unknown as DATA;
     }
 
     public iter(world?: IWorld): IterableIterator<DATA> {
         if (world) {
-            return world.getEntities(this);
+            const data: DATA[] = [];
+            // @ts-ignore todo: figure out why the type system errors `this`
+            const entities = world.getEntities(this);
+            let entity;
+
+            for (entity of entities) {
+                data.push(this.getDataFromEntity(entity, this.queryDescriptor));
+            }
+
+            return data.values();
         } else {
             return this.queryResult.values();
         }
     }
 
     public matchesEntity(entity: IEntity): boolean {
-        if (Array.isArray(this.recordDesc)) {
+        if (Array.isArray(this.queryDescriptor)) {
             let componentDesc: TExistenceQueryParameter<TTypeProto<Object>>;
 
-            for (componentDesc of this.recordDesc) {
+            for (componentDesc of this.queryDescriptor) {
                 if (
                     componentDesc[existenceDescSym].targetType == ETargetType.tag
                     && entity.hasTag(componentDesc[existenceDescSym].target as TTag) != (componentDesc[existenceDescSym].type == EExistence.set)
@@ -106,7 +131,7 @@ export class Query<
         } else {
             let componentDesc: TAccessQueryParameter<TTypeProto<Object>>;
 
-            for (componentDesc of Object.values(this.recordDesc)) {
+            for (componentDesc of Object.values(this.queryDescriptor)) {
                 if (
                     componentDesc[accessDescSym].targetType == ETargetType.tag
                     && !entity.hasTag(componentDesc[accessDescSym].target as TTag)
