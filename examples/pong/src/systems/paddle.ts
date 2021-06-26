@@ -75,7 +75,7 @@ export class PaddleSystem extends System {
     }
 
     run(actions: ISystemActions) {
-        for (const {paddle, pos, shape, vel} of this.query.iter()) {
+        this.query.execute(({paddle, pos, shape, vel}) => {
             this.updateTransformationResource(paddle.side, pos, shape.dimensions);
             this.updateVelocity(
                 pos,
@@ -86,6 +86,6 @@ export class PaddleSystem extends System {
                     ? this.gameStore.input.actions.leftPaddleMovement
                     : this.gameStore.input.actions.rightPaddleMovement
             );
-        }
+        });
     }
 }

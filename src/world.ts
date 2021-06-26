@@ -319,7 +319,7 @@ export class World implements IWorld {
 
         const initialState = configuration.initialState
             ? configuration.initialState
-            : State.bind(undefined, Array.from(this.systemInfos.keys()).map(system => system.constructor as TSystemProto));
+            : State.bind(undefined, Array.from(this.systemInfos.values()).map(systemInfo => systemInfo.system.constructor as TSystemProto));
         const runConfig: IStaticRunConfiguration = {
             afterStepHandler: configuration.afterStepHandler ?? (_action => {}),
             beforeStepHandler: configuration.beforeStepHandler ?? (_action => {}),

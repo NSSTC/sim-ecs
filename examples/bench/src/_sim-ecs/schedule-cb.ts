@@ -15,10 +15,9 @@ class ABSystem extends System {
     });
 
     run(actions: ISystemActions) {
-        let a, b;
-        for ({a, b} of this.query.iter()) {
+        this.query.execute(({a, b}) => {
             [a.val, b.val] = [b.val, a.val];
-        }
+        });
     }
 }
 
@@ -29,10 +28,9 @@ class CDSystem extends System {
     });
 
     run(actions: ISystemActions) {
-        let c, d;
-        for ({c, d} of this.query.iter()) {
+        this.query.execute(({c, d}) => {
             [c.val, d.val] = [d.val, c.val];
-        }
+        });
     }
 }
 
@@ -43,10 +41,9 @@ class CESystem extends System {
     });
 
     run(actions: ISystemActions) {
-        let c, e;
-        for ({c, e} of this.query.iter()) {
+        this.query.execute(({c, e}) => {
             [c.val, e.val] = [e.val, c.val];
-        }
+        });
     }
 }
 

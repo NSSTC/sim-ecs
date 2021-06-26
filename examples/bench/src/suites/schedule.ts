@@ -1,6 +1,7 @@
 import {complete, cycle, suite} from 'benny';
 import {Schedule as ApeECS} from '../_ape-ecs';
 import {Schedule as SimECS} from '../_sim-ecs';
+import {Schedule_CB as SimECS_CB} from '../_sim-ecs';
 import {Schedule as TickKnock} from '../_tick-knock';
 import {testImplementations} from "../util";
 
@@ -12,6 +13,7 @@ export const bench = () => new Promise((resolve, reject) => {
             ...testImplementations(iterCount,
                 ['ape-ecs', ApeECS],
                 ['sim-ecs', SimECS],
+                ['sim-ecs CB', SimECS_CB],
                 ['tick-knock', TickKnock],
             ),
             cycle(),

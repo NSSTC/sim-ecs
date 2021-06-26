@@ -20,7 +20,7 @@ export class RenderUISystem extends System {
     run(actions: ISystemActions) {
         this.ctx.textBaseline = 'top';
 
-        for (const {pos, ui} of this.query.iter()) {
+        this.query.execute(({pos, ui}) => {
             const screenPos = this.toScreenCoords(pos.x, pos.y);
 
             this.ctx.fillStyle = ui.active
@@ -30,6 +30,6 @@ export class RenderUISystem extends System {
                 ? `${ui.fontSize * 1.2}px serif`
                 : `${ui.fontSize}px serif`;
             this.ctx.fillText(ui.finalCaption, screenPos[0], screenPos[1]);
-        }
+        });
     }
 }

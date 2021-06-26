@@ -10,9 +10,9 @@ export class AnimationSystem extends System {
     });
 
     run(actions: ISystemActions) {
-        for (const {pos, vel} of this.query.iter()) {
+        this.query.execute(({pos, vel}) => {
             pos.x += vel.x;
             pos.y += vel.y;
-        }
+        });
     }
 }

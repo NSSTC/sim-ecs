@@ -24,9 +24,9 @@ class SimpleIterSystem extends System {
 
     run(actions: ISystemActions) {
         let pos, vel;
-        for ({pos, vel} of this.query.iter()) {
+        this.query.execute(({pos, vel}) => {
             pos.x += vel.x;
-        }
+        });
     }
 }
 

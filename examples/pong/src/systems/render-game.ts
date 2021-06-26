@@ -19,7 +19,7 @@ export class RenderGameSystem extends System {
     }
 
     run(actions: ISystemActions) {
-        for (const {pos, shape} of this.query.iter()) {
+        this.query.execute(({pos, shape}) => {
             const screenDim = this.toScreenCoords(shape.dimensions.width, shape.dimensions.height ?? 0);
             const screenPos = this.toScreenCoords(pos.x, pos.y);
 
@@ -29,6 +29,6 @@ export class RenderGameSystem extends System {
 
             this.ctx.fillStyle = shape.color;
             this.ctx.fillRect(screenPos[0], screenPos[1], screenDim[0], screenDim[1]);
-        }
+        });
     }
 }

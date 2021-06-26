@@ -2,14 +2,9 @@ import {ISystemActions, Query, Read, System} from "sim-ecs";
 import {GameStore} from "../models/game-store";
 import {GameState} from "../states/game";
 import {PauseState} from "../states/pause";
-import {UIItem} from "../components/ui-item";
 
 
 export class PauseSystem extends System {
-    query = new Query({
-        uiItem: Read(UIItem)
-    });
-
     actions!: ISystemActions
     gameStore!: GameStore;
 

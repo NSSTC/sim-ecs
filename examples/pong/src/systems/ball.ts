@@ -32,7 +32,7 @@ export class BallSystem extends System {
         let wallCollisionVertical = EWallSide.None;
         let paddleCollision = false;
 
-        for (const {collisionData, pos, vel} of this.query.iter()) {
+        this.query.execute(({collisionData, pos, vel}) => {
             if (collisionData.occurred) {
                 for (const obj of collisionData.collisionObjects) {
                     if (obj.hasComponent(Wall)) {
@@ -68,6 +68,6 @@ export class BallSystem extends System {
                     vel.y *= -1;
                 }
             }
-        }
+        });
     }
 }
