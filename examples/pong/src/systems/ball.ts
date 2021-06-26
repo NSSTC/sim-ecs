@@ -1,4 +1,4 @@
-import {ISystemActions, Read, System, SystemData, WithTag, Write} from "sim-ecs";
+import {ISystemActions, Query, Read, System, WithTag, Write} from "sim-ecs";
 import {Velocity} from "../components/velocity";
 import {PaddleTransforms} from "../models/paddle-transforms";
 import {Collision} from "../components/collision";
@@ -9,15 +9,14 @@ import {Position} from "../components/position";
 import {defaultBallPositionX, defaultBallPositionY} from "../prefabs/game";
 import {ETags} from "../models/tags";
 
-class Data extends SystemData {
-    readonly _ball = WithTag(ETags.ball)
-    readonly collisionData = Read(Collision)
-    pos = Write(Position)
-    vel = Write(Velocity)
-}
+export class BallSystem extends System {
+    query = new Query({
+        _ball: WithTag(ETags.ball),
+        collisionData: Read(Collision),
+        pos: Write(Position),
+        vel: Write(Velocity),
+    });
 
-export class BallSystem extends System<Data> {
-    readonly SystemDataType = Data;
     canvas!: HTMLCanvasElement;
     paddleTrans!: PaddleTransforms;
     scoreBoard!: ScoreBoard;
@@ -28,12 +27,12 @@ export class BallSystem extends System<Data> {
         this.scoreBoard = actions.getResource(ScoreBoard);
     }
 
-    run(dataSet: Set<Data>) {
+    run(actions: ISystemActions) {
         let wallCollisionHorizontal = false;
         let wallCollisionVertical = EWallSide.None;
         let paddleCollision = false;
 
-        for (const {collisionData, pos, vel} of dataSet) {
+        for (const {collisionData, pos, vel} of this.query.iter()) {
             if (collisionData.occurred) {
                 for (const obj of collisionData.collisionObjects) {
                     if (obj.hasComponent(Wall)) {

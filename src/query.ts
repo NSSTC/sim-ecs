@@ -82,8 +82,10 @@ export class Query<
         let componentDesc: [string, TAccessQueryParameter<TTypeProto<K>>];
 
         for (componentDesc of Object.entries(descriptor)) {
-            if (componentDesc[1][accessDescSym].targetType == ETargetType.entity) {
-                components[componentDesc[0]] = entity;
+            if (componentDesc[1][accessDescSym].type == EAccess.meta) {
+                if (componentDesc[1][accessDescSym].targetType == ETargetType.entity) {
+                    components[componentDesc[0]] = entity;
+                }
             } else {
                 components[componentDesc[0]] = entity.getComponent(componentDesc[1][accessDescSym].target as TTypeProto<K>)!;
             }
@@ -192,14 +194,19 @@ export function With<C extends Object>(componentPrototype: TTypeProto<C>): IExis
     };
 }
 
-export function WithTag(tag: TTag): IExistenceDescriptor<TTypeProto<Object>> {
+export function WithTag(tag: TTag): TAccessQueryParameter<TTypeProto<Object>> & IExistenceDescriptor<TTypeProto<Object>> {
     return {
+        [accessDescSym]: {
+            target: tag,
+            targetType: ETargetType.tag,
+            type: EAccess.meta,
+        },
         [existenceDescSym]: {
             target: tag,
             targetType: ETargetType.tag,
             type: EExistence.set,
         }
-    };
+    } as TAccessQueryParameter<TTypeProto<Object>> & IExistenceDescriptor<TTypeProto<Object>>;
 }
 
 export function Without<C extends Object>(componentPrototype: TTypeProto<C>): IExistenceDescriptor<TTypeProto<C>> {

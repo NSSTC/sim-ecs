@@ -1,6 +1,5 @@
 import {IEntity, TTag} from "./entity.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
-import {World} from "./world";
 
 export * from './entity.spec';
 

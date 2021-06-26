@@ -1,15 +1,15 @@
-import {ISystemActions, Read, System, SystemData} from "sim-ecs";
+import {ISystemActions, Query, Read, System} from "sim-ecs";
 import {Position} from "../components/position";
 import {Shape} from "../components/shape";
 import {relToScreenCoords} from "../app/util";
 
-class Data extends SystemData {
-    readonly pos = Read(Position)
-    readonly shape = Read(Shape)
-}
 
-export class RenderGameSystem extends System<Data> {
-    SystemDataType = Data;
+export class RenderGameSystem extends System {
+    query = new Query({
+        pos: Read(Position),
+        shape: Read(Shape)
+    });
+
     ctx!: CanvasRenderingContext2D;
     toScreenCoords!: (x: number, y: number) => [number, number];
 
@@ -18,8 +18,8 @@ export class RenderGameSystem extends System<Data> {
         this.toScreenCoords = relToScreenCoords.bind(undefined, this.ctx.canvas);
     }
 
-    run(dataSet: Set<Data>) {
-        for (const {pos, shape} of dataSet) {
+    run(actions: ISystemActions) {
+        for (const {pos, shape} of this.query.iter()) {
             const screenDim = this.toScreenCoords(shape.dimensions.width, shape.dimensions.height ?? 0);
             const screenPos = this.toScreenCoords(pos.x, pos.y);
 

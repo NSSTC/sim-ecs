@@ -1,4 +1,4 @@
-import {ITransitionActions, SerialFormat, TGroupHandle, WithTag} from "sim-ecs";
+import {ITransitionActions, Query, SerialFormat, TGroupHandle, WithTag} from "sim-ecs";
 import {ScoreBoard} from "../models/score-board";
 import {ETags} from "../models/tags";
 
@@ -25,6 +25,6 @@ export function load(actions: ITransitionActions): TGroupHandle {
 }
 
 export function save(actions: ITransitionActions) {
-    localStorage.setItem(saveKey, actions.save([WithTag(ETags.save)]).toJSON());
+    localStorage.setItem(saveKey, actions.save(new Query([WithTag(ETags.save)])).toJSON());
     localStorage.setItem(scoreSaveKey, JSON.stringify(actions.getResource(ScoreBoard)));
 }

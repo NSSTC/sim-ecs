@@ -1,4 +1,4 @@
-import {ISystemActions, Read, System, SystemData, Write} from "sim-ecs";
+import {ISystemActions, Query, Read, System, Write} from "sim-ecs";
 import {EMovement, GameStore} from "../models/game-store";
 import {EPaddleSide, Paddle} from "../components/paddle";
 import {Position} from "../components/position";
@@ -8,15 +8,15 @@ import {PaddleTransforms} from "../models/paddle-transforms";
 import {Dimensions} from "../models/dimensions";
 import {Transform} from "../models/transform";
 
-class Data extends SystemData {
-    readonly paddle = Read(Paddle)
-    readonly pos = Read(Position)
-    readonly shape = Read(Shape)
-    vel = Write(Velocity)
-}
 
-export class PaddleSystem extends System<Data> {
-    readonly SystemDataType = Data;
+export class PaddleSystem extends System {
+    query = new Query({
+        paddle: Read(Paddle),
+        pos: Read(Position),
+        shape: Read(Shape),
+        vel: Write(Velocity)
+    });
+
     gameStore!: GameStore;
     ctx!: CanvasRenderingContext2D;
     paddleTrans!: PaddleTransforms;
@@ -74,8 +74,8 @@ export class PaddleSystem extends System<Data> {
         }
     }
 
-    run(dataSet: Set<Data>) {
-        for (const {paddle, pos, shape, vel} of dataSet) {
+    run(actions: ISystemActions) {
+        for (const {paddle, pos, shape, vel} of this.query.iter()) {
             this.updateTransformationResource(paddle.side, pos, shape.dimensions);
             this.updateVelocity(
                 pos,

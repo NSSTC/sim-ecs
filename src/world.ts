@@ -92,7 +92,9 @@ export class World implements IWorld {
         this.sortedSystems = this.sortSystems(this.systemInfos);
 
         for (const systemInfo of this.systemInfos) {
-            this.queries.push(systemInfo.system.query);
+            if (systemInfo.system.query) {
+                this.queries.push(systemInfo.system.query);
+            }
         }
     }
 
@@ -263,7 +265,7 @@ export class World implements IWorld {
         }
 
         for (systemInfo of this.sortedSystems) {
-            shouldRunSystem = !!stateSystems.find(stateSys => stateSys.prototype.constructor.name === systemInfo.constructor.name);
+            shouldRunSystem = !!stateSystems.find(stateSys => stateSys.prototype.constructor.name === systemInfo.system.constructor.name);
 
             if (shouldRunSystem) {
                 if (systemInfo.dependencies.size > 0) {
@@ -284,7 +286,7 @@ export class World implements IWorld {
         this.pda.push(NewState);
 
         const newState = this.pda.state!;
-        const registeredSystemNames = Array.from(this.systemInfos.keys()).map(nfo => nfo.constructor.name);
+        const registeredSystemNames = Array.from(this.systemInfos).map(nfo => nfo.system.constructor.name);
 
         for (const system of newState.systems) {
             if (!registeredSystemNames.includes(system.name)) {
@@ -403,7 +405,6 @@ export class World implements IWorld {
             const afterStepHandler = preparedConfig.afterStepHandler;
             const beforeStepHandler = preparedConfig.beforeStepHandler;
             const execFn = preparedConfig.executionFunction;
-            let executionGroup;
             let systemPromises;
 
             const cleanUp = async () => {
@@ -430,6 +431,7 @@ export class World implements IWorld {
                 await beforeStepHandler(this.transitionWorld);
 
                 {
+                    let executionGroup;
                     let system;
                     for (executionGroup of this.runExecutionPipeline) {
                         systemPromises = [];
