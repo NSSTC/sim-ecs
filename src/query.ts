@@ -9,7 +9,7 @@ import {
     IAccessQuery,
     setEntitiesSym,
     TExistenceQuery,
-    TAccessQueryParameter, TExistenceQueryParameter, IAccessQueryResult
+    TAccessQueryParameter, TExistenceQueryParameter
 } from "./query.spec";
 import {Entity, IEntity, TTag} from "./entity";
 import {TTypeProto} from "./_.spec";
@@ -17,20 +17,20 @@ import IWorld from "./world.spec";
 
 export * from "./query.spec";
 
+
+export type TAccessQueryData<DESC extends IAccessQuery<TTypeProto<Object>>> = {
+    [P in keyof DESC]: Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>>
+}
+
 // todo: ReadEntity() should also work
 export class Query<
-    C extends Object,
-    DESC extends IAccessQuery<TTypeProto<C>> | TExistenceQuery<TTypeProto<C>>,
-    ACCESS_RESULT extends IAccessQueryResult<C>,
-    ACCESS_DATA extends
-        DESC extends IAccessQuery<TTypeProto<C>>
-            ? { [P in keyof DESC]: Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<C>>> }
-            : never,
-    EXISTENCE_DATA extends IEntity,
+    DESC extends IAccessQuery<TTypeProto<Object>> | TExistenceQuery<TTypeProto<Object>>,
     DATA extends
-        DESC extends TExistenceQuery<TTypeProto<C>>
-            ? EXISTENCE_DATA
-            : ACCESS_DATA
+        DESC extends TExistenceQuery<TTypeProto<Object>>
+            ? IEntity
+            : DESC extends IAccessQuery<TTypeProto<Object>>
+                ? TAccessQueryData<DESC>
+                : never
 > {
     queryResult: Set<DATA> = new Set();
 
@@ -53,8 +53,8 @@ export class Query<
                     // @ts-ignore if recordDesc is an array, it's a query for existence, which yields entities
                     this.queryResult.add(entity);
                 } else {
-                    const components: Record<string, C> = {};
-                    let componentDesc: [string, TAccessQueryParameter<TTypeProto<C>>];
+                    const components: Record<string, Object> = {};
+                    let componentDesc: [string, TAccessQueryParameter<TTypeProto<Object>>];
 
                     for (componentDesc of Object.entries(this.recordDesc)) {
                         if (componentDesc[1][accessDescSym].targetType == ETargetType.entity) {
@@ -86,7 +86,7 @@ export class Query<
 
     public matchesEntity(entity: IEntity): boolean {
         if (Array.isArray(this.recordDesc)) {
-            let componentDesc: TExistenceQueryParameter<TTypeProto<C>>;
+            let componentDesc: TExistenceQueryParameter<TTypeProto<Object>>;
 
             for (componentDesc of this.recordDesc) {
                 if (
@@ -98,13 +98,13 @@ export class Query<
 
                 if (
                     componentDesc[existenceDescSym].targetType == ETargetType.component
-                    && entity.hasComponent(componentDesc[existenceDescSym].target as TTypeProto<C>) != (componentDesc[existenceDescSym].type == EExistence.set)
+                    && entity.hasComponent(componentDesc[existenceDescSym].target as TTypeProto<Object>) != (componentDesc[existenceDescSym].type == EExistence.set)
                 ) {
                     return false;
                 }
             }
         } else {
-            let componentDesc: TAccessQueryParameter<TTypeProto<C>>;
+            let componentDesc: TAccessQueryParameter<TTypeProto<Object>>;
 
             for (componentDesc of Object.values(this.recordDesc)) {
                 if (
@@ -116,7 +116,7 @@ export class Query<
 
                 if (
                     componentDesc[accessDescSym].targetType == ETargetType.component
-                    && !entity.hasComponent(componentDesc[accessDescSym].target as TTypeProto<C>)
+                    && !entity.hasComponent(componentDesc[accessDescSym].target as TTypeProto<Object>)
                 ) {
                     return false;
                 }
@@ -147,7 +147,7 @@ export function Read<C extends Object>(componentPrototype: TTypeProto<C>): TAcce
     } as IAccessDescriptor<C>);
 }
 
-export function Write<C extends TTypeProto<Object>>(componentPrototype: C): TAccessQueryParameter<C> {
+export function Write<C extends Object>(componentPrototype: TTypeProto<C>): TAccessQueryParameter<TTypeProto<C>> {
     return Object.assign({}, componentPrototype.prototype, {
         [accessDescSym]: {
             target: componentPrototype,
