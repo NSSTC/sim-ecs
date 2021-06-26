@@ -9,6 +9,7 @@ npm install sim-ecs
 
 
 - [Considerations](#considerations)
+- [Why use sim-ecs](#why-use-sim-ecs)
 - [Examples](#examples)
   - [Counter](#counter)
   - [Pong](#pong)
@@ -30,18 +31,21 @@ npm install sim-ecs
 
 ## Considerations
 
-This ECS is inspired by SPECS, Legion and bevy-ecs (three Rust ECS libraries), however optimized for JS.
+This ECS is inspired by SPECS, Legion and bevy-ecs (three Rust ECS libraries), however optimized for TypeScript.
 It is built for easy usage (DX) and high iteration speed.
-The trade-off is that insertion and deletion are slow,
+The trade-off is that insertion and deletion are slower,
 however there are optimizations and opinionations in place to still make it fast.
-I recommend doing insertions and deletions at defined points (for example loading screens)
-and batching these operations.
-For on-the-fly changes, there is a way to register a callback which does the work
-in between system executions, so that all systems can work on the same dataset per iteration.
+For example, by using commands, these operations are batched and executed when it is safe to perform them.
 
-In order to allow reproducible simulations, all systems operate on cached data-sets.
-Changes to entities are propagated on the next system execution (for example one frame lagging behind creation).
-It is hence not recommended to use entities to propagate messages in between systems.
+In order to create optimized simulation runs, the ECS has to be fully specified in the beginning.
+All components, systems and queries need to be registered at the start.
+
+
+## Why use sim-ecs
+
+Sim-ecs was created out of the lack of a fast, featured ECS library for TypeScript, which is able to handle
+the requirements in a big, agile game project. While there are other ECS libraries available,
+they do not necessarily cater to that goal and will have short-comings in such an environment.
 
 
 ## Examples
