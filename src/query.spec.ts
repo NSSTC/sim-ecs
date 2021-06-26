@@ -1,5 +1,5 @@
 import {TTypeProto} from "./_.spec";
-import {IEntity, TTag} from "./entity";
+import {TTag} from "./entity";
 
 export type TAccessQueryParameter<C extends TTypeProto<Object>> = C & IAccessDescriptor<InstanceType<C>>;
 export interface IAccessQuery<C extends TTypeProto<Object>> { [componentName: string]: TAccessQueryParameter<C> }

@@ -11,7 +11,7 @@ import {
 } from "./serde.spec";
 import {ISerialFormat} from "./serial-format.spec";
 import {SerialFormat} from "./serial-format";
-import IEntity, {TTag} from "../entity.spec";
+import {IEntity, TTag} from "../entity.spec";
 import {getDefaultDeserializer, getDefaultSerializer} from "./default-handlers";
 import {Entity} from "../entity";
 

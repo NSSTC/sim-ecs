@@ -85,7 +85,7 @@ export class Query<
             if (componentDesc[1][accessDescSym].targetType == ETargetType.entity) {
                 components[componentDesc[0]] = entity;
             } else {
-                components[componentDesc[0]] = entity.getComponent(componentDesc[1])!;
+                components[componentDesc[0]] = entity.getComponent(componentDesc[1][accessDescSym].target as TTypeProto<K>)!;
             }
         }
 

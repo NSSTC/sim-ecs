@@ -1,11 +1,12 @@
 import {ISystemActions} from "./world";
 import {ISystem} from "./system.spec";
-import {IQuery} from "./query";
+import {IAccessQuery, Query} from "./query";
+import {TTypeProto} from "./_.spec";
 
 export * from './system.spec';
 
 export abstract class System implements ISystem {
-    abstract query: IQuery<any>;
+    abstract query: Query<IAccessQuery<TTypeProto<Object>>>;
 
     destroy(actions: ISystemActions): void | Promise<void> {}
 

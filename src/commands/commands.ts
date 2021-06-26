@@ -1,5 +1,5 @@
 import {ICommands} from "./commands.spec";
-import IEntity from "../entity.spec";
+import {IEntity} from "../entity.spec";
 import {TTypeProto} from "../_.spec";
 import {ISerialFormat} from "../serde/serial-format.spec";
 import {TDeserializer, TSerDeOptions} from "../serde/serde.spec";
