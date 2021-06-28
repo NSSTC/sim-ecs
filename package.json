@@ -3,7 +3,8 @@
   "version": "0.4.0",
   "license": "MPL 2.0",
   "repository": "https://github.com/NSSTC/sim-ecs.git",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "keywords": [
     "ecs",
     "entity",
@@ -23,12 +24,19 @@
     "mocha": "^8.2.1",
     "nyc": "^15.1.0",
     "ts-node": "^10.0.0",
+    "typedoc": "^0.21.2",
     "typescript": "^4.3.4"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "bench": "ts-node -P tsconfig.json examples/bench.ts",
+    "build": "tsc --project . && npm run doc",
+    "doc": "typedoc src/index.ts --out docs --includeVersion",
     "coverage": "nyc -r lcov -e .ts -x \"**/*.test.ts\" -x \"**/*.spec.ts\" -x \"src/tests\" npm run test",
     "counter": "ts-node -P tsconfig.json examples/counter.ts",
+    "prepare": "npm run build",
     "test": "mocha -r ts-node/register src/**/*.test.ts"
   }
 }

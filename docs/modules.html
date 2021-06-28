@@ -1,0 +1,977 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>sim-ecs - v0.4.0</title>
+	<meta name="description" content="Documentation for sim-ecs - v0.4.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">sim-ecs - v0.4.0</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<h1>sim-ecs - v0.4.0</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Enumerations</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-enum"><a href="enums/eaccess.html" class="tsd-kind-icon">EAccess</a></li>
+								<li class="tsd-kind-enum"><a href="enums/eexistence.html" class="tsd-kind-icon">EExistence</a></li>
+								<li class="tsd-kind-enum"><a href="enums/etargettype.html" class="tsd-kind-icon">ETarget<wbr>Type</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Classes</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-class"><a href="classes/ecs.html" class="tsd-kind-icon">ECS</a></li>
+								<li class="tsd-kind-class"><a href="classes/entity.html" class="tsd-kind-icon">Entity</a></li>
+								<li class="tsd-kind-class"><a href="classes/entitybuilder.html" class="tsd-kind-icon">Entity<wbr>Builder</a></li>
+								<li class="tsd-kind-class tsd-has-type-parameter"><a href="classes/query.html" class="tsd-kind-icon">Query</a></li>
+								<li class="tsd-kind-class"><a href="classes/serde.html" class="tsd-kind-icon">Ser<wbr>De</a></li>
+								<li class="tsd-kind-class"><a href="classes/serialformat.html" class="tsd-kind-icon">Serial<wbr>Format</a></li>
+								<li class="tsd-kind-class"><a href="classes/state.html" class="tsd-kind-icon">State</a></li>
+								<li class="tsd-kind-class"><a href="classes/system.html" class="tsd-kind-icon">System</a></li>
+								<li class="tsd-kind-class"><a href="classes/world.html" class="tsd-kind-icon">World</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Interfaces</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/iaccessdescriptor.html" class="tsd-kind-icon">IAccess<wbr>Descriptor</a></li>
+								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/iaccessquery.html" class="tsd-kind-icon">IAccess<wbr>Query</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ientity.html" class="tsd-kind-icon">IEntity</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ientitybuilder.html" class="tsd-kind-icon">IEntity<wbr>Builder</a></li>
+								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/iexistencedescriptor.html" class="tsd-kind-icon">IExistence<wbr>Descriptor</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ipartialworld.html" class="tsd-kind-icon">IPartial<wbr>World</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/irunconfiguration.html" class="tsd-kind-icon">IRun<wbr>Configuration</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/iserde.html" class="tsd-kind-icon">ISer<wbr>De</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/iserdedataset.html" class="tsd-kind-icon">ISer<wbr>DeData<wbr>Set</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/iserdeoperations.html" class="tsd-kind-icon">ISer<wbr>DeOperations</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/iserialformat.html" class="tsd-kind-icon">ISerial<wbr>Format</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/istate.html" class="tsd-kind-icon">IState</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/istaticrunconfiguration.html" class="tsd-kind-icon">IStatic<wbr>Run<wbr>Configuration</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/isystem.html" class="tsd-kind-icon">ISystem</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/isystemactions.html" class="tsd-kind-icon">ISystem<wbr>Actions</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/isysteminfo.html" class="tsd-kind-icon">ISystem<wbr>Info</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/itransitionactions.html" class="tsd-kind-icon">ITransition<wbr>Actions</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/iworld.html" class="tsd-kind-icon">IWorld</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Type aliases</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#taccessquerydata" class="tsd-kind-icon">TAccess<wbr>Query<wbr>Data</a></li>
+								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#taccessqueryparameter" class="tsd-kind-icon">TAccess<wbr>Query<wbr>Parameter</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tcustomdeserializer" class="tsd-kind-icon">TCustom<wbr>Deserializer</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tdeserializer" class="tsd-kind-icon">TDeserializer</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tentity" class="tsd-kind-icon">TEntity</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tentitybuilderproto" class="tsd-kind-icon">TEntity<wbr>Builder<wbr>Proto</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tentityproto" class="tsd-kind-icon">TEntity<wbr>Proto</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#texecutionfunction" class="tsd-kind-icon">TExecution<wbr>Function</a></li>
+								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#texistencequery" class="tsd-kind-icon">TExistence<wbr>Query</a></li>
+								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#texistencequeryparameter" class="tsd-kind-icon">TExistence<wbr>Query<wbr>Parameter</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tgrouphandle" class="tsd-kind-icon">TGroup<wbr>Handle</a></li>
+								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#tserdeoptions" class="tsd-kind-icon">TSer<wbr>DeOptions</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tserializable" class="tsd-kind-icon">TSerializable</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tserializer" class="tsd-kind-icon">TSerializer</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tstateproto" class="tsd-kind-icon">TState<wbr>Proto</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tsystemproto" class="tsd-kind-icon">TSystem<wbr>Proto</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#ttag" class="tsd-kind-icon">TTag</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#tworldproto" class="tsd-kind-icon">TWorld<wbr>Proto</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Variables</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-variable"><a href="modules.html#ctagmarker" class="tsd-kind-icon">CTag<wbr>Marker</a></li>
+								<li class="tsd-kind-variable"><a href="modules.html#accessdescsym" class="tsd-kind-icon">access<wbr>Desc<wbr>Sym</a></li>
+								<li class="tsd-kind-variable"><a href="modules.html#addentitysym" class="tsd-kind-icon">add<wbr>Entity<wbr>Sym</a></li>
+								<li class="tsd-kind-variable"><a href="modules.html#clearentitiessym" class="tsd-kind-icon">clear<wbr>Entities<wbr>Sym</a></li>
+								<li class="tsd-kind-variable"><a href="modules.html#existencedescsym" class="tsd-kind-icon">existence<wbr>Desc<wbr>Sym</a></li>
+								<li class="tsd-kind-variable"><a href="modules.html#removeentitysym" class="tsd-kind-icon">remove<wbr>Entity<wbr>Sym</a></li>
+								<li class="tsd-kind-variable"><a href="modules.html#setentitiessym" class="tsd-kind-icon">set<wbr>Entities<wbr>Sym</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#read" class="tsd-kind-icon">Read</a></li>
+								<li class="tsd-kind-function"><a href="modules.html#readentity" class="tsd-kind-icon">Read<wbr>Entity</a></li>
+								<li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#with" class="tsd-kind-icon">With</a></li>
+								<li class="tsd-kind-function"><a href="modules.html#withtag" class="tsd-kind-icon">With<wbr>Tag</a></li>
+								<li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#without" class="tsd-kind-icon">Without</a></li>
+								<li class="tsd-kind-function"><a href="modules.html#withouttag" class="tsd-kind-icon">Without<wbr>Tag</a></li>
+								<li class="tsd-kind-function tsd-has-type-parameter"><a href="modules.html#write" class="tsd-kind-icon">Write</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Type aliases</h2>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
+					<a name="taccessquerydata" class="tsd-anchor"></a>
+					<h3>TAccess<wbr>Query<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">TAccess<wbr>Query<wbr>Data&lt;DESC&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol"> in </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">DESC</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Required</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DESC</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">keyof </span><a href="interfaces/iaccessdescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IAccessDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.ts#L21">src/query.ts:21</a></li>
+						</ul>
+					</aside>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>DESC<span class="tsd-signature-symbol">: </span><a href="interfaces/iaccessquery.html" class="tsd-signature-type" data-tsd-kind="Interface">IAccessQuery</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
+					<a name="taccessqueryparameter" class="tsd-anchor"></a>
+					<h3>TAccess<wbr>Query<wbr>Parameter</h3>
+					<div class="tsd-signature tsd-kind-icon">TAccess<wbr>Query<wbr>Parameter&lt;C&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">C</span><span class="tsd-signature-symbol"> &amp; </span><a href="interfaces/iaccessdescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IAccessDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.spec.ts#L4">src/query.spec.ts:4</a></li>
+						</ul>
+					</aside>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>C<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tcustomdeserializer" class="tsd-anchor"></a>
+					<h3>TCustom<wbr>Deserializer</h3>
+					<div class="tsd-signature tsd-kind-icon">TCustom<wbr>Deserializer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/serde/serde.spec.ts#L6">src/serde/serde.spec.ts:6</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>data: <span class="tsd-signature-type">unknown</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Object</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tdeserializer" class="tsd-anchor"></a>
+					<h3>TDeserializer</h3>
+					<div class="tsd-signature tsd-kind-icon">TDeserializer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>constructorName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/serde/serde.spec.ts#L7">src/serde/serde.spec.ts:7</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>constructorName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>constructorName: <span class="tsd-signature-type">string</span></h5>
+											</li>
+											<li>
+												<h5>data: <span class="tsd-signature-type">unknown</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Object</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tentity" class="tsd-anchor"></a>
+					<h3>TEntity</h3>
+					<div class="tsd-signature tsd-kind-icon">TEntity<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/serde/serde.spec.ts#L8">src/serde/serde.spec.ts:8</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>componentName: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">unknown</span></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tentitybuilderproto" class="tsd-anchor"></a>
+					<h3>TEntity<wbr>Builder<wbr>Proto</h3>
+					<div class="tsd-signature tsd-kind-icon">TEntity<wbr>Builder<wbr>Proto<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/entity-builder.spec.ts#L24">src/entity-builder.spec.ts:24</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tentityproto" class="tsd-anchor"></a>
+					<h3>TEntity<wbr>Proto</h3>
+					<div class="tsd-signature tsd-kind-icon">TEntity<wbr>Proto<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/entity.spec.ts#L62">src/entity.spec.ts:62</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="texecutionfunction" class="tsd-anchor"></a>
+					<h3>TExecution<wbr>Function</h3>
+					<div class="tsd-signature tsd-kind-icon">TExecution<wbr>Function<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">typeof </span><span class="tsd-signature-type">setTimeout</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">typeof </span><span class="tsd-signature-type">requestAnimationFrame</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L12">src/world.spec.ts:12</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
+					<a name="texistencequery" class="tsd-anchor"></a>
+					<h3>TExistence<wbr>Query</h3>
+					<div class="tsd-signature tsd-kind-icon">TExistence<wbr>Query&lt;C&gt;<span class="tsd-signature-symbol">:</span> <a href="modules.html#texistencequeryparameter" class="tsd-signature-type" data-tsd-kind="Type alias">TExistenceQueryParameter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.spec.ts#L8">src/query.spec.ts:8</a></li>
+						</ul>
+					</aside>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>C<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
+					<a name="texistencequeryparameter" class="tsd-anchor"></a>
+					<h3>TExistence<wbr>Query<wbr>Parameter</h3>
+					<div class="tsd-signature tsd-kind-icon">TExistence<wbr>Query<wbr>Parameter&lt;C&gt;<span class="tsd-signature-symbol">:</span> <a href="interfaces/iexistencedescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IExistenceDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.spec.ts#L7">src/query.spec.ts:7</a></li>
+						</ul>
+					</aside>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>C<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tgrouphandle" class="tsd-anchor"></a>
+					<h3>TGroup<wbr>Handle</h3>
+					<div class="tsd-signature tsd-kind-icon">TGroup<wbr>Handle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L13">src/world.spec.ts:13</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-has-type-parameter">
+					<a name="tserdeoptions" class="tsd-anchor"></a>
+					<h3>TSer<wbr>DeOptions</h3>
+					<div class="tsd-signature tsd-kind-icon">TSer<wbr>DeOptions&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>fallbackHandler<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">; </span>useDefaultHandler<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>useRegisteredHandlers<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/serde/serde.spec.ts#L9">src/serde/serde.spec.ts:9</a></li>
+						</ul>
+					</aside>
+					<h4 class="tsd-type-parameters-title">Type parameters</h4>
+					<ul class="tsd-type-parameters">
+						<li>
+							<h4>T</h4>
+						</li>
+					</ul>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> fallback<wbr>Handler<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">T</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> use<wbr>Default<wbr>Handler<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> use<wbr>Registered<wbr>Handlers<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span></h5>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tserializable" class="tsd-anchor"></a>
+					<h3>TSerializable</h3>
+					<div class="tsd-signature tsd-kind-icon">TSerializable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">unknown</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/serde/serde.spec.ts#L14">src/serde/serde.spec.ts:14</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tserializer" class="tsd-anchor"></a>
+					<h3>TSerializer</h3>
+					<div class="tsd-signature tsd-kind-icon">TSerializer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="modules.html#tserializable" class="tsd-signature-type" data-tsd-kind="Type alias">TSerializable</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/serde/serde.spec.ts#L15">src/serde/serde.spec.ts:15</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="modules.html#tserializable" class="tsd-signature-type" data-tsd-kind="Type alias">TSerializable</a></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>component: <span class="tsd-signature-type">unknown</span></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <a href="modules.html#tserializable" class="tsd-signature-type" data-tsd-kind="Type alias">TSerializable</a></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tstateproto" class="tsd-anchor"></a>
+					<h3>TState<wbr>Proto</h3>
+					<div class="tsd-signature tsd-kind-icon">TState<wbr>Proto<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/state.spec.ts#L33">src/state.spec.ts:33</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tsystemproto" class="tsd-anchor"></a>
+					<h3>TSystem<wbr>Proto</h3>
+					<div class="tsd-signature tsd-kind-icon">TSystem<wbr>Proto<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/system.spec.ts#L28">src/system.spec.ts:28</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="ttag" class="tsd-anchor"></a>
+					<h3>TTag</h3>
+					<div class="tsd-signature tsd-kind-icon">TTag<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/entity.spec.ts#L3">src/entity.spec.ts:3</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias">
+					<a name="tworldproto" class="tsd-anchor"></a>
+					<h3>TWorld<wbr>Proto</h3>
+					<div class="tsd-signature tsd-kind-icon">TWorld<wbr>Proto<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L150">src/world.spec.ts:150</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+						</ul>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Variables</h2>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="ctagmarker" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> CTag<wbr>Marker</h3>
+					<div class="tsd-signature tsd-kind-icon">CTag<wbr>Marker<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;#Tags&quot;</span><span class="tsd-signature-symbol"> = &#x27;#Tags&#x27;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/serde/serde.spec.ts#L57">src/serde/serde.spec.ts:57</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="accessdescsym" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> access<wbr>Desc<wbr>Sym</h3>
+					<div class="tsd-signature tsd-kind-icon">access<wbr>Desc<wbr>Sym<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">unique </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.spec.ts#L14">src/query.spec.ts:14</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="addentitysym" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> add<wbr>Entity<wbr>Sym</h3>
+					<div class="tsd-signature tsd-kind-icon">add<wbr>Entity<wbr>Sym<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#addentitysym" class="tsd-signature-type" data-tsd-kind="Variable">addEntitySym</a><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.spec.ts#L10">src/query.spec.ts:10</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="clearentitiessym" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> clear<wbr>Entities<wbr>Sym</h3>
+					<div class="tsd-signature tsd-kind-icon">clear<wbr>Entities<wbr>Sym<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#clearentitiessym" class="tsd-signature-type" data-tsd-kind="Variable">clearEntitiesSym</a><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.spec.ts#L11">src/query.spec.ts:11</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="existencedescsym" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> existence<wbr>Desc<wbr>Sym</h3>
+					<div class="tsd-signature tsd-kind-icon">existence<wbr>Desc<wbr>Sym<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">unique </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.spec.ts#L15">src/query.spec.ts:15</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="removeentitysym" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> remove<wbr>Entity<wbr>Sym</h3>
+					<div class="tsd-signature tsd-kind-icon">remove<wbr>Entity<wbr>Sym<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#removeentitysym" class="tsd-signature-type" data-tsd-kind="Variable">removeEntitySym</a><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.spec.ts#L12">src/query.spec.ts:12</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="setentitiessym" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> set<wbr>Entities<wbr>Sym</h3>
+					<div class="tsd-signature tsd-kind-icon">set<wbr>Entities<wbr>Sym<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#setentitiessym" class="tsd-signature-type" data-tsd-kind="Variable">setEntitiesSym</a><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.spec.ts#L13">src/query.spec.ts:13</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="read" class="tsd-anchor"></a>
+					<h3>Read</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">Read&lt;C&gt;<span class="tsd-signature-symbol">(</span>componentPrototype<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="modules.html#taccessqueryparameter" class="tsd-signature-type" data-tsd-kind="Type alias">TAccessQueryParameter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.ts#L167">src/query.ts:167</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>C<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>componentPrototype: <span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="modules.html#taccessqueryparameter" class="tsd-signature-type" data-tsd-kind="Type alias">TAccessQueryParameter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="readentity" class="tsd-anchor"></a>
+					<h3>Read<wbr>Entity</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">Read<wbr>Entity<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="modules.html#taccessqueryparameter" class="tsd-signature-type" data-tsd-kind="Type alias">TAccessQueryParameter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/ientity.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntity</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.ts#L157">src/query.ts:157</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="modules.html#taccessqueryparameter" class="tsd-signature-type" data-tsd-kind="Type alias">TAccessQueryParameter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/ientity.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntity</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="with" class="tsd-anchor"></a>
+					<h3>With</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">With&lt;C&gt;<span class="tsd-signature-symbol">(</span>componentPrototype<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/iexistencedescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IExistenceDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.ts#L187">src/query.ts:187</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>C<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>componentPrototype: <span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/iexistencedescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IExistenceDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="withtag" class="tsd-anchor"></a>
+					<h3>With<wbr>Tag</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">With<wbr>Tag<span class="tsd-signature-symbol">(</span>tag<span class="tsd-signature-symbol">: </span><a href="modules.html#ttag" class="tsd-signature-type" data-tsd-kind="Type alias">TTag</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="modules.html#taccessqueryparameter" class="tsd-signature-type" data-tsd-kind="Type alias">TAccessQueryParameter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><a href="interfaces/iexistencedescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IExistenceDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.ts#L197">src/query.ts:197</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tag: <a href="modules.html#ttag" class="tsd-signature-type" data-tsd-kind="Type alias">TTag</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="modules.html#taccessqueryparameter" class="tsd-signature-type" data-tsd-kind="Type alias">TAccessQueryParameter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> &amp; </span><a href="interfaces/iexistencedescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IExistenceDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="without" class="tsd-anchor"></a>
+					<h3>Without</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">Without&lt;C&gt;<span class="tsd-signature-symbol">(</span>componentPrototype<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/iexistencedescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IExistenceDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.ts#L212">src/query.ts:212</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>C<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>componentPrototype: <span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/iexistencedescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IExistenceDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function">
+					<a name="withouttag" class="tsd-anchor"></a>
+					<h3>Without<wbr>Tag</h3>
+					<ul class="tsd-signatures tsd-kind-function">
+						<li class="tsd-signature tsd-kind-icon">Without<wbr>Tag<span class="tsd-signature-symbol">(</span>tag<span class="tsd-signature-symbol">: </span><a href="modules.html#ttag" class="tsd-signature-type" data-tsd-kind="Type alias">TTag</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="interfaces/iexistencedescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IExistenceDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.ts#L222">src/query.ts:222</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tag: <a href="modules.html#ttag" class="tsd-signature-type" data-tsd-kind="Type alias">TTag</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="interfaces/iexistencedescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IExistenceDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-has-type-parameter">
+					<a name="write" class="tsd-anchor"></a>
+					<h3>Write</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">Write&lt;C&gt;<span class="tsd-signature-symbol">(</span>componentPrototype<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="modules.html#taccessqueryparameter" class="tsd-signature-type" data-tsd-kind="Type alias">TAccessQueryParameter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/query.ts#L177">src/query.ts:177</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>C<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>componentPrototype: <span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="modules.html#taccessqueryparameter" class="tsd-signature-type" data-tsd-kind="Type alias">TAccessQueryParameter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="current ">
+						<a href="modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="enums/eaccess.html" class="tsd-kind-icon">EAccess</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/eexistence.html" class="tsd-kind-icon">EExistence</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/etargettype.html" class="tsd-kind-icon">ETarget<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/ecs.html" class="tsd-kind-icon">ECS</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/entity.html" class="tsd-kind-icon">Entity</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/entitybuilder.html" class="tsd-kind-icon">Entity<wbr>Builder</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/query.html" class="tsd-kind-icon">Query</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/serde.html" class="tsd-kind-icon">Ser<wbr>De</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/serialformat.html" class="tsd-kind-icon">Serial<wbr>Format</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/state.html" class="tsd-kind-icon">State</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/system.html" class="tsd-kind-icon">System</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/world.html" class="tsd-kind-icon">World</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/iaccessdescriptor.html" class="tsd-kind-icon">IAccess<wbr>Descriptor</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/iaccessquery.html" class="tsd-kind-icon">IAccess<wbr>Query</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ientity.html" class="tsd-kind-icon">IEntity</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ientitybuilder.html" class="tsd-kind-icon">IEntity<wbr>Builder</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/iexistencedescriptor.html" class="tsd-kind-icon">IExistence<wbr>Descriptor</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ipartialworld.html" class="tsd-kind-icon">IPartial<wbr>World</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/irunconfiguration.html" class="tsd-kind-icon">IRun<wbr>Configuration</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iserde.html" class="tsd-kind-icon">ISer<wbr>De</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iserdedataset.html" class="tsd-kind-icon">ISer<wbr>DeData<wbr>Set</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iserdeoperations.html" class="tsd-kind-icon">ISer<wbr>DeOperations</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iserialformat.html" class="tsd-kind-icon">ISerial<wbr>Format</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/istate.html" class="tsd-kind-icon">IState</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/istaticrunconfiguration.html" class="tsd-kind-icon">IStatic<wbr>Run<wbr>Configuration</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/isystem.html" class="tsd-kind-icon">ISystem</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/isystemactions.html" class="tsd-kind-icon">ISystem<wbr>Actions</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/isysteminfo.html" class="tsd-kind-icon">ISystem<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/itransitionactions.html" class="tsd-kind-icon">ITransition<wbr>Actions</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/iworld.html" class="tsd-kind-icon">IWorld</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#taccessquerydata" class="tsd-kind-icon">TAccess<wbr>Query<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#taccessqueryparameter" class="tsd-kind-icon">TAccess<wbr>Query<wbr>Parameter</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tcustomdeserializer" class="tsd-kind-icon">TCustom<wbr>Deserializer</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tdeserializer" class="tsd-kind-icon">TDeserializer</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tentity" class="tsd-kind-icon">TEntity</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tentitybuilderproto" class="tsd-kind-icon">TEntity<wbr>Builder<wbr>Proto</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tentityproto" class="tsd-kind-icon">TEntity<wbr>Proto</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#texecutionfunction" class="tsd-kind-icon">TExecution<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#texistencequery" class="tsd-kind-icon">TExistence<wbr>Query</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#texistencequeryparameter" class="tsd-kind-icon">TExistence<wbr>Query<wbr>Parameter</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tgrouphandle" class="tsd-kind-icon">TGroup<wbr>Handle</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#tserdeoptions" class="tsd-kind-icon">TSer<wbr>DeOptions</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tserializable" class="tsd-kind-icon">TSerializable</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tserializer" class="tsd-kind-icon">TSerializer</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tstateproto" class="tsd-kind-icon">TState<wbr>Proto</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tsystemproto" class="tsd-kind-icon">TSystem<wbr>Proto</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#ttag" class="tsd-kind-icon">TTag</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#tworldproto" class="tsd-kind-icon">TWorld<wbr>Proto</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#ctagmarker" class="tsd-kind-icon">CTag<wbr>Marker</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#accessdescsym" class="tsd-kind-icon">access<wbr>Desc<wbr>Sym</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#addentitysym" class="tsd-kind-icon">add<wbr>Entity<wbr>Sym</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#clearentitiessym" class="tsd-kind-icon">clear<wbr>Entities<wbr>Sym</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#existencedescsym" class="tsd-kind-icon">existence<wbr>Desc<wbr>Sym</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#removeentitysym" class="tsd-kind-icon">remove<wbr>Entity<wbr>Sym</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#setentitiessym" class="tsd-kind-icon">set<wbr>Entities<wbr>Sym</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#read" class="tsd-kind-icon">Read</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#readentity" class="tsd-kind-icon">Read<wbr>Entity</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#with" class="tsd-kind-icon">With</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#withtag" class="tsd-kind-icon">With<wbr>Tag</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#without" class="tsd-kind-icon">Without</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#withouttag" class="tsd-kind-icon">Without<wbr>Tag</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#write" class="tsd-kind-icon">Write</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

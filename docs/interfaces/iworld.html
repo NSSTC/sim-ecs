@@ -1,0 +1,658 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>IWorld | sim-ecs - v0.4.0</title>
+	<meta name="description" content="Documentation for sim-ecs - v0.4.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">sim-ecs - v0.4.0</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules.html">sim-ecs - v0.4.0</a>
+				</li>
+				<li>
+					<a href="iworld.html">IWorld</a>
+				</li>
+			</ul>
+			<h1>Interface IWorld</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<a href="ipartialworld.html" class="tsd-signature-type" data-tsd-kind="Interface">IPartialWorld</a>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">IWorld</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel">
+				<h3>Implemented by</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../classes/world.html" class="tsd-signature-type" data-tsd-kind="Class">World</a></li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="iworld.html#commands" class="tsd-kind-icon">commands</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="iworld.html#serde" class="tsd-kind-icon">serde</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="iworld.html#systeminfos" class="tsd-kind-icon">system<wbr>Infos</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iworld.html#addentity" class="tsd-kind-icon">add<wbr>Entity</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter"><a href="iworld.html#addresource" class="tsd-kind-icon">add<wbr>Resource</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="iworld.html#buildentity" class="tsd-kind-icon">build<wbr>Entity</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iworld.html#createentity" class="tsd-kind-icon">create<wbr>Entity</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iworld.html#dispatch" class="tsd-kind-icon">dispatch</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="iworld.html#flushcommands" class="tsd-kind-icon">flush<wbr>Commands</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="iworld.html#getentities" class="tsd-kind-icon">get<wbr>Entities</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited"><a href="iworld.html#getresource" class="tsd-kind-icon">get<wbr>Resource</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="iworld.html#getresources" class="tsd-kind-icon">get<wbr>Resources</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-inherited"><a href="iworld.html#maintain" class="tsd-kind-icon">maintain</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iworld.html#merge" class="tsd-kind-icon">merge</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="iworld.html#run" class="tsd-kind-icon">run</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited"><a href="iworld.html#save" class="tsd-kind-icon">save</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="commands" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> commands</h3>
+					<div class="tsd-signature tsd-kind-icon">commands<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ICommands</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="ipartialworld.html">IPartialWorld</a>.<a href="ipartialworld.html#commands">commands</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L35">src/world.spec.ts:35</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="serde" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> serde</h3>
+					<div class="tsd-signature tsd-kind-icon">serde<span class="tsd-signature-symbol">:</span> <a href="iserde.html" class="tsd-signature-type" data-tsd-kind="Interface">ISerDe</a></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="ipartialworld.html">IPartialWorld</a>.<a href="ipartialworld.html#serde">serde</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L36">src/world.spec.ts:36</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="systeminfos" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> system<wbr>Infos</h3>
+					<div class="tsd-signature tsd-kind-icon">system<wbr>Infos<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><a href="isysteminfo.html" class="tsd-signature-type" data-tsd-kind="Interface">ISystemInfo</a><span class="tsd-signature-symbol">&gt;</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L110">src/world.spec.ts:110</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Systems which are registered with this world</p>
+						</div>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="addentity" class="tsd-anchor"></a>
+					<h3>add<wbr>Entity</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Entity<span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><a href="ientity.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntity</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L116">src/world.spec.ts:116</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Add an entity to this world</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>entity: <a href="ientity.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntity</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
+					<a name="addresource" class="tsd-anchor"></a>
+					<h3>add<wbr>Resource</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Resource&lt;T&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span>, <span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L123">src/world.spec.ts:123</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Add a resource to this world and returns the resource instance</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <span class="tsd-signature-type">T</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>constructor parameters</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+					<a name="buildentity" class="tsd-anchor"></a>
+					<h3>build<wbr>Entity</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">build<wbr>Entity<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ientitybuilder.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntityBuilder</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="ipartialworld.html">IPartialWorld</a>.<a href="ipartialworld.html#buildentity">buildEntity</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L41">src/world.spec.ts:41</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Convenience builder to create a new Entity</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="ientitybuilder.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntityBuilder</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="createentity" class="tsd-anchor"></a>
+					<h3>create<wbr>Entity</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Entity<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ientity.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntity</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L128">src/world.spec.ts:128</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create a new entity and add it to this world</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="ientity.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntity</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="dispatch" class="tsd-anchor"></a>
+					<h3>dispatch</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">dispatch<span class="tsd-signature-symbol">(</span>state<span class="tsd-signature-symbol">?: </span><a href="../modules.html#tstateproto" class="tsd-signature-type" data-tsd-kind="Type alias">TStateProto</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L134">src/world.spec.ts:134</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Execute all systems</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> state: <a href="../modules.html#tstateproto" class="tsd-signature-type" data-tsd-kind="Type alias">TStateProto</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+					<a name="flushcommands" class="tsd-anchor"></a>
+					<h3>flush<wbr>Commands</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">flush<wbr>Commands<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="ipartialworld.html">IPartialWorld</a>.<a href="ipartialworld.html#flushcommands">flushCommands</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L46">src/world.spec.ts:46</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Execute all commands NOW</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+					<a name="getentities" class="tsd-anchor"></a>
+					<h3>get<wbr>Entities</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Entities<span class="tsd-signature-symbol">(</span>query<span class="tsd-signature-symbol">?: </span><a href="../classes/query.html" class="tsd-signature-type" data-tsd-kind="Class">Query</a><span class="tsd-signature-symbol">&lt;</span><a href="iaccessquery.html" class="tsd-signature-type" data-tsd-kind="Interface">IAccessQuery</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../modules.html#texistencequery" class="tsd-signature-type" data-tsd-kind="Type alias">TExistenceQuery</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="ientity.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntity</a><span class="tsd-signature-symbol"> | </span><a href="../modules.html#taccessquerydata" class="tsd-signature-type" data-tsd-kind="Type alias">TAccessQueryData</a><span class="tsd-signature-symbol">&lt;</span><a href="iaccessquery.html" class="tsd-signature-type" data-tsd-kind="Interface">IAccessQuery</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><a href="ientity.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntity</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="ipartialworld.html">IPartialWorld</a>.<a href="ipartialworld.html#getentities">getEntities</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L52">src/world.spec.ts:52</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Query entities and find the ones with a certain combination of component</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> query: <a href="../classes/query.html" class="tsd-signature-type" data-tsd-kind="Class">Query</a><span class="tsd-signature-symbol">&lt;</span><a href="iaccessquery.html" class="tsd-signature-type" data-tsd-kind="Interface">IAccessQuery</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><a href="../modules.html#texistencequery" class="tsd-signature-type" data-tsd-kind="Type alias">TExistenceQuery</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="ientity.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntity</a><span class="tsd-signature-symbol"> | </span><a href="../modules.html#taccessquerydata" class="tsd-signature-type" data-tsd-kind="Type alias">TAccessQueryData</a><span class="tsd-signature-symbol">&lt;</span><a href="iaccessquery.html" class="tsd-signature-type" data-tsd-kind="Interface">IAccessQuery</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><a href="ientity.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntity</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited">
+					<a name="getresource" class="tsd-anchor"></a>
+					<h3>get<wbr>Resource</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Resource&lt;T&gt;<span class="tsd-signature-symbol">(</span>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="ipartialworld.html">IPartialWorld</a>.<a href="ipartialworld.html#getresource">getResource</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L58">src/world.spec.ts:58</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get a resource which was previously stored</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>type: <span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+					<a name="getresources" class="tsd-anchor"></a>
+					<h3>get<wbr>Resources</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Resources<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="ipartialworld.html">IPartialWorld</a>.<a href="ipartialworld.html#getresources">getResources</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L63">src/world.spec.ts:63</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get all resources stored in this world. Useful for debugging</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">IterableIterator</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+					<a name="maintain" class="tsd-anchor"></a>
+					<h3>maintain</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">maintain<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="ipartialworld.html">IPartialWorld</a>.<a href="ipartialworld.html#maintain">maintain</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L68">src/world.spec.ts:68</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Re-calculate all entity, component and system dependencies and connections</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="merge" class="tsd-anchor"></a>
+					<h3>merge</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">merge<span class="tsd-signature-symbol">(</span>world<span class="tsd-signature-symbol">: </span><a href="iworld.html" class="tsd-signature-type" data-tsd-kind="Interface">IWorld</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><a href="ientity.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntity</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L140">src/world.spec.ts:140</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Merge entities from another world into this one</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>world: <a href="iworld.html" class="tsd-signature-type" data-tsd-kind="Interface">IWorld</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><a href="ientity.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntity</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="run" class="tsd-anchor"></a>
+					<h3>run</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">run<span class="tsd-signature-symbol">(</span>configuration<span class="tsd-signature-symbol">?: </span><a href="irunconfiguration.html" class="tsd-signature-type" data-tsd-kind="Interface">IRunConfiguration</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L147">src/world.spec.ts:147</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Execute all systems continuously in a dispatch-loop
+									Contains performance benefits by pre-calculating and pre-scheduling the execution</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> configuration: <a href="irunconfiguration.html" class="tsd-signature-type" data-tsd-kind="Interface">IRunConfiguration</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited">
+					<a name="save" class="tsd-anchor"></a>
+					<h3>save</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">save&lt;C, T&gt;<span class="tsd-signature-symbol">(</span>query<span class="tsd-signature-symbol">?: </span><a href="../classes/query.html" class="tsd-signature-type" data-tsd-kind="Class">Query</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#texistencequery" class="tsd-signature-type" data-tsd-kind="Type alias">TExistenceQuery</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="ientity.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntity</a><span class="tsd-signature-symbol">&gt;</span>, options<span class="tsd-signature-symbol">?: </span><a href="../modules.html#tserdeoptions" class="tsd-signature-type" data-tsd-kind="Type alias">TSerDeOptions</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#tserializer" class="tsd-signature-type" data-tsd-kind="Type alias">TSerializer</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="iserialformat.html" class="tsd-signature-type" data-tsd-kind="Interface">ISerialFormat</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="ipartialworld.html">IPartialWorld</a>.<a href="ipartialworld.html#save">save</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/751c1bb/src/world.spec.ts#L76">src/world.spec.ts:76</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Prepare a savable version of the current world.
+									The query can be used to only save a sub-set with specific conditions</p>
+								</div>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>C<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object</span></h4>
+								</li>
+								<li>
+									<h4>T<span class="tsd-signature-symbol">: </span><a href="iaccessdescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IAccessDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> query: <a href="../classes/query.html" class="tsd-signature-type" data-tsd-kind="Class">Query</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#texistencequery" class="tsd-signature-type" data-tsd-kind="Type alias">TExistenceQuery</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TTypeProto</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><a href="ientity.html" class="tsd-signature-type" data-tsd-kind="Interface">IEntity</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <a href="../modules.html#tserdeoptions" class="tsd-signature-type" data-tsd-kind="Type alias">TSerDeOptions</a><span class="tsd-signature-symbol">&lt;</span><a href="../modules.html#tserializer" class="tsd-signature-type" data-tsd-kind="Type alias">TSerializer</a><span class="tsd-signature-symbol">&gt;</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="iserialformat.html" class="tsd-signature-type" data-tsd-kind="Interface">ISerialFormat</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface">
+						<a href="iworld.html" class="tsd-kind-icon">IWorld</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="iworld.html#commands" class="tsd-kind-icon">commands</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="iworld.html#serde" class="tsd-kind-icon">serde</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="iworld.html#systeminfos" class="tsd-kind-icon">system<wbr>Infos</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="iworld.html#addentity" class="tsd-kind-icon">add<wbr>Entity</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter">
+								<a href="iworld.html#addresource" class="tsd-kind-icon">add<wbr>Resource</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+								<a href="iworld.html#buildentity" class="tsd-kind-icon">build<wbr>Entity</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="iworld.html#createentity" class="tsd-kind-icon">create<wbr>Entity</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="iworld.html#dispatch" class="tsd-kind-icon">dispatch</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+								<a href="iworld.html#flushcommands" class="tsd-kind-icon">flush<wbr>Commands</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+								<a href="iworld.html#getentities" class="tsd-kind-icon">get<wbr>Entities</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited">
+								<a href="iworld.html#getresource" class="tsd-kind-icon">get<wbr>Resource</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+								<a href="iworld.html#getresources" class="tsd-kind-icon">get<wbr>Resources</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-inherited">
+								<a href="iworld.html#maintain" class="tsd-kind-icon">maintain</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="iworld.html#merge" class="tsd-kind-icon">merge</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="iworld.html#run" class="tsd-kind-icon">run</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-interface tsd-has-type-parameter tsd-is-inherited">
+								<a href="iworld.html#save" class="tsd-kind-icon">save</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
