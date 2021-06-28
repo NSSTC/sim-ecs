@@ -32,7 +32,7 @@ export class Query<
                 ? TAccessQueryData<DESC>
                 : never
 > {
-    queryResult: Map<IEntity, DATA> = new Map();
+    protected queryResult: Map<IEntity, DATA> = new Map();
 
     constructor(
         protected queryDescriptor: DESC
