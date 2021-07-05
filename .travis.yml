@@ -3,5 +3,7 @@ cache:
   directories:
     - "node_modules"
 node_js:
-  - node
-  - lts/*
+  - "10"
+  - "12"
+  - "14"
+  - "16"
