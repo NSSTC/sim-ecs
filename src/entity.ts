@@ -7,12 +7,14 @@ export class Entity implements IEntity {
     protected components: Map<TObjectProto, Object> = new Map();
     protected tags: Set<TTag> = new Set();
 
-    addComponent(component: Object): Entity {
-        if (this.hasComponent(component.constructor as typeof Object)) {
-            throw new Error(`Component "${component.constructor.name}" already exists on entity!`)
+    addComponent(component: Object | TObjectProto): Entity {
+        const obj = this.asObject(component);
+
+        if (this.hasComponent(obj.constructor as typeof Object)) {
+            throw new Error(`Component "${obj.constructor.name}" already exists on entity!`)
         }
 
-        this.components.set(component.constructor as TObjectProto, component);
+        this.components.set(obj.constructor as TObjectProto, component);
         return this;
     }
 
@@ -21,12 +23,24 @@ export class Entity implements IEntity {
         return this;
     }
 
+    protected asObject(component: Object | TObjectProto, ...args: unknown[]): Object {
+        return typeof component === 'object'
+            ? component
+            : new (component.prototype.constructor.bind(component, ...Array.from(arguments).slice(1)))();
+    }
+
     getComponent<T extends Object>(component: TTypeProto<T>): T | undefined {
         return this.components.get(component) as T;
     }
 
     getComponents(): IterableIterator<Object> {
         return this.components.values();
+    }
+
+    protected getConstructor(component: Object | TObjectProto): TObjectProto {
+        return typeof component === 'object'
+            ? component.constructor as TObjectProto
+            : component;
     }
 
     getTags(): IterableIterator<TTag> {
@@ -41,8 +55,8 @@ export class Entity implements IEntity {
         return this.tags.has(tag);
     }
 
-    removeComponent(component: Object): Entity {
-        this.components.delete(component.constructor as TObjectProto);
+    removeComponent(component: Object | TObjectProto): Entity {
+        this.components.delete(this.getConstructor(component));
         return this;
     }
 

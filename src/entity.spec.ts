@@ -7,7 +7,7 @@ export interface IEntity {
      * Add a component to this entity
      * @param component
      */
-    addComponent(component: Object): IEntity
+    addComponent(component: Object | TObjectProto): IEntity
 
     /**
      * Add a tag to this entity
@@ -50,7 +50,7 @@ export interface IEntity {
      * Un-associate a component from this entity
      * @param component
      */
-    removeComponent(component: Object): IEntity
+    removeComponent(component: Object | TObjectProto): IEntity
 
     /**
      * Remove a tag from this entity
