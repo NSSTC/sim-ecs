@@ -22,7 +22,6 @@ export type TAccessQueryData<DESC extends IAccessQuery<TTypeProto<Object>>> = {
     [P in keyof DESC]: Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>>
 }
 
-// todo: ReadEntity() should also work
 export class Query<
     DESC extends IAccessQuery<TTypeProto<Object>> | TExistenceQuery<TTypeProto<Object>>,
     DATA =
@@ -154,6 +153,7 @@ export class Query<
     }
 }
 
+// todo: this is dangerous! The exposed interface should be reduced to prevent direct modifications in systems
 export function ReadEntity(): TAccessQueryParameter<TTypeProto<Readonly<IEntity>>> {
     return Object.assign({}, Entity, {
         [accessDescSym]: {

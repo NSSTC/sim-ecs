@@ -1,23 +1,48 @@
-import {IWorld, World} from "./world";
-import {IWorldBuilder} from "./world-builder.spec";
-import {WorldBuilder} from "./world-builder";
+import {IWorld} from "./world";
+import {IWorldBuilder, WorldBuilder} from "./world-builder";
 
 
-type TWorldInfo = {
-    name?: string
-    world: IWorld
-};
+const worlds: Set<IWorld> = new Set();
 
-export class ECS {
-    protected worlds: Map<World, TWorldInfo> = new Map();
+/**
+ * Register a world
+ * @param world
+ */
+export function addWorld(world: IWorld) {
+    worlds.add(world);
+}
 
-    buildWorld(name?: string): IWorldBuilder {
-        return new WorldBuilder(this).addCallback(world => this.worlds.set(world as World, { name, world }));
-    }
+/**
+ * Build a new world and automatically add it to the list of worlds inside the ECS
+ */
+export function buildWorld(): IWorldBuilder {
+    return new WorldBuilder().addCallback(world => worlds.add(world));
+}
 
-    removeWorld(world: IWorld) {
-        this.worlds.delete(world as World);
+/**
+ * Find a world with a name
+ * @param name
+ */
+export function findWorld(name: string): IWorld | undefined {
+    let world;
+    for (world of worlds) {
+        if (world.name == name) {
+            return world;
+        }
     }
 }
 
-export default ECS;
+/**
+ * Iterate over all registered worlds
+ */
+export function getWorlds(): IterableIterator<IWorld> {
+    return worlds.values();
+}
+
+/**
+ * Remove a world
+ * @param world
+ */
+export function removeWorld(world: IWorld) {
+    worlds.delete(world);
+}

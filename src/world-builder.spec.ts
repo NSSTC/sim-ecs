@@ -14,13 +14,6 @@ export interface IWorldBuilder {
     build(): IWorld
 
     /**
-     * Add system to the world
-     * @param System
-     * @param dependencies
-     */
-    withSystem(System: TSystemProto, dependencies?: TSystemProto[]): IWorldBuilder
-
-    /**
      * Register a component in the world
      * @param Component
      * @param options
@@ -32,4 +25,17 @@ export interface IWorldBuilder {
      * @param Components
      */
     withComponents(...Components: TObjectProto[]): IWorldBuilder
+
+    /**
+     * Give the world a name
+     * @param name
+     */
+    withName(name: string): IWorldBuilder
+
+    /**
+     * Add system to the world
+     * @param System
+     * @param dependencies
+     */
+    withSystem(System: TSystemProto, dependencies?: TSystemProto[]): IWorldBuilder
 }

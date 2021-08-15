@@ -33,6 +33,7 @@ export interface ISystemInfo {
 
 export interface IPartialWorld {
     readonly commands: ICommands
+    readonly name?: string
     readonly serde: ISerDe
 
     /**

@@ -1,4 +1,4 @@
-import {ECS, IWorld} from "sim-ecs";
+import {buildWorld, IWorld} from "sim-ecs";
 import {PaddleSystem} from "./systems/paddle";
 import {beforeFrameHandler} from "./app/frame-transition-handlers";
 import {InputSystem} from "./systems/input";
@@ -36,8 +36,7 @@ const cleanup = () => {
 };
 
 const createWorld = () => {
-    return new ECS()
-        .buildWorld()
+    return buildWorld()
         .withSystem(AnimationSystem, [BallSystem, PaddleSystem])
         .withSystem(BallSystem, [CollisionSystem])
         .withSystem(CollisionSystem, [PaddleSystem])

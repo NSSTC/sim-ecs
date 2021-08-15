@@ -14,7 +14,6 @@ import {TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
 import {SerDe, TDeserializer, TSerDeOptions, TSerializer} from "./serde/serde";
 import {ISerialFormat} from "./serde/serial-format";
-import ECS from "./ecs";
 import {Commands} from "./commands/commands";
 import {CommandsAggregator} from "./commands/commands-aggregator";
 import {ISystem, System, TSystemProto} from "./system";
@@ -50,7 +49,7 @@ export class World implements IWorld {
     protected transitionWorld: ITransitionActions;
 
     constructor(
-        public ecs: ECS,
+        protected _name?: string,
         public systemInfos: Set<ISystemInfo> = new Set(),
         protected _serde: SerDe = new SerDe(),
     ) {
@@ -104,6 +103,10 @@ export class World implements IWorld {
 
     get dirty() {
         return this._dirty;
+    }
+
+    get name() {
+        return this._name;
     }
 
     get running() {

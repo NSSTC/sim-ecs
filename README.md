@@ -87,8 +87,7 @@ which usually means an interface with comments on what the methods do.
 In an ECS, a world is like a container for entities.
 
 ```typescript
-const ecs = new ECS();
-const world = ecs.buildWorld().withSystem(CountSystem).build();
+const world = buildWorld().withSystem(CountSystem).build();
 ```
 
 

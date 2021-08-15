@@ -3,46 +3,33 @@ import {
     IWorldBuilder,
 } from "./world-builder.spec";
 import {System, TSystemProto} from "./system";
-import {IWorld, ISystemInfo, World} from "./world";
+import {ISystemInfo, World} from "./world";
 import {TObjectProto} from "./_.spec";
 import {SerDe} from "./serde/serde";
-import ECS from "./ecs";
+
+
+export * from './world-builder.spec';
 
 export class WorldBuilder implements IWorldBuilder {
-    protected callbacks: Set<(world: IWorld) => void> = new Set();
+    protected callbacks: Set<(world: World) => void> = new Set();
+    protected name?: string;
     protected serde = new SerDe();
     protected systemInfos = new Map<TSystemProto, ISystemInfo>();
 
-    constructor(
-        protected ecs: ECS,
-    ) {}
 
-    addCallback(cb: (world: IWorld) => void): WorldBuilder {
+    addCallback(cb: (world: World) => void): WorldBuilder {
         this.callbacks.add(cb);
         return this;
     }
 
-    build(): IWorld {
-        const world = new World(this.ecs, new Set(this.systemInfos.values()), this.serde);
+    build(): World {
+        const world = new World(this.name, new Set(this.systemInfos.values()), this.serde);
 
         for (const cb of this.callbacks) {
             cb(world);
         }
 
         return world;
-    }
-
-    withSystem(System: TSystemProto, dependencies?: TSystemProto[]): WorldBuilder {
-        if (this.systemInfos.has(System)) {
-            throw new Error(`The system ${System.constructor.name} is already registered!`);
-        }
-
-        this.systemInfos.set(System, {
-            system: new System() as System,
-            dependencies: new Set(dependencies),
-        });
-
-        return this;
     }
 
     withComponent(Component: TObjectProto, options?: IComponentRegistrationOptions): WorldBuilder {
@@ -59,6 +46,24 @@ export class WorldBuilder implements IWorldBuilder {
         for (const Component of Components) {
             this.withComponent(Component);
         }
+
+        return this;
+    }
+
+    withName(name: string): WorldBuilder {
+        this.name = name;
+        return this;
+    }
+
+    withSystem(System: TSystemProto, dependencies?: TSystemProto[]): WorldBuilder {
+        if (this.systemInfos.has(System)) {
+            throw new Error(`The system ${System.constructor.name} is already registered!`);
+        }
+
+        this.systemInfos.set(System, {
+            system: new System() as System,
+            dependencies: new Set(dependencies),
+        });
 
         return this;
     }

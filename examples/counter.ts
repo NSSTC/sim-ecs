@@ -1,4 +1,4 @@
-import {ECS, ISystemActions, Query, System, Write} from "..";
+import {buildWorld, ISystemActions, Query, System, Write} from "../src";
 
 
 /// a component.
@@ -46,10 +46,9 @@ class CounterSystem extends System {
 
 /// with everything defined, let's implement the setup code
 /// everything starts with the ECS initialization
-const ecs = new ECS();
+
 /// then, we need a world which will hold our systems and entities
-const world = ecs
-    .buildWorld()
+const world = buildWorld()
     /// we can inform the world about our processing logic by adding the above defined system
     .withSystem(CounterSystem)
     /// we can register components types at this level in order to enable saving (serialization) and loading (deserialization) of them
