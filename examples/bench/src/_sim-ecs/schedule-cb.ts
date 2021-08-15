@@ -1,4 +1,4 @@
-import {ECS, ISystemActions, Query, System, World, Write} from 'sim-ecs';
+import {buildWorld, ISystemActions, Query, System, World, Write} from 'sim-ecs';
 import {ABenchmark, IBenchmark} from "../benchmark.spec";
 
 class A { constructor(public val: number) {} }
@@ -54,8 +54,7 @@ export class Benchmark extends ABenchmark {
         protected iterCount: number
     ) {
         super();
-        this.world = new ECS()
-            .buildWorld()
+        this.world = buildWorld()
             .withSystem(ABSystem)
             .withSystem(CDSystem)
             .withSystem(CESystem)

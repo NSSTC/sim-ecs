@@ -1,4 +1,4 @@
-import {ECS, IWorld} from 'sim-ecs';
+import {buildWorld, IWorld} from 'sim-ecs';
 import {ABenchmark} from "../benchmark.spec";
 
 class Transform {}
@@ -13,8 +13,7 @@ export class Benchmark extends ABenchmark {
         protected iterCount: number
     ) {
         super();
-        this.world = new ECS()
-            .buildWorld()
+        this.world = buildWorld()
             .withComponents(
                 Transform,
                 Position,

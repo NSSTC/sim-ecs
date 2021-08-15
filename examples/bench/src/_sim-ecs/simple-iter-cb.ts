@@ -1,4 +1,4 @@
-import {ECS, ISystemActions, Query, Read, System, World, Write} from 'sim-ecs';
+import {buildWorld, ISystemActions, Query, Read, System, World, Write} from 'sim-ecs';
 import {ABenchmark, IBenchmark} from "../benchmark.spec";
 
 class Transform {
@@ -38,8 +38,7 @@ export class Benchmark extends ABenchmark {
         protected iterCount: number
     ) {
         super();
-        this.world = new ECS()
-            .buildWorld()
+        this.world = buildWorld()
             .withSystem(SimpleIterSystem)
             .withComponents(
                 Transform,
