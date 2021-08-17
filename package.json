@@ -15,17 +15,17 @@
     "sim-ecs"
   ],
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.18",
-    "@types/mocha": "^8.2.2",
+    "@types/chai": "^4.2.21",
+    "@types/mocha": "^9.0.0",
     "chai": "^4.2.0",
-    "mocha": "^8.2.1",
+    "mocha": "^9.0.3",
     "nyc": "^15.1.0",
-    "ts-node": "^10.0.0",
-    "typedoc": "^0.21.2",
-    "typescript": "^4.3.4"
+    "ts-node": "^10.2.0",
+    "typedoc": "^0.21.5",
+    "typescript": "^4.3.5"
   },
   "files": [
     "dist"
