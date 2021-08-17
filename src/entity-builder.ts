@@ -5,7 +5,11 @@ import {TObjectProto} from "./_.spec";
 export * from './entity-builder.spec';
 
 export class EntityBuilder implements IEntityBuilder {
-    protected entity = new Entity();
+    protected entity: Entity;
+
+    constructor(uuid?: string) {
+        this.entity = new Entity(uuid);
+    }
 
     build(): Entity {
         return this.entity;

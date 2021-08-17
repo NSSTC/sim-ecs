@@ -33,6 +33,7 @@ export enum ETargetType {
 
 export interface IAccessDescriptor<C extends Object> {
     [accessDescSym]: {
+        readonly data?: string
         readonly target: TTypeProto<C> | TTag
         readonly targetType: ETargetType
         readonly type: EAccess

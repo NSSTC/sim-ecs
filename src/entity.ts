@@ -1,11 +1,28 @@
 import {IEntity, TTag} from "./entity.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
+import {registerEntity} from "./ecs";
 
 export * from './entity.spec';
 
 export class Entity implements IEntity {
+    static uuidFn?: () => string;
     protected components: Map<TObjectProto, Object> = new Map();
     protected tags: Set<TTag> = new Set();
+
+    constructor(protected uuid?: string) {
+        if (uuid) {
+            registerEntity(this);
+        }
+    }
+
+    get id() {
+        if (!this.uuid && Entity.uuidFn) {
+            this.uuid = Entity.uuidFn();
+            registerEntity(this);
+        }
+
+        return this.uuid;
+    }
 
     addComponent(component: Object | TObjectProto): Entity {
         const obj = this.asObject(component);

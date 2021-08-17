@@ -39,7 +39,7 @@ export interface IPartialWorld {
     /**
      * Convenience builder to create a new Entity
      */
-    buildEntity(): IEntityBuilder
+    buildEntity(uuid?: string): IEntityBuilder
 
     /**
      * Execute all commands NOW

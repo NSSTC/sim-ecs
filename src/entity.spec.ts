@@ -4,6 +4,12 @@ export type TTag = number | string;
 
 export interface IEntity {
     /**
+     * UUID to identify the entity across instances
+     * The ID is generated and must be manually maintained when syncing with another instance
+     */
+    readonly id?: string
+
+    /**
      * Add a component to this entity
      * @param component
      */

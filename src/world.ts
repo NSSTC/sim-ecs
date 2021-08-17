@@ -144,8 +144,8 @@ export class World implements IWorld {
         return instance;
     }
 
-    buildEntity(): EntityBuilder {
-        return new EntityBuilder();
+    buildEntity(uuid?: string): EntityBuilder {
+        return new EntityBuilder(uuid);
     }
 
     clearEntities() {

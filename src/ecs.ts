@@ -1,8 +1,10 @@
-import {IWorld} from "./world";
+import {IWorld} from "./world.spec";
 import {IWorldBuilder, WorldBuilder} from "./world-builder";
+import {IEntity} from "./entity.spec";
 
 
-const worlds: Set<IWorld> = new Set();
+const entities = new Map<string, IEntity>();
+const worlds = new Set<IWorld>();
 
 /**
  * Register a world
@@ -30,6 +32,29 @@ export function findWorld(name: string): IWorld | undefined {
             return world;
         }
     }
+}
+
+/**
+ * Get a tracked entity
+ * @param id
+ */
+export function getEntity(id: string): IEntity | undefined {
+    return entities.get(id);
+}
+
+/**
+ * Register an entity by its ID
+ * Only useful for tracking entities with ID
+ * @param entity
+ */
+export function registerEntity(entity: IEntity) {
+    const id = entity.id;
+
+    if (!id) {
+        throw new Error('Could not get ID from entity, did you forget to register a generator or pass an ID?');
+    }
+
+    entities.set(id, entity);
 }
 
 /**

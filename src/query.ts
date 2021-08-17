@@ -11,8 +11,8 @@ import {
     TExistenceQuery,
     TAccessQueryParameter, TExistenceQueryParameter, addEntitySym, removeEntitySym, clearEntitiesSym
 } from "./query.spec";
-import {Entity, IEntity, TTag} from "./entity";
-import {TTypeProto} from "./_.spec";
+import {Entity, IEntity, TEntityProto, TTag} from "./entity";
+import {TObjectProto, TTypeProto} from "./_.spec";
 import IWorld from "./world.spec";
 
 export * from "./query.spec";
@@ -93,6 +93,10 @@ export class Query<
         return components as unknown as DATA;
     }
 
+    public getOne(): DATA | undefined {
+        return this.queryResult.values().next().value;
+    }
+
     public iter(world?: IWorld): IterableIterator<DATA> {
         if (world) {
             const data: DATA[] = [];
@@ -146,6 +150,14 @@ export class Query<
                 ) {
                     return false;
                 }
+
+                if (
+                    componentDesc[accessDescSym].targetType == ETargetType.entity
+                    && componentDesc[accessDescSym].data !== undefined
+                    && componentDesc[accessDescSym].data != entity.id
+                ) {
+                    return false;
+                }
             }
         }
 
@@ -154,9 +166,10 @@ export class Query<
 }
 
 // todo: this is dangerous! The exposed interface should be reduced to prevent direct modifications in systems
-export function ReadEntity(): TAccessQueryParameter<TTypeProto<Readonly<IEntity>>> {
+export function ReadEntity(uuid?: string): TAccessQueryParameter<TTypeProto<Readonly<IEntity>>> {
     return Object.assign({}, Entity, {
         [accessDescSym]: {
+            data: uuid,
             target: Entity,
             targetType: ETargetType.entity,
             type: EAccess.meta,
@@ -194,7 +207,7 @@ export function With<C extends Object>(componentPrototype: TTypeProto<C>): IExis
     };
 }
 
-export function WithTag(tag: TTag): TAccessQueryParameter<TTypeProto<Object>> & IExistenceDescriptor<TTypeProto<Object>> {
+export function WithTag(tag: TTag): TAccessQueryParameter<TTypeProto<Object>> & IExistenceDescriptor<TObjectProto> {
     return {
         [accessDescSym]: {
             target: tag,
@@ -219,7 +232,7 @@ export function Without<C extends Object>(componentPrototype: TTypeProto<C>): IE
     };
 }
 
-export function WithoutTag(tag: TTag): IExistenceDescriptor<TTypeProto<Object>> {
+export function WithoutTag(tag: TTag): IExistenceDescriptor<TObjectProto> {
     return {
         [existenceDescSym]: {
             target: tag,

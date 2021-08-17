@@ -23,6 +23,7 @@ npm install sim-ecs
 - [Update loop](#Update-loop)
 - [Commands](#commands)
 - [Saving and using Prefabs](#saving-and-using-prefabs)
+- [Syncing instances](#syncing-instances)
 - [Building for Production](#building-for-production)
 - [Comparison with other TS ECS libs](#comparison-with-other-ts-ecs-libs)
   - [Features](#features)
@@ -286,6 +287,32 @@ saveToFile(jsonPrefab, 'prefab.json');
 // so that only certain data is saved and not all data of the whole world
 const saveData = world.save(new Query([With(Player)])).toJSON();
 localStorage.setItem('save', saveData);
+```
+
+
+## Syncing instances
+
+In order to keep several instances in sync, sim-ecs provides tooling.
+Especially when writing networked simulations, it is very important to keep certain entities in sync.
+
+```typescript
+// initialize UUID mechanism
+import {uuid} from 'your-favorit-uuid-library';
+Entity.uuidFn = uuid;
+
+// at the source, entities can be created as normal
+const entity = world.buildEntity().build();
+
+// IDs are created lazily when getting them for the first time
+const entityId = entity.id;
+
+// on another instance, you can assign the entity ID on entity creation:
+const syncedEntity = world.buildEntity(entityId).build();
+
+// in order to fetch an entity with a given ID, the ECS's function can be used
+const entityFromIdGetter = getEntity(entityId);
+// or inside a Query:
+const {entityFromIdQuery} = new Query({entityFromIdQuery: ReadEntity(entityId) }).getOne();
 ```
 
 
