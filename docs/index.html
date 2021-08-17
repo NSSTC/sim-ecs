@@ -1,0 +1,721 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>sim-ecs - v0.4.0</title>
+	<meta name="description" content="Documentation for sim-ecs - v0.4.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">sim-ecs - v0.4.0</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<h1>sim-ecs - v0.4.0</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#sim-ecs" id="sim-ecs" style="color: inherit; text-decoration: none;">
+					<h1>sim-ecs</h1>
+				</a>
+				<p>Type-based, Components-first ECS, which is optimized for simulation needs. Will run in NodeJS and the browser.</p>
+				<pre><code><span style="color: #001080">npm</span><span style="color: #000000"> </span><span style="color: #001080">install</span><span style="color: #000000"> </span><span style="color: #001080">sim</span><span style="color: #000000">-</span><span style="color: #001080">ecs</span>
+</code></pre>
+				<hr>
+				<ul>
+					<li><a href="#considerations">Considerations</a></li>
+					<li><a href="#why-use-sim-ecs">Why use sim-ecs</a></li>
+					<li><a href="#examples">Examples</a><ul>
+							<li><a href="#counter">Counter</a></li>
+							<li><a href="#pong">Pong</a></li>
+						</ul>
+					</li>
+					<li><a href="#where-is-the-documentation">Where is the Documentation</a></li>
+					<li><a href="#creating-the-ecs-and-a-world">Creating the ECS and a World</a></li>
+					<li><a href="#setting-resources">Setting Resources</a></li>
+					<li><a href="#defining-systems">Defining Systems</a></li>
+					<li><a href="#defining-components">Defining Components</a></li>
+					<li><a href="#adding-entities">Adding Entities</a></li>
+					<li><a href="#working-with-states-optional">Working with States</a></li>
+					<li><a href="#Update-loop">Update loop</a></li>
+					<li><a href="#commands">Commands</a></li>
+					<li><a href="#saving-and-using-prefabs">Saving and using Prefabs</a></li>
+					<li><a href="#syncing-instances">Syncing instances</a></li>
+					<li><a href="#building-for-production">Building for Production</a></li>
+					<li><a href="#comparison-with-other-ts-ecs-libs">Comparison with other TS ECS libs</a><ul>
+							<li><a href="#features">Features</a></li>
+							<li><a href="#performance">Performance</a></li>
+						</ul>
+					</li>
+				</ul>
+				<a href="#considerations" id="considerations" style="color: inherit; text-decoration: none;">
+					<h2>Considerations</h2>
+				</a>
+				<p>This ECS is inspired by SPECS, Legion and bevy-ecs (three Rust ECS libraries), however optimized for TypeScript.
+					It is built for easy usage (DX) and high iteration speed.
+					The trade-off is that insertion and deletion are slower,
+					however there are optimizations and opinionations in place to still make it fast.
+				For example, by using commands, these operations are batched and executed when it is safe to perform them.</p>
+				<p>In order to create optimized simulation runs, the ECS has to be fully specified in the beginning.
+				All components, systems and queries need to be registered at the start.</p>
+				<a href="#why-use-sim-ecs" id="why-use-sim-ecs" style="color: inherit; text-decoration: none;">
+					<h2>Why use sim-ecs</h2>
+				</a>
+				<p>Sim-ecs was created out of the lack of a fast, featured ECS library for TypeScript, which is able to handle
+					the requirements in a big, agile game project. While there are other ECS libraries available,
+				they do not necessarily cater to that goal and will have short-comings in such an environment.</p>
+				<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
+					<h2>Examples</h2>
+				</a>
+				<p>For quickly seeing the ECS in action, there are two examples available: A counter and a game of Pong.
+				You can find them in the <code>/examples</code> directory.</p>
+				<a href="#counter" id="counter" style="color: inherit; text-decoration: none;">
+					<h3>Counter</h3>
+				</a>
+				<p>The counter example is a very small, minimal example to get a quick overview.
+				It increases a number a few times and then terminates. You can run it using:</p>
+				<pre><code><span style="color: #001080">$</span><span style="color: #000000"> </span><span style="color: #001080">npm</span><span style="color: #000000"> </span><span style="color: #001080">run</span><span style="color: #000000"> </span><span style="color: #001080">counter</span>
+</code></pre>
+				<a href="#pong" id="pong" style="color: inherit; text-decoration: none;">
+					<h3>Pong</h3>
+				</a>
+				<p>Pong is a full game which can be run in the browser. It demonstrates all features of sim-ecs.
+					It comes with numerous components and systems, handles states and makes use of prefabs and saves.
+					Since it is an ECS demo, other parts of the game code may be minimal, like rendering and sound.
+				It is recommended to use readily available libraries for these parts for any real endeavour, like BabylonJS.</p>
+				<p>You will need to build Pong from its directory.
+				Then, you can open the <code>index.html</code> in the public folder to run the game.  </p>
+				<a href="#where-is-the-documentation" id="where-is-the-documentation" style="color: inherit; text-decoration: none;">
+					<h2>Where is the Documentation</h2>
+				</a>
+				<p>Anything which is not explained in detail enough in this README can be found in the code.
+					You will notice that there are spec-files. These contain the specification for a certain class,
+				which usually means an interface with comments on what the methods do.</p>
+				<a href="#creating-the-ecs-and-a-world" id="creating-the-ecs-and-a-world" style="color: inherit; text-decoration: none;">
+					<h2>Creating the ECS and a World</h2>
+				</a>
+				<p>In an ECS, a world is like a container for entities.</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">world</span><span style="color: #000000"> = </span><span style="color: #795E26">buildWorld</span><span style="color: #000000">().</span><span style="color: #795E26">withSystem</span><span style="color: #000000">(</span><span style="color: #001080">CountSystem</span><span style="color: #000000">).</span><span style="color: #795E26">build</span><span style="color: #000000">();</span>
+</code></pre>
+				<a href="#setting-resources" id="setting-resources" style="color: inherit; text-decoration: none;">
+					<h2>Setting Resources</h2>
+				</a>
+				<p>Resources are objects, which can hold certain data, like the start DateTime.</p>
+				<pre><code class="language-typescript"><span style="color: #008000">// this call implicitely creates a new object of type Date. You can also pass an instance instead.</span>
+<span style="color: #008000">// you can pass arguments to the constructor by passing them as additional parameters here</span>
+<span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #795E26">addResource</span><span style="color: #000000">(</span><span style="color: #267F99">Date</span><span style="color: #000000">);</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #795E26">getResource</span><span style="color: #000000">(</span><span style="color: #267F99">Date</span><span style="color: #000000">).</span><span style="color: #795E26">getDate</span><span style="color: #000000">());</span>
+</code></pre>
+				<a href="#defining-systems" id="defining-systems" style="color: inherit; text-decoration: none;">
+					<h2>Defining Systems</h2>
+				</a>
+				<p>Systems are the logic, which operates on data sets (components).
+				They are logic building blocks which separate concerns and make the world move.</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">CountSystem</span><span style="color: #000000"> </span><span style="color: #0000FF">extends</span><span style="color: #000000"> </span><span style="color: #267F99">System</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">readonly</span><span style="color: #000000"> </span><span style="color: #001080">query</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Query</span><span style="color: #000000">({ </span><span style="color: #001080">counterObj:</span><span style="color: #000000"> </span><span style="color: #795E26">Write</span><span style="color: #000000">(</span><span style="color: #001080">Counter</span><span style="color: #000000">) });</span>
+
+<span style="color: #000000">    </span><span style="color: #008000">// update() is called every time the world needs to be updated. Put your logic in there</span>
+<span style="color: #000000">    </span><span style="color: #795E26">run</span><span style="color: #000000">() {</span>
+<span style="color: #000000">        </span><span style="color: #0000FF">this</span><span style="color: #000000">.</span><span style="color: #001080">query</span><span style="color: #000000">.</span><span style="color: #795E26">execute</span><span style="color: #000000">(({</span><span style="color: #001080">counterObj</span><span style="color: #000000">}) </span><span style="color: #0000FF">=&gt;</span><span style="color: #000000"> {</span>
+<span style="color: #000000">          </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(++</span><span style="color: #001080">counterObj</span><span style="color: #000000">.</span><span style="color: #001080">a</span><span style="color: #000000">);</span>
+<span style="color: #000000">        });</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<a href="#defining-components" id="defining-components" style="color: inherit; text-decoration: none;">
+					<h2>Defining Components</h2>
+				</a>
+				<p>Components are needed to define data on which the whole system can operate.
+					You can think of them like columns in a database.
+				Any serialize-able object may be a component in sim-ecs.</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">Counter</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">a</span><span style="color: #000000"> = </span><span style="color: #098658">0</span><span style="color: #000000">;</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<p>In case you have advanced components, it is possible to pass a serializer and deserializer
+					to the entity builder later on. If you don&#39;t do so, it is assumed that the component is a simple key:value map.
+				You can also use a default-type de-/serializer on save/load, which allows for a variety of standard types (such as <code>Date</code>) as components.</p>
+				<a href="#adding-entities" id="adding-entities" style="color: inherit; text-decoration: none;">
+					<h2>Adding Entities</h2>
+				</a>
+				<p>Entities are like glue. They define which components belong together and form one data.
+					Entities are automatically added to the world they are built in.
+				You can think of entities like rows in a database.</p>
+				<pre><code class="language-typescript"><span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #001080">commands</span><span style="color: #000000">.</span><span style="color: #795E26">buildEntity</span><span style="color: #000000">().</span><span style="color: #795E26">withComponent</span><span style="color: #000000">(</span><span style="color: #001080">Counter</span><span style="color: #000000">).</span><span style="color: #795E26">build</span><span style="color: #000000">();</span>
+</code></pre>
+				<a href="#working-with-states-optional" id="working-with-states-optional" style="color: inherit; text-decoration: none;">
+					<h2>Working with States (optional)</h2>
+				</a>
+				<p>States allow for splitting up a simulation into different logical parts.
+					In games, that&#39;s for example &quot;Menu&quot;, &quot;Play&quot; and &quot;Pause&quot;.
+					States can be switched using a push-down automaton.
+					States define which systems should run, so that a pause-state can run graphics updates, but not game-logic, for example.
+				If no state is passed to the dispatcher, all systems are run by default.</p>
+				<p>While the world is running (using <code>run()</code>), the state can be changed using commands.
+				Single calls to <code>dispatch()</code> do not offer the benefits of a PDA.</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">InitState</span><span style="color: #000000"> </span><span style="color: #0000FF">extends</span><span style="color: #000000"> </span><span style="color: #267F99">State</span><span style="color: #000000"> { </span><span style="color: #001080">_systems</span><span style="color: #000000"> = [</span><span style="color: #001080">InitSystem</span><span style="color: #000000">] }</span>
+<span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">RunState</span><span style="color: #000000"> </span><span style="color: #0000FF">extends</span><span style="color: #000000"> </span><span style="color: #267F99">State</span><span style="color: #000000"> { </span><span style="color: #001080">_systems</span><span style="color: #000000"> = [</span><span style="color: #001080">GravitySystem</span><span style="color: #000000">] }</span>
+<span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">PauseState</span><span style="color: #000000"> </span><span style="color: #0000FF">extends</span><span style="color: #000000"> </span><span style="color: #267F99">State</span><span style="color: #000000"> { </span><span style="color: #001080">_systems</span><span style="color: #000000"> = [</span><span style="color: #001080">PauseSystem</span><span style="color: #000000">] }</span>
+
+<span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #795E26">dispatch</span><span style="color: #000000">(</span><span style="color: #001080">InitState</span><span style="color: #000000">);</span>
+<span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #795E26">run</span><span style="color: #000000">({ </span><span style="color: #001080">initialState:</span><span style="color: #000000"> </span><span style="color: #001080">RunState</span><span style="color: #000000"> });</span>
+</code></pre>
+				<a href="#update-loop" id="update-loop" style="color: inherit; text-decoration: none;">
+					<h2>Update loop</h2>
+				</a>
+				<p>The update loop (for example game loop) is what keeps simulations running.
+				In this loop, the world is dispatched on each step (then it waits for 500ms for slower output).</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #795E26">update</span><span style="color: #000000"> = </span><span style="color: #0000FF">function</span><span style="color: #000000"> () {</span>
+<span style="color: #000000">    </span><span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #795E26">dispatch</span><span style="color: #000000">();</span>
+<span style="color: #000000">    </span><span style="color: #795E26">setTimeout</span><span style="color: #000000">(</span><span style="color: #001080">update</span><span style="color: #000000">, </span><span style="color: #098658">500</span><span style="color: #000000">);</span>
+<span style="color: #000000">};</span>
+
+<span style="color: #795E26">update</span><span style="color: #000000">();</span>
+</code></pre>
+				<p>However, sim-ecs has to do a lot of calculations on each dispatch,
+					so it offers its own <code>run()</code> method, which is optimized for continuously executing the system logic.
+				It is the recommended way of running the ECS for simulations!</p>
+				<pre><code class="language-typescript"><span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #795E26">run</span><span style="color: #000000">();</span>
+</code></pre>
+				<p>The run-method can be fed an options object to further configure the runner,
+					and from within a transition-handler or the systems, certain actions can be called
+				which influence how the runner acts. For example on transition, the state can be changed.</p>
+				<a href="#commands" id="commands" style="color: inherit; text-decoration: none;">
+					<h2>Commands</h2>
+				</a>
+				<p>Commands, accessible using <code>world.commands</code> and <code>actions.commands</code> in Systems, are a mechanism,
+					which queues certain functionality, like adding entities.
+					The queue is then worked on at certain sync points, usually at the end of every step.
+					This is a safety and comfort mechanism, which guarantees that critical changes can be triggered comfortably,
+				but still only run at times when it is actually safe to do them.</p>
+				<p>Such sync points include any major transitions in a step&#39;s life-cycle, and sim-ecs will always trigger the execution
+				of all queued commands at the end of the step.</p>
+				<a href="#saving-and-using-prefabs" id="saving-and-using-prefabs" style="color: inherit; text-decoration: none;">
+					<h2>Saving and using Prefabs</h2>
+				</a>
+				<p>Prefabs, short for pre-fabrications, are ready-made files or objects,
+					which can be loaded at runtime to initialize a certain part of the application.
+				In the case of sim-ecs, prefabs can be used to load entities with their components.</p>
+				<p>All loaded entities are tracked and can be unloaded when not needed anymore. This is thanks to a grouping mechanism,
+					which means that prefabs can be used to design menus, levels, GUIs, etc. which are only loaded when needed
+				and discarded after use. After all, who needs level1 data when they switched over to level2?</p>
+				<p>The same is true for save games, so that when going back to the menu or loading another save, this can be done cleanly.</p>
+				<p>Saving and loading save-data works the same in sim-ecs, since they both use a shared mechanism
+					If you wish to work with the raw serializable data instead of writing it as JSON, the SaveFormat extends Array,
+				so it can be used just like an <code>Array&lt;TEntity&gt;</code>.</p>
+				<pre><code class="language-typescript"><span style="color: #0000FF">enum</span><span style="color: #000000"> </span><span style="color: #267F99">MonsterTypes</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0070C1">Duck</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #0070C1">Lizard</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #0070C1">Tiger</span><span style="color: #000000">,</span>
+<span style="color: #000000">}</span>
+
+<span style="color: #008000">// loading a prefab, the prefab might be in a different file, even maybe just JSON data!</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">prefab</span><span style="color: #000000"> = [</span>
+<span style="color: #000000">    {</span>
+<span style="color: #000000">        </span><span style="color: #001080">Position:</span><span style="color: #000000"> &lt;</span><span style="color: #267F99">Position</span><span style="color: #000000">&gt;{</span>
+<span style="color: #000000">            </span><span style="color: #001080">x:</span><span style="color: #000000"> </span><span style="color: #098658">0</span><span style="color: #000000">,</span>
+<span style="color: #000000">            </span><span style="color: #001080">y:</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">,</span>
+<span style="color: #000000">        },</span>
+<span style="color: #000000">        </span><span style="color: #001080">Player:</span><span style="color: #000000"> &lt;</span><span style="color: #267F99">Player</span><span style="color: #000000">&gt;{</span>
+<span style="color: #000000">            </span><span style="color: #001080">level:</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">,</span>
+<span style="color: #000000">            </span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;Jane&#039;</span><span style="color: #000000">,</span>
+<span style="color: #000000">        },</span>
+<span style="color: #000000">        </span><span style="color: #001080">Health:</span><span style="color: #000000"> &lt;</span><span style="color: #267F99">Health</span><span style="color: #000000">&gt;{</span>
+<span style="color: #000000">            </span><span style="color: #001080">current:</span><span style="color: #000000"> </span><span style="color: #098658">100</span><span style="color: #000000">,</span>
+<span style="color: #000000">            </span><span style="color: #001080">max:</span><span style="color: #000000"> </span><span style="color: #098658">100</span><span style="color: #000000">,</span>
+<span style="color: #000000">        },</span>
+<span style="color: #000000">    },</span>
+<span style="color: #000000">    {</span>
+<span style="color: #000000">        </span><span style="color: #001080">Position:</span><span style="color: #000000"> &lt;</span><span style="color: #267F99">Position</span><span style="color: #000000">&gt;{</span>
+<span style="color: #000000">            </span><span style="color: #001080">x:</span><span style="color: #000000"> </span><span style="color: #098658">0</span><span style="color: #000000">, </span>
+<span style="color: #000000">            </span><span style="color: #001080">y:</span><span style="color: #000000"> </span><span style="color: #098658">1</span><span style="color: #000000">,</span>
+<span style="color: #000000">        }, </span>
+<span style="color: #000000">        </span><span style="color: #001080">Monster:</span><span style="color: #000000"> &lt;</span><span style="color: #267F99">Monster</span><span style="color: #000000">&gt;{</span>
+<span style="color: #000000">            </span><span style="color: #001080">hostileToPlayer:</span><span style="color: #000000"> </span><span style="color: #0000FF">true</span><span style="color: #000000">,</span>
+<span style="color: #000000">            </span><span style="color: #001080">type:</span><span style="color: #000000"> </span><span style="color: #001080">MonsterTypes</span><span style="color: #000000">.</span><span style="color: #001080">Tiger</span><span style="color: #000000">,</span>
+<span style="color: #000000">        },</span>
+<span style="color: #000000">        </span><span style="color: #001080">Health:</span><span style="color: #000000"> &lt;</span><span style="color: #267F99">Health</span><span style="color: #000000">&gt;{</span>
+<span style="color: #000000">            </span><span style="color: #001080">current:</span><span style="color: #000000"> </span><span style="color: #098658">100</span><span style="color: #000000">,</span>
+<span style="color: #000000">            </span><span style="color: #001080">max:</span><span style="color: #000000"> </span><span style="color: #098658">250</span><span style="color: #000000">,</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">    }, </span>
+<span style="color: #000000">];</span>
+
+
+<span style="color: #008000">// to load from JSON, use SerialFormat.fromJSON() instead!</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">prefabHandle</span><span style="color: #000000"> = </span><span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #001080">commands</span><span style="color: #000000">.</span><span style="color: #795E26">load</span><span style="color: #000000">(</span><span style="color: #001080">SerialFormat</span><span style="color: #000000">.</span><span style="color: #795E26">fromArray</span><span style="color: #000000">(</span><span style="color: #001080">prefab</span><span style="color: #000000">));</span>
+
+<span style="color: #008000">// ...</span>
+
+<span style="color: #008000">// unloading is also easily possible to clean up the world</span>
+<span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #001080">commands</span><span style="color: #000000">.</span><span style="color: #795E26">unloadPrefab</span><span style="color: #000000">(</span><span style="color: #001080">prefabHandle</span><span style="color: #000000">);</span>
+</code></pre>
+				<pre><code class="language-typescript"><span style="color: #008000">// saving a prefab from the current world. This may be used to write an editor</span>
+<span style="color: #008000">// or export a PoC for game designers to improve on</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">jsonPrefab</span><span style="color: #000000"> = </span><span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #795E26">save</span><span style="color: #000000">().</span><span style="color: #795E26">toJSON</span><span style="color: #000000">(</span><span style="color: #098658">4</span><span style="color: #000000">);</span>
+<span style="color: #795E26">saveToFile</span><span style="color: #000000">(</span><span style="color: #001080">jsonPrefab</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;prefab.json&#039;</span><span style="color: #000000">);</span>
+</code></pre>
+				<pre><code class="language-typescript"><span style="color: #008000">// filtering what should be saved is also possible,</span>
+<span style="color: #008000">// so that only certain data is saved and not all data of the whole world</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">saveData</span><span style="color: #000000"> = </span><span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #795E26">save</span><span style="color: #000000">(</span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Query</span><span style="color: #000000">([</span><span style="color: #795E26">With</span><span style="color: #000000">(</span><span style="color: #001080">Player</span><span style="color: #000000">)])).</span><span style="color: #795E26">toJSON</span><span style="color: #000000">();</span>
+<span style="color: #001080">localStorage</span><span style="color: #000000">.</span><span style="color: #795E26">setItem</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;save&#039;</span><span style="color: #000000">, </span><span style="color: #001080">saveData</span><span style="color: #000000">);</span>
+</code></pre>
+				<a href="#syncing-instances" id="syncing-instances" style="color: inherit; text-decoration: none;">
+					<h2>Syncing instances</h2>
+				</a>
+				<p>In order to keep several instances in sync, sim-ecs provides tooling.
+				Especially when writing networked simulations, it is very important to keep certain entities in sync.</p>
+				<pre><code class="language-typescript"><span style="color: #008000">// initialize UUID mechanism</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> {</span><span style="color: #001080">uuid</span><span style="color: #000000">} </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;your-favorit-uuid-library&#039;</span><span style="color: #000000">;</span>
+<span style="color: #001080">Entity</span><span style="color: #000000">.</span><span style="color: #001080">uuidFn</span><span style="color: #000000"> = </span><span style="color: #001080">uuid</span><span style="color: #000000">;</span>
+
+<span style="color: #008000">// at the source, entities can be created as normal</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">entity</span><span style="color: #000000"> = </span><span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #795E26">buildEntity</span><span style="color: #000000">().</span><span style="color: #795E26">build</span><span style="color: #000000">();</span>
+
+<span style="color: #008000">// IDs are created lazily when getting them for the first time</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">entityId</span><span style="color: #000000"> = </span><span style="color: #001080">entity</span><span style="color: #000000">.</span><span style="color: #001080">id</span><span style="color: #000000">;</span>
+
+<span style="color: #008000">// on another instance, you can assign the entity ID on entity creation:</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">syncedEntity</span><span style="color: #000000"> = </span><span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #795E26">buildEntity</span><span style="color: #000000">(</span><span style="color: #001080">entityId</span><span style="color: #000000">).</span><span style="color: #795E26">build</span><span style="color: #000000">();</span>
+
+<span style="color: #008000">// in order to fetch an entity with a given ID, the ECS&#039;s function can be used</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">entityFromIdGetter</span><span style="color: #000000"> = </span><span style="color: #795E26">getEntity</span><span style="color: #000000">(</span><span style="color: #001080">entityId</span><span style="color: #000000">);</span>
+<span style="color: #008000">// or inside a Query:</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> {</span><span style="color: #0070C1">entityFromIdQuery</span><span style="color: #000000">} = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Query</span><span style="color: #000000">({</span><span style="color: #001080">entityFromIdQuery:</span><span style="color: #000000"> </span><span style="color: #795E26">ReadEntity</span><span style="color: #000000">(</span><span style="color: #001080">entityId</span><span style="color: #000000">) }).</span><span style="color: #795E26">getOne</span><span style="color: #000000">();</span>
+</code></pre>
+				<a href="#building-for-production" id="building-for-production" style="color: inherit; text-decoration: none;">
+					<h2>Building for Production</h2>
+				</a>
+				<p>When building for production, it is important to keep class names.
+					Some minimizers need to be adjusted. For example WebPack (using Terser) needs to pass this as configuration.
+				The Pong example uses WebPack and demonstrates how to set up WebPack for proper production usage (in <code>make.js</code>).</p>
+				<a href="#comparison-with-other-ts-ecs-libs" id="comparison-with-other-ts-ecs-libs" style="color: inherit; text-decoration: none;">
+					<h2>Comparison with other TS ECS libs</h2>
+				</a>
+				<p>In an attempt to make sim-ecs best in class, it is important to compare it to other ECS libraries,
+					identify differences and improve based on lessons others already learned.
+					That&#39;s why a comparison to other libraries is tracked here, as fair as possible!
+				Please open a PR for any improvement!</p>
+				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
+					<h3>Features</h3>
+				</a>
+				<table>
+					<thead>
+						<tr>
+							<th align="right">Feature</th>
+							<th align="center">sim-ecs</th>
+							<th align="center">tick-knock</th>
+							<th align="center">ape-ecs</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td align="right">Data first</td>
+							<td align="center">x</td>
+							<td align="center"></td>
+							<td align="center"></td>
+						</tr>
+						<tr>
+							<td align="right">Full typing/intention support</td>
+							<td align="center">x</td>
+							<td align="center">x</td>
+							<td align="center"></td>
+						</tr>
+						<tr>
+							<td align="right">Everything can be used as a Component</td>
+							<td align="center">x</td>
+							<td align="center">x</td>
+							<td align="center"></td>
+						</tr>
+						<tr>
+							<td align="right">Consistency check at transpile time (thanks to typing)</td>
+							<td align="center">x</td>
+							<td align="center"></td>
+							<td align="center"></td>
+						</tr>
+						<tr>
+							<td align="right">Full async-support</td>
+							<td align="center">x</td>
+							<td align="center"></td>
+							<td align="center"></td>
+						</tr>
+						<tr>
+							<td align="right">Save / Load world</td>
+							<td align="center">x</td>
+							<td align="center"></td>
+							<td align="center">x</td>
+						</tr>
+						<tr>
+							<td align="right">Load prefabs</td>
+							<td align="center">x</td>
+							<td align="center"></td>
+							<td align="center">x</td>
+						</tr>
+						<tr>
+							<td align="right">State Management</td>
+							<td align="center">x</td>
+							<td align="center"></td>
+							<td align="center"></td>
+						</tr>
+				</tbody></table>
+				<a href="#performance" id="performance" style="color: inherit; text-decoration: none;">
+					<h3>Performance</h3>
+				</a>
+				<p>Please take the results with a grain of salt. These are benchmarks, so they are synthetic.
+				An actual application will use a mix out of everything and more, and depending on that may have a different experience.</p>
+				<p>Date: 27th June 2021</p>
+				<pre><code><span style="color: #000000">--------------------------------------------------------------------------------</span>
+<span style="color: #001080">TypeScript</span><span style="color: #000000"> </span><span style="color: #0070C1">ECS</span><span style="color: #000000"> </span><span style="color: #001080">Bench</span>
+<span style="color: #000000">--------------------------------------------------------------------------------</span>
+
+<span style="color: #000000">Platform: </span><span style="color: #001080">Windows_NT</span><span style="color: #000000"> </span><span style="color: #001080">win32</span><span style="color: #000000"> </span><span style="color: #001080">x64</span><span style="color: #000000"> </span><span style="color: #001080">v10</span><span style="color: #000000">.</span><span style="color: #098658">0.19043</span>
+<span style="color: #000000">CPU: </span><span style="color: #0070C1">AMD</span><span style="color: #000000"> </span><span style="color: #001080">Ryzen</span><span style="color: #000000"> </span><span style="color: #098658">7</span><span style="color: #000000"> 3700</span><span style="color: #0070C1">X</span><span style="color: #000000"> </span><span style="color: #098658">8</span><span style="color: #000000">-</span><span style="color: #001080">Core</span><span style="color: #000000"> </span><span style="color: #001080">Processor</span><span style="color: #000000">@3600</span><span style="color: #001080">MHz</span>
+
+<span style="color: #001080">Bench</span><span style="color: #000000">           </span><span style="color: #001080">v0</span><span style="color: #000000">.</span><span style="color: #098658">1.0</span>
+<span style="color: #001080">TypeScript</span><span style="color: #000000">      </span><span style="color: #001080">v4</span><span style="color: #000000">.</span><span style="color: #098658">3.4</span>
+<span style="color: #0070C1">TS</span><span style="color: #000000">-</span><span style="color: #001080">Lib</span><span style="color: #000000">          </span><span style="color: #001080">v2</span><span style="color: #000000">.</span><span style="color: #098658">3.0</span>
+<span style="color: #0070C1">TS</span><span style="color: #000000">-</span><span style="color: #001080">Node</span><span style="color: #000000">         </span><span style="color: #001080">v10</span><span style="color: #000000">.</span><span style="color: #098658">0.0</span>
+
+<span style="color: #001080">Ape</span><span style="color: #000000">-</span><span style="color: #0070C1">ECS</span><span style="color: #000000">         </span><span style="color: #001080">v1</span><span style="color: #000000">.</span><span style="color: #098658">3.1</span>
+<span style="color: #001080">sim</span><span style="color: #000000">-</span><span style="color: #001080">ecs</span><span style="color: #000000">         </span><span style="color: #001080">v0</span><span style="color: #000000">.</span><span style="color: #098658">4.0</span>
+<span style="color: #001080">tick</span><span style="color: #000000">-</span><span style="color: #001080">knock</span><span style="color: #000000">      </span><span style="color: #001080">v4</span><span style="color: #000000">.</span><span style="color: #098658">0.0</span>
+</code></pre>
+				<table>
+					<thead>
+						<tr>
+							<th align="right"></th>
+							<th align="center">Ape-ECS</th>
+							<th align="center">sim-ecs</th>
+							<th align="center">sim-ecs with callbacks</th>
+							<th align="center">tick-knock</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td align="right">Simple Insert</td>
+							<td align="center">59 ops/s, ±9.66%</td>
+							<td align="center"><strong>249 ops/s, ±0.34%</strong></td>
+							<td align="center"><strong>249 ops/s, ±0.34%</strong></td>
+							<td align="center">238 ops/s, ±34.51%</td>
+						</tr>
+						<tr>
+							<td align="right">Simple Iteration</td>
+							<td align="center">147 ops/s, ±1.67%</td>
+							<td align="center">24 001 ops/s, ±59.47%</td>
+							<td align="center"><strong>1 070 399 ops/s, ±26.58%</strong></td>
+							<td align="center">33 ops/s, ±0.23%</td>
+						</tr>
+						<tr>
+							<td align="right">Schedule</td>
+							<td align="center">1 ops/s, ±0.78%</td>
+							<td align="center">192 309 ops/s, ±146.63%</td>
+							<td align="center"><strong>917 930 ops/s, ±20.31%</strong></td>
+							<td align="center">0 ops/s, ±0.36%</td>
+						</tr>
+						<tr>
+							<td align="right">De-/Serialize Save</td>
+							<td align="center">61 ops/s, ±11.88% (445.31KB)</td>
+							<td align="center"><strong>203 ops/s, ±44.30%</strong> (<strong>67.38KB</strong>)</td>
+							<td align="center"><strong>203 ops/s, ±44.30%</strong> (<strong>67.38KB</strong>)</td>
+							<td align="center">-</td>
+						</tr>
+				</tbody></table>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="enums/EAccess.html" class="tsd-kind-icon">EAccess</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/EExistence.html" class="tsd-kind-icon">EExistence</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="enums/ETargetType.html" class="tsd-kind-icon">ETarget<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/Entity.html" class="tsd-kind-icon">Entity</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/EntityBuilder.html" class="tsd-kind-icon">Entity<wbr>Builder</a>
+					</li>
+					<li class=" tsd-kind-class tsd-has-type-parameter">
+						<a href="classes/Query.html" class="tsd-kind-icon">Query</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/SerDe.html" class="tsd-kind-icon">Ser<wbr>De</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/SerialFormat.html" class="tsd-kind-icon">Serial<wbr>Format</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/State.html" class="tsd-kind-icon">State</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/System.html" class="tsd-kind-icon">System</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/World.html" class="tsd-kind-icon">World</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/IAccessDescriptor.html" class="tsd-kind-icon">IAccess<wbr>Descriptor</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/IAccessQuery.html" class="tsd-kind-icon">IAccess<wbr>Query</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/IEntity.html" class="tsd-kind-icon">IEntity</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/IEntityBuilder.html" class="tsd-kind-icon">IEntity<wbr>Builder</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/IExistenceDescriptor.html" class="tsd-kind-icon">IExistence<wbr>Descriptor</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/IPartialWorld.html" class="tsd-kind-icon">IPartial<wbr>World</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/IRunConfiguration.html" class="tsd-kind-icon">IRun<wbr>Configuration</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ISerDe.html" class="tsd-kind-icon">ISer<wbr>De</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ISerDeDataSet.html" class="tsd-kind-icon">ISer<wbr>DeData<wbr>Set</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ISerDeOperations.html" class="tsd-kind-icon">ISer<wbr>DeOperations</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ISerialFormat.html" class="tsd-kind-icon">ISerial<wbr>Format</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/IState.html" class="tsd-kind-icon">IState</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/IStaticRunConfiguration.html" class="tsd-kind-icon">IStatic<wbr>Run<wbr>Configuration</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ISystem.html" class="tsd-kind-icon">ISystem</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ISystemActions.html" class="tsd-kind-icon">ISystem<wbr>Actions</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ISystemInfo.html" class="tsd-kind-icon">ISystem<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/ITransitionActions.html" class="tsd-kind-icon">ITransition<wbr>Actions</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/IWorld.html" class="tsd-kind-icon">IWorld</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#TAccessQueryData" class="tsd-kind-icon">TAccess<wbr>Query<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#TAccessQueryParameter" class="tsd-kind-icon">TAccess<wbr>Query<wbr>Parameter</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#TCustomDeserializer" class="tsd-kind-icon">TCustom<wbr>Deserializer</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#TDeserializer" class="tsd-kind-icon">TDeserializer</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#TEntity" class="tsd-kind-icon">TEntity</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#TEntityBuilderProto" class="tsd-kind-icon">TEntity<wbr>Builder<wbr>Proto</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#TEntityProto" class="tsd-kind-icon">TEntity<wbr>Proto</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#TExecutionFunction" class="tsd-kind-icon">TExecution<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#TExistenceQuery" class="tsd-kind-icon">TExistence<wbr>Query</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#TExistenceQueryParameter" class="tsd-kind-icon">TExistence<wbr>Query<wbr>Parameter</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#TGroupHandle" class="tsd-kind-icon">TGroup<wbr>Handle</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
+						<a href="modules.html#TSerDeOptions" class="tsd-kind-icon">TSer<wbr>DeOptions</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#TSerializable" class="tsd-kind-icon">TSerializable</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#TSerializer" class="tsd-kind-icon">TSerializer</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#TStateProto" class="tsd-kind-icon">TState<wbr>Proto</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#TSystemProto" class="tsd-kind-icon">TSystem<wbr>Proto</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#TTag" class="tsd-kind-icon">TTag</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="modules.html#TWorldProto" class="tsd-kind-icon">TWorld<wbr>Proto</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#CTagMarker" class="tsd-kind-icon">CTag<wbr>Marker</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#accessDescSym" class="tsd-kind-icon">access<wbr>Desc<wbr>Sym</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#addEntitySym" class="tsd-kind-icon">add<wbr>Entity<wbr>Sym</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#clearEntitiesSym" class="tsd-kind-icon">clear<wbr>Entities<wbr>Sym</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#existenceDescSym" class="tsd-kind-icon">existence<wbr>Desc<wbr>Sym</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#removeEntitySym" class="tsd-kind-icon">remove<wbr>Entity<wbr>Sym</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#setEntitiesSym" class="tsd-kind-icon">set<wbr>Entities<wbr>Sym</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#Read" class="tsd-kind-icon">Read</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#ReadEntity" class="tsd-kind-icon">Read<wbr>Entity</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#With" class="tsd-kind-icon">With</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#WithTag" class="tsd-kind-icon">With<wbr>Tag</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#Without" class="tsd-kind-icon">Without</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#WithoutTag" class="tsd-kind-icon">Without<wbr>Tag</a>
+					</li>
+					<li class=" tsd-kind-function tsd-has-type-parameter">
+						<a href="modules.html#Write" class="tsd-kind-icon">Write</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#addWorld" class="tsd-kind-icon">add<wbr>World</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#buildWorld" class="tsd-kind-icon">build<wbr>World</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#findWorld" class="tsd-kind-icon">find<wbr>World</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#getEntity" class="tsd-kind-icon">get<wbr>Entity</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#getWorlds" class="tsd-kind-icon">get<wbr>Worlds</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#registerEntity" class="tsd-kind-icon">register<wbr>Entity</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="modules.html#removeWorld" class="tsd-kind-icon">remove<wbr>World</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
