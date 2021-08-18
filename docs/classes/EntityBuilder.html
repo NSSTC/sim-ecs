@@ -92,6 +92,7 @@
 						<section class="tsd-index-section tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="EntityBuilder.html#callback" class="tsd-kind-icon">callback</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="EntityBuilder.html#entity" class="tsd-kind-icon">entity</a></li>
 							</ul>
 						</section>
@@ -112,19 +113,40 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Entity<wbr>Builder<span class="tsd-signature-symbol">(</span>uuid<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="EntityBuilder.html" class="tsd-signature-type" data-tsd-kind="Class">EntityBuilder</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Entity<wbr>Builder<span class="tsd-signature-symbol">(</span>uuid<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><a href="Entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="EntityBuilder.html" class="tsd-signature-type" data-tsd-kind="Class">EntityBuilder</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/a502347/src/entity-builder.ts#L10">src/entity-builder.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/b37ea9e/src/entity-builder.ts#L10">src/entity-builder.ts:10</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> uuid: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> callback: <span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><a href="Entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></h5>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-signature">
+											<ul class="tsd-signatures tsd-kind-type-literal">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><a href="Entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>entity: <a href="Entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="EntityBuilder.html" class="tsd-signature-type" data-tsd-kind="Class">EntityBuilder</a></h4>
@@ -135,12 +157,40 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-private-protected">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+					<a name="callback" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> <span class="tsd-flag ts-flagOptional">Optional</span> callback</h3>
+					<div class="tsd-signature tsd-kind-icon">callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><a href="Entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<aside class="tsd-sources">
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-class">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>entity<span class="tsd-signature-symbol">: </span><a href="Entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>entity: <a href="Entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
 					<a name="entity" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagProtected">Protected</span> entity</h3>
 					<div class="tsd-signature tsd-kind-icon">entity<span class="tsd-signature-symbol">:</span> <a href="Entity.html" class="tsd-signature-type" data-tsd-kind="Class">Entity</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/a502347/src/entity-builder.ts#L8">src/entity-builder.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/b37ea9e/src/entity-builder.ts#L8">src/entity-builder.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -158,7 +208,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/IEntityBuilder.html">IEntityBuilder</a>.<a href="../interfaces/IEntityBuilder.html#build">build</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/a502347/src/entity-builder.ts#L14">src/entity-builder.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/b37ea9e/src/entity-builder.ts#L17">src/entity-builder.ts:17</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -181,7 +231,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/IEntityBuilder.html">IEntityBuilder</a>.<a href="../interfaces/IEntityBuilder.html#with">with</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/a502347/src/entity-builder.ts#L18">src/entity-builder.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/b37ea9e/src/entity-builder.ts#L22">src/entity-builder.ts:22</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -213,7 +263,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of <a href="../interfaces/IEntityBuilder.html">IEntityBuilder</a>.<a href="../interfaces/IEntityBuilder.html#withAll">withAll</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/a502347/src/entity-builder.ts#L23">src/entity-builder.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/b37ea9e/src/entity-builder.ts#L27">src/entity-builder.ts:27</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -250,6 +300,9 @@
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="EntityBuilder.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+								<a href="EntityBuilder.html#callback" class="tsd-kind-icon">callback</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
 								<a href="EntityBuilder.html#entity" class="tsd-kind-icon">entity</a>

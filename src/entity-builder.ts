@@ -7,11 +7,15 @@ export * from './entity-builder.spec';
 export class EntityBuilder implements IEntityBuilder {
     protected entity: Entity;
 
-    constructor(uuid?: string) {
+    constructor(
+        uuid?: string,
+        protected callback?: (entity: Entity) => void
+    ) {
         this.entity = new Entity(uuid);
     }
 
     build(): Entity {
+        this.callback?.(this.entity);
         return this.entity;
     }
 

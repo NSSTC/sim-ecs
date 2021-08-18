@@ -5,10 +5,6 @@ export const getDefaultSerializer = function (customSerializer?: TSerializer): T
         let componentName: string = typeof component;
 
         switch (typeof component) {
-            case 'number': {
-                return component;
-            }
-
             case 'object': {
                 if (component == null) {
                     return 'null';
@@ -21,12 +17,10 @@ export const getDefaultSerializer = function (customSerializer?: TSerializer): T
                         return (component as Date).getTime();
                     case 'Array':
                     case 'Object':
-                        return JSON.stringify(component.toString());
+                        return JSON.stringify(component);
                     case 'Map':
                     case 'Set':
                         return JSON.stringify(Array.from(component as Iterable<unknown>));
-                    case 'Number':
-                        return component;
                 }
 
                 break;
@@ -49,11 +43,13 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
     return (constructorName: string, data: unknown) => {
         switch (constructorName.toLowerCase()) {
             case 'array': {
-                if (!Array.isArray(data)) {
+                const parsedData = JSON.parse(data as string);
+
+                if (!Array.isArray(parsedData)) {
                     throw new Error(`Cannot deserialize Array with data of type ${typeof data}! Array expected!`);
                 }
 
-                return data as Array<unknown>;
+                return parsedData as Array<unknown>;
             }
 
             case 'date': {

@@ -1,22 +1,18 @@
 import {assert} from "chai";
 import * as Components from "./test-data/components";
 import * as Systems from "./test-data/systems";
-import {S1Data, S2Data, THandlerFn1, THandlerFn2} from "./test-data/systems";
-import ECS from "./ecs";
 import IWorld from "./world.spec";
 import {World} from "./world";
+import {buildWorld} from "./ecs";
+import {C1} from "./test-data/components";
+import {ISystem} from "./system.spec";
 
 
 describe('Manage Resources', () => {
-    let ecs: ECS;
     let world: World;
 
-    before(() => {
-        ecs = Object.seal(new ECS());
-    });
-
     beforeEach(() => {
-        world = Object.seal(ecs.buildWorld().build()) as World;
+        world = Object.seal(buildWorld().build()) as World;
     });
 
     it('Store resource', () => {
@@ -35,15 +31,10 @@ describe('Manage Resources', () => {
 });
 
 describe('Build Entities', () => {
-    let ecs: ECS;
     let world: IWorld;
 
-    before(() => {
-        ecs = Object.seal(new ECS());
-    });
-
     beforeEach(() => {
-        world = Object.seal(ecs.buildWorld().build());
+        world = Object.seal(buildWorld().build());
     });
 
     it('create', () => {
@@ -53,28 +44,22 @@ describe('Build Entities', () => {
 });
 
 describe('Run Systems', () => {
-    const op: THandlerFn1 = (data: S1Data) => {
-        if (data.c1) {
-            data.c1.a++;
-        }
-    };
-    let ecs: ECS;
-
-    before(() => {
-        ecs = Object.seal(new ECS());
-    });
+    const op = (data: { c1: C1 }) => {
+        data.c1.a++;
+    }
 
     it('register', () => {
-        const world = ecs.buildWorld().withSystem(Systems.S1.bind(undefined, () => {})).build();
-        assert.equal(world.systemInfos.length, 1, 'System was not registered');
+        const world = buildWorld().withSystem(Systems.S1).build();
+        assert.equal(world.systemInfos.size, 1, 'System was not registered');
     });
 
     it('dispatch', async () => {
-        const world = ecs.buildWorld().withSystem(Systems.S1.bind(undefined, op)).build();
+        const world = buildWorld().withSystem(Systems.S1.bind(undefined, op)).build();
         const entity = world.buildEntity().with(Components.C1).build();
         const c1 = entity.getComponent(Components.C1);
 
         world.commands.addEntity(entity);
+        await world.flushCommands();
         await world.dispatch();
 
         assert(c1, 'Could not fetch component'); if (!c1) return;
@@ -82,7 +67,7 @@ describe('Run Systems', () => {
     });
 
     it('run', async () => {
-        const world = ecs.buildWorld().withSystem(Systems.S1.bind(undefined, op)).build();
+        const world = buildWorld().withSystem(Systems.S1.bind(undefined, op)).build();
         const entity = world.buildEntity().with(Components.C1).build();
         const c1 = entity.getComponent(Components.C1);
         let runFinished = false;
@@ -96,45 +81,15 @@ describe('Run Systems', () => {
 
         assert(runFinished, 'Run promise resolved early');
         assert(c1, 'Could not fetch component'); if (!c1) return;
-        assert(c1.a > 0, 'System did not operate on component');
-    });
-
-    it ('no-data', async () => {
-        let numComponents = 0;
-        const world = ecs.buildWorld().withSystem(Systems.NoDataSystem.bind(undefined, dataSet => { numComponents = dataSet.size })).build();
-        let runFinished = false;
-
-        world.buildEntity().with(Components.C1).build();
-
-        setTimeout(() => {
-            runFinished = true;
-            world.commands.stopRun();
-        });
-        await world.run();
-
-        assert.equal(numComponents, 0, 'NoDataSystem was assigned components to process');
+        assert(c1.a > 0, 'System did not operate on component ' + c1.a.toString());
     });
 });
 
 describe('Delete Entities', () => {
     let counter = 0;
-    let entityCount = -1;
-    const op: THandlerFn2 = (data: Set<S2Data>) => {
-        entityCount = data.size;
-    };
-    let ecs: ECS;
-
-    before(() => {
-        ecs = Object.seal(new ECS());
-    });
-
-    beforeEach(() => {
-        counter = 0;
-        entityCount = -1;
-    });
 
     it('delete before run', async () => {
-        const world = ecs.buildWorld().build() as World;
+        const world = buildWorld().build() as World;
         const entity = world.buildEntity().with(Components.C1).build();
 
         world.removeEntity(entity);
@@ -142,7 +97,7 @@ describe('Delete Entities', () => {
     });
 
     it('delete during run', async () => {
-        const world = ecs.buildWorld().withSystem(Systems.S2.bind(undefined, op)).build();
+        const world = buildWorld().withSystem(new Systems.S2() as ISystem).build();
         const entity = world.buildEntity().with(Components.C1).build();
 
         await world.run({
@@ -158,21 +113,13 @@ describe('Delete Entities', () => {
         });
 
         assert.equal(Array.from(world.getEntities()).length, 0, 'Did not remove entity');
-        assert.notEqual(entityCount, -1, 'System did not run');
-        assert.equal(entityCount, 0, 'Data set was not deleted');
     });
 });
 
 describe('Helpers', () => {
-    let ecs: ECS;
-
-    before(() => {
-        ecs = Object.seal(new ECS());
-    });
-
     it('merge two worlds', () => {
-        const w1 = ecs.buildWorld().build();
-        const w2 = ecs.buildWorld().build();
+        const w1 = buildWorld().build();
+        const w2 = buildWorld().build();
 
         w1.buildEntity().build();
         w1.buildEntity().with(new Date(0)).build();

@@ -31,7 +31,7 @@ export class Entity implements IEntity {
             throw new Error(`Component "${obj.constructor.name}" already exists on entity!`)
         }
 
-        this.components.set(obj.constructor as TObjectProto, component);
+        this.components.set(obj.constructor as TObjectProto, obj);
         return this;
     }
 

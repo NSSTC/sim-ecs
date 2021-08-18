@@ -92,7 +92,6 @@ export class World implements IWorld {
             get serde() {
                 return self.serde;
             },
-            buildEntity: this.buildEntity.bind(this),
             flushCommands: this.flushCommands.bind(this),
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
@@ -158,7 +157,7 @@ export class World implements IWorld {
     }
 
     buildEntity(uuid?: string): EntityBuilder {
-        return new EntityBuilder(uuid);
+        return new EntityBuilder(uuid, entity => this.addEntity(entity));
     }
 
     clearEntities() {
@@ -245,6 +244,7 @@ export class World implements IWorld {
         for (entity of elsewhere.getEntities()) {
             this.addEntity(entity);
             entities.push(entity);
+            elsewhere.removeEntity(entity);
         }
 
         return [groupHandle, entities];

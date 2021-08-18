@@ -38,11 +38,6 @@ export interface IPartialWorld {
     readonly serde: ISerDe
 
     /**
-     * Convenience builder to create a new Entity
-     */
-    buildEntity(uuid?: string): IEntityBuilder
-
-    /**
      * Execute all commands NOW
      */
     flushCommands(): Promise<void>
@@ -125,6 +120,11 @@ export interface IWorld extends IPartialWorld {
     addResource<T extends Object>(type: T | TTypeProto<T>, ...args: unknown[]): T
 
     /**
+     * Convenience builder to create a new Entity
+     */
+    buildEntity(uuid?: string): IEntityBuilder
+
+    /**
      * Create a new entity and add it to this world
      */
     createEntity(): IEntity
@@ -140,6 +140,12 @@ export interface IWorld extends IPartialWorld {
      * @param world
      */
     merge(world: IWorld): [TGroupHandle, IEntity[]]
+
+    /**
+     * Remove an entity from this world
+     * @param entity
+     */
+    removeEntity(entity: IEntity): void
 
     /**
      * Execute all systems continuously in a dispatch-loop
