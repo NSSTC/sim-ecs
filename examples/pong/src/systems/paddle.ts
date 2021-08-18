@@ -7,6 +7,7 @@ import {Shape} from "../components/shape";
 import {PaddleTransforms} from "../models/paddle-transforms";
 import {Dimensions} from "../models/dimensions";
 import {Transform} from "../models/transform";
+import {GameState} from "../states/game";
 
 
 export class PaddleSystem extends System {
@@ -16,6 +17,7 @@ export class PaddleSystem extends System {
         shape: Read(Shape),
         vel: Write(Velocity)
     });
+    readonly states = [GameState];
 
     gameStore!: GameStore;
     ctx!: CanvasRenderingContext2D;

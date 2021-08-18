@@ -3,7 +3,7 @@ import {TTypeProto} from "../_.spec";
 import {ISerialFormat} from "../serde/serial-format.spec";
 import {TDeserializer, TSerDeOptions} from "../serde/serde.spec";
 import {IWorld, TGroupHandle} from "../world.spec";
-import {TStateProto} from "../state.spec";
+import {IIStateProto} from "../state.spec";
 import {ICommandEntityBuilder} from "./command-entity-builder.spec";
 import {TCommand} from "./commands-aggregator.spec";
 
@@ -64,7 +64,7 @@ export interface ICommands {
      * Change the running world to a new state
      * @param NewState
      */
-    pushState(NewState: TStateProto): void
+    pushState(NewState: IIStateProto): void
 
     /**
      * Queue custom command for execution

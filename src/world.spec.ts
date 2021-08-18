@@ -1,6 +1,6 @@
 import {IEntity} from "./entity.spec";
-import {TSystemProto, ISystem} from "./system.spec";
-import IState, {TStateProto} from "./state.spec";
+import {IISystemProto, ISystem} from "./system.spec";
+import {IIStateProto, IState} from "./state.spec";
 import {TTypeProto} from "./_.spec";
 import {IAccessDescriptor, IAccessQuery, TExistenceQuery} from "./query.spec";
 import {ISerDe, TSerDeOptions, TSerializer} from "./serde/serde.spec";
@@ -11,23 +11,24 @@ import {Query} from "./query";
 
 export type TExecutionFunction = ((callback: Function) => any) | typeof setTimeout | typeof requestAnimationFrame;
 export type TGroupHandle = number;
+export type TStates = Map<IIStateProto, Set<ISystem>>;
 
 export interface IRunConfiguration {
     afterStepHandler?: (actions: ITransitionActions) => Promise<void> | void
     beforeStepHandler?: (actions: ITransitionActions) => Promise<void> | void
     executionFunction?: TExecutionFunction
-    initialState?: TStateProto
+    initialState?: IIStateProto
 }
 
 export interface IStaticRunConfiguration {
     afterStepHandler: (actions: ITransitionActions) => Promise<void> | void
     beforeStepHandler: (actions: ITransitionActions) => Promise<void> | void
     executionFunction: TExecutionFunction
-    initialState: TStateProto,
+    initialState: IIStateProto,
 }
 
 export interface ISystemInfo {
-    dependencies: Set<TSystemProto>
+    dependencies: Set<IISystemProto>
     system: ISystem
 }
 
@@ -132,7 +133,7 @@ export interface IWorld extends IPartialWorld {
      * Execute all systems
      * @param state
      */
-    dispatch(state?: TStateProto): Promise<void>
+    dispatch(state?: IIStateProto): Promise<void>
 
     /**
      * Merge entities from another world into this one

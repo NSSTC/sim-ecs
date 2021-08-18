@@ -1,17 +1,15 @@
 import {expect} from 'chai';
-import {WorldBuilder, _ as _WorldBuilder} from "./world-builder";
-import {NoData, System} from "./system";
-import ECS from "./ecs";
+import {WorldBuilder} from "./world-builder";
+import {System} from "../system";
+import {dataStructDeserializer, dataStructSerializer} from "./world-builder.util";
 
-class ASystem extends System<NoData> {
-    readonly SystemDataType = NoData;
-    async run(dataSet: Set<NoData>): Promise<void> {}
+class ASystem extends System {
+    run() {}
 }
 
 describe('Test WorldBuilder', () => {
     it('Unique Systems', () => {
-        const ecs = new ECS();
-        const builder = new WorldBuilder(ecs);
+        const builder = new WorldBuilder();
         builder.withSystem(ASystem);
         expect(builder.withSystem.bind(builder, ASystem)).to.throw();
     });
@@ -28,8 +26,8 @@ describe('Test WorldBuilder', () => {
         component.a = 17;
 
         const jsonObj = JSON.stringify(component);
-        const serializedObj = _WorldBuilder.dataStructSerializer(component);
-        const deserializedObj = _WorldBuilder.dataStructDeserializer(Component, serializedObj);
+        const serializedObj = dataStructSerializer(component);
+        const deserializedObj = dataStructDeserializer(Component, serializedObj);
 
         expect(JSON.stringify(serializedObj)).eq(jsonObj);
         expect(deserializedObj).deep.eq(component);

@@ -8,6 +8,7 @@ import {ScoreBoard} from "../models/score-board";
 import {Position} from "../components/position";
 import {defaultBallPositionX, defaultBallPositionY} from "../prefabs/game";
 import {ETags} from "../models/tags";
+import {GameState} from "../states/game";
 
 export class BallSystem extends System {
     readonly query = new Query({
@@ -16,6 +17,7 @@ export class BallSystem extends System {
         pos: Write(Position),
         vel: Write(Velocity),
     });
+    readonly states = [GameState];
 
     canvas!: HTMLCanvasElement;
     paddleTrans!: PaddleTransforms;

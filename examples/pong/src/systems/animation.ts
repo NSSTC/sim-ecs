@@ -1,6 +1,7 @@
 import {Position} from "../components/position";
 import {ISystemActions, Query, Read, System, Write} from "sim-ecs";
 import {Velocity} from "../components/velocity";
+import {GameState} from "../states/game";
 
 
 export class AnimationSystem extends System {
@@ -8,6 +9,7 @@ export class AnimationSystem extends System {
         pos: Write(Position),
         vel: Read(Velocity),
     });
+    readonly states = [GameState];
 
     run(actions: ISystemActions) {
         this.query.execute(({pos, vel}) => {

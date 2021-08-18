@@ -37,7 +37,7 @@ class CounterSystem extends System {
             }
         });
 
-        /// 2. you can use regular loops:
+        /// 2. you can use regular loops, too:
         // for (const {info} of this.query.iter()) {
         //     ...
         // });

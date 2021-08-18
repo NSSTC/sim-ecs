@@ -1,5 +1,5 @@
 import {IWorld} from "./world.spec";
-import {IWorldBuilder, WorldBuilder} from "./world-builder";
+import {IWorldBuilder, WorldBuilder} from "./world-builder/world-builder";
 import {IEntity} from "./entity.spec";
 
 

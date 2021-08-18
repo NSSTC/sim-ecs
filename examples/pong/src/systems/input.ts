@@ -1,5 +1,8 @@
 import {ISystemActions, System} from "sim-ecs";
 import {EMovement, GameStore} from "../models/game-store";
+import {GameState} from "../states/game";
+import {MenuState} from "../states/menu";
+import {PauseState} from "../states/pause";
 
 export enum EKeyState {
     Down,
@@ -12,6 +15,8 @@ interface IInputEvent {
 }
 
 export class InputSystem extends System {
+    readonly states = [GameState, MenuState, PauseState];
+
     gameStore!: GameStore;
     inputEvents: IInputEvent[] = [];
 

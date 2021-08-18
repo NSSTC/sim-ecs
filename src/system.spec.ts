@@ -1,10 +1,12 @@
 import {ISystemActions} from "./world.spec";
 import {IAccessQuery, Query} from "./query";
 import {TTypeProto} from "./_.spec";
+import {IIStateProto} from "./state.spec";
 
 
 export interface ISystem {
     readonly query?: Query<IAccessQuery<TTypeProto<Object>>>
+    readonly states?: IIStateProto[]
 
     /**
      * Called after dispatching or running a world
@@ -25,4 +27,4 @@ export interface ISystem {
     setup(actions: ISystemActions): void | Promise<void>
 }
 
-export type TSystemProto = { new(): ISystem };
+export interface IISystemProto { new(): ISystem }

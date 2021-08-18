@@ -6,17 +6,17 @@ import {
     ISystemActions, ISystemInfo,
     ITransitionActions,
     IWorld,
-    TGroupHandle
+    TGroupHandle, TStates
 } from "./world.spec";
 import {IEntity} from "./entity.spec";
-import {IState, State, TStateProto} from "./state";
+import {IState, State, IIStateProto} from "./state";
 import {TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
 import {SerDe, TDeserializer, TSerDeOptions, TSerializer} from "./serde/serde";
 import {ISerialFormat} from "./serde/serial-format";
 import {Commands} from "./commands/commands";
 import {CommandsAggregator} from "./commands/commands-aggregator";
-import {ISystem, System, TSystemProto} from "./system";
+import {System, IISystemProto} from "./system";
 import {
     IAccessDescriptor,
     IAccessQuery,
@@ -27,10 +27,20 @@ import {
 
 export * from './world.spec';
 
+
+export interface IWorldConstructorOptions {
+    name?: string
+    states: TStates
+    systems?: Set<ISystemInfo>
+    serde?: SerDe
+}
+
 export class World implements IWorld {
     protected _commandsAggregator: CommandsAggregator;
     protected _commands: Commands;
     protected _dirty = false;
+    protected _name?: string;
+    protected _serde: SerDe;
     public entities: Set<IEntity> = new Set();
     protected pda = new PushDownAutomaton<IState>();
     private lastRunPreparation?: IStaticRunConfiguration;
@@ -41,19 +51,22 @@ export class World implements IWorld {
     protected queries: Query<IAccessQuery<TTypeProto<Object>>>[] = [];
     public resources = new Map<{ new(): Object }, Object>();
     protected runExecutionPipeline: Set<System>[] = [];
-    protected runExecutionPipelineCache: Map<TStateProto, Set<System>[]> = new Map();
+    protected runExecutionPipelineCache: Map<IIStateProto, Set<System>[]> = new Map();
     protected runPromise?: Promise<void> = undefined;
     protected shouldRunSystems = false;
     protected sortedSystems: Set<ISystemInfo>;
+    protected stateInfos: TStates;
+    public systemInfos: Set<ISystemInfo>;
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
 
-    constructor(
-        protected _name?: string,
-        public systemInfos: Set<ISystemInfo> = new Set(),
-        protected _serde: SerDe = new SerDe(),
-    ) {
+    constructor(options: IWorldConstructorOptions) {
         const self = this;
+
+        this._name = options.name;
+        this._serde = options.serde ?? new SerDe();
+        this.stateInfos = options.states;
+        this.systemInfos = options.systems ?? new Set();
 
         this._commandsAggregator = new CommandsAggregator(this);
         this._commands = new Commands(this, this._commandsAggregator);
@@ -159,7 +172,7 @@ export class World implements IWorld {
         return entity;
     }
 
-    async dispatch(state?: TStateProto): Promise<void> {
+    async dispatch(state?: IIStateProto): Promise<void> {
         await this.run({
             initialState: state,
             afterStepHandler: actions => actions.commands.stopRun(),
@@ -247,19 +260,19 @@ export class World implements IWorld {
         }
 
         await newState.activate(this.transitionWorld);
-        this.runExecutionPipeline = this.runExecutionPipelineCache.get(newState.constructor as TStateProto) ?? [];
+        this.runExecutionPipeline = this.runExecutionPipelineCache.get(newState.constructor as IIStateProto) ?? [];
     }
 
     // todo: improve logic which sets up the groups (tracked by #13)
-    protected prepareExecutionPipeline(state: IState): Set<ISystem>[] {
+    protected prepareExecutionPipeline(state: IState): Set<System>[] {
         // todo: this could be further optimized by allowing systems with dependencies to run in parallel
         //    if all of their dependencies already ran
 
         // todo: also, if two systems depend on the same components, they may run in parallel
         //    if they only require READ access
-        const result: Set<ISystem>[] = [];
-        const stateSystems = state.systems;
-        let executionGroup: Set<ISystem> = new Set();
+        const result: Set<System>[] = [];
+        const stateSystems = this.stateInfos.get(state.constructor as IIStateProto) ?? new Set();
+        let executionGroup: Set<System> = new Set();
         let shouldRunSystem;
         let systemInfo: ISystemInfo;
 
@@ -268,15 +281,15 @@ export class World implements IWorld {
         }
 
         for (systemInfo of this.sortedSystems) {
-            shouldRunSystem = !!stateSystems.find(stateSys => stateSys.prototype.constructor.name === systemInfo.system.constructor.name);
+            shouldRunSystem = stateSystems.has(systemInfo.system);
 
             if (shouldRunSystem) {
                 if (systemInfo.dependencies.size > 0) {
                     result.push(executionGroup);
-                    executionGroup = new Set<ISystem>();
+                    executionGroup = new Set<System>();
                 }
 
-                executionGroup.add(systemInfo.system);
+                executionGroup.add(systemInfo.system as System);
             }
         }
 
@@ -284,17 +297,17 @@ export class World implements IWorld {
         return result;
     }
 
-    async pushState(NewState: TStateProto): Promise<void> {
+    async pushState(NewState: IIStateProto): Promise<void> {
         await this.pda.state?.deactivate(this.transitionWorld);
         this.pda.push(NewState);
 
-        const newState = this.pda.state!;
+        const newState = this.pda.state! as State;
         const registeredSystemNames = Array.from(this.systemInfos).map(nfo => nfo.system.constructor.name);
 
-        for (const system of newState.systems) {
-            if (!registeredSystemNames.includes(system.name)) {
+        for (const system of (this.stateInfos.get(newState.constructor as IIStateProto) ?? []).values()) {
+            if (!registeredSystemNames.includes(system.constructor.name)) {
                 // cannot infer dependencies, so we have to throw :/
-                throw new Error(`Did you forget to register System ${system.name}?`);
+                throw new Error(`Did you forget to register System ${system.constructor.name}?`);
             }
         }
 
@@ -322,7 +335,7 @@ export class World implements IWorld {
 
         const initialState = configuration.initialState
             ? configuration.initialState
-            : State.bind(undefined, Array.from(this.systemInfos.values()).map(systemInfo => systemInfo.system.constructor as TSystemProto));
+            : State;
         const runConfig: IStaticRunConfiguration = {
             afterStepHandler: configuration.afterStepHandler ?? (_action => {}),
             beforeStepHandler: configuration.beforeStepHandler ?? (_action => {}),
@@ -340,7 +353,7 @@ export class World implements IWorld {
         }
 
         await this.pushState(initialState);
-        this.runExecutionPipeline = this.prepareExecutionPipeline(this.pda.state!);
+        this.runExecutionPipeline = this.prepareExecutionPipeline(this.pda.state! as State);
 
         this.lastRunPreparation = runConfig;
         return runConfig;
@@ -459,26 +472,26 @@ export class World implements IWorld {
 
     protected sortSystems(unsorted: Set<ISystemInfo>): Set<ISystemInfo> {
         const unsortedArr = Array.from(unsorted);
-        const graph = new Map(unsortedArr.map(node => [node.system.constructor as TSystemProto, Array.from(node.dependencies)]));
-        let edges: TSystemProto[];
+        const graph = new Map(unsortedArr.map(node => [node.system.constructor as IISystemProto, Array.from(node.dependencies)]));
+        let edges: IISystemProto[];
 
         /// toposort with Kahn
         /// https://en.wikipedia.org/wiki/Topological_sorting#Kahn's_algorithm
-        const L: TSystemProto[] = []; // Empty list that will contain the sorted elements
+        const L: IISystemProto[] = []; // Empty list that will contain the sorted elements
         const S = Array.from(graph.entries()).filter(pair => pair[1].length === 0).map(pair => pair[0]); // Set of all nodes with no incoming edge
-        let n: TSystemProto;
+        let n: IISystemProto;
 
         // while S is non-empty do
         while (S.length > 0) {
             // remove a node n from S
-            n = S.shift() as TSystemProto;
+            n = S.shift() as IISystemProto;
             // add n to tail of L
             L.push(n);
 
             // for each node m with an edge e from n to m do
             for (let m of Array.from(graph.entries()).filter(pair => pair[1].includes(n)).map(pair => pair[0])) {
                 // remove edge e from the graph
-                edges = graph.get(m) as TSystemProto[];
+                edges = graph.get(m) as IISystemProto[];
                 edges.splice(edges.indexOf(n), 1);
 
                 // if m has no other incoming edges then

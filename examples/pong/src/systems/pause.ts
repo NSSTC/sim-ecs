@@ -1,10 +1,12 @@
-import {ISystemActions, Query, Read, System} from "sim-ecs";
+import {ISystemActions, System} from "sim-ecs";
 import {GameStore} from "../models/game-store";
 import {GameState} from "../states/game";
 import {PauseState} from "../states/pause";
 
 
 export class PauseSystem extends System {
+    readonly states = [GameState, PauseState];
+
     actions!: ISystemActions
     gameStore!: GameStore;
 

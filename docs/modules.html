@@ -90,6 +90,8 @@
 								<li class="tsd-kind-interface"><a href="interfaces/IEntity.html" class="tsd-kind-icon">IEntity</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/IEntityBuilder.html" class="tsd-kind-icon">IEntity<wbr>Builder</a></li>
 								<li class="tsd-kind-interface tsd-has-type-parameter"><a href="interfaces/IExistenceDescriptor.html" class="tsd-kind-icon">IExistence<wbr>Descriptor</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/IIStateProto.html" class="tsd-kind-icon">IIState<wbr>Proto</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/IISystemProto.html" class="tsd-kind-icon">IISystem<wbr>Proto</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/IPartialWorld.html" class="tsd-kind-icon">IPartial<wbr>World</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/IRunConfiguration.html" class="tsd-kind-icon">IRun<wbr>Configuration</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/ISerDe.html" class="tsd-kind-icon">ISer<wbr>De</a></li>
@@ -97,12 +99,15 @@
 								<li class="tsd-kind-interface"><a href="interfaces/ISerDeOperations.html" class="tsd-kind-icon">ISer<wbr>DeOperations</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/ISerialFormat.html" class="tsd-kind-icon">ISerial<wbr>Format</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/IState.html" class="tsd-kind-icon">IState</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/IStateProto.html" class="tsd-kind-icon">IState<wbr>Proto</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/IStaticRunConfiguration.html" class="tsd-kind-icon">IStatic<wbr>Run<wbr>Configuration</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/ISystem.html" class="tsd-kind-icon">ISystem</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/ISystemActions.html" class="tsd-kind-icon">ISystem<wbr>Actions</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/ISystemInfo.html" class="tsd-kind-icon">ISystem<wbr>Info</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/ISystemProto.html" class="tsd-kind-icon">ISystem<wbr>Proto</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/ITransitionActions.html" class="tsd-kind-icon">ITransition<wbr>Actions</a></li>
 								<li class="tsd-kind-interface"><a href="interfaces/IWorld.html" class="tsd-kind-icon">IWorld</a></li>
+								<li class="tsd-kind-interface"><a href="interfaces/IWorldConstructorOptions.html" class="tsd-kind-icon">IWorld<wbr>Constructor<wbr>Options</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -122,8 +127,7 @@
 								<li class="tsd-kind-type-alias tsd-has-type-parameter"><a href="modules.html#TSerDeOptions" class="tsd-kind-icon">TSer<wbr>DeOptions</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#TSerializable" class="tsd-kind-icon">TSerializable</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#TSerializer" class="tsd-kind-icon">TSerializer</a></li>
-								<li class="tsd-kind-type-alias"><a href="modules.html#TStateProto" class="tsd-kind-icon">TState<wbr>Proto</a></li>
-								<li class="tsd-kind-type-alias"><a href="modules.html#TSystemProto" class="tsd-kind-icon">TSystem<wbr>Proto</a></li>
+								<li class="tsd-kind-type-alias"><a href="modules.html#TStates" class="tsd-kind-icon">TStates</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#TTag" class="tsd-kind-icon">TTag</a></li>
 								<li class="tsd-kind-type-alias"><a href="modules.html#TWorldProto" class="tsd-kind-icon">TWorld<wbr>Proto</a></li>
 							</ul>
@@ -138,6 +142,7 @@
 								<li class="tsd-kind-variable"><a href="modules.html#existenceDescSym" class="tsd-kind-icon">existence<wbr>Desc<wbr>Sym</a></li>
 								<li class="tsd-kind-variable"><a href="modules.html#removeEntitySym" class="tsd-kind-icon">remove<wbr>Entity<wbr>Sym</a></li>
 								<li class="tsd-kind-variable"><a href="modules.html#setEntitiesSym" class="tsd-kind-icon">set<wbr>Entities<wbr>Sym</a></li>
+								<li class="tsd-kind-variable"><a href="modules.html#systemsSym" class="tsd-kind-icon">systems<wbr>Sym</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -170,7 +175,7 @@
 					<div class="tsd-signature tsd-kind-icon">TAccess<wbr>Query<wbr>Data&lt;DESC&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span><span class="tsd-signature-symbol">[ </span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol"> in </span><span class="tsd-signature-symbol">keyof </span><span class="tsd-signature-type">DESC</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Required</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DESC</span><span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">P</span><span class="tsd-signature-symbol">]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-symbol">keyof </span><a href="interfaces/IAccessDescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IAccessDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.ts#L21">src/query.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.ts#L21">src/query.ts:21</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -186,7 +191,7 @@
 					<div class="tsd-signature tsd-kind-icon">TAccess<wbr>Query<wbr>Parameter&lt;C&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">C</span><span class="tsd-signature-symbol"> &amp; </span><a href="interfaces/IAccessDescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IAccessDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">InstanceType</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.spec.ts#L4">src/query.spec.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.spec.ts#L4">src/query.spec.ts:4</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -202,7 +207,7 @@
 					<div class="tsd-signature tsd-kind-icon">TCustom<wbr>Deserializer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/serde/serde.spec.ts#L6">src/serde/serde.spec.ts:6</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/serde/serde.spec.ts#L6">src/serde/serde.spec.ts:6</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -233,7 +238,7 @@
 					<div class="tsd-signature tsd-kind-icon">TDeserializer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>constructorName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/serde/serde.spec.ts#L7">src/serde/serde.spec.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/serde/serde.spec.ts#L7">src/serde/serde.spec.ts:7</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -267,7 +272,7 @@
 					<div class="tsd-signature tsd-kind-icon">TEntity<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/serde/serde.spec.ts#L8">src/serde/serde.spec.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/serde/serde.spec.ts#L8">src/serde/serde.spec.ts:8</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -285,7 +290,7 @@
 					<div class="tsd-signature tsd-kind-icon">TEntity<wbr>Builder<wbr>Proto<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/entity-builder.spec.ts#L24">src/entity-builder.spec.ts:24</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/entity-builder.spec.ts#L24">src/entity-builder.spec.ts:24</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -300,7 +305,7 @@
 					<div class="tsd-signature tsd-kind-icon">TEntity<wbr>Proto<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/entity.spec.ts#L68">src/entity.spec.ts:68</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/entity.spec.ts#L68">src/entity.spec.ts:68</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -315,7 +320,7 @@
 					<div class="tsd-signature tsd-kind-icon">TExecution<wbr>Function<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">typeof </span><span class="tsd-signature-type">setTimeout</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">typeof </span><span class="tsd-signature-type">requestAnimationFrame</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/world.spec.ts#L12">src/world.spec.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/world.spec.ts#L12">src/world.spec.ts:12</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -325,7 +330,7 @@
 					<div class="tsd-signature tsd-kind-icon">TExistence<wbr>Query&lt;C&gt;<span class="tsd-signature-symbol">:</span> <a href="modules.html#TExistenceQueryParameter" class="tsd-signature-type" data-tsd-kind="Type alias">TExistenceQueryParameter</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.spec.ts#L8">src/query.spec.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.spec.ts#L8">src/query.spec.ts:8</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -341,7 +346,7 @@
 					<div class="tsd-signature tsd-kind-icon">TExistence<wbr>Query<wbr>Parameter&lt;C&gt;<span class="tsd-signature-symbol">:</span> <a href="interfaces/IExistenceDescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">IExistenceDescriptor</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">C</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.spec.ts#L7">src/query.spec.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.spec.ts#L7">src/query.spec.ts:7</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -357,7 +362,7 @@
 					<div class="tsd-signature tsd-kind-icon">TGroup<wbr>Handle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/world.spec.ts#L13">src/world.spec.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/world.spec.ts#L13">src/world.spec.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -367,7 +372,7 @@
 					<div class="tsd-signature tsd-kind-icon">TSer<wbr>DeOptions&lt;T&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>fallbackHandler<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">; </span>useDefaultHandler<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">; </span>useRegisteredHandlers<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/serde/serde.spec.ts#L9">src/serde/serde.spec.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/serde/serde.spec.ts#L9">src/serde/serde.spec.ts:9</a></li>
 						</ul>
 					</aside>
 					<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -397,7 +402,7 @@
 					<div class="tsd-signature tsd-kind-icon">TSerializable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">unknown</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/serde/serde.spec.ts#L14">src/serde/serde.spec.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/serde/serde.spec.ts#L14">src/serde/serde.spec.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -407,7 +412,7 @@
 					<div class="tsd-signature tsd-kind-icon">TSerializer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>component<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="modules.html#TSerializable" class="tsd-signature-type" data-tsd-kind="Type alias">TSerializable</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/serde/serde.spec.ts#L15">src/serde/serde.spec.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/serde/serde.spec.ts#L15">src/serde/serde.spec.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -433,34 +438,14 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="TStateProto" class="tsd-anchor"></a>
-					<h3>TState<wbr>Proto</h3>
-					<div class="tsd-signature tsd-kind-icon">TState<wbr>Proto<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
+					<a name="TStates" class="tsd-anchor"></a>
+					<h3>TStates</h3>
+					<div class="tsd-signature tsd-kind-icon">TStates<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/IIStateProto.html" class="tsd-signature-type" data-tsd-kind="Interface">IIStateProto</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><a href="interfaces/ISystem.html" class="tsd-signature-type" data-tsd-kind="Interface">ISystem</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/state.spec.ts#L33">src/state.spec.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/world.spec.ts#L14">src/world.spec.ts:14</a></li>
 						</ul>
 					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias">
-					<a name="TSystemProto" class="tsd-anchor"></a>
-					<h3>TSystem<wbr>Proto</h3>
-					<div class="tsd-signature tsd-kind-icon">TSystem<wbr>Proto<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/system.spec.ts#L28">src/system.spec.ts:28</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-						</ul>
-					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias">
 					<a name="TTag" class="tsd-anchor"></a>
@@ -468,7 +453,7 @@
 					<div class="tsd-signature tsd-kind-icon">TTag<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/entity.spec.ts#L3">src/entity.spec.ts:3</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/entity.spec.ts#L3">src/entity.spec.ts:3</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -478,7 +463,7 @@
 					<div class="tsd-signature tsd-kind-icon">TWorld<wbr>Proto<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{}</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/world.spec.ts#L151">src/world.spec.ts:151</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/world.spec.ts#L152">src/world.spec.ts:152</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -496,7 +481,7 @@
 					<div class="tsd-signature tsd-kind-icon">CTag<wbr>Marker<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;#Tags&quot;</span><span class="tsd-signature-symbol"> = &#x27;#Tags&#x27;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/serde/serde.spec.ts#L57">src/serde/serde.spec.ts:57</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/serde/serde.spec.ts#L57">src/serde/serde.spec.ts:57</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -506,7 +491,7 @@
 					<div class="tsd-signature tsd-kind-icon">access<wbr>Desc<wbr>Sym<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">unique </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.spec.ts#L14">src/query.spec.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.spec.ts#L14">src/query.spec.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -516,7 +501,7 @@
 					<div class="tsd-signature tsd-kind-icon">add<wbr>Entity<wbr>Sym<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#addEntitySym" class="tsd-signature-type" data-tsd-kind="Variable">addEntitySym</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.spec.ts#L10">src/query.spec.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.spec.ts#L10">src/query.spec.ts:10</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -526,7 +511,7 @@
 					<div class="tsd-signature tsd-kind-icon">clear<wbr>Entities<wbr>Sym<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#clearEntitiesSym" class="tsd-signature-type" data-tsd-kind="Variable">clearEntitiesSym</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.spec.ts#L11">src/query.spec.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.spec.ts#L11">src/query.spec.ts:11</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -536,7 +521,7 @@
 					<div class="tsd-signature tsd-kind-icon">existence<wbr>Desc<wbr>Sym<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">unique </span><span class="tsd-signature-type">symbol</span><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.spec.ts#L15">src/query.spec.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.spec.ts#L15">src/query.spec.ts:15</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -546,7 +531,7 @@
 					<div class="tsd-signature tsd-kind-icon">remove<wbr>Entity<wbr>Sym<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#removeEntitySym" class="tsd-signature-type" data-tsd-kind="Variable">removeEntitySym</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.spec.ts#L12">src/query.spec.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.spec.ts#L12">src/query.spec.ts:12</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -556,7 +541,17 @@
 					<div class="tsd-signature tsd-kind-icon">set<wbr>Entities<wbr>Sym<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#setEntitiesSym" class="tsd-signature-type" data-tsd-kind="Variable">setEntitiesSym</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.spec.ts#L13">src/query.spec.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.spec.ts#L13">src/query.spec.ts:13</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-variable">
+					<a name="systemsSym" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> systems<wbr>Sym</h3>
+					<div class="tsd-signature tsd-kind-icon">systems<wbr>Sym<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="modules.html#systemsSym" class="tsd-signature-type" data-tsd-kind="Variable">systemsSym</a><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/state.ts#L7">src/state.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -573,7 +568,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.ts#L180">src/query.ts:180</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.ts#L180">src/query.ts:180</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -602,7 +597,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.ts#L169">src/query.ts:169</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.ts#L169">src/query.ts:169</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -625,7 +620,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.ts#L200">src/query.ts:200</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.ts#L200">src/query.ts:200</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -654,7 +649,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.ts#L210">src/query.ts:210</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.ts#L210">src/query.ts:210</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -677,7 +672,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.ts#L225">src/query.ts:225</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.ts#L225">src/query.ts:225</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -706,7 +701,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.ts#L235">src/query.ts:235</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.ts#L235">src/query.ts:235</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -729,7 +724,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/query.ts#L190">src/query.ts:190</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/query.ts#L190">src/query.ts:190</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -758,7 +753,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/ecs.ts#L13">src/ecs.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/ecs.ts#L13">src/ecs.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -788,7 +783,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/ecs.ts#L20">src/ecs.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/ecs.ts#L20">src/ecs.ts:20</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -810,7 +805,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/ecs.ts#L28">src/ecs.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/ecs.ts#L28">src/ecs.ts:28</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -840,7 +835,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/ecs.ts#L41">src/ecs.ts:41</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/ecs.ts#L41">src/ecs.ts:41</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -870,7 +865,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/ecs.ts#L63">src/ecs.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/ecs.ts#L63">src/ecs.ts:63</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -892,7 +887,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/ecs.ts#L50">src/ecs.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/ecs.ts#L50">src/ecs.ts:50</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -923,7 +918,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/7a3e281/src/ecs.ts#L71">src/ecs.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/e246af1/src/ecs.ts#L71">src/ecs.ts:71</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1004,6 +999,12 @@
 						<a href="interfaces/IExistenceDescriptor.html" class="tsd-kind-icon">IExistence<wbr>Descriptor</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="interfaces/IIStateProto.html" class="tsd-kind-icon">IIState<wbr>Proto</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/IISystemProto.html" class="tsd-kind-icon">IISystem<wbr>Proto</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/IPartialWorld.html" class="tsd-kind-icon">IPartial<wbr>World</a>
 					</li>
 					<li class=" tsd-kind-interface">
@@ -1025,6 +1026,9 @@
 						<a href="interfaces/IState.html" class="tsd-kind-icon">IState</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="interfaces/IStateProto.html" class="tsd-kind-icon">IState<wbr>Proto</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/IStaticRunConfiguration.html" class="tsd-kind-icon">IStatic<wbr>Run<wbr>Configuration</a>
 					</li>
 					<li class=" tsd-kind-interface">
@@ -1037,10 +1041,16 @@
 						<a href="interfaces/ISystemInfo.html" class="tsd-kind-icon">ISystem<wbr>Info</a>
 					</li>
 					<li class=" tsd-kind-interface">
+						<a href="interfaces/ISystemProto.html" class="tsd-kind-icon">ISystem<wbr>Proto</a>
+					</li>
+					<li class=" tsd-kind-interface">
 						<a href="interfaces/ITransitionActions.html" class="tsd-kind-icon">ITransition<wbr>Actions</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="interfaces/IWorld.html" class="tsd-kind-icon">IWorld</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/IWorldConstructorOptions.html" class="tsd-kind-icon">IWorld<wbr>Constructor<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-has-type-parameter">
 						<a href="modules.html#TAccessQueryData" class="tsd-kind-icon">TAccess<wbr>Query<wbr>Data</a>
@@ -1085,10 +1095,7 @@
 						<a href="modules.html#TSerializer" class="tsd-kind-icon">TSerializer</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#TStateProto" class="tsd-kind-icon">TState<wbr>Proto</a>
-					</li>
-					<li class=" tsd-kind-type-alias">
-						<a href="modules.html#TSystemProto" class="tsd-kind-icon">TSystem<wbr>Proto</a>
+						<a href="modules.html#TStates" class="tsd-kind-icon">TStates</a>
 					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="modules.html#TTag" class="tsd-kind-icon">TTag</a>
@@ -1116,6 +1123,9 @@
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="modules.html#setEntitiesSym" class="tsd-kind-icon">set<wbr>Entities<wbr>Sym</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="modules.html#systemsSym" class="tsd-kind-icon">systems<wbr>Sym</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="modules.html#Read" class="tsd-kind-icon">Read</a>
@@ -1169,13 +1179,14 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>

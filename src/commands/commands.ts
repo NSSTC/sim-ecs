@@ -4,7 +4,7 @@ import {TTypeProto} from "../_.spec";
 import {ISerialFormat} from "../serde/serial-format.spec";
 import {TDeserializer, TSerDeOptions} from "../serde/serde.spec";
 import IWorld, {TGroupHandle} from "../world.spec";
-import {TStateProto} from "../state.spec";
+import {IIStateProto} from "../state.spec";
 import {World} from "../world";
 import {ICommandsAggregator, TCommand} from "./commands-aggregator.spec";
 import {CommandEntityBuilder} from "./command-entity-builder";
@@ -76,7 +76,7 @@ export class Commands implements ICommands {
         this.aggregator.addCommand(() => this.world.popState());
     }
 
-    pushState(NewState: TStateProto): void {
+    pushState(NewState: IIStateProto): void {
         this.aggregator.addCommand(() => this.world.pushState(NewState));
     }
 

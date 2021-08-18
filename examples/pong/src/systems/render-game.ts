@@ -2,6 +2,8 @@ import {ISystemActions, Query, Read, System} from "sim-ecs";
 import {Position} from "../components/position";
 import {Shape} from "../components/shape";
 import {relToScreenCoords} from "../app/util";
+import {GameState} from "../states/game";
+import {PauseState} from "../states/pause";
 
 
 export class RenderGameSystem extends System {
@@ -9,6 +11,7 @@ export class RenderGameSystem extends System {
         pos: Read(Position),
         shape: Read(Shape)
     });
+    readonly states = [GameState, PauseState];
 
     ctx!: CanvasRenderingContext2D;
     toScreenCoords!: (x: number, y: number) => [number, number];

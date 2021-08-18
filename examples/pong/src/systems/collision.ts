@@ -2,6 +2,7 @@ import {ISystemActions, Query, Read, ReadEntity, System, Write} from "sim-ecs";
 import {Shape} from "../components/shape";
 import {Collision} from "../components/collision";
 import {Position} from "../components/position";
+import {GameState} from "../states/game";
 
 export class CollisionSystem extends System {
     readonly query = new Query({
@@ -10,6 +11,7 @@ export class CollisionSystem extends System {
         position: Read(Position),
         shape: Read(Shape)
     });
+    readonly states = [GameState];
 
     run(actions: ISystemActions) {
         const rects = Array.from(this.query.iter()).map(({collision, entity, position, shape}) => {

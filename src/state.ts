@@ -1,17 +1,13 @@
-import {TSystemProto} from "./system.spec";
-import IState from "./state.spec";
+import {IState, IIStateProto} from "./state.spec";
 import {ITransitionActions} from "./world.spec";
+import {IISystemProto} from "./system";
 
 export * from './state.spec';
 
-export class State implements IState {
-    constructor(
-        protected _systems: TSystemProto[] = []
-    ) {}
+export const systemsSym = Symbol();
 
-    get systems(): TSystemProto[] {
-        return this._systems;
-    }
+export class State implements IState {
+    static [systemsSym]: IISystemProto[] = [];
 
     activate(actions: ITransitionActions): void | Promise<void> {}
 
@@ -21,3 +17,5 @@ export class State implements IState {
 
     destroy(actions: ITransitionActions): void | Promise<void> {}
 }
+
+export interface IStateProto extends IIStateProto { new(): State }

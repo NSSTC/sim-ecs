@@ -1,25 +1,16 @@
 import {ITransitionActions, Query, SerialFormat, State, TGroupHandle, With} from "sim-ecs";
-import {InputSystem} from "../systems/input";
-import {PauseSystem} from "../systems/pause";
-import {PaddleSystem} from "../systems/paddle";
 import {gamePrefab} from "../prefabs/game";
 import {EPaddleSide, Paddle} from "../components/paddle";
 import {Position} from "../components/position";
 import {GameStore} from "../models/game-store";
-import {BallSystem} from "../systems/ball";
 import {Velocity} from "../components/velocity";
 import {load} from "../app/persistence";
-import {RenderUISystem} from "../systems/render-ui";
-import {RenderGameSystem} from "../systems/render-game";
 import {Shape} from "../components/shape";
-import {AnimationSystem} from "../systems/animation";
 import {UIItem} from "../components/ui-item";
 import {ScoreBoard} from "../models/score-board";
-import {CollisionSystem} from "../systems/collision";
 import {savablePrefab} from "../prefabs/savable";
 
 export class GameState extends State {
-    _systems = [AnimationSystem, BallSystem, CollisionSystem, InputSystem, PaddleSystem, PauseSystem, RenderGameSystem, RenderUISystem];
     saveDataPrefabHandle?: TGroupHandle;
     staticDataPrefabHandle?: TGroupHandle;
 

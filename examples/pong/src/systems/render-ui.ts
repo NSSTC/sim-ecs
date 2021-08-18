@@ -2,12 +2,16 @@ import {Position} from "../components/position";
 import {ISystemActions, Query, Read, System} from "sim-ecs";
 import {UIItem} from "../components/ui-item";
 import {relToScreenCoords} from "../app/util";
+import {GameState} from "../states/game";
+import {MenuState} from "../states/menu";
+import {PauseState} from "../states/pause";
 
 export class RenderUISystem extends System {
     readonly query = new Query({
         pos: Read(Position),
         ui: Read(UIItem)
     });
+    readonly states = [GameState, MenuState, PauseState];
 
     ctx!: CanvasRenderingContext2D;
     toScreenCoords!: (x: number, y: number) => [number, number];

@@ -3,12 +3,14 @@ import {UIItem} from "../components/ui-item";
 import {EMovement, GameStore} from "../models/game-store";
 import {EActions} from "../app/actions";
 import {GameState} from "../states/game";
+import {MenuState} from "../states/menu";
 
 
 export class MenuSystem extends System {
     readonly query = new Query({
         uiItem: Write(UIItem)
     });
+    readonly states = [MenuState];
 
     actions!: ISystemActions
     gameStore!: GameStore;
