@@ -163,12 +163,23 @@ While the world is running (using `run()`), the state can be changed using comma
 Single calls to `dispatch()` do not offer the benefits of a PDA.
 
 ```typescript
-class InitState extends State { _systems = [InitSystem] }
-class RunState extends State { _systems = [GravitySystem] }
-class PauseState extends State { _systems = [PauseSystem] }
+class GameState extends State {
+    activate() {
+        console.log('Game State is active, now!');
+    }
+    
+    deactivate() {
+        console.log('Game State is inactive, now!');
+    }
+}
 
-world.dispatch(InitState);
-world.run({ initialState: RunState });
+class GameSystem extends System {
+    readonly query = new Query({ /* ... */ });
+    readonly states = [GameState];
+}
+
+world.dispatch(GameState);
+world.run({ initialState: GameState });
 ``` 
 
 ## Update loop
