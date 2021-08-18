@@ -1,7 +1,7 @@
 import {IEntity} from "./entity.spec";
 import {IISystemProto, ISystem} from "./system.spec";
 import {IIStateProto, IState} from "./state.spec";
-import {TTypeProto} from "./_.spec";
+import {TObjectProto, TTypeProto} from "./_.spec";
 import {IAccessDescriptor, IAccessQuery, TExistenceQuery} from "./query.spec";
 import {ISerDe, TSerDeOptions, TSerializer} from "./serde/serde.spec";
 import {ISerialFormat} from "./serde/serial-format.spec";
@@ -51,7 +51,7 @@ export interface IPartialWorld {
      * Query entities and find the ones with a certain combination of component
      * @param query
      */
-    getEntities(query?: Query<IAccessQuery<TTypeProto<Object>> | TExistenceQuery<TTypeProto<Object>>>): IterableIterator<IEntity>
+    getEntities(query?: Query<IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>>): IterableIterator<IEntity>
 
     /**
      * Get a resource which was previously stored
@@ -75,7 +75,7 @@ export interface IPartialWorld {
      * @param query
      * @param options
      */
-    save<C extends Object, T extends IAccessDescriptor<C>>(query?: Query<TExistenceQuery<TTypeProto<Object>>>, options?: TSerDeOptions<TSerializer>): ISerialFormat
+    save<C extends Object, T extends IAccessDescriptor<C>>(query?: Query<TExistenceQuery<TObjectProto>>, options?: TSerDeOptions<TSerializer>): ISerialFormat
 }
 
 /**
@@ -89,7 +89,7 @@ export interface ISystemActions {
      * Query entities and find the ones with a certain combination of component
      * @param query
      */
-    getEntities(query?: Query<IAccessQuery<TTypeProto<Object>> | TExistenceQuery<TTypeProto<Object>>>): IterableIterator<IEntity>
+    getEntities(query?: Query<IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>>): IterableIterator<IEntity>
 
     /**
      * Get a resource which was previously stored

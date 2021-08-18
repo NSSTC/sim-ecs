@@ -11,23 +11,23 @@ import {
     TExistenceQuery,
     TAccessQueryParameter, TExistenceQueryParameter, addEntitySym, removeEntitySym, clearEntitiesSym
 } from "./query.spec";
-import {Entity, IEntity, TEntityProto, TTag} from "./entity";
+import {Entity, IEntity, TTag} from "./entity";
 import {TObjectProto, TTypeProto} from "./_.spec";
 import IWorld from "./world.spec";
 
 export * from "./query.spec";
 
 
-export type TAccessQueryData<DESC extends IAccessQuery<TTypeProto<Object>>> = {
+export type TAccessQueryData<DESC extends IAccessQuery<TObjectProto>> = {
     [P in keyof DESC]: Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>>
 }
 
 export class Query<
-    DESC extends IAccessQuery<TTypeProto<Object>> | TExistenceQuery<TTypeProto<Object>>,
+    DESC extends IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>,
     DATA =
-        DESC extends TExistenceQuery<TTypeProto<Object>>
+        DESC extends TExistenceQuery<TObjectProto>
             ? IEntity
-            : DESC extends IAccessQuery<TTypeProto<Object>>
+            : DESC extends IAccessQuery<TObjectProto>
                 ? TAccessQueryData<DESC>
                 : never
 > {
@@ -116,7 +116,7 @@ export class Query<
 
     public matchesEntity(entity: IEntity): boolean {
         if (Array.isArray(this.queryDescriptor)) {
-            let componentDesc: TExistenceQueryParameter<TTypeProto<Object>>;
+            let componentDesc: TExistenceQueryParameter<TObjectProto>;
 
             for (componentDesc of this.queryDescriptor) {
                 if (
@@ -128,13 +128,13 @@ export class Query<
 
                 if (
                     componentDesc[existenceDescSym].targetType == ETargetType.component
-                    && entity.hasComponent(componentDesc[existenceDescSym].target as TTypeProto<Object>) != (componentDesc[existenceDescSym].type == EExistence.set)
+                    && entity.hasComponent(componentDesc[existenceDescSym].target as TObjectProto) != (componentDesc[existenceDescSym].type == EExistence.set)
                 ) {
                     return false;
                 }
             }
         } else {
-            let componentDesc: TAccessQueryParameter<TTypeProto<Object>>;
+            let componentDesc: TAccessQueryParameter<TObjectProto>;
 
             for (componentDesc of Object.values(this.queryDescriptor)) {
                 if (
@@ -146,7 +146,7 @@ export class Query<
 
                 if (
                     componentDesc[accessDescSym].targetType == ETargetType.component
-                    && !entity.hasComponent(componentDesc[accessDescSym].target as TTypeProto<Object>)
+                    && !entity.hasComponent(componentDesc[accessDescSym].target as TObjectProto)
                 ) {
                     return false;
                 }
@@ -207,7 +207,7 @@ export function With<C extends Object>(componentPrototype: TTypeProto<C>): IExis
     };
 }
 
-export function WithTag(tag: TTag): TAccessQueryParameter<TTypeProto<Object>> & IExistenceDescriptor<TObjectProto> {
+export function WithTag(tag: TTag): TAccessQueryParameter<TObjectProto> & IExistenceDescriptor<TObjectProto> {
     return {
         [accessDescSym]: {
             target: tag,
@@ -219,7 +219,7 @@ export function WithTag(tag: TTag): TAccessQueryParameter<TTypeProto<Object>> & 
             targetType: ETargetType.tag,
             type: EExistence.set,
         }
-    } as TAccessQueryParameter<TTypeProto<Object>> & IExistenceDescriptor<TTypeProto<Object>>;
+    } as TAccessQueryParameter<TObjectProto> & IExistenceDescriptor<TObjectProto>;
 }
 
 export function Without<C extends Object>(componentPrototype: TTypeProto<C>): IExistenceDescriptor<TTypeProto<C>> {

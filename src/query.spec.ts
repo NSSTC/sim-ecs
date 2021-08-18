@@ -1,11 +1,11 @@
-import {TTypeProto} from "./_.spec";
-import {TTag} from "./entity";
+import {TObjectProto, TTypeProto} from "./_.spec";
+import {TTag} from "./entity.spec";
 
-export type TAccessQueryParameter<C extends TTypeProto<Object>> = C & IAccessDescriptor<InstanceType<C>>;
-export interface IAccessQuery<C extends TTypeProto<Object>> { [componentName: string]: TAccessQueryParameter<C> }
+export type TAccessQueryParameter<C extends TObjectProto> = C & IAccessDescriptor<InstanceType<C>>;
+export interface IAccessQuery<C extends TObjectProto> { [componentName: string]: TAccessQueryParameter<C> }
 
-export type TExistenceQueryParameter<C extends TTypeProto<Object>> = IExistenceDescriptor<C>;
-export type TExistenceQuery<C extends TTypeProto<Object>> = Array<TExistenceQueryParameter<C>>;
+export type TExistenceQueryParameter<C extends TObjectProto> = IExistenceDescriptor<C>;
+export type TExistenceQuery<C extends TObjectProto> = Array<TExistenceQueryParameter<C>>;
 
 export const addEntitySym = Symbol();
 export const clearEntitiesSym = Symbol();
@@ -40,7 +40,7 @@ export interface IAccessDescriptor<C extends Object> {
     }
 }
 
-export interface IExistenceDescriptor<C extends TTypeProto<Object>> {
+export interface IExistenceDescriptor<C extends TObjectProto> {
     [existenceDescSym]: {
         readonly target: C | TTag
         readonly targetType: ETargetType
@@ -48,7 +48,7 @@ export interface IExistenceDescriptor<C extends TTypeProto<Object>> {
     }
 }
 
-/*
+/* todo, help wanted
 export interface IQuery<D extends IAccessQueryResult<Object> | TExistenceQueryResult> {
     iter(): IterableIterator<D extends Array<infer T> ? IEntity : { [P in keyof D]: Required<Omit<InstanceType<D[P]>, keyof IAccessDescriptor<Object>>> }>
     matchesEntity(entity: IEntity): boolean

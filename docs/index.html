@@ -196,12 +196,25 @@
 				If no state is passed to the dispatcher, all systems are run by default.</p>
 				<p>While the world is running (using <code>run()</code>), the state can be changed using commands.
 				Single calls to <code>dispatch()</code> do not offer the benefits of a PDA.</p>
-				<pre><code class="language-typescript"><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">InitState</span><span style="color: #000000"> </span><span style="color: #0000FF">extends</span><span style="color: #000000"> </span><span style="color: #267F99">State</span><span style="color: #000000"> { </span><span style="color: #001080">_systems</span><span style="color: #000000"> = [</span><span style="color: #001080">InitSystem</span><span style="color: #000000">] }</span>
-<span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">RunState</span><span style="color: #000000"> </span><span style="color: #0000FF">extends</span><span style="color: #000000"> </span><span style="color: #267F99">State</span><span style="color: #000000"> { </span><span style="color: #001080">_systems</span><span style="color: #000000"> = [</span><span style="color: #001080">GravitySystem</span><span style="color: #000000">] }</span>
-<span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">PauseState</span><span style="color: #000000"> </span><span style="color: #0000FF">extends</span><span style="color: #000000"> </span><span style="color: #267F99">State</span><span style="color: #000000"> { </span><span style="color: #001080">_systems</span><span style="color: #000000"> = [</span><span style="color: #001080">PauseSystem</span><span style="color: #000000">] }</span>
+				<pre><code class="language-typescript"><span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">GameState</span><span style="color: #000000"> </span><span style="color: #0000FF">extends</span><span style="color: #000000"> </span><span style="color: #267F99">State</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #795E26">activate</span><span style="color: #000000">() {</span>
+<span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Game State is active, now!&#039;</span><span style="color: #000000">);</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">    </span>
+<span style="color: #000000">    </span><span style="color: #795E26">deactivate</span><span style="color: #000000">() {</span>
+<span style="color: #000000">        </span><span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;Game State is inactive, now!&#039;</span><span style="color: #000000">);</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">}</span>
 
-<span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #795E26">dispatch</span><span style="color: #000000">(</span><span style="color: #001080">InitState</span><span style="color: #000000">);</span>
-<span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #795E26">run</span><span style="color: #000000">({ </span><span style="color: #001080">initialState:</span><span style="color: #000000"> </span><span style="color: #001080">RunState</span><span style="color: #000000"> });</span>
+<span style="color: #0000FF">class</span><span style="color: #000000"> </span><span style="color: #267F99">GameSystem</span><span style="color: #000000"> </span><span style="color: #0000FF">extends</span><span style="color: #000000"> </span><span style="color: #267F99">System</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">readonly</span><span style="color: #000000"> </span><span style="color: #001080">query</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">Query</span><span style="color: #000000">({ </span><span style="color: #008000">/* ... */</span><span style="color: #000000"> });</span>
+<span style="color: #000000">    </span><span style="color: #0000FF">readonly</span><span style="color: #000000"> </span><span style="color: #001080">states</span><span style="color: #000000"> = [</span><span style="color: #001080">GameState</span><span style="color: #000000">];</span>
+<span style="color: #000000">    </span>
+<span style="color: #000000">    </span><span style="color: #795E26">run</span><span style="color: #000000">() { </span><span style="color: #008000">/* ... */</span><span style="color: #000000"> }</span>
+<span style="color: #000000">}</span>
+
+<span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #795E26">dispatch</span><span style="color: #000000">(</span><span style="color: #001080">GameState</span><span style="color: #000000">);</span>
+<span style="color: #001080">world</span><span style="color: #000000">.</span><span style="color: #795E26">run</span><span style="color: #000000">({ </span><span style="color: #001080">initialState:</span><span style="color: #000000"> </span><span style="color: #001080">GameState</span><span style="color: #000000"> });</span>
 </code></pre>
 				<a href="#update-loop" id="update-loop" style="color: inherit; text-decoration: none;">
 					<h2>Update loop</h2>
@@ -646,9 +659,6 @@
 					</li>
 					<li class=" tsd-kind-variable">
 						<a href="modules.html#setEntitiesSym" class="tsd-kind-icon">set<wbr>Entities<wbr>Sym</a>
-					</li>
-					<li class=" tsd-kind-variable">
-						<a href="modules.html#systemsSym" class="tsd-kind-icon">systems<wbr>Sym</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="modules.html#Read" class="tsd-kind-icon">Read</a>

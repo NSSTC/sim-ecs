@@ -1,11 +1,11 @@
 import {ISystemActions} from "./world.spec";
 import {IAccessQuery, Query} from "./query";
-import {TTypeProto} from "./_.spec";
+import {TObjectProto} from "./_.spec";
 import {IIStateProto} from "./state.spec";
 
 
 export interface ISystem {
-    readonly query?: Query<IAccessQuery<TTypeProto<Object>>>
+    readonly query?: Query<IAccessQuery<TObjectProto>>
     readonly states?: IIStateProto[]
 
     /**

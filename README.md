@@ -176,6 +176,8 @@ class GameState extends State {
 class GameSystem extends System {
     readonly query = new Query({ /* ... */ });
     readonly states = [GameState];
+    
+    run() { /* ... */ }
 }
 
 world.dispatch(GameState);

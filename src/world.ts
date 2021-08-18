@@ -10,7 +10,7 @@ import {
 } from "./world.spec";
 import {IEntity} from "./entity.spec";
 import {IState, State, IIStateProto} from "./state";
-import {TTypeProto} from "./_.spec";
+import {TObjectProto, TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
 import {SerDe, TDeserializer, TSerDeOptions, TSerializer} from "./serde/serde";
 import {ISerialFormat} from "./serde/serial-format";
@@ -48,7 +48,7 @@ export class World implements IWorld {
         nextHandle: 0,
         entityLinks: new Map<number, IEntity[]>(),
     };
-    protected queries: Query<IAccessQuery<TTypeProto<Object>>>[] = [];
+    protected queries: Query<IAccessQuery<TObjectProto>>[] = [];
     public resources = new Map<{ new(): Object }, Object>();
     protected runExecutionPipeline: Set<System>[] = [];
     protected runExecutionPipelineCache: Map<IIStateProto, Set<System>[]> = new Map();
@@ -183,7 +183,7 @@ export class World implements IWorld {
         return this._commandsAggregator.executeAll();
     }
 
-    getEntities(query?: Query<IAccessQuery<TTypeProto<Object>> | TExistenceQuery<TTypeProto<Object>>>): IterableIterator<IEntity> {
+    getEntities(query?: Query<IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>>): IterableIterator<IEntity> {
         if (!query) {
             return this.entities.keys();
         }
@@ -522,7 +522,7 @@ export class World implements IWorld {
         this.shouldRunSystems = false;
     }
 
-    save<C extends Object, T extends IAccessDescriptor<C>>(query?: Query<TExistenceQuery<TTypeProto<Object>>>, options?: TSerDeOptions<TSerializer>): ISerialFormat {
+    save<C extends Object, T extends IAccessDescriptor<C>>(query?: Query<TExistenceQuery<TObjectProto>>, options?: TSerDeOptions<TSerializer>): ISerialFormat {
         return this.serde.serialize({entities: this.getEntities(query)}, options);
     }
 
