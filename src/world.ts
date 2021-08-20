@@ -22,8 +22,8 @@ import {
     IAccessQuery,
     setEntitiesSym,
     TExistenceQuery,
-    Query
-} from "./query";
+    Query, clearEntitiesSym
+} from "./query/query";
 
 export * from './world.spec';
 
@@ -230,6 +230,7 @@ export class World implements IWorld {
     maintain(): void {
         let query;
         for (query of this.queries) {
+            query[clearEntitiesSym]();
             query[setEntitiesSym](this.entities.values());
         }
 

@@ -1,6 +1,6 @@
 import {System} from "../system";
 import {C1} from "./components";
-import {Query, Write} from "../query";
+import {Query, Write} from "../query/query";
 
 export class S1 extends System {
     readonly query = new Query({ c1: Write(C1) });

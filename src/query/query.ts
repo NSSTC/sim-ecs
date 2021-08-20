@@ -3,23 +3,30 @@ import {
     EAccess,
     ETargetType,
     IAccessDescriptor,
-    IExistenceDescriptor,
     existenceDescSym,
     EExistence,
     IAccessQuery,
     setEntitiesSym,
     TExistenceQuery,
-    TAccessQueryParameter, TExistenceQueryParameter, addEntitySym, removeEntitySym, clearEntitiesSym
+    TAccessQueryParameter,
+    TExistenceQueryParameter,
+    addEntitySym,
+    removeEntitySym,
+    clearEntitiesSym,
+    TOptionalAccessQueryParameter
 } from "./query.spec";
-import {Entity, IEntity, TTag} from "./entity";
-import {TObjectProto, TTypeProto} from "./_.spec";
-import IWorld from "./world.spec";
+import {IEntity, TTag} from "../entity";
+import {TObjectProto, TTypeProto} from "../_.spec";
+import IWorld from "../world.spec";
 
 export * from "./query.spec";
+export * from "./query.util";
 
 
 export type TAccessQueryData<DESC extends IAccessQuery<TObjectProto>> = {
-    [P in keyof DESC]: Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>>
+    [P in keyof DESC]: DESC[P] extends TAccessQueryParameter<TObjectProto>
+        ? Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>>
+        : (Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>> | undefined)
 }
 
 export class Query<
@@ -116,6 +123,8 @@ export class Query<
 
     public matchesEntity(entity: IEntity): boolean {
         if (Array.isArray(this.queryDescriptor)) {
+            // Existence query
+
             let componentDesc: TExistenceQueryParameter<TObjectProto>;
 
             for (componentDesc of this.queryDescriptor) {
@@ -134,8 +143,11 @@ export class Query<
                 }
             }
         } else {
-            let componentDesc: TAccessQueryParameter<TObjectProto>;
+            // Access query
 
+            let componentDesc: IAccessDescriptor<TObjectProto | undefined>;
+
+            // @ts-ignore todo: figure out typing. Something is still wrong somewhere
             for (componentDesc of Object.values(this.queryDescriptor)) {
                 if (
                     componentDesc[accessDescSym].targetType == ETargetType.tag
@@ -148,6 +160,10 @@ export class Query<
                     componentDesc[accessDescSym].targetType == ETargetType.component
                     && !entity.hasComponent(componentDesc[accessDescSym].target as TObjectProto)
                 ) {
+                    if (componentDesc[accessDescSym].optional) {
+                        continue;
+                    }
+
                     return false;
                 }
 
@@ -163,81 +179,4 @@ export class Query<
 
         return true;
     }
-}
-
-// todo: this is dangerous! The exposed interface should be reduced to prevent direct modifications in systems
-export function ReadEntity(uuid?: string): TAccessQueryParameter<TTypeProto<Readonly<IEntity>>> {
-    return Object.assign({}, Entity, {
-        [accessDescSym]: {
-            data: uuid,
-            target: Entity,
-            targetType: ETargetType.entity,
-            type: EAccess.meta,
-        },
-    } as IAccessDescriptor<Entity>);
-}
-
-export function Read<C extends Object>(componentPrototype: TTypeProto<C>): TAccessQueryParameter<TTypeProto<Readonly<C>>> {
-    return Object.assign({}, componentPrototype.prototype, {
-        [accessDescSym]: {
-            target: componentPrototype,
-            targetType: ETargetType.component,
-            type: EAccess.read,
-        },
-    } as IAccessDescriptor<C>);
-}
-
-export function Write<C extends Object>(componentPrototype: TTypeProto<C>): TAccessQueryParameter<TTypeProto<C>> {
-    return Object.assign({}, componentPrototype.prototype, {
-        [accessDescSym]: {
-            target: componentPrototype,
-            targetType: ETargetType.component,
-            type: EAccess.write,
-        },
-    });
-}
-
-export function With<C extends Object>(componentPrototype: TTypeProto<C>): IExistenceDescriptor<TTypeProto<C>> {
-    return {
-        [existenceDescSym]: {
-            target: componentPrototype,
-            targetType: ETargetType.component,
-            type: EExistence.set,
-        }
-    };
-}
-
-export function WithTag(tag: TTag): TAccessQueryParameter<TObjectProto> & IExistenceDescriptor<TObjectProto> {
-    return {
-        [accessDescSym]: {
-            target: tag,
-            targetType: ETargetType.tag,
-            type: EAccess.meta,
-        },
-        [existenceDescSym]: {
-            target: tag,
-            targetType: ETargetType.tag,
-            type: EExistence.set,
-        }
-    } as TAccessQueryParameter<TObjectProto> & IExistenceDescriptor<TObjectProto>;
-}
-
-export function Without<C extends Object>(componentPrototype: TTypeProto<C>): IExistenceDescriptor<TTypeProto<C>> {
-    return {
-        [existenceDescSym]: {
-            target: componentPrototype,
-            targetType: ETargetType.component,
-            type: EExistence.unset,
-        }
-    };
-}
-
-export function WithoutTag(tag: TTag): IExistenceDescriptor<TObjectProto> {
-    return {
-        [existenceDescSym]: {
-            target: tag,
-            targetType: ETargetType.tag,
-            type: EExistence.unset,
-        }
-    };
 }

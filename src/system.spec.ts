@@ -1,5 +1,5 @@
 import {ISystemActions} from "./world.spec";
-import {IAccessQuery, Query} from "./query";
+import {IAccessQuery, Query} from "./query/query";
 import {TObjectProto} from "./_.spec";
 import {IIStateProto} from "./state.spec";
 

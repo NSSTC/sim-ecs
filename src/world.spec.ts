@@ -2,12 +2,12 @@ import {IEntity} from "./entity.spec";
 import {IISystemProto, ISystem} from "./system.spec";
 import {IIStateProto, IState} from "./state.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
-import {IAccessDescriptor, IAccessQuery, TExistenceQuery} from "./query.spec";
+import {IAccessDescriptor, IAccessQuery, TExistenceQuery} from "./query/query.spec";
 import {ISerDe, TSerDeOptions, TSerializer} from "./serde/serde.spec";
 import {ISerialFormat} from "./serde/serial-format.spec";
 import {ICommands} from "./commands/commands.spec";
 import IEntityBuilder from "./entity-builder.spec";
-import {Query} from "./query";
+import {Query} from "./query/query";
 
 export type TExecutionFunction = ((callback: Function) => any) | typeof setTimeout | typeof requestAnimationFrame;
 export type TGroupHandle = number;

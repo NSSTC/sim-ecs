@@ -1,8 +1,9 @@
-import {TObjectProto, TTypeProto} from "./_.spec";
-import {TTag} from "./entity.spec";
+import {TObjectProto, TTypeProto} from "../_.spec";
+import {TTag} from "../entity.spec";
 
 export type TAccessQueryParameter<C extends TObjectProto> = C & IAccessDescriptor<InstanceType<C>>;
-export interface IAccessQuery<C extends TObjectProto> { [componentName: string]: TAccessQueryParameter<C> }
+export type TOptionalAccessQueryParameter<C extends TObjectProto | undefined> = IAccessDescriptor<C extends TObjectProto ? InstanceType<C> : undefined> & C extends TObjectProto ? C : undefined;
+export interface IAccessQuery<C extends TObjectProto> { [componentName: string]: TAccessQueryParameter<C> | TOptionalAccessQueryParameter<C> }
 
 export type TExistenceQueryParameter<C extends TObjectProto> = IExistenceDescriptor<C>;
 export type TExistenceQuery<C extends TObjectProto> = Array<TExistenceQueryParameter<C>>;
@@ -31,9 +32,10 @@ export enum ETargetType {
     tag,
 }
 
-export interface IAccessDescriptor<C extends Object> {
+export interface IAccessDescriptor<C extends Object | undefined> {
     [accessDescSym]: {
         readonly data?: string
+        readonly optional: boolean
         readonly target: TTypeProto<C> | TTag
         readonly targetType: ETargetType
         readonly type: EAccess
