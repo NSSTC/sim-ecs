@@ -7,6 +7,7 @@ const tsLibVersion = JSON.parse(readFileSync('node_modules/tslib/package.json').
 const tsNodeVersion = JSON.parse(readFileSync('node_modules/ts-node/package.json').toString()).version;
 
 const apeVersion = JSON.parse(readFileSync('node_modules/ape-ecs/package.json').toString()).version;
+const bitVersion = JSON.parse(readFileSync('node_modules/bitecs/package.json').toString()).version;
 const simVersion = JSON.parse(readFileSync('../../package.json').toString()).version;
 const tickKnockVersion = JSON.parse(readFileSync('node_modules/tick-knock/package.json').toString()).version;
 
@@ -29,6 +30,7 @@ TS-Lib\t\tv${tsLibVersion}
 TS-Node\t\tv${tsNodeVersion}
 
 Ape-ECS\t\tv${apeVersion}
+bitecs\t\tv${bitVersion}
 sim-ecs\t\tv${simVersion}
 tick-knock\tv${tickKnockVersion}
 `);

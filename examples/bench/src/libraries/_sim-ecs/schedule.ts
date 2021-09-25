@@ -1,5 +1,5 @@
-import {buildWorld, ISystemActions, Query, System, World, Write} from 'sim-ecs';
-import {ABenchmark, IBenchmark} from "../benchmark.spec";
+import {buildWorld, ISystemActions, Query, System, World, Write} from '../../../../../src';
+import {IBenchmark} from "../../benchmark.spec";
 
 class A { constructor(public val: number) {} }
 class B { constructor(public val: number) {} }
@@ -15,9 +15,10 @@ class ABSystem extends System {
     });
 
     run(actions: ISystemActions) {
-        this.query.execute(({a, b}) => {
+        let a, b;
+        for ({a, b} of this.query.iter()) {
             [a.val, b.val] = [b.val, a.val];
-        });
+        }
     }
 }
 
@@ -28,9 +29,10 @@ class CDSystem extends System {
     });
 
     run(actions: ISystemActions) {
-        this.query.execute(({c, d}) => {
+        let c, d;
+        for ({c, d} of this.query.iter()) {
             [c.val, d.val] = [d.val, c.val];
-        });
+        }
     }
 }
 
@@ -41,19 +43,21 @@ class CESystem extends System {
     });
 
     run(actions: ISystemActions) {
-        this.query.execute(({c, e}) => {
+        let c, e;
+        for ({c, e} of this.query.iter()) {
             [c.val, e.val] = [e.val, c.val];
-        });
+        }
     }
 }
 
-export class Benchmark extends ABenchmark {
+export class Benchmark implements IBenchmark {
+    readonly name = 'sim-ecs';
+    count = 0;
     world: World;
 
     constructor(
         protected iterCount: number
     ) {
-        super();
         this.world = buildWorld()
             .withSystem(ABSystem)
             .withSystem(CDSystem)
@@ -102,16 +106,15 @@ export class Benchmark extends ABenchmark {
         }
     }
 
-    cleanUp(): IBenchmark {
-        return this;
+    reset() {
+        this.count = 0;
     }
 
     async init(): Promise<void> {
-        let count = 0;
         await this.world.flushCommands();
         await this.world.prepareRun({
             afterStepHandler: (actions) => {
-                if (count++ >= this.iterCount) { actions.commands.stopRun(); }
+                if (this.count++ >= this.iterCount) { actions.commands.stopRun(); }
             },
             // to make the comparison fair, we will iterate in a sync loop over the steps, just like the others do
             executionFunction: (fn: Function) => fn(),

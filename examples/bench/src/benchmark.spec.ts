@@ -1,26 +1,31 @@
+export interface IBenchmark {
+    readonly name: string
+
+    init(): Promise<void> | void
+    reset(): Promise<void> | void
+    run(): Promise<void> | void
+}
+
 export interface IBenchmarkConstructor {
     new(iterCount: number): IBenchmark
 }
 
-export interface IBenchmark {
-    burnIn(): IBenchmark | Promise<IBenchmark>
-    cleanUp(): IBenchmark | Promise<IBenchmark>
-    init(): Promise<void>
-    run(): void | Promise<void>
+export interface ICaseResult {
+    readonly name: string
+
+    averageTime: number
+    fastestTime: number
+    slowestTime: number
+    totalTime: number
 }
 
-export abstract class ABenchmark implements IBenchmark {
-    async burnIn(): Promise<IBenchmark> {
-        await this.run();
-        this.cleanUp();
-        return this;
-    }
+export interface ISuiteResult {
+    readonly name: string
 
-    abstract cleanUp(): IBenchmark | Promise<IBenchmark>;
-
-    async init(): Promise<void> {}
-
-    abstract run(): void | Promise<void>;
+    currentResult: ICaseResult
+    results: ISuiteResults
 }
 
-export type TBenchProto = new (...args: any[]) => IBenchmark;
+export interface ISuiteResults {
+    [caseName: string]: ICaseResult
+}

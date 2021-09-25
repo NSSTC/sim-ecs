@@ -1,5 +1,5 @@
-import {ABenchmark, IBenchmark} from "../benchmark.spec";
 import {Component, System, World} from "ape-ecs";
+import {IBenchmark} from "../../benchmark.spec";
 
 class A extends Component { static properties = { val: 0 } }
 class B extends Component { static properties = { val: 0 } }
@@ -49,13 +49,13 @@ class CESystem extends System {
     }
 }
 
-export class Benchmark extends ABenchmark {
+export class Benchmark implements IBenchmark {
+    readonly name = 'Ape-ECS'
     world: World;
 
     constructor(
         protected iterCount: number
     ) {
-        super();
         this.world = new World();
         this.world.registerComponent(A);
         this.world.registerComponent(B);
@@ -117,9 +117,9 @@ export class Benchmark extends ABenchmark {
         }
     }
 
-    cleanUp(): IBenchmark {
-        return this;
-    }
+    init() {}
+
+    reset() {}
 
     async run() {
         for (let i = 0; i < this.iterCount; i++) {

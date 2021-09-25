@@ -1,18 +1,18 @@
-import {buildWorld, IWorld} from 'sim-ecs';
-import {ABenchmark} from "../benchmark.spec";
+import {buildWorld, IWorld} from '../../../../../src';
+import { IBenchmark } from '../../benchmark.spec';
 
 class Transform {}
 class Position { x = 0 }
 class Rotation {}
 class Velocity { x = 1 }
 
-export class Benchmark extends ABenchmark {
-    world: IWorld;
+export class Benchmark implements IBenchmark {
+    readonly name = 'sim-ecs';
+    world!: IWorld;
 
     constructor(
-        protected iterCount: number
+        protected readonly iterCount: number
     ) {
-        super();
         this.world = buildWorld()
             .withComponents(
                 Transform,
@@ -23,10 +23,11 @@ export class Benchmark extends ABenchmark {
             .build();
     }
 
-    async cleanUp() {
+    init(): Promise<void> | void {}
+
+    async reset() {
         this.world.commands.clearEntities();
         await this.world.flushCommands();
-        return this;
     }
 
     run() {

@@ -31,7 +31,7 @@
     "dist"
   ],
   "scripts": {
-    "bench": "ts-node -P tsconfig.json examples/bench.ts",
+    "bench": "cd examples/bench && npm run bench",
     "build": "tsc --project . && npm run doc",
     "doc": "typedoc src/index.ts --out docs --includeVersion",
     "coverage": "nyc -r lcov -e .ts -x \"**/*.test.ts\" -x \"**/*.spec.ts\" -x \"src/tests\" npm run test",

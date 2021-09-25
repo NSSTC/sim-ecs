@@ -1,24 +1,25 @@
 import {Engine, Entity} from 'tick-knock';
-import {ABenchmark, IBenchmark} from "../benchmark.spec";
+import {IBenchmark} from "../../benchmark.spec";
 
 class Transform {}
 class Position { x = 0 }
 class Rotation {}
 class Velocity { x = 1 }
 
-export class Benchmark extends ABenchmark {
+export class Benchmark implements IBenchmark {
+    readonly name = 'tick-knock';
     world: Engine;
 
     constructor(
         protected iterCount: number
     ) {
-        super();
         this.world = new Engine();
     }
 
-    cleanUp(): IBenchmark {
+    init() {}
+
+    reset() {
         this.world.removeAllEntities();
-        return this;
     }
 
     run() {

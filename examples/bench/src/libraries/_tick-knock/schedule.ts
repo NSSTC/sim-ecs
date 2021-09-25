@@ -1,5 +1,5 @@
-import {ABenchmark, IBenchmark} from "../benchmark.spec";
 import {Engine, Entity, Query, System} from "tick-knock";
+import {IBenchmark} from "../../benchmark.spec";
 
 class A { constructor(public val: number) {} }
 class B { constructor(public val: number) {} }
@@ -70,14 +70,13 @@ class CESystem extends System {
     }
 }
 
-export class Benchmark extends ABenchmark {
+export class Benchmark implements IBenchmark {
+    readonly name = 'tick-knock';
     world: Engine;
 
     constructor(
         protected iterCount: number
     ) {
-        super();
-
         this.world = new Engine()
             .addSystem(new ABSystem())
             .addSystem(new CDSystem())
@@ -124,9 +123,9 @@ export class Benchmark extends ABenchmark {
         }
     }
 
-    cleanUp(): IBenchmark {
-        return this;
-    }
+    init() {}
+
+    reset() {}
 
     async run() {
         for (let i = 0; i < this.iterCount; i++) {

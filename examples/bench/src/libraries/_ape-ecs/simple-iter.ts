@@ -1,5 +1,5 @@
 import {Component, System, World} from 'ape-ecs';
-import {ABenchmark, IBenchmark} from "../benchmark.spec";
+import {IBenchmark} from "../../benchmark.spec";
 
 class Transform extends Component {}
 class Position extends Component { static properties = { x: 0 } }
@@ -21,13 +21,13 @@ class SimpleIterSystem extends System {
     }
 }
 
-export class Benchmark extends ABenchmark {
+export class Benchmark implements IBenchmark {
+    readonly name = 'Ape-ECS';
     world: World;
 
     constructor(
         protected iterCount: number
     ) {
-        super();
         this.world = new World({ trackChanges: false, entityPool: 1000 });
         this.world.registerSystem('step', SimpleIterSystem);
         this.world.registerComponent(Transform);
@@ -47,9 +47,9 @@ export class Benchmark extends ABenchmark {
         }
     }
 
-    cleanUp(): IBenchmark {
-        return this;
-    }
+    init() {}
+
+    reset() {}
 
     run() {
         for (let i = 0; i < this.iterCount; i++) {

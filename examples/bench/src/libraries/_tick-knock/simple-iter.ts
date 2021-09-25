@@ -1,5 +1,5 @@
 import {Engine, Entity, Query, System} from 'tick-knock';
-import {ABenchmark, IBenchmark} from "../benchmark.spec";
+import {IBenchmark} from "../../benchmark.spec";
 
 class Transform {}
 class Position { x = 0 }
@@ -17,14 +17,13 @@ class SimpleIterSystem extends System {
     }
 }
 
-export class Benchmark extends ABenchmark {
+export class Benchmark implements IBenchmark {
+    readonly name = 'tick-knock';
     world: Engine;
 
     constructor(
         protected iterCount: number
     ) {
-        super();
-
         const system = new SimpleIterSystem();
 
         this.world = new Engine()
@@ -40,9 +39,9 @@ export class Benchmark extends ABenchmark {
         }
     }
 
-    cleanUp(): IBenchmark {
-        return this;
-    }
+    init() {}
+
+    reset() {}
 
     run() {
         for (let i = 0; i < this.iterCount; i++) {

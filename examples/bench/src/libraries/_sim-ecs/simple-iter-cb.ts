@@ -1,5 +1,5 @@
-import {buildWorld, ISystemActions, Query, Read, System, World, Write} from 'sim-ecs';
-import {ABenchmark, IBenchmark} from "../benchmark.spec";
+import {buildWorld, ISystemActions, Query, Read, System, World, Write} from '../../../../../src';
+import {IBenchmark} from "../../benchmark.spec";
 
 class Transform {
 }
@@ -23,21 +23,20 @@ class SimpleIterSystem extends System {
     });
 
     run(actions: ISystemActions) {
-        let pos, vel;
         this.query.execute(({pos, vel}) => {
             pos.x += vel.x;
         });
     }
 }
 
-export class Benchmark extends ABenchmark {
+export class Benchmark implements IBenchmark {
+    readonly name = 'sim-ecs CB';
     count = 0;
     world: World;
 
     constructor(
         protected iterCount: number
     ) {
-        super();
         this.world = buildWorld()
             .withSystem(SimpleIterSystem)
             .withComponents(
@@ -60,9 +59,8 @@ export class Benchmark extends ABenchmark {
         }
     }
 
-    cleanUp(): IBenchmark {
+    reset() {
         this.count = 0;
-        return this;
     }
 
     async init(): Promise<void> {

@@ -373,19 +373,48 @@ TypeScript ECS Bench
 Platform: Windows_NT win32 x64 v10.0.19043
 CPU: AMD Ryzen 7 3700X 8-Core Processor@3600MHz
 
-Bench           v0.1.0
-TypeScript      v4.3.4
-TS-Lib          v2.3.0
-TS-Node         v10.0.0
+Bench           v0.2.0
+TypeScript      v4.4.3
+TS-Lib          v2.3.1
+TS-Node         v10.2.1
 
 Ape-ECS         v1.3.1
+bitecs          v0.3.21-5
 sim-ecs         v0.4.0
-tick-knock      v4.0.0
-```
+tick-knock      v4.0.2
 
-| | Ape-ECS | sim-ecs | sim-ecs with callbacks | tick-knock |
-| ---: | :---: | :---: | :---: | :---: |
-| Simple Insert | 59 ops/s, ±9.66% | **249 ops/s, ±0.34%** | **249 ops/s, ±0.34%** | 238 ops/s, ±34.51% |
-| Simple Iteration | 147 ops/s, ±1.67% | 24 001 ops/s, ±59.47% | **1 070 399 ops/s, ±26.58%** | 33 ops/s, ±0.23% |
-| Schedule | 1 ops/s, ±0.78%  | 192 309 ops/s, ±146.63% | **917 930 ops/s, ±20.31%** | 0 ops/s, ±0.36% |
-| De-/Serialize Save | 61 ops/s, ±11.88% (445.31KB) | **203 ops/s, ±44.30%** (**67.38KB**) | **203 ops/s, ±44.30%** (**67.38KB**) | - |
+
+ Default Suite / Simple Insert
+--------------------------------
+    Ape-ECS 90 ops/s ± 0.41%
+    bitecs 10000 ops/s ± 1.9%
+    sim-ecs 347 ops/s ± 0.94%
+    tick-knock 495 ops/s ± 1.1%
+
+
+
+ Default Suite / Simple Iter
+--------------------------------
+    Ape-ECS 164 ops/s ± 0.14%
+    bitecs 50000 ops/s ± 1.9%
+    sim-ecs 118 ops/s ± 0.26%
+    sim-ecs CB 292 ops/s ± 0.55%
+    tick-knock 33 ops/s ± 0.029%
+
+
+
+ Default Suite / Schedule
+--------------------------------
+    bitecs 30 ops/s ± 0.11%
+    sim-ecs 1 ops/s ± 0.15%
+    sim-ecs CB 1 ops/s ± 0.14%
+
+
+
+ Default Suite / Serialize
+--------------------------------
+Ape-ECS SerializeSave file size: 450.1962890625 KB
+    Ape-ECS 56 ops/s ± 1.3%
+sim-ecs SerializeSave file size: 67.3837890625 KB
+    sim-ecs 205 ops/s ± 1.7%
+```

@@ -1,19 +1,19 @@
-import {buildWorld, IWorld, SerialFormat} from 'sim-ecs';
-import {ABenchmark, IBenchmark} from "../benchmark.spec";
+import {buildWorld, IWorld, SerialFormat} from '../../../../../src';
+import {IBenchmark} from "../../benchmark.spec";
 
 class Transform {}
 class Position { x = 0 }
 class Rotation {}
 class Velocity { x = 1 }
 
-export class Benchmark extends ABenchmark {
+export class Benchmark implements IBenchmark {
+    readonly name = 'sim-ecs';
     world: IWorld;
     world2: IWorld;
 
     constructor(
         protected iterCount: number
     ) {
-        super();
         this.world = buildWorld()
             .withComponents(
                 Transform,
@@ -33,9 +33,7 @@ export class Benchmark extends ABenchmark {
             .build();
     }
 
-    cleanUp(): IBenchmark {
-        return this;
-    }
+    reset() {}
 
     async init(): Promise<void> {
         for (let i = 0; i < 1000; i++) {
