@@ -417,6 +417,7 @@ export class World implements IWorld {
                 throw new Error('Cannot run without preparing the run!');
             }
 
+            this.shouldRunSystems = true;
             this.runPromise = runPromise;
 
             const afterStepHandler = preparedConfig.afterStepHandler;
