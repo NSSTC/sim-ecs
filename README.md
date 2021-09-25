@@ -354,17 +354,17 @@ Please open a PR for any improvement!
 | Consistency check at transpile time (thanks to typing) | x | | | | 
 | Full async-support | x | | | |
 | Save / Load world | x | | | x |
-| Load prefabs | x | | | x |
+| Full prefab support | x | | | |
 | State Management | x | | | |
 
-* only works with numeric fields on components
+\* only works with numeric fields on components
 
 ### Performance
 
 Please take the results with a grain of salt. These are benchmarks, so they are synthetic.
 An actual application will use a mix out of everything and more, and depending on that may have a different experience.
 
-Date: 27th June 2021
+Date: 25th September 2021
 
 ```
 --------------------------------------------------------------------------------
