@@ -346,17 +346,18 @@ Please open a PR for any improvement!
 
 ### Features
 
-| Feature | sim-ecs | tick-knock | ape-ecs |
-| ---: | :---: | :---: | :---: |
-| Data first | x | | |
-| Full typing/intention support | x | x | | 
-| Everything can be used as a Component | x | x | |
-| Consistency check at transpile time (thanks to typing) | x | | | 
-| Full async-support | x | | |
-| Save / Load world | x | | x |
-| Load prefabs | x | | x |
-| State Management | x | | |
+| Feature | sim-ecs | bitecs | tick-knock | ape-ecs |
+| ---: | :---: | :---: | :---: | :---: |
+| Data first | x | x* | | |
+| Full typing/intention support | x | | x | | 
+| Everything can be used as a Component | x | | x | |
+| Consistency check at transpile time (thanks to typing) | x | | | | 
+| Full async-support | x | | | |
+| Save / Load world | x | | | x |
+| Load prefabs | x | | | x |
+| State Management | x | | | |
 
+* only works with numeric fields on components
 
 ### Performance
 
