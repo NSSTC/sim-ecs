@@ -125,6 +125,16 @@ export interface IWorld extends IPartialWorld {
     buildEntity(uuid?: string): IEntityBuilder
 
     /**
+     * Clear all entities and groups from this world
+     */
+    clearEntities(): void
+
+    /**
+     * Remove all resources from this world
+     */
+    clearResources(): void
+
+    /**
      * Create a new entity and add it to this world
      */
     createEntity(): IEntity
@@ -146,6 +156,12 @@ export interface IWorld extends IPartialWorld {
      * @param entity
      */
     removeEntity(entity: IEntity): void
+
+    /**
+     * Remove a resource from this world
+     * @param type
+     */
+    removeResource<T extends Object>(type: TTypeProto<T>): void
 
     /**
      * Execute all systems continuously in a dispatch-loop

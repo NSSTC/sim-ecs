@@ -162,6 +162,16 @@ export class World implements IWorld {
 
     clearEntities() {
         this.entities.clear();
+        this.clearGroups();
+    }
+
+    clearGroups() {
+        this.groups.entityLinks.clear();
+        this.groups.nextHandle = 0;
+    }
+
+    clearResources() {
+        this.resources.clear();
     }
 
     createEntity(): Entity {
