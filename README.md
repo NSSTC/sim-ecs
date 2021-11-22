@@ -325,7 +325,7 @@ const syncedEntity = world.buildEntity(entityId).build();
 // in order to fetch an entity with a given ID, the ECS's function can be used
 const entityFromIdGetter = getEntity(entityId);
 // or inside a Query:
-const {entityFromIdQuery} = new Query({entityFromIdQuery: ReadEntity(entityId) }).getOne();
+const {entityFromIdQuery} = new Query({ entityFromIdQuery: ReadEntity(entityId) }).getOne();
 ```
 
 
