@@ -7,11 +7,9 @@ import {PauseState} from "../states/pause";
 export class PauseSystem extends System {
     readonly states = [GameState, PauseState];
 
-    actions!: ISystemActions
     gameStore!: GameStore;
 
     setup(actions: ISystemActions) {
-        this.actions = actions;
         this.gameStore = actions.getResource(GameStore);
     }
 
@@ -25,9 +23,9 @@ export class PauseSystem extends System {
 
         if (this.gameStore.input.actions.togglePause) {
             if (isGameState) {
-                this.actions.commands.pushState(PauseState);
+                actions.commands.pushState(PauseState);
             } else {
-                this.actions.commands.popState();
+                actions.commands.popState();
             }
         }
     }

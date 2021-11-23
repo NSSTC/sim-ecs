@@ -12,12 +12,10 @@ export class MenuSystem extends System {
     });
     readonly states = [MenuState];
 
-    actions!: ISystemActions
     gameStore!: GameStore;
     menuAction = EActions.Play;
 
     setup(actions: ISystemActions) {
-        this.actions = actions;
         this.gameStore = actions.getResource(GameStore);
     }
 
@@ -46,7 +44,7 @@ export class MenuSystem extends System {
 
         if (this.gameStore.input.actions.menuConfirm) {
             if (this.menuAction == EActions.Play) {
-                this.actions.commands.pushState(GameState);
+                actions.commands.pushState(GameState);
             }
             else if (this.menuAction == EActions.Continue) {
                 if (localStorage.getItem('save') == null) {
@@ -54,10 +52,10 @@ export class MenuSystem extends System {
                 }
 
                 this.gameStore.continue = true;
-                this.actions.commands.pushState(GameState);
+                actions.commands.pushState(GameState);
             }
             else {
-                this.actions.commands.stopRun();
+                actions.commands.stopRun();
             }
 
             return;
