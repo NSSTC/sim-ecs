@@ -13,7 +13,8 @@ import {
     addEntitySym,
     removeEntitySym,
     clearEntitiesSym,
-    TOptionalAccessQueryParameter
+    IQuery,
+    TAccessQueryData,
 } from "./query.spec";
 import {IEntity, TTag} from "../entity";
 import {TObjectProto, TTypeProto} from "../_.spec";
@@ -23,12 +24,6 @@ export * from "./query.spec";
 export * from "./query.util";
 
 
-export type TAccessQueryData<DESC extends IAccessQuery<TObjectProto>> = {
-    [P in keyof DESC]: DESC[P] extends TAccessQueryParameter<TObjectProto>
-        ? Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>>
-        : (Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>> | undefined)
-}
-
 export class Query<
     DESC extends IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>,
     DATA =
@@ -37,7 +32,7 @@ export class Query<
             : DESC extends IAccessQuery<TObjectProto>
                 ? TAccessQueryData<DESC>
                 : never
-> {
+> implements IQuery<DESC, DATA>{
     protected queryResult: Map<IEntity, DATA> = new Map();
 
     constructor(
