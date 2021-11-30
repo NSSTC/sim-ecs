@@ -88,6 +88,10 @@ export class Commands implements ICommands {
         this.aggregator.addCommand(() => this.world.removeEntity(entity));
     }
 
+    removeGroup(handle: TGroupHandle): void {
+        this.aggregator.addCommand(() => this.world.removeGroup(handle));
+    }
+
     removeResource<T extends Object>(type: TTypeProto<T>): void {
         if (!this.world.resources.has(type)) {
             throw new Error(`Resource with name "${type.name}" does not exists!`);
@@ -127,9 +131,5 @@ export class Commands implements ICommands {
 
     stopRun(): void {
         this.aggregator.addCommand(() => this.world.stopRun());
-    }
-
-    unloadPrefab(handle: TGroupHandle): void {
-        this.aggregator.addCommand(() => this.world.unloadPrefab(handle));
     }
 }

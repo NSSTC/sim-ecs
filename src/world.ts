@@ -181,6 +181,12 @@ export class World implements IWorld {
         return entity;
     }
 
+    createGroup(): TGroupHandle {
+        const handle = this.groups.nextHandle++;
+        this.groups.entityLinks.set(handle, []);
+        return handle;
+    }
+
     async dispatch(state?: IIStateProto): Promise<void> {
         await this.run({
             initialState: state,
@@ -222,8 +228,12 @@ export class World implements IWorld {
     }
 
     load(prefab: ISerialFormat, options?: TSerDeOptions<TDeserializer>, intoGroup?: TGroupHandle): TGroupHandle {
-        const entities = [];
-        const groupHandle = intoGroup ?? this.groups.nextHandle++;
+        let groupHandle = intoGroup;
+        if (groupHandle == undefined || !this.groups.entityLinks.has(groupHandle)) {
+            groupHandle = this.createGroup();
+        }
+
+        const entities = this.groups.entityLinks.get(groupHandle)!;
         let entity: IEntity;
 
         for (entity of this._serde.deserialize(prefab, options).entities) {
@@ -370,14 +380,27 @@ export class World implements IWorld {
         return runConfig;
     }
 
-    removeEntity(entity: IEntity): void {
+    removeEntity(entity: IEntity) {
         this.entities.delete(entity);
         this._dirty = true;
     }
 
-    removeEntityFromSystems(entity: IEntity): void {
+    removeEntityFromSystems(entity: IEntity) {
         this.removeEntity(entity);
         this.maintain();
+    }
+
+    removeGroup(handle: TGroupHandle) {
+        if (!this.groups.entityLinks.has(handle)) {
+            throw new Error(`Could not find any loaded prefab under handle "${handle}"!`)
+        }
+
+        let entity;
+        for (entity of this.groups.entityLinks.get(handle)!) {
+            this.removeEntity(entity);
+        }
+
+        this.groups.entityLinks.delete(handle);
     }
 
     replaceEntitiesWith(world: IWorld) {
@@ -410,7 +433,7 @@ export class World implements IWorld {
         this.resources.delete(type);
     }
 
-    run(configuration?: IRunConfiguration, skipPreparation: boolean = false): Promise<void> {
+    run(configuration?: IRunConfiguration, skipPreparation: boolean = false) {
         const runPromise = new Promise<void>(async resolver => {
             let preparedConfig: IStaticRunConfiguration;
 
@@ -536,18 +559,5 @@ export class World implements IWorld {
 
     save<C extends Object, T extends IAccessDescriptor<C>>(query?: Query<TExistenceQuery<TObjectProto>>, options?: TSerDeOptions<TSerializer>): ISerialFormat {
         return this.serde.serialize({entities: this.getEntities(query)}, options);
-    }
-
-    unloadPrefab(handle: TGroupHandle) {
-        if (!this.groups.entityLinks.has(handle)) {
-            throw new Error(`Could not find any loaded prefab under handle "${handle}"!`)
-        }
-
-        let entity;
-        for (entity of this.groups.entityLinks.get(handle)!) {
-            this.removeEntity(entity);
-        }
-
-        this.groups.entityLinks.delete(handle);
     }
 }

@@ -79,6 +79,12 @@ export interface ICommands {
     removeEntity(entity: IEntity): void
 
     /**
+     * Remove a group and all entities inside from this world
+     * @param handle
+     */
+    removeGroup(handle: TGroupHandle): void
+
+    /**
      * Remove a resource from the world
      * @param type
      */
@@ -95,10 +101,4 @@ export interface ICommands {
      * Signal the world to stop its dispatch-loop
      */
     stopRun(): void
-
-    /**
-     * Remove entities with data-components from a prefab file
-     * @param handle
-     */
-    unloadPrefab(handle: TGroupHandle): void
 }

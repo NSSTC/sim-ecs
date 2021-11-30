@@ -34,11 +34,11 @@ export class GameState extends State {
 
     destroy(actions: ITransitionActions) {
         if (this.staticDataPrefabHandle) {
-            actions.commands.unloadPrefab(this.staticDataPrefabHandle);
+            actions.commands.removeGroup(this.staticDataPrefabHandle);
         }
 
         if (this.saveDataPrefabHandle) {
-            actions.commands.unloadPrefab(this.saveDataPrefabHandle);
+            actions.commands.removeGroup(this.saveDataPrefabHandle);
         }
 
         actions.commands.maintain();

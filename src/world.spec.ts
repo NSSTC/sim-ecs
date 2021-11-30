@@ -140,6 +140,11 @@ export interface IWorld extends IPartialWorld {
     createEntity(): IEntity
 
     /**
+     * Create a new group and add it to this world
+     */
+    createGroup(): TGroupHandle
+
+    /**
      * Execute all systems
      * @param state
      */
@@ -156,6 +161,12 @@ export interface IWorld extends IPartialWorld {
      * @param entity
      */
     removeEntity(entity: IEntity): void
+
+    /**
+     * Remove a group and all entities inside from this world
+     * @param handle
+     */
+    removeGroup(handle: TGroupHandle): void
 
     /**
      * Remove a resource from this world
