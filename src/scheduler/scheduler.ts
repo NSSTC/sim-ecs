@@ -26,15 +26,15 @@ export class Scheduler implements IScheduler {
     schedulingAlgorithm = defaultSchedulingAlgorithm;
     protected _stageSets?: IStage[][];
 
-    get isPrepared() {
+    get isPrepared(): boolean {
         return this._isPrepared;
     }
 
-    get currentPipeline() {
+    get currentPipeline(): IPipeline {
         return this._pipeline;
     }
 
-    async execute(actions: ISystemActions) {
+    async execute(actions: ISystemActions): Promise<void> {
         this.prepare(false);
 
         {
@@ -48,7 +48,7 @@ export class Scheduler implements IScheduler {
         this.unprepare(false);
     }
 
-    prepare(manual = true) {
+    prepare(manual = true): void {
         if (!manual && this._isManuallyPrepared) {
             return;
         }
@@ -70,7 +70,7 @@ export class Scheduler implements IScheduler {
         this._isPrepared = true;
     }
 
-    setPipeline(newPipeline: IPipeline) {
+    setPipeline(newPipeline: IPipeline): void {
         if (this._isPrepared) {
             throw new Error('This scheduler was already prepared or is executing and cannot be changed right now!');
         }
@@ -78,7 +78,7 @@ export class Scheduler implements IScheduler {
         this._pipeline = newPipeline;
     }
 
-    unprepare(manual = true) {
+    unprepare(manual = true): void {
         if (!manual && this._isManuallyPrepared) {
             return;
         }

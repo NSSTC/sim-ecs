@@ -1,10 +1,10 @@
 import {IStage} from "./stage.spec";
-import {ISystem} from "../../system";
+import {ISystem, ISystemProto} from "../../system";
 import {ISystemActions} from "../../world.spec";
 
 export * from "./stage.spec";
 
-export async function defaultSchedulingAlgorithm(actions: ISystemActions, systems: ISystem[]) {
+export async function defaultSchedulingAlgorithm(actions: ISystemActions, systems: ISystem[]): Promise<void> {
     const promises = [];
     let system;
 
@@ -19,7 +19,12 @@ export class Stage implements IStage {
     schedulingAlgorithm = defaultSchedulingAlgorithm;
     systems: ISystem[] = [];
 
-    execute(actions: ISystemActions) {
+    addSystem(System: ISystemProto): Stage {
+        this.systems.push(new System());
+        return this;
+    }
+
+    execute(actions: ISystemActions): Promise<void> {
         return this.schedulingAlgorithm(actions, this.systems);
     }
 }

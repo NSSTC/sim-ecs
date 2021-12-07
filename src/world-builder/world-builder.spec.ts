@@ -1,7 +1,8 @@
-import {IISystemProto, ISystem} from "../system.spec";
 import IWorld from "../world.spec";
 import {TObjectProto} from "../_.spec";
 import {ISerDeOperations} from "../serde/serde.spec";
+import {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
+import {IScheduler} from "../scheduler/scheduler.spec";
 
 export interface IComponentRegistrationOptions {
     serDe: ISerDeOperations
@@ -33,9 +34,14 @@ export interface IWorldBuilder {
     withName(name: string): IWorldBuilder
 
     /**
-     * Add system to the world
-     * @param System
-     * @param dependencies
+     * Add a custom scheduler
+     * @param scheduler
      */
-    withSystem(System: IISystemProto | ISystem, dependencies?: IISystemProto[]): IWorldBuilder
+    withScheduler(scheduler: IScheduler): IWorldBuilder
+
+    /**
+     * Add system to the world
+     * @param planner
+     */
+    withScheduling(planner: (root: ISyncPoint) => void): IWorldBuilder
 }

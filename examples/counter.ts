@@ -50,7 +50,7 @@ class CounterSystem extends System {
 /// then, we need a world which will hold our systems and entities
 const world = buildWorld()
     /// we can inform the world about our processing logic by adding the above defined system
-    .withSystem(CounterSystem)
+    .withScheduling(root => root.addNewStage(stage => stage.addSystem(CounterSystem)))
     /// we can register components types at this level in order to enable saving (serialization) and loading (deserialization) of them
     .withComponent(CounterInfo)
     .build();

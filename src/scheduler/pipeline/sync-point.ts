@@ -1,5 +1,5 @@
 import {ISyncPoint} from "./sync-point.spec";
-import {IStage} from "./stage";
+import {IStage, Stage} from "./stage";
 
 export * from "./sync-point.spec";
 
@@ -13,7 +13,14 @@ export class SyncPoint implements ISyncPoint {
         return this._locked;
     }
 
-    lock() {
+    addNewStage(handler: (stage: IStage) => void): SyncPoint {
+        const stage = new Stage();
+        this.stages.push(stage);
+        handler(stage);
+        return this;
+    }
+
+    lock(): void {
         if (this._locked) {
             throw new Error('This sync point is already locked!');
         }
@@ -21,7 +28,7 @@ export class SyncPoint implements ISyncPoint {
         this._locked = true;
     }
 
-    unlock() {
+    unlock(): void {
         this._locked = false;
     }
 }

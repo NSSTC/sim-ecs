@@ -2,12 +2,14 @@ import {
     IComponentRegistrationOptions,
     IWorldBuilder,
 } from "./world-builder.spec";
-import {IISystemProto, ISystem} from "../system";
-import {ISystemInfo, TStates, World} from "../world";
+import {ISystem} from "../system";
+import {TStates, World} from "../world";
 import {TObjectProto} from "../_.spec";
 import {SerDe} from "../serde/serde";
 import {IIStateProto, State} from "../state";
 import {dataStructDeserializer, dataStructSerializer} from "./world-builder.util";
+import {IScheduler, Scheduler} from "../scheduler/scheduler";
+import {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
 
 
 export * from './world-builder.spec';
@@ -16,9 +18,9 @@ export class WorldBuilder implements IWorldBuilder {
     protected allSystemsStateSet = new Set<ISystem>();
     protected callbacks: Set<(world: World) => void> = new Set();
     protected name?: string;
+    protected scheduler: IScheduler = new Scheduler();
     protected serde = new SerDe();
     protected stateInfos: TStates = new Map<IIStateProto, Set<ISystem>>();
-    protected systemInfos = new Map<IISystemProto, ISystemInfo>();
 
     constructor() {
         this.stateInfos.set(State, this.allSystemsStateSet);
@@ -32,8 +34,8 @@ export class WorldBuilder implements IWorldBuilder {
     build(): World {
         const world = new World({
             name: this.name,
+            scheduler: this.scheduler,
             states: this.stateInfos,
-            systems: new Set(this.systemInfos.values()),
             serde: this.serde,
         });
 
@@ -67,35 +69,13 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withSystem(System: IISystemProto | ISystem, dependencies?: IISystemProto[]): WorldBuilder {
-        const SystemProto = typeof System == 'object'
-            ? System.constructor as IISystemProto
-            : System;
+    withScheduler(scheduler: IScheduler): IWorldBuilder {
+        this.scheduler = scheduler;
+        return this;
+    }
 
-        /// every system may only be registered once
-        if (this.systemInfos.has(SystemProto)) {
-            throw new Error(`The system ${System.constructor.name} is already registered!`);
-        }
-
-        const system = new SystemProto();
-
-        this.allSystemsStateSet.add(system);
-        this.systemInfos.set(SystemProto, {
-            system,
-            dependencies: new Set(dependencies),
-        });
-
-        system.states?.forEach(State => {
-            let systemsSet = this.stateInfos.get(State);
-
-            if (!systemsSet) {
-                systemsSet = new Set<ISystem>();
-            }
-
-            systemsSet.add(system);
-            this.stateInfos.set(State, systemsSet);
-        });
-
+    withScheduling(planner: (root: ISyncPoint) => void): WorldBuilder {
+        planner(this.scheduler.currentPipeline.root);
         return this;
     }
 }
