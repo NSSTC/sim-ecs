@@ -71,10 +71,10 @@ export class Query<
         }
     }
 
-    public execute(handler: (data: DATA) => void): void {
+    public async execute(handler: (data: DATA) => Promise<void> | void): Promise<void> {
         let data: DATA;
         for (data of this.queryResult.values()) {
-            handler(data);
+            await handler(data);
         }
     }
 

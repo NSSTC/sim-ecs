@@ -19,10 +19,10 @@ class CounterSystem extends System {
     });
 
     /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
-    run(actions: ISystemActions) {
+    async run(actions: ISystemActions) {
         /// there are two ways to go over the query result:
         /// 1. you can use a callback function
-        this.query.execute(({info}) => {
+        await this.query.execute(({info}) => {
             info.count++;
 
             // after every ten steps, write out a log message

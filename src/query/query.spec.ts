@@ -69,10 +69,10 @@ export interface IQuery<
     > {
     readonly descriptor: DESC
 
-    execute(handler: (data: DATA) => void): void
+    execute(handler: (data: DATA) => Promise<void> | void): Promise<void>
     getOne(): DATA | undefined
     iter(world?: IWorld): IterableIterator<DATA>
     matchesEntity(entity: IEntity): boolean
 }
 
-export type TQueryProto<D extends IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>> = { new(): IQuery<D> };
+export interface IQueryProto<D extends IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>> { new(): IQuery<D> }
