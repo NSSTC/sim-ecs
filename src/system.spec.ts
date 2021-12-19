@@ -9,12 +9,6 @@ export interface ISystem {
     readonly states?: IIStateProto[]
 
     /**
-     * Called after dispatching or running a world
-     * @param actions
-     */
-    destroy(actions: ISystemActions): void | Promise<void>
-
-    /**
      * Run the system logic during a dispatch
      * @param actions
      */

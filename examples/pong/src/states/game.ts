@@ -34,11 +34,11 @@ export class GameState extends State {
 
     destroy(actions: ITransitionActions) {
         if (this.staticDataPrefabHandle) {
-            actions.commands.unloadPrefab(this.staticDataPrefabHandle);
+            actions.commands.removeGroup(this.staticDataPrefabHandle);
         }
 
         if (this.saveDataPrefabHandle) {
-            actions.commands.unloadPrefab(this.saveDataPrefabHandle);
+            actions.commands.removeGroup(this.saveDataPrefabHandle);
         }
 
         actions.commands.maintain();
@@ -53,7 +53,7 @@ const createGameFromSaveData = async function (actions: ITransitionActions) {
     const prefabHandle = actions.commands.load(SerialFormat.fromArray(savablePrefab));
     await actions.flushCommands();
 
-for (const entity of actions.getEntities(new Query([With(Paddle), With(Shape)]))) {
+    for (const entity of actions.getEntities(new Query([With(Paddle), With(Shape)]))) {
         entity
             .addComponent(new Position(
                 entity.getComponent(Paddle)!.side == EPaddleSide.Left

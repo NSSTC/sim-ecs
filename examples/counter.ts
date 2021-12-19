@@ -19,10 +19,10 @@ class CounterSystem extends System {
     });
 
     /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
-    run(actions: ISystemActions) {
+    async run(actions: ISystemActions) {
         /// there are two ways to go over the query result:
         /// 1. you can use a callback function
-        this.query.execute(({info}) => {
+        await this.query.execute(({info}) => {
             info.count++;
 
             // after every ten steps, write out a log message
@@ -44,13 +44,10 @@ class CounterSystem extends System {
     }
 }
 
-/// with everything defined, let's implement the setup code
-/// everything starts with the ECS initialization
-
 /// then, we need a world which will hold our systems and entities
 const world = buildWorld()
     /// we can inform the world about our processing logic by adding the above defined system
-    .withSystem(CounterSystem)
+    .withDefaultScheduling(root => root.addNewStage(stage => stage.addSystem(CounterSystem)))
     /// we can register components types at this level in order to enable saving (serialization) and loading (deserialization) of them
     .withComponent(CounterInfo)
     .build();

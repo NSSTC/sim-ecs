@@ -8,21 +8,19 @@ import {ISerialFormat} from "./serde/serial-format.spec";
 import {ICommands} from "./commands/commands.spec";
 import IEntityBuilder from "./entity-builder.spec";
 import {Query} from "./query/query";
+import {SerDe} from "./serde/serde";
+import {IScheduler} from "./scheduler/scheduler.spec";
 
 export type TExecutionFunction = ((callback: Function) => any) | typeof setTimeout | typeof requestAnimationFrame;
 export type TGroupHandle = number;
 export type TStates = Map<IIStateProto, Set<ISystem>>;
 
 export interface IRunConfiguration {
-    afterStepHandler?: (actions: ITransitionActions) => Promise<void> | void
-    beforeStepHandler?: (actions: ITransitionActions) => Promise<void> | void
     executionFunction?: TExecutionFunction
     initialState?: IIStateProto
 }
 
 export interface IStaticRunConfiguration {
-    afterStepHandler: (actions: ITransitionActions) => Promise<void> | void
-    beforeStepHandler: (actions: ITransitionActions) => Promise<void> | void
     executionFunction: TExecutionFunction
     initialState: IIStateProto,
 }
@@ -30,6 +28,13 @@ export interface IStaticRunConfiguration {
 export interface ISystemInfo {
     dependencies: Set<IISystemProto>
     system: ISystem
+}
+
+export interface IWorldConstructorOptions {
+    name?: string
+    defaultScheduler: IScheduler
+    stateSchedulers: Map<IIStateProto, IScheduler>
+    serde?: SerDe
 }
 
 export interface IPartialWorld {
@@ -74,6 +79,14 @@ export interface IPartialWorld {
 }
 
 /**
+ * Actions which an be called from a stage
+ */
+export interface IStageAction {
+    systemActions: ISystemActions
+    readonly systems: Readonly<Map<IISystemProto, ISystem>>
+}
+
+/**
  * Actions which can be called from a system run
  */
 export interface ISystemActions {
@@ -101,11 +114,6 @@ export interface ITransitionActions extends IPartialWorld {
 }
 
 export interface IWorld extends IPartialWorld {
-    /**
-     * Systems which are registered with this world
-     */
-    readonly systemInfos: Set<ISystemInfo>
-
     /**
      * Add an entity to this world
      * @param entity
@@ -140,6 +148,11 @@ export interface IWorld extends IPartialWorld {
     createEntity(): IEntity
 
     /**
+     * Create a new group and add it to this world
+     */
+    createGroup(): TGroupHandle
+
+    /**
      * Execute all systems
      * @param state
      */
@@ -156,6 +169,12 @@ export interface IWorld extends IPartialWorld {
      * @param entity
      */
     removeEntity(entity: IEntity): void
+
+    /**
+     * Remove a group and all entities inside from this world
+     * @param handle
+     */
+    removeGroup(handle: TGroupHandle): void
 
     /**
      * Remove a resource from this world

@@ -88,7 +88,27 @@ which usually means an interface with comments on what the methods do.
 In an ECS, a world is like a container for entities.
 
 ```typescript
-const world = buildWorld().withSystem(CountSystem).build();
+const world = buildWorld().build();
+```
+
+## Scheduling a run
+
+In sim-ecs, a run has to be planned ahead. This is done by giving a developer the means to pu systems into stages
+and then decide in which order stages should run and if they run in parallel.
+
+One thing to add is that a pipeline, which contains the entire program order, is made up of "Sync Points". These
+constructs allow for hooking into the plan in a non-destructive way. For example third-party code (like plugins)
+can make use of such a feature to add their own Systems at the right place in the program chronology.
+If that's not necessary, sim-ecs will work fine with just the `root` Sync Point.
+
+```typescript
+const world = buildWorld()
+    .withDefaultScheduling(root => root
+        .addNewStage(stage => stage
+            .addSystem(CounterSystem)
+        )
+    )
+    .build();
 ```
 
 
@@ -381,41 +401,41 @@ TS-Node         v10.2.1
 
 Ape-ECS         v1.3.1
 bitecs          v0.3.21-5
-sim-ecs         v0.4.0
+sim-ecs         v0.5.0
 tick-knock      v4.0.2
 
 
  Default Suite / Simple Insert
 --------------------------------
-    Ape-ECS 90 ops/s ± 0.41%
-    bitecs 10000 ops/s ± 1.9%
-    sim-ecs 347 ops/s ± 0.94%
-    tick-knock 495 ops/s ± 1.1%
+    Ape-ECS 75 ops/s ± 1.3%
+    bitecs 8333 ops/s ± 1.8%
+    sim-ecs 352 ops/s ± 0.85%
+    tick-knock 562 ops/s ± 0.95%
 
 
 
  Default Suite / Simple Iter
 --------------------------------
-    Ape-ECS 164 ops/s ± 0.14%
-    bitecs 50000 ops/s ± 1.9%
-    sim-ecs 118 ops/s ± 0.26%
-    sim-ecs CB 292 ops/s ± 0.55%
-    tick-knock 33 ops/s ± 0.029%
+    Ape-ECS 166 ops/s ± 0.15%
+    bitecs Infinity ops/s ± NaN%
+    sim-ecs Infinity ops/s ± NaN%
+    sim-ecs CB 25000 ops/s ± 1.9%
+    tick-knock 32 ops/s ± 0.17%
 
 
 
  Default Suite / Schedule
 --------------------------------
-    bitecs 30 ops/s ± 0.11%
-    sim-ecs 1 ops/s ± 0.15%
-    sim-ecs CB 1 ops/s ± 0.14%
+    bitecs 30 ops/s ± 0.029%
+    sim-ecs 1000 ops/s ± 0.0%
+    sim-ecs CB 70 ops/s ± 0.17%
 
 
 
  Default Suite / Serialize
 --------------------------------
 Ape-ECS SerializeSave file size: 450.1962890625 KB
-    Ape-ECS 56 ops/s ± 1.3%
+    Ape-ECS 56 ops/s ± 1.2%
 sim-ecs SerializeSave file size: 67.3837890625 KB
-    sim-ecs 205 ops/s ± 1.7%
+    sim-ecs 127 ops/s ± 1.4%
 ```
