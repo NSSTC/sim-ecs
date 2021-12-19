@@ -88,7 +88,27 @@ which usually means an interface with comments on what the methods do.
 In an ECS, a world is like a container for entities.
 
 ```typescript
-const world = buildWorld().withSystem(CountSystem).build();
+const world = buildWorld().build();
+```
+
+## Scheduling a run
+
+In sim-ecs, a run has to be planned ahead. This is done by giving a developer the means to pu systems into stages
+and then decide in which order stages should run and if they run in parallel.
+
+One thing to add is that a pipeline, which contains the entire program order, is made up of "Sync Points". These
+constructs allow for hooking into the plan in a non-destructive way. For example third-party code (like plugins)
+can make use of such a feature to add their own Systems at the right place in the program chronology.
+If that's not necessary, sim-ecs will work fine with just the `root` Sync Point.
+
+```typescript
+const world = buildWorld()
+    .withDefaultScheduling(root => root
+        .addNewStage(stage => stage
+            .addSystem(CounterSystem)
+        )
+    )
+    .build();
 ```
 
 

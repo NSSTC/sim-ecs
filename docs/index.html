@@ -86,7 +86,19 @@ which usually means an interface with comments on what the methods do.</p>
   <h2>Creating the ECS and a World</h2>
 </a>
 <p>In an ECS, a world is like a container for entities.</p>
-<pre><code class="language-typescript"><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">world</span><span class="hl-1"> = </span><span class="hl-4">buildWorld</span><span class="hl-1">().</span><span class="hl-4">withSystem</span><span class="hl-1">(</span><span class="hl-0">CountSystem</span><span class="hl-1">).</span><span class="hl-4">build</span><span class="hl-1">();</span>
+<pre><code class="language-typescript"><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">world</span><span class="hl-1"> = </span><span class="hl-4">buildWorld</span><span class="hl-1">().</span><span class="hl-4">build</span><span class="hl-1">();</span>
+</code></pre>
+
+<a href="#scheduling-a-run" id="scheduling-a-run" style="color: inherit; text-decoration: none;">
+  <h2>Scheduling a run</h2>
+</a>
+<p>In sim-ecs, a run has to be planned ahead. This is done by giving a developer the means to pu systems into stages
+and then decide in which order stages should run and if they run in parallel.</p>
+<p>One thing to add is that a pipeline, which contains the entire program order, is made up of &quot;Sync Points&quot;. These
+constructs allow for hooking into the plan in a non-destructive way. For example third-party code (like plugins)
+can make use of such a feature to add their own Systems at the right place in the program chronology.
+If that&#39;s not necessary, sim-ecs will work fine with just the <code>root</code> Sync Point.</p>
+<pre><code class="language-typescript"><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">world</span><span class="hl-1"> = </span><span class="hl-4">buildWorld</span><span class="hl-1">()</span><br/><span class="hl-1">    .</span><span class="hl-4">withDefaultScheduling</span><span class="hl-1">(</span><span class="hl-0">root</span><span class="hl-1"> </span><span class="hl-2">=&gt;</span><span class="hl-1"> </span><span class="hl-0">root</span><br/><span class="hl-1">        .</span><span class="hl-4">addNewStage</span><span class="hl-1">(</span><span class="hl-0">stage</span><span class="hl-1"> </span><span class="hl-2">=&gt;</span><span class="hl-1"> </span><span class="hl-0">stage</span><br/><span class="hl-1">            .</span><span class="hl-4">addSystem</span><span class="hl-1">(</span><span class="hl-0">CounterSystem</span><span class="hl-1">)</span><br/><span class="hl-1">        )</span><br/><span class="hl-1">    )</span><br/><span class="hl-1">    .</span><span class="hl-4">build</span><span class="hl-1">();</span>
 </code></pre>
 
 <a href="#setting-resources" id="setting-resources" style="color: inherit; text-decoration: none;">
