@@ -381,41 +381,41 @@ TS-Node         v10.2.1
 
 Ape-ECS         v1.3.1
 bitecs          v0.3.21-5
-sim-ecs         v0.4.0
+sim-ecs         v0.5.0
 tick-knock      v4.0.2
 
 
  Default Suite / Simple Insert
 --------------------------------
-    Ape-ECS 90 ops/s ± 0.41%
-    bitecs 10000 ops/s ± 1.9%
-    sim-ecs 347 ops/s ± 0.94%
-    tick-knock 495 ops/s ± 1.1%
+    Ape-ECS 75 ops/s ± 1.3%
+    bitecs 8333 ops/s ± 1.8%
+    sim-ecs 352 ops/s ± 0.85%
+    tick-knock 562 ops/s ± 0.95%
 
 
 
  Default Suite / Simple Iter
 --------------------------------
-    Ape-ECS 164 ops/s ± 0.14%
-    bitecs 50000 ops/s ± 1.9%
-    sim-ecs 118 ops/s ± 0.26%
-    sim-ecs CB 292 ops/s ± 0.55%
-    tick-knock 33 ops/s ± 0.029%
+    Ape-ECS 166 ops/s ± 0.15%
+    bitecs Infinity ops/s ± NaN%
+    sim-ecs Infinity ops/s ± NaN%
+    sim-ecs CB 25000 ops/s ± 1.9%
+    tick-knock 32 ops/s ± 0.17%
 
 
 
  Default Suite / Schedule
 --------------------------------
-    bitecs 30 ops/s ± 0.11%
-    sim-ecs 1 ops/s ± 0.15%
-    sim-ecs CB 1 ops/s ± 0.14%
+    bitecs 30 ops/s ± 0.029%
+    sim-ecs 1000 ops/s ± 0.0%
+    sim-ecs CB 70 ops/s ± 0.17%
 
 
 
  Default Suite / Serialize
 --------------------------------
 Ape-ECS SerializeSave file size: 450.1962890625 KB
-    Ape-ECS 56 ops/s ± 1.3%
+    Ape-ECS 56 ops/s ± 1.2%
 sim-ecs SerializeSave file size: 67.3837890625 KB
-    sim-ecs 205 ops/s ± 1.7%
+    sim-ecs 127 ops/s ± 1.4%
 ```

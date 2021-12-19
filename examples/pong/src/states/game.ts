@@ -53,7 +53,7 @@ const createGameFromSaveData = async function (actions: ITransitionActions) {
     const prefabHandle = actions.commands.load(SerialFormat.fromArray(savablePrefab));
     await actions.flushCommands();
 
-for (const entity of actions.getEntities(new Query([With(Paddle), With(Shape)]))) {
+    for (const entity of actions.getEntities(new Query([With(Paddle), With(Shape)]))) {
         entity
             .addComponent(new Position(
                 entity.getComponent(Paddle)!.side == EPaddleSide.Left

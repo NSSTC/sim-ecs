@@ -1,16 +1,16 @@
 import {Entity} from "./entity";
 import {EntityBuilder} from "./entity-builder";
 import {
-    IRunConfiguration,
+    IRunConfiguration, IStageAction,
     IStaticRunConfiguration,
     ISystemActions,
     ITransitionActions,
     IWorld, IWorldConstructorOptions,
-    TGroupHandle, TStates
+    TGroupHandle
 } from "./world.spec";
 import {IEntity} from "./entity.spec";
 import {IState, State, IIStateProto} from "./state";
-import {TObjectProto, TTypeProto} from "./_.spec";
+import {TExecutor, TObjectProto, TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
 import {SerDe, TDeserializer, TSerDeOptions, TSerializer} from "./serde/serde";
 import {ISerialFormat} from "./serde/serial-format";
@@ -25,6 +25,7 @@ import {
 } from "./query/query";
 import {IScheduler} from "./scheduler/scheduler.spec";
 import {IPipeline} from "./scheduler/pipeline/pipeline.spec";
+import {IISystemProto, ISystem} from "./system.spec";
 
 export * from './world.spec';
 
@@ -35,19 +36,22 @@ export class World implements IWorld {
     protected _dirty = false;
     protected _name?: string;
     protected _serde: SerDe;
+    protected currentScheduler?: IScheduler;
+    protected currentSchedulerExecutor?: TExecutor;
     public entities: Set<IEntity> = new Set();
     protected pda = new PushDownAutomaton<IState>();
     private lastRunPreparation?: IStaticRunConfiguration;
-    public groups = {
+    private groups = {
         nextHandle: 0,
         entityLinks: new Map<number, IEntity[]>(),
     };
     protected queries: Set<Query<IAccessQuery<TObjectProto>>> = new Set();
     public resources = new Map<{ new(): Object }, Object>();
     protected runPromise?: Promise<void> = undefined;
-    protected scheduler: IScheduler;
+    protected defaultScheduler: IScheduler;
     protected shouldRunSystems = false;
-    protected stateInfos: TStates;
+    protected stateSchedulers: Map<IIStateProto, IScheduler>;
+    protected systems = new Map<IISystemProto, ISystem>();
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
 
@@ -56,8 +60,8 @@ export class World implements IWorld {
 
         this._name = options.name;
         this._serde = options.serde ?? new SerDe();
-        this.stateInfos = options.states;
-        this.scheduler = options.scheduler;
+        this.defaultScheduler = options.defaultScheduler;
+        this.stateSchedulers = options.stateSchedulers;
 
         this._commandsAggregator = new CommandsAggregator(this);
         this._commands = new Commands(this, this._commandsAggregator);
@@ -90,8 +94,6 @@ export class World implements IWorld {
             maintain: this.maintain.bind(this),
             save: this.save.bind(this),
         });
-
-        this.preparePipeline(this.scheduler.currentPipeline);
     }
 
     get commands() {
@@ -215,6 +217,13 @@ export class World implements IWorld {
         return this.resources.values();
     }
 
+    getStageWorld(): IStageAction {
+        return {
+            systems: this.systems,
+            systemActions: this.systemWorld,
+        };
+    }
+
     load(prefab: ISerialFormat, options?: TSerDeOptions<TDeserializer>, intoGroup?: TGroupHandle): TGroupHandle {
         let groupHandle = intoGroup;
         if (groupHandle == undefined || !this.groups.entityLinks.has(groupHandle)) {
@@ -229,7 +238,6 @@ export class World implements IWorld {
             entities.push(entity);
         }
 
-        this.groups.entityLinks.set(groupHandle, entities);
         return groupHandle;
     }
 
@@ -268,6 +276,8 @@ export class World implements IWorld {
         }
 
         await newState.activate(this.transitionWorld);
+        this.currentScheduler = this.stateSchedulers.get(newState.constructor as IIStateProto) ?? this.defaultScheduler;
+        this.currentSchedulerExecutor = this.currentScheduler.getExecutor(this.getStageWorld());
     }
 
     async pushState(NewState: IIStateProto): Promise<void> {
@@ -275,25 +285,33 @@ export class World implements IWorld {
         this.pda.push(NewState);
 
         const newState = this.pda.state! as State;
-
-        // todo: call create if new!
-        // newState.create(this.transitionWorld);
-
+        newState.create(this.transitionWorld);
         await newState.activate(this.transitionWorld);
+        this.currentScheduler = this.stateSchedulers.get(NewState) ?? this.defaultScheduler;
+
+        if (!this.currentScheduler) {
+            throw new Error(`There is no DefaultScheduler or Scheduler for ${NewState.name}!`);
+        }
+
+        this.currentSchedulerExecutor = this.currentScheduler.getExecutor(this.getStageWorld());
     }
 
-    protected preparePipeline(pipeline: IPipeline): void {
+    protected async preparePipeline(pipeline: IPipeline): Promise<void> {
         let stage;
         let syncPoint;
         let system;
+        let systemProto;
 
         for (syncPoint of pipeline.getGroups().values()) {
             for (stage of syncPoint.stages) {
-                for (system of stage.systems) {
-                    system.setup(this.systemWorld);
+                for (systemProto of stage.systemProtos) {
+                    system = new systemProto();
+                    await system.setup(this.systemWorld);
+                    this.systems.set(systemProto, system);
 
                     if (system.query) {
                         this.queries.add(system.query);
+                        this._dirty = true;
                     }
                 }
             }
@@ -303,10 +321,6 @@ export class World implements IWorld {
     public async prepareRun(configuration?: IRunConfiguration): Promise<IStaticRunConfiguration> {
         if (this.runPromise) {
             throw new Error('The dispatch loop is already running!');
-        }
-
-        if (this._dirty) {
-            this.maintain();
         }
 
         configuration ||= {};
@@ -325,6 +339,11 @@ export class World implements IWorld {
         this.shouldRunSystems = true;
 
         await this.pushState(initialState);
+        await this.preparePipeline(this.defaultScheduler.pipeline);
+
+        if (this._dirty) {
+            this.maintain();
+        }
 
         this.lastRunPreparation = runConfig;
         return runConfig;
@@ -342,7 +361,7 @@ export class World implements IWorld {
 
     removeGroup(handle: TGroupHandle) {
         if (!this.groups.entityLinks.has(handle)) {
-            throw new Error(`Could not find any loaded prefab under handle "${handle}"!`)
+            throw new Error(`Could not find any loaded group under handle "${handle}"!`)
         }
 
         let entity;
@@ -405,6 +424,7 @@ export class World implements IWorld {
 
             {
                 const execFn = preparedConfig.executionFunction;
+                this.currentSchedulerExecutor = this.currentScheduler!.getExecutor(this.getStageWorld());
 
                 const cleanUp = async () => {
                     await this.pda.state?.deactivate(this.transitionWorld);
@@ -422,7 +442,7 @@ export class World implements IWorld {
                         return;
                     }
 
-                    await this.scheduler.execute(this.systemWorld);
+                    await this.currentSchedulerExecutor!();
                     await this._commandsAggregator.executeAll();
                     execFn(mainLoop);
                 }

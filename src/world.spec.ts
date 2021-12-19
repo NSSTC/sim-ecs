@@ -32,8 +32,8 @@ export interface ISystemInfo {
 
 export interface IWorldConstructorOptions {
     name?: string
-    scheduler: IScheduler
-    states: TStates
+    defaultScheduler: IScheduler
+    stateSchedulers: Map<IIStateProto, IScheduler>
     serde?: SerDe
 }
 
@@ -76,6 +76,14 @@ export interface IPartialWorld {
      * @param options
      */
     save<C extends Object, T extends IAccessDescriptor<C>>(query?: Query<TExistenceQuery<TObjectProto>>, options?: TSerDeOptions<TSerializer>): ISerialFormat
+}
+
+/**
+ * Actions which an be called from a stage
+ */
+export interface IStageAction {
+    systemActions: ISystemActions
+    readonly systems: Readonly<Map<IISystemProto, ISystem>>
 }
 
 /**

@@ -57,7 +57,7 @@ export class Commands implements ICommands {
     }
 
     load(prefab: ISerialFormat, options?: TSerDeOptions<TDeserializer>): TGroupHandle {
-        const handle = this.world.groups.nextHandle++;
+        const handle = this.world.createGroup();
         this.aggregator.addCommand(() => { this.world.load(prefab, options, handle) });
         return handle;
     }
@@ -67,7 +67,7 @@ export class Commands implements ICommands {
     }
 
     merge(world: IWorld): TGroupHandle {
-        const handle = this.world.groups.nextHandle++;
+        const handle = this.world.createGroup();
         this.aggregator.addCommand(() => { this.world.merge(world, handle) });
         return handle;
     }
