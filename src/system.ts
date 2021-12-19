@@ -10,8 +10,6 @@ export abstract class System implements ISystem {
     readonly query?: Query<IAccessQuery<TObjectProto>>;
     readonly states?: IIStateProto[];
 
-    destroy(actions: ISystemActions): void | Promise<void> {}
-
     abstract run(actions: ISystemActions): void | Promise<void>;
 
     setup(actions: ISystemActions): void | Promise<void> {}

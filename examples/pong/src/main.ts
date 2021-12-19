@@ -1,6 +1,5 @@
 import {buildWorld, IWorld} from "sim-ecs";
 import {PaddleSystem} from "./systems/paddle";
-import {beforeFrameHandler} from "./app/frame-transition-handlers";
 import {InputSystem} from "./systems/input";
 import {GameStore} from "./models/game-store";
 import {MenuState} from "./states/menu";
@@ -21,6 +20,8 @@ import {Dimensions} from "./models/dimensions";
 import {CollisionSystem} from "./systems/collision";
 import {Collision} from "./components/collision";
 import {Wall} from "./components/wall";
+import {BeforeStepSystem} from "./systems/before-step";
+import {PauseState} from "./states/pause";
 
 
 const cleanup = () => {
@@ -37,15 +38,28 @@ const cleanup = () => {
 
 const createWorld = () => {
     return buildWorld()
-        .withSystem(AnimationSystem, [BallSystem, PaddleSystem])
-        .withSystem(BallSystem, [CollisionSystem])
-        .withSystem(CollisionSystem, [PaddleSystem])
-        .withSystem(InputSystem)
-        .withSystem(MenuSystem, [InputSystem])
-        .withSystem(PaddleSystem, [InputSystem])
-        .withSystem(PauseSystem, [InputSystem])
-        .withSystem(RenderGameSystem, [AnimationSystem, BallSystem, PaddleSystem])
-        .withSystem(RenderUISystem, [AnimationSystem, MenuSystem, PauseSystem])
+        .withDefaultScheduling(root => root
+            .addNewStage(stage => stage.addSystem(BeforeStepSystem))
+            .addNewStage(stage => stage.addSystem(InputSystem))
+            .addNewStage(stage => stage
+                .addSystem(MenuSystem)
+                .addSystem(PaddleSystem)
+                .addSystem(PauseSystem))
+            .addNewStage(stage => stage.addSystem(CollisionSystem))
+            .addNewStage(stage => stage.addSystem(BallSystem))
+            .addNewStage(stage => stage.addSystem(AnimationSystem))
+            .addNewStage(stage => stage
+                .addSystem(RenderGameSystem)
+                .addSystem(RenderUISystem))
+        )
+        .withStateScheduling(PauseState, root => root
+            .addNewStage(stage => stage.addSystem(BeforeStepSystem))
+            .addNewStage(stage => stage.addSystem(InputSystem))
+            .addNewStage(stage => stage.addSystem(PauseSystem))
+            .addNewStage(stage => stage
+                .addSystem(RenderGameSystem)
+                .addSystem(RenderUISystem))
+        )
         .withComponents(
             Collision,
             Paddle,
@@ -66,7 +80,6 @@ const initGame = (world: IWorld) => {
     if (!renderContext) throw new Error('Could not initialize 2D context');
 
     const canvasBoundingRect = canvasEle.getBoundingClientRect();
-    const gameStore = new GameStore();
 
     canvasEle.width = canvasBoundingRect.width;
     canvasEle.height = canvasBoundingRect.height;
@@ -74,9 +87,9 @@ const initGame = (world: IWorld) => {
     renderContext.imageSmoothingEnabled = true;
     renderContext.imageSmoothingQuality = 'high';
 
+    world.addResource(GameStore);
     world.addResource(renderContext);
     world.addResource(ScoreBoard);
-    world.addResource(gameStore);
     world.addResource(
         PaddleTransforms,
         {
@@ -91,7 +104,6 @@ const initGame = (world: IWorld) => {
 
 const runGame = (world: IWorld) => {
     return world.run({
-        beforeStepHandler: beforeFrameHandler,
         initialState: MenuState,
     });
 }

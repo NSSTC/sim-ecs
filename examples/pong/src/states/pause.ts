@@ -16,7 +16,7 @@ export class PauseState extends State {
     }
 
     deactivate(actions: ITransitionActions) {
-        actions.commands.unloadPrefab(this.prefabHandle);
+        actions.commands.removeGroup(this.prefabHandle);
         actions.commands.maintain();
     }
 }

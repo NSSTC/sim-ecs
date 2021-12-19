@@ -144,9 +144,9 @@ const log = (...strs) => console.log.apply(console.log, ['[make]'].concat(strs))
             },
             plugins: [
                 new ProgressBarPlugin(),
-                new webpack.IgnorePlugin(
-                    /bundle\.js$/i
-                ),
+                new webpack.IgnorePlugin({
+                    resourceRegExp: /bundle\.js$/i,
+                }),
             ],
         });
 

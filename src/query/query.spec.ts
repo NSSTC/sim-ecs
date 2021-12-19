@@ -1,5 +1,6 @@
 import {TObjectProto, TTypeProto} from "../_.spec";
-import {TTag} from "../entity.spec";
+import {IEntity, TTag} from "../entity.spec";
+import IWorld from "../world.spec";
 
 export type TAccessQueryParameter<C extends TObjectProto> = C & IAccessDescriptor<InstanceType<C>>;
 export type TOptionalAccessQueryParameter<C extends TObjectProto | undefined> = IAccessDescriptor<C extends TObjectProto ? InstanceType<C> : undefined> & C extends TObjectProto ? C : undefined;
@@ -32,6 +33,12 @@ export enum ETargetType {
     tag,
 }
 
+export type TAccessQueryData<DESC extends IAccessQuery<TObjectProto>> = {
+    [P in keyof DESC]: DESC[P] extends TAccessQueryParameter<TObjectProto>
+        ? Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>>
+        : (Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>> | undefined)
+}
+
 export interface IAccessDescriptor<C extends Object | undefined> {
     [accessDescSym]: {
         readonly data?: string
@@ -50,11 +57,22 @@ export interface IExistenceDescriptor<C extends TObjectProto> {
     }
 }
 
-/* todo, help wanted
-export interface IQuery<D extends IAccessQueryResult<Object> | TExistenceQueryResult> {
-    iter(): IterableIterator<D extends Array<infer T> ? IEntity : { [P in keyof D]: Required<Omit<InstanceType<D[P]>, keyof IAccessDescriptor<Object>>> }>
+
+export interface IQuery<
+    DESC extends IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>,
+    DATA =
+        DESC extends TExistenceQuery<TObjectProto>
+            ? IEntity
+            : DESC extends IAccessQuery<TObjectProto>
+                ? TAccessQueryData<DESC>
+                : never
+    > {
+    readonly descriptor: DESC
+
+    execute(handler: (data: DATA) => Promise<void> | void): Promise<void>
+    getOne(): DATA | undefined
+    iter(world?: IWorld): IterableIterator<DATA>
     matchesEntity(entity: IEntity): boolean
 }
 
-export type TQueryProto<D extends IAccessQueryResult<Object> | TExistenceQueryResult> = { new(): IQuery<D> };
-*/
+export interface IQueryProto<D extends IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>> { new(): IQuery<D> }

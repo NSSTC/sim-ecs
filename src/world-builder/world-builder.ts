@@ -2,12 +2,14 @@ import {
     IComponentRegistrationOptions,
     IWorldBuilder,
 } from "./world-builder.spec";
-import {IISystemProto, ISystem} from "../system";
-import {ISystemInfo, TStates, World} from "../world";
+import {ISystem} from "../system";
+import {World} from "../world";
 import {TObjectProto} from "../_.spec";
 import {SerDe} from "../serde/serde";
-import {IIStateProto, State} from "../state";
 import {dataStructDeserializer, dataStructSerializer} from "./world-builder.util";
+import {IScheduler, Scheduler} from "../scheduler/scheduler";
+import {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
+import {IIStateProto} from "../state.spec";
 
 
 export * from './world-builder.spec';
@@ -16,13 +18,9 @@ export class WorldBuilder implements IWorldBuilder {
     protected allSystemsStateSet = new Set<ISystem>();
     protected callbacks: Set<(world: World) => void> = new Set();
     protected name?: string;
+    protected defaultScheduler: IScheduler = new Scheduler();
     protected serde = new SerDe();
-    protected stateInfos: TStates = new Map<IIStateProto, Set<ISystem>>();
-    protected systemInfos = new Map<IISystemProto, ISystemInfo>();
-
-    constructor() {
-        this.stateInfos.set(State, this.allSystemsStateSet);
-    }
+    protected stateSchedulers = new Map<IIStateProto, IScheduler>();
 
     addCallback(cb: (world: World) => void): WorldBuilder {
         this.callbacks.add(cb);
@@ -32,9 +30,9 @@ export class WorldBuilder implements IWorldBuilder {
     build(): World {
         const world = new World({
             name: this.name,
-            states: this.stateInfos,
-            systems: new Set(this.systemInfos.values()),
+            defaultScheduler: this.defaultScheduler!,
             serde: this.serde,
+            stateSchedulers: this.stateSchedulers,
         });
 
         for (const cb of this.callbacks) {
@@ -62,39 +60,40 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
+    withDefaultScheduler(scheduler: IScheduler): IWorldBuilder {
+        this.defaultScheduler = scheduler;
+        return this;
+    }
+
     withName(name: string): WorldBuilder {
         this.name = name;
         return this;
     }
 
-    withSystem(System: IISystemProto | ISystem, dependencies?: IISystemProto[]): WorldBuilder {
-        const SystemProto = typeof System == 'object'
-            ? System.constructor as IISystemProto
-            : System;
+    withDefaultScheduling(planner: (root: ISyncPoint) => void): WorldBuilder {
+        planner(this.defaultScheduler.pipeline.root);
+        return this;
+    }
 
-        /// every system may only be registered once
-        if (this.systemInfos.has(SystemProto)) {
-            throw new Error(`The system ${System.constructor.name} is already registered!`);
+    withStateScheduler(state: IIStateProto, scheduler: IScheduler): WorldBuilder {
+        if (this.stateSchedulers.has(state)) {
+            throw new Error(`A scheduler was already assigned to ${state.name}!`);
         }
 
-        const system = new SystemProto();
+        this.stateSchedulers.set(state, scheduler);
+        return this;
+    }
 
-        this.allSystemsStateSet.add(system);
-        this.systemInfos.set(SystemProto, {
-            system,
-            dependencies: new Set(dependencies),
-        });
+    withStateScheduling(state: IIStateProto, planner: (root: ISyncPoint) => void): WorldBuilder {
+        if (this.stateSchedulers.has(state)) {
+            throw new Error(`A scheduler was already assigned to ${state.name}!`);
+        }
 
-        system.states?.forEach(State => {
-            let systemsSet = this.stateInfos.get(State);
-
-            if (!systemsSet) {
-                systemsSet = new Set<ISystem>();
-            }
-
-            systemsSet.add(system);
-            this.stateInfos.set(State, systemsSet);
-        });
+        {
+            const scheduler = new Scheduler();
+            this.stateSchedulers.set(state, scheduler);
+            planner(scheduler.pipeline.root);
+        }
 
         return this;
     }

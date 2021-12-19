@@ -57,7 +57,7 @@ export class Commands implements ICommands {
     }
 
     load(prefab: ISerialFormat, options?: TSerDeOptions<TDeserializer>): TGroupHandle {
-        const handle = this.world.groups.nextHandle++;
+        const handle = this.world.createGroup();
         this.aggregator.addCommand(() => { this.world.load(prefab, options, handle) });
         return handle;
     }
@@ -67,7 +67,7 @@ export class Commands implements ICommands {
     }
 
     merge(world: IWorld): TGroupHandle {
-        const handle = this.world.groups.nextHandle++;
+        const handle = this.world.createGroup();
         this.aggregator.addCommand(() => { this.world.merge(world, handle) });
         return handle;
     }
@@ -86,6 +86,10 @@ export class Commands implements ICommands {
 
     removeEntity(entity: IEntity): void {
         this.aggregator.addCommand(() => this.world.removeEntity(entity));
+    }
+
+    removeGroup(handle: TGroupHandle): void {
+        this.aggregator.addCommand(() => this.world.removeGroup(handle));
     }
 
     removeResource<T extends Object>(type: TTypeProto<T>): void {
@@ -127,9 +131,5 @@ export class Commands implements ICommands {
 
     stopRun(): void {
         this.aggregator.addCommand(() => this.world.stopRun());
-    }
-
-    unloadPrefab(handle: TGroupHandle): void {
-        this.aggregator.addCommand(() => this.world.unloadPrefab(handle));
     }
 }
