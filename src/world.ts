@@ -17,15 +17,17 @@ import {ISerialFormat} from "./serde/serial-format";
 import {Commands} from "./commands/commands";
 import {CommandsAggregator} from "./commands/commands-aggregator";
 import {
+    clearEntitiesSym,
     IAccessDescriptor,
     IAccessQuery,
+    IQuery,
     setEntitiesSym,
     TExistenceQuery,
-    Query, clearEntitiesSym
+    Query,
 } from "./query/query";
 import {IScheduler} from "./scheduler/scheduler.spec";
 import {IPipeline} from "./scheduler/pipeline/pipeline.spec";
-import {IISystemProto, ISystem} from "./system.spec";
+import {getQueriesFromSystem, ISystem} from "./system";
 
 export * from './world.spec';
 
@@ -45,13 +47,13 @@ export class World implements IWorld {
         nextHandle: 0,
         entityLinks: new Map<number, IEntity[]>(),
     };
-    protected queries: Set<Query<IAccessQuery<TObjectProto>>> = new Set();
+    protected queries: Set<IQuery<IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>>> = new Set();
     public resources = new Map<{ new(): Object }, Object>();
     protected runPromise?: Promise<void> = undefined;
     protected defaultScheduler: IScheduler;
     protected shouldRunSystems = false;
     protected stateSchedulers: Map<IIStateProto, IScheduler>;
-    protected systems = new Map<IISystemProto, ISystem>();
+    protected systems = new Set<ISystem>();
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
 
@@ -246,8 +248,8 @@ export class World implements IWorld {
     maintain(): void {
         let query;
         for (query of this.queries) {
-            query[clearEntitiesSym]();
-            query[setEntitiesSym](this.entities.values());
+            (query as Query<any>)[clearEntitiesSym]();
+            (query as Query<any>)[setEntitiesSym](this.entities.values());
         }
 
         this._dirty = false;
@@ -300,18 +302,18 @@ export class World implements IWorld {
         let stage;
         let syncPoint;
         let system;
-        let systemProto;
+        let queries;
 
         for (syncPoint of pipeline.getGroups().values()) {
             for (stage of syncPoint.stages) {
-                for (systemProto of stage.systemProtos) {
-                    system = new systemProto();
-                    await system.setup(this.systemWorld);
-                    this.systems.set(systemProto, system);
+                for (system of stage.systems) {
+                    await system.setupFunction(this.systemWorld);
+                    this.systems.add(system);
 
-                    if (system.query) {
-                        this.queries.add(system.query);
+                    queries = getQueriesFromSystem(system);
+                    if (queries.length > 0) {
                         this._dirty = true;
+                        queries.forEach(q => this.queries.add(q));
                     }
                 }
             }

@@ -2,7 +2,6 @@ import {
     IComponentRegistrationOptions,
     IWorldBuilder,
 } from "./world-builder.spec";
-import {ISystem} from "../system";
 import {World} from "../world";
 import {TObjectProto} from "../_.spec";
 import {SerDe} from "../serde/serde";
@@ -15,7 +14,6 @@ import {IIStateProto} from "../state.spec";
 export * from './world-builder.spec';
 
 export class WorldBuilder implements IWorldBuilder {
-    protected allSystemsStateSet = new Set<ISystem>();
     protected callbacks: Set<(world: World) => void> = new Set();
     protected name?: string;
     protected defaultScheduler: IScheduler = new Scheduler();
