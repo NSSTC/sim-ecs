@@ -1,4 +1,4 @@
-import {buildWorld, ISystemActions, Query, System, Write} from "../src";
+import {buildWorld, createSystem, Query, Write} from "../src";
 
 
 /// a component.
@@ -10,39 +10,41 @@ class CounterInfo {
 
 /// systems process data. We declare what kind of input we need in the above Data struct,
 /// and then define the processing code here
-class CounterSystem extends System {
-    /// our data-structure we want to use to interact with the world
-    /// we can define our own fields. The value is either Write() or Read() of a specific prototype.
-    /// the fields will be filled with actual objects of the given prototypes during system execution
-    readonly query = new Query({
-        info: Write(CounterInfo),
-    });
+const CounterSystem =
+    createSystem(
+        /// our data-structure we want to use to interact with the world
+        /// we can define our own fields. The value is either Write() or Read() of a specific prototype.
+        /// the fields will be filled with actual objects of the given prototypes during system execution
+        new Query({
+            info: Write(CounterInfo),
+        }),
+    )
+        /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
+        .withRunFunction((query) => {
+            /// there are two ways to go over the query result:
+            /// 1. you can use regular loops:
+            for (const {info} of query.iter()) {
+                info.count++;
 
-    /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
-    async run(actions: ISystemActions) {
-        /// there are two ways to go over the query result:
-        /// 1. you can use a callback function
-        await this.query.execute(({info}) => {
-            info.count++;
+                // after every ten steps, write out a log message
+                if (info.count % 10 == 0) {
+                    console.log(`The current count is ${info.count} / ${info.limit}!`);
+                }
 
-            // after every ten steps, write out a log message
-            if (info.count % 10 == 0) {
-                console.log(`The current count is ${info.count} / ${info.limit}!`);
+                // if the limit is reached, set the exit field to true
+                if (info.count == info.limit) {
+                    console.log('Time to exit!');
+                    //todo actions.commands.stopRun();
+                    process.exit(0);
+                }
             }
 
-            // if the limit is reached, set the exit field to true
-            if (info.count == info.limit) {
-                console.log('Time to exit!');
-                actions.commands.stopRun();
-            }
-        });
-
-        /// 2. you can use regular loops, too:
-        // for (const {info} of this.query.iter()) {
-        //     ...
-        // });
-    }
-}
+            /// 2. at the cost of iteration speed, you can use a callback function, too:
+            // await this.query.execute(({info}) => {
+            //     ...
+            // });
+        })
+        .build();
 
 /// then, we need a world which will hold our systems and entities
 const world = buildWorld()

@@ -1,5 +1,5 @@
 import {IStage} from "./stage.spec";
-import {ISystem, ISystemProto} from "../../system";
+import {getSystemRunParameters, ISystem} from "../../system";
 import {IStageAction, ISystemActions} from "../../world.spec";
 import {TExecutor} from "../../_.spec";
 
@@ -10,7 +10,8 @@ export async function defaultSchedulingAlgorithm(actions: ISystemActions, system
     let system;
 
     for (system of systems) {
-        promises.push(system.run(actions));
+        // todo: oh fuck! check the parameters first and then call this!
+        promises.push(system.runFunction.apply(system, getSystemRunParameters(system)));
     }
 
     await Promise.all(promises);
@@ -18,20 +19,14 @@ export async function defaultSchedulingAlgorithm(actions: ISystemActions, system
 
 export class Stage implements IStage {
     schedulingAlgorithm = defaultSchedulingAlgorithm;
-    systemProtos: ISystemProto[] = [];
+    systems: ISystem[] = [];
 
-    addSystem(System: ISystemProto): Stage {
-        this.systemProtos.push(System);
+    addSystem(System: ISystem): Stage {
+        this.systems.push(System);
         return this;
     }
 
     getExecutor(actions: IStageAction): TExecutor {
-        const systems: ISystem[] = [];
-
-        for (const systemProto of this.systemProtos) {
-            systems.push(actions.systems.get(systemProto)!);
-        }
-
-        return () => this.schedulingAlgorithm(actions.systemActions, systems);
+        return () => this.schedulingAlgorithm(actions.systemActions, Array.from(actions.systems));
     }
 }

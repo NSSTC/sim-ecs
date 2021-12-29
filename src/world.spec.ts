@@ -1,5 +1,5 @@
 import {IEntity} from "./entity.spec";
-import {IISystemProto, ISystem} from "./system.spec";
+import {ISystem} from "./system";
 import {IIStateProto, IState} from "./state.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
 import {IAccessDescriptor, IAccessQuery, TExistenceQuery} from "./query/query.spec";
@@ -26,7 +26,7 @@ export interface IStaticRunConfiguration {
 }
 
 export interface ISystemInfo {
-    dependencies: Set<IISystemProto>
+    dependencies: Set<ISystem>
     system: ISystem
 }
 
@@ -83,7 +83,7 @@ export interface IPartialWorld {
  */
 export interface IStageAction {
     systemActions: ISystemActions
-    readonly systems: Readonly<Map<IISystemProto, ISystem>>
+    readonly systems: Readonly<Set<ISystem>>
 }
 
 /**

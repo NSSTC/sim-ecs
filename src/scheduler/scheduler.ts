@@ -1,7 +1,5 @@
 import {IScheduler} from "./scheduler.spec";
 import {IPipeline, Pipeline} from "./pipeline/pipeline";
-import {IStage} from "./pipeline/stage";
-import {ISyncPoint} from "./pipeline/sync-point";
 import {IStageAction} from "../world.spec";
 import {TExecutor} from "../_.spec";
 
@@ -20,12 +18,9 @@ export async function defaultSchedulingAlgorithm(stageExecutors: TExecutor[]) {
 }
 
 export class Scheduler implements IScheduler {
-    protected _groups?: Readonly<Array<Readonly<ISyncPoint>>>;
-    protected _isManuallyPrepared = false;
     protected _isPrepared = false;
     protected _pipeline: IPipeline = new Pipeline();
     schedulingAlgorithm = defaultSchedulingAlgorithm;
-    protected _stageSets?: IStage[][];
 
     get isPrepared(): boolean {
         return this._isPrepared;
