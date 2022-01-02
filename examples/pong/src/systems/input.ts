@@ -1,4 +1,4 @@
-import {ISystemActions, System} from "sim-ecs";
+import {Actions, createSystem, Storage} from "sim-ecs";
 import {EMovement, GameStore} from "../models/game-store";
 import {GameState} from "../states/game";
 import {MenuState} from "../states/menu";
@@ -14,60 +14,59 @@ interface IInputEvent {
     type: EKeyState
 }
 
-export class InputSystem extends System {
-    readonly states = [GameState, MenuState, PauseState];
+export const InputSystem = createSystem(
+    Actions,
+    Storage<{ gameStore: GameStore, inputEvents: IInputEvent[] }>(),
+)
+    .runInStates(GameState, MenuState, PauseState)
+    .withSetupFunction((actions, storage) => {
+        storage.gameStore = actions.getResource(GameStore);
+        storage.inputEvents = [];
 
-    gameStore!: GameStore;
-    inputEvents: IInputEvent[] = [];
-
-    setup(actions: ISystemActions) {
-        this.gameStore = actions.getResource(GameStore);
-
-        window.addEventListener('keydown', event => this.inputEvents.push({key: event.key, type: EKeyState.Down}));
-        window.addEventListener('keyup', event => this.inputEvents.push({key: event.key, type: EKeyState.Up}));
-    }
-
-    run(actions: ISystemActions) {
+        window.addEventListener('keydown', event => storage.inputEvents.push({key: event.key, type: EKeyState.Down}));
+        window.addEventListener('keyup', event => storage.inputEvents.push({key: event.key, type: EKeyState.Up}));
+    })
+    .withRunFunction((actions, storage) => {
         { // Reset input actions
-            this.gameStore.input.actions.menuConfirm = false;
-            this.gameStore.input.actions.menuMovement = EMovement.halt;
-            this.gameStore.input.actions.togglePause = false;
+            storage.gameStore.input.actions.menuConfirm = false;
+            storage.gameStore.input.actions.menuMovement = EMovement.halt;
+            storage.gameStore.input.actions.togglePause = false;
         }
 
         { // Work on all events which occurred during the last frame
-            for (const event of this.inputEvents) {
-                this.gameStore.input.keyStates[event.key] = event.type;
+            for (const event of storage.inputEvents) {
+                storage.gameStore.input.keyStates[event.key] = event.type;
 
                 if (event.type == EKeyState.Down) {
                     switch (event.key) {
                         case 'w':
                         case 'W': {
-                            this.gameStore.input.actions.leftPaddleMovement = EMovement.up;
-                            this.gameStore.input.actions.menuMovement = EMovement.up;
+                            storage.gameStore.input.actions.leftPaddleMovement = EMovement.up;
+                            storage.gameStore.input.actions.menuMovement = EMovement.up;
                             break;
                         }
                         case 'ArrowUp': {
-                            this.gameStore.input.actions.rightPaddleMovement = EMovement.up;
-                            this.gameStore.input.actions.menuMovement = EMovement.up;
+                            storage.gameStore.input.actions.rightPaddleMovement = EMovement.up;
+                            storage.gameStore.input.actions.menuMovement = EMovement.up;
                             break;
                         }
                         case 's':
                         case 'S': {
-                            this.gameStore.input.actions.leftPaddleMovement = EMovement.down;
-                            this.gameStore.input.actions.menuMovement = EMovement.down;
+                            storage.gameStore.input.actions.leftPaddleMovement = EMovement.down;
+                            storage.gameStore.input.actions.menuMovement = EMovement.down;
                             break;
                         }
                         case 'ArrowDown': {
-                            this.gameStore.input.actions.rightPaddleMovement = EMovement.down;
-                            this.gameStore.input.actions.menuMovement = EMovement.down;
+                            storage.gameStore.input.actions.rightPaddleMovement = EMovement.down;
+                            storage.gameStore.input.actions.menuMovement = EMovement.down;
                             break;
                         }
                         case 'Enter': {
-                            this.gameStore.input.actions.menuConfirm = true;
+                            storage.gameStore.input.actions.menuConfirm = true;
                             break;
                         }
                         case 'Escape': {
-                            this.gameStore.input.actions.togglePause = true;
+                            storage.gameStore.input.actions.togglePause = true;
                             break;
                         }
                     }
@@ -75,20 +74,20 @@ export class InputSystem extends System {
                     switch (event.key) {
                         case 'w':
                         case 'W': {
-                            this.gameStore.input.actions.leftPaddleMovement = EMovement.halt;
+                            storage.gameStore.input.actions.leftPaddleMovement = EMovement.halt;
                             break;
                         }
                         case 'ArrowUp': {
-                            this.gameStore.input.actions.rightPaddleMovement = EMovement.halt;
+                            storage.gameStore.input.actions.rightPaddleMovement = EMovement.halt;
                             break;
                         }
                         case 's':
                         case 'S': {
-                            this.gameStore.input.actions.leftPaddleMovement = EMovement.halt;
+                            storage.gameStore.input.actions.leftPaddleMovement = EMovement.halt;
                             break;
                         }
                         case 'ArrowDown': {
-                            this.gameStore.input.actions.rightPaddleMovement = EMovement.halt;
+                            storage.gameStore.input.actions.rightPaddleMovement = EMovement.halt;
                             break;
                         }
                     }
@@ -97,6 +96,6 @@ export class InputSystem extends System {
         }
 
         // Clear event queue
-        this.inputEvents.length = 0;
-    }
-}
+        storage.inputEvents.length = 0;
+    })
+    .build();
