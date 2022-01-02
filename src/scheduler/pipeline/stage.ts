@@ -1,7 +1,8 @@
 import {IStage} from "./stage.spec";
-import {getSystemRunParameters, ISystem} from "../../system";
+import {ISystem} from "../../system";
 import {IStageAction, ISystemActions} from "../../world.spec";
 import {TExecutor} from "../../_.spec";
+import {systemRunParamSym} from "../../system/_";
 
 export * from "./stage.spec";
 
@@ -10,8 +11,7 @@ export async function defaultSchedulingAlgorithm(actions: ISystemActions, system
     let system;
 
     for (system of systems) {
-        // todo: oh fuck! check the parameters first and then call this!
-        promises.push(system.runFunction.apply(system, getSystemRunParameters(system)));
+        promises.push(system.runFunction.apply(system, system[systemRunParamSym]!));
     }
 
     await Promise.all(promises);

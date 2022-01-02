@@ -1,39 +1,40 @@
 import {Position} from "../components/position";
-import {ISystemActions, Query, Read, System} from "sim-ecs";
+import {Actions, createSystem, Query, Read, Storage} from "sim-ecs";
 import {UIItem} from "../components/ui-item";
 import {relToScreenCoords} from "../app/util";
 import {GameState} from "../states/game";
 import {MenuState} from "../states/menu";
 import {PauseState} from "../states/pause";
 
-export class RenderUISystem extends System {
-    readonly query = new Query({
+export const RenderUISystem = createSystem(
+    Actions,
+    Storage<{
+        ctx: CanvasRenderingContext2D,
+        toScreenCoords: (x: number, y: number) => [number, number],
+    }>(),
+    new Query({
         pos: Read(Position),
         ui: Read(UIItem)
-    });
-    readonly states = [GameState, MenuState, PauseState];
+    })
+)
+    .runInStates(GameState, MenuState, PauseState)
+    .withSetupFunction((actions, storage) => {
+        storage.ctx = actions.getResource(CanvasRenderingContext2D);
+        storage.toScreenCoords = relToScreenCoords.bind(undefined, storage.ctx.canvas);
+    })
+    .withRunFunction((actions, storage, query) => {
+        storage.ctx.textBaseline = 'top';
 
-    ctx!: CanvasRenderingContext2D;
-    toScreenCoords!: (x: number, y: number) => [number, number];
+        return query.execute(({pos, ui}) => {
+            const screenPos = storage.toScreenCoords(pos.x, pos.y);
 
-    setup(actions: ISystemActions): void | Promise<void> {
-        this.ctx = actions.getResource(CanvasRenderingContext2D);
-        this.toScreenCoords = relToScreenCoords.bind(undefined, this.ctx.canvas);
-    }
-
-    run(actions: ISystemActions) {
-        this.ctx.textBaseline = 'top';
-
-        this.query.execute(({pos, ui}) => {
-            const screenPos = this.toScreenCoords(pos.x, pos.y);
-
-            this.ctx.fillStyle = ui.active
+            storage.ctx.fillStyle = ui.active
                 ? ui.activeColor ?? 'red'
                 : ui.color;
-            this.ctx.font = ui.active
+            storage.ctx.font = ui.active
                 ? `${ui.fontSize * 1.2}px serif`
                 : `${ui.fontSize}px serif`;
-            this.ctx.fillText(ui.finalCaption, screenPos[0], screenPos[1]);
+            storage.ctx.fillText(ui.finalCaption, screenPos[0], screenPos[1]);
         });
-    }
-}
+    })
+    .build();

@@ -1,6 +1,5 @@
-import {ISystemActions, Query, Read, System, WithTag, Write} from "sim-ecs";
+import {Actions, createSystem, Query, Read, Storage, WithTag, Write} from "sim-ecs";
 import {Velocity} from "../components/velocity";
-import {PaddleTransforms} from "../models/paddle-transforms";
 import {Collision} from "../components/collision";
 import {EWallSide, EWallType, Wall} from "../components/wall";
 import {Paddle} from "../components/paddle";
@@ -10,31 +9,27 @@ import {defaultBallPositionX, defaultBallPositionY} from "../prefabs/game";
 import {ETags} from "../models/tags";
 import {GameState} from "../states/game";
 
-export class BallSystem extends System {
-    readonly query = new Query({
+
+export const BallSystem = createSystem(
+    Actions,
+    Storage<{ scoreBoard: ScoreBoard }>(),
+    new Query({
         _ball: WithTag(ETags.ball),
         collisionData: Read(Collision),
         pos: Write(Position),
         vel: Write(Velocity),
-    });
-    readonly states = [GameState];
-
-    canvas!: HTMLCanvasElement;
-    paddleTrans!: PaddleTransforms;
-    scoreBoard!: ScoreBoard;
-
-    setup(actions: ISystemActions) {
-        this.canvas = actions.getResource(CanvasRenderingContext2D).canvas;
-        this.paddleTrans = actions.getResource(PaddleTransforms);
-        this.scoreBoard = actions.getResource(ScoreBoard);
-    }
-
-    run(actions: ISystemActions) {
+    })
+)
+    .runInStates(GameState)
+    .withSetupFunction((actions, storage) => {
+        storage.scoreBoard = actions.getResource(ScoreBoard);
+    })
+    .withRunFunction((actions, storage, query) => {
         let wallCollisionHorizontal = false;
         let wallCollisionVertical = EWallSide.None;
         let paddleCollision = false;
 
-        this.query.execute(({collisionData, pos, vel}) => {
+        return query.execute(({collisionData, pos, vel}) => {
             if (collisionData.occurred) {
                 for (const obj of collisionData.collisionObjects) {
                     if (obj.hasComponent(Wall)) {
@@ -55,9 +50,9 @@ export class BallSystem extends System {
                 if (!paddleCollision && wallCollisionVertical != EWallSide.None) {
                     // Point for one side, restart
                     if (wallCollisionVertical == EWallSide.Left) {
-                        this.scoreBoard.left++;
+                        storage.scoreBoard.left++;
                     } else {
-                        this.scoreBoard.right++;
+                        storage.scoreBoard.right++;
                     }
 
                     pos.x = defaultBallPositionX;
@@ -71,5 +66,5 @@ export class BallSystem extends System {
                 }
             }
         });
-    }
-}
+    })
+    .build();

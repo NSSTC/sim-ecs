@@ -27,7 +27,8 @@ import {
 } from "./query/query";
 import {IScheduler} from "./scheduler/scheduler.spec";
 import {IPipeline} from "./scheduler/pipeline/pipeline.spec";
-import {getQueriesFromSystem, ISystem} from "./system";
+import {getQueriesFromSystem, getSystemRunParameters, ISystem} from "./system";
+import {systemRunParamSym} from "./system/_";
 
 export * from './world.spec';
 
@@ -307,7 +308,8 @@ export class World implements IWorld {
         for (syncPoint of pipeline.getGroups().values()) {
             for (stage of syncPoint.stages) {
                 for (system of stage.systems) {
-                    await system.setupFunction(this.systemWorld);
+                    system[systemRunParamSym] = getSystemRunParameters(system, this.systemWorld);
+                    await system.setupFunction.apply(system, system[systemRunParamSym]!);
                     this.systems.add(system);
 
                     queries = getQueriesFromSystem(system);

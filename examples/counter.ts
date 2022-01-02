@@ -1,4 +1,4 @@
-import {buildWorld, createSystem, Query, Write} from "../src";
+import {Actions, buildWorld, createSystem, Query, Write} from "../src";
 
 
 /// a component.
@@ -10,8 +10,9 @@ class CounterInfo {
 
 /// systems process data. We declare what kind of input we need in the above Data struct,
 /// and then define the processing code here
-const CounterSystem =
-    createSystem(
+const CounterSystem = createSystem(
+        /// The actions interface allows  
+        Actions,
         /// our data-structure we want to use to interact with the world
         /// we can define our own fields. The value is either Write() or Read() of a specific prototype.
         /// the fields will be filled with actual objects of the given prototypes during system execution
@@ -20,10 +21,11 @@ const CounterSystem =
         }),
     )
         /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
-        .withRunFunction((query) => {
+        .withRunFunction((actions, query) => {
             /// there are two ways to go over the query result:
             /// 1. you can use regular loops:
-            for (const {info} of query.iter()) {
+            let info;
+            for ({info} of query.iter()) {
                 info.count++;
 
                 // after every ten steps, write out a log message
@@ -34,8 +36,7 @@ const CounterSystem =
                 // if the limit is reached, set the exit field to true
                 if (info.count == info.limit) {
                     console.log('Time to exit!');
-                    //todo actions.commands.stopRun();
-                    process.exit(0);
+                    actions.commands.stopRun();
                 }
             }
 

@@ -1,20 +1,20 @@
-import {ISystemActions, Query, Read, ReadEntity, System, Write} from "sim-ecs";
+import {createSystem, Query, Read, ReadEntity, Write} from "sim-ecs";
 import {Shape} from "../components/shape";
 import {Collision} from "../components/collision";
 import {Position} from "../components/position";
 import {GameState} from "../states/game";
 
-export class CollisionSystem extends System {
-    readonly query = new Query({
+export const CollisionSystem = createSystem(
+    new Query({
         collision: Write(Collision),
         entity: ReadEntity(),
         position: Read(Position),
         shape: Read(Shape)
-    });
-    readonly states = [GameState];
-
-    run(actions: ISystemActions) {
-        const rects = Array.from(this.query.iter()).map(({collision, entity, position, shape}) => {
+    }),
+)
+    .runInStates(GameState)
+    .withRunFunction(query => {
+        const rects = Array.from(query.iter()).map(({collision, entity, position, shape}) => {
             // ideally, this should be two separate steps,
             // but JS would loop twice.
             // As an optimization, I will include this data change into the map() function
@@ -57,5 +57,5 @@ export class CollisionSystem extends System {
                 }
             }
         }
-    }
-}
+    })
+    .build();
