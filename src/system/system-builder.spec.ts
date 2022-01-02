@@ -1,17 +1,17 @@
-import {ISystem, TSystemParameters, TSystemRunFunction, TSystemSetupFunction} from "./system.spec";
+import {ISystem, TSystemParameters, TSystemFunction} from "./system.spec";
 import {IIStateProto} from "../state.spec";
 
 
 export interface ISystemBuilder<PARAMS extends TSystemParameters> {
     parameters: PARAMS
-    setupFunction: TSystemSetupFunction
+    setupFunction: TSystemFunction<PARAMS>
     states: IIStateProto | IIStateProto[]
-    runFunction: TSystemRunFunction<PARAMS>
+    runFunction: TSystemFunction<PARAMS>
 
     build(): ISystem<PARAMS>
-    runInStates(states: IIStateProto | IIStateProto[]): ISystemBuilder<PARAMS>
+    runInStates(state0: IIStateProto | IIStateProto[], ...states: IIStateProto[]): ISystemBuilder<PARAMS>
     // todo: only take "blueprint" parameters here
     withRunParameters(params: TSystemParameters): ISystemBuilder<PARAMS>
-    withRunFunction(fn: TSystemRunFunction<PARAMS>): ISystemBuilder<PARAMS>
-    withSetupFunction(fn: TSystemSetupFunction): ISystemBuilder<PARAMS>
+    withRunFunction(fn: TSystemFunction<PARAMS>): ISystemBuilder<PARAMS>
+    withSetupFunction(fn: TSystemFunction<PARAMS>): ISystemBuilder<PARAMS>
 }

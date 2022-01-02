@@ -1,14 +1,14 @@
 import {ISystemBuilder} from "./system-builder.spec";
-import {ISystem, TSystemParameters, TSystemRunFunction, TSystemSetupFunction} from "./system.spec";
+import {ISystem, TSystemParameters, TSystemFunction} from "./system.spec";
 import {IIStateProto} from "../state.spec";
 
 export * from "./system-builder.spec";
 
 export class SystemBuilder<PARAMS extends TSystemParameters = TSystemParameters> implements ISystemBuilder<PARAMS> {
     parameters: PARAMS;
-    setupFunction: TSystemSetupFunction = () => {};
-    states: IIStateProto | IIStateProto[] = [];
-    runFunction: TSystemRunFunction<PARAMS> = () => {};
+    setupFunction: TSystemFunction<PARAMS> = () => {};
+    states: IIStateProto[] = [];
+    runFunction: TSystemFunction<PARAMS> = () => {};
 
 
     constructor(params: PARAMS) {
@@ -25,12 +25,22 @@ export class SystemBuilder<PARAMS extends TSystemParameters = TSystemParameters>
         }
     }
 
-    runInStates(states: IIStateProto | IIStateProto[]): SystemBuilder<PARAMS> {
-        this.states = states;
+    runInStates(state0: IIStateProto | IIStateProto[], ...states: IIStateProto[]): SystemBuilder<PARAMS> {
+        const allStates: IIStateProto[] = [];
+
+        if (Array.isArray(state0)) {
+            allStates.concat(state0);
+        } else {
+            allStates.push(state0);
+        }
+
+        allStates.concat(states);
+
+        this.states = allStates;
         return this;
     }
 
-    withRunFunction(fn: TSystemRunFunction<PARAMS>): SystemBuilder<PARAMS> {
+    withRunFunction(fn: TSystemFunction<PARAMS>): SystemBuilder<PARAMS> {
         this.runFunction = fn;
         return this;
     }
@@ -40,7 +50,7 @@ export class SystemBuilder<PARAMS extends TSystemParameters = TSystemParameters>
         return this;
     }
 
-    withSetupFunction(fn: TSystemSetupFunction): SystemBuilder<PARAMS> {
+    withSetupFunction(fn: TSystemFunction<PARAMS>): SystemBuilder<PARAMS> {
         this.setupFunction = fn;
         return this;
     }
