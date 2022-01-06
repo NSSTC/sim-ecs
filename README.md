@@ -130,16 +130,16 @@ Systems are the logic, which operates on data sets (components).
 They are logic building blocks which separate concerns and make the world move.
 
 ```typescript
-class CountSystem extends System {
-    readonly query = new Query({ counterObj: Write(Counter) });
-
-    // update() is called every time the world needs to be updated. Put your logic in there
-    run() {
-        this.query.execute(({counterObj}) => {
-          console.log(++counterObj.a);
-        });
-    }
-}
+const CountSystem = createSystem(
+    new Query({counterObj: Write(Counter)})
+)
+    // this function is called every time the world needs to be updated. Put your logic in there
+    .withRunFunction(query => 
+        query.execute(({counterObj}) => 
+            console.log(++counterObj.a)
+        )
+    )
+    .build();
 ```
 
 
