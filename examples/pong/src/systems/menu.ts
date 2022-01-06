@@ -1,26 +1,21 @@
-import {Actions, createSystem, Query, Storage, Write} from "sim-ecs";
+import {Actions, createSystem, Query, Storage, Write, WriteResource} from "sim-ecs";
 import {UIItem} from "../components/ui-item";
 import {EMovement, GameStore} from "../models/game-store";
 import {EActions} from "../app/actions";
 import {GameState} from "../states/game";
-import {MenuState} from "../states/menu";
 
 
 export const MenuSystem = createSystem(
     Actions,
-    Storage<{ gameStore: GameStore, menuAction: EActions }>(),
+    WriteResource(GameStore),
+    Storage<{ menuAction: EActions }>({ menuAction: EActions.Play }),
     new Query({
         uiItem: Write(UIItem)
     }),
 )
-    .runInStates(MenuState)
-    .withSetupFunction((actions, storage) => {
-        storage.gameStore = actions.getResource(GameStore);
-        storage.menuAction = EActions.Play;
-    })
-    .withRunFunction((actions, storage, query) => {
+    .withRunFunction((actions, gameStore, storage, query) => {
         // todo: use index
-        if (storage.gameStore.input.actions.menuMovement == EMovement.down) {
+        if (gameStore.input.actions.menuMovement == EMovement.down) {
             switch (storage.menuAction) {
                 case EActions.Play: storage.menuAction = EActions.Continue; break;
                 case EActions.Continue: storage.menuAction = EActions.Exit; break;
@@ -30,7 +25,7 @@ export const MenuSystem = createSystem(
                 }
             }
         }
-        else if (storage.gameStore.input.actions.menuMovement == EMovement.up) {
+        else if (gameStore.input.actions.menuMovement == EMovement.up) {
             switch (storage.menuAction) {
                 case EActions.Play: storage.menuAction = EActions.Exit; break;
                 case EActions.Continue: storage.menuAction = EActions.Play; break;
@@ -41,7 +36,7 @@ export const MenuSystem = createSystem(
             }
         }
 
-        if (storage.gameStore.input.actions.menuConfirm) {
+        if (gameStore.input.actions.menuConfirm) {
             if (storage.menuAction == EActions.Play) {
                 actions.commands.pushState(GameState);
             }
@@ -50,7 +45,7 @@ export const MenuSystem = createSystem(
                     return;
                 }
 
-                storage.gameStore.continue = true;
+                gameStore.continue = true;
                 actions.commands.pushState(GameState);
             }
             else {

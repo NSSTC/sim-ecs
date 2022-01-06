@@ -280,6 +280,7 @@ export class World implements IWorld {
 
         await newState.activate(this.transitionWorld);
         this.currentScheduler = this.stateSchedulers.get(newState.constructor as IIStateProto) ?? this.defaultScheduler;
+        await this.preparePipeline(this.currentScheduler.pipeline);
         this.currentSchedulerExecutor = this.currentScheduler.getExecutor(this.getStageWorld());
     }
 
@@ -288,9 +289,10 @@ export class World implements IWorld {
         this.pda.push(NewState);
 
         const newState = this.pda.state! as State;
-        newState.create(this.transitionWorld);
+        await newState.create(this.transitionWorld);
         await newState.activate(this.transitionWorld);
         this.currentScheduler = this.stateSchedulers.get(NewState) ?? this.defaultScheduler;
+        await this.preparePipeline(this.currentScheduler.pipeline);
 
         if (!this.currentScheduler) {
             throw new Error(`There is no DefaultScheduler or Scheduler for ${NewState.name}!`);
@@ -308,9 +310,11 @@ export class World implements IWorld {
         for (syncPoint of pipeline.getGroups().values()) {
             for (stage of syncPoint.stages) {
                 for (system of stage.systems) {
-                    system[systemRunParamSym] = getSystemRunParameters(system, this.systemWorld);
-                    await system.setupFunction.apply(system, system[systemRunParamSym]!);
-                    this.systems.add(system);
+                    if (!system[systemRunParamSym]) {
+                        system[systemRunParamSym] = getSystemRunParameters(system, this.systemWorld);
+                        await system.setupFunction.apply(system, system[systemRunParamSym]!);
+                        this.systems.add(system);
+                    }
 
                     queries = getQueriesFromSystem(system);
                     if (queries.length > 0) {
@@ -343,7 +347,7 @@ export class World implements IWorld {
         this.shouldRunSystems = true;
 
         await this.pushState(initialState);
-        await this.preparePipeline(this.defaultScheduler.pipeline);
+        await this.preparePipeline(this.stateSchedulers.get(initialState)?.pipeline ?? this.defaultScheduler.pipeline);
 
         if (this._dirty) {
             this.maintain();
