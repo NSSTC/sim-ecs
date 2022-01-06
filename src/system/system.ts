@@ -1,9 +1,16 @@
-import {Actions, ISystem, Storage, TSystemParameter, TSystemParameters} from "./system.spec";
+import {
+    Actions,
+    ISystem,
+    ISystemResource,
+    Storage,
+    TSystemParameter,
+    TSystemParameters
+} from "./system.spec";
 import {ISystemBuilder, SystemBuilder} from "./system-builder";
 import {IAccessQuery, IQuery, Query, TExistenceQuery} from "../query/query";
 import {TObjectProto} from "../_.spec";
 import {ISystemActions} from "../world.spec";
-import {arrayReplace} from "../util";
+import {systemResourceTypeSym} from "./_";
 
 
 export * from "./system.spec";
@@ -26,11 +33,19 @@ export function getQueriesFromSystem(system: ISystem): IQuery<IAccessQuery<TObje
 }
 
 export function getSystemRunParameters(system: ISystem, actions: ISystemActions): TSystemParameters {
-    let runParameters = system.parameters;
+    let runParameters = [];
 
-    // I guess for now this is super simple, but it might become harder later on..?
-    runParameters = arrayReplace(runParameters, Actions, actions);
-    runParameters = arrayReplace(runParameters, Storage, new Map());
+    for (const param of system.parameters) {
+        if (param == Actions) {
+            runParameters.push(actions);
+        } else if (param == Storage) {
+            runParameters.push(param);
+        } else if (Object.getOwnPropertySymbols(param).includes(systemResourceTypeSym)) {
+            runParameters.push(actions.getResource((param as ISystemResource<TObjectProto>)[systemResourceTypeSym]))
+        } else {
+            runParameters.push(param);
+        }
+    }
 
     return runParameters;
 }

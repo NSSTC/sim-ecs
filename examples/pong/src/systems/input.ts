@@ -1,8 +1,5 @@
-import {Actions, createSystem, Storage} from "sim-ecs";
+import {createSystem, Storage, WriteResource} from "sim-ecs";
 import {EMovement, GameStore} from "../models/game-store";
-import {GameState} from "../states/game";
-import {MenuState} from "../states/menu";
-import {PauseState} from "../states/pause";
 
 export enum EKeyState {
     Down,
@@ -15,58 +12,54 @@ interface IInputEvent {
 }
 
 export const InputSystem = createSystem(
-    Actions,
-    Storage<{ gameStore: GameStore, inputEvents: IInputEvent[] }>(),
+    WriteResource(GameStore),
+    Storage<IInputEvent[]>([]),
 )
-    .runInStates(GameState, MenuState, PauseState)
-    .withSetupFunction((actions, storage) => {
-        storage.gameStore = actions.getResource(GameStore);
-        storage.inputEvents = [];
-
-        window.addEventListener('keydown', event => storage.inputEvents.push({key: event.key, type: EKeyState.Down}));
-        window.addEventListener('keyup', event => storage.inputEvents.push({key: event.key, type: EKeyState.Up}));
+    .withSetupFunction((gameStore, inputEvents) => {
+        window.addEventListener('keydown', event => inputEvents.push({key: event.key, type: EKeyState.Down}));
+        window.addEventListener('keyup', event => inputEvents.push({key: event.key, type: EKeyState.Up}));
     })
-    .withRunFunction((actions, storage) => {
+    .withRunFunction((gameStore, inputEvents) => {
         { // Reset input actions
-            storage.gameStore.input.actions.menuConfirm = false;
-            storage.gameStore.input.actions.menuMovement = EMovement.halt;
-            storage.gameStore.input.actions.togglePause = false;
+            gameStore.input.actions.menuConfirm = false;
+            gameStore.input.actions.menuMovement = EMovement.halt;
+            gameStore.input.actions.togglePause = false;
         }
 
         { // Work on all events which occurred during the last frame
-            for (const event of storage.inputEvents) {
-                storage.gameStore.input.keyStates[event.key] = event.type;
+            for (const event of inputEvents) {
+                gameStore.input.keyStates[event.key] = event.type;
 
                 if (event.type == EKeyState.Down) {
                     switch (event.key) {
                         case 'w':
                         case 'W': {
-                            storage.gameStore.input.actions.leftPaddleMovement = EMovement.up;
-                            storage.gameStore.input.actions.menuMovement = EMovement.up;
+                            gameStore.input.actions.leftPaddleMovement = EMovement.up;
+                            gameStore.input.actions.menuMovement = EMovement.up;
                             break;
                         }
                         case 'ArrowUp': {
-                            storage.gameStore.input.actions.rightPaddleMovement = EMovement.up;
-                            storage.gameStore.input.actions.menuMovement = EMovement.up;
+                            gameStore.input.actions.rightPaddleMovement = EMovement.up;
+                            gameStore.input.actions.menuMovement = EMovement.up;
                             break;
                         }
                         case 's':
                         case 'S': {
-                            storage.gameStore.input.actions.leftPaddleMovement = EMovement.down;
-                            storage.gameStore.input.actions.menuMovement = EMovement.down;
+                            gameStore.input.actions.leftPaddleMovement = EMovement.down;
+                            gameStore.input.actions.menuMovement = EMovement.down;
                             break;
                         }
                         case 'ArrowDown': {
-                            storage.gameStore.input.actions.rightPaddleMovement = EMovement.down;
-                            storage.gameStore.input.actions.menuMovement = EMovement.down;
+                            gameStore.input.actions.rightPaddleMovement = EMovement.down;
+                            gameStore.input.actions.menuMovement = EMovement.down;
                             break;
                         }
                         case 'Enter': {
-                            storage.gameStore.input.actions.menuConfirm = true;
+                            gameStore.input.actions.menuConfirm = true;
                             break;
                         }
                         case 'Escape': {
-                            storage.gameStore.input.actions.togglePause = true;
+                            gameStore.input.actions.togglePause = true;
                             break;
                         }
                     }
@@ -74,20 +67,20 @@ export const InputSystem = createSystem(
                     switch (event.key) {
                         case 'w':
                         case 'W': {
-                            storage.gameStore.input.actions.leftPaddleMovement = EMovement.halt;
+                            gameStore.input.actions.leftPaddleMovement = EMovement.halt;
                             break;
                         }
                         case 'ArrowUp': {
-                            storage.gameStore.input.actions.rightPaddleMovement = EMovement.halt;
+                            gameStore.input.actions.rightPaddleMovement = EMovement.halt;
                             break;
                         }
                         case 's':
                         case 'S': {
-                            storage.gameStore.input.actions.leftPaddleMovement = EMovement.halt;
+                            gameStore.input.actions.leftPaddleMovement = EMovement.halt;
                             break;
                         }
                         case 'ArrowDown': {
-                            storage.gameStore.input.actions.rightPaddleMovement = EMovement.halt;
+                            gameStore.input.actions.rightPaddleMovement = EMovement.halt;
                             break;
                         }
                     }
@@ -96,6 +89,6 @@ export const InputSystem = createSystem(
         }
 
         // Clear event queue
-        storage.inputEvents.length = 0;
+        inputEvents.length = 0;
     })
     .build();

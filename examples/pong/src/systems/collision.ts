@@ -2,7 +2,6 @@ import {createSystem, Query, Read, ReadEntity, Write} from "sim-ecs";
 import {Shape} from "../components/shape";
 import {Collision} from "../components/collision";
 import {Position} from "../components/position";
-import {GameState} from "../states/game";
 
 export const CollisionSystem = createSystem(
     new Query({
@@ -12,7 +11,6 @@ export const CollisionSystem = createSystem(
         shape: Read(Shape)
     }),
 )
-    .runInStates(GameState)
     .withRunFunction(query => {
         const rects = Array.from(query.iter()).map(({collision, entity, position, shape}) => {
             // ideally, this should be two separate steps,
