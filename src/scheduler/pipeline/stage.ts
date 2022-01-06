@@ -27,6 +27,6 @@ export class Stage implements IStage {
     }
 
     getExecutor(actions: IStageAction): TExecutor {
-        return () => this.schedulingAlgorithm(actions.systemActions, Array.from(actions.systems));
+        return () => this.schedulingAlgorithm(actions.systemActions, Array.from(this.systems));
     }
 }

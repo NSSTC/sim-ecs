@@ -1,4 +1,4 @@
-import {Actions, createSystem, Query, Read, Storage, Write} from "sim-ecs";
+import {createSystem, Query, Read, ReadResource, Write} from "sim-ecs";
 import {EMovement, GameStore} from "../models/game-store";
 import {EPaddleSide, Paddle} from "../components/paddle";
 import {Position} from "../components/position";
@@ -7,13 +7,13 @@ import {Shape} from "../components/shape";
 import {PaddleTransforms} from "../models/paddle-transforms";
 import {Dimensions} from "../models/dimensions";
 import {Transform} from "../models/transform";
-import {GameState} from "../states/game";
 
 
 
 export const PaddleSystem = createSystem(
-    Actions,
-    Storage<{ gameStore: GameStore, ctx: CanvasRenderingContext2D, paddleTrans: PaddleTransforms }>(),
+    ReadResource(GameStore),
+    ReadResource(CanvasRenderingContext2D),
+    ReadResource(PaddleTransforms),
     new Query({
         paddle: Read(Paddle),
         pos: Read(Position),
@@ -21,23 +21,17 @@ export const PaddleSystem = createSystem(
         vel: Write(Velocity)
     }),
 )
-    .runInStates(GameState)
-    .withSetupFunction((actions, storage) => {
-        storage.gameStore = actions.getResource(GameStore);
-        storage.ctx = actions.getResource(CanvasRenderingContext2D);
-        storage.paddleTrans = actions.getResource(PaddleTransforms);
-    })
-    .withRunFunction((actions, storage, query) => {
+    .withRunFunction((gameStore, ctx, paddleTrans, query) => {
         return query.execute(({paddle, pos, shape, vel}) => {
-            updateTransformationResource(paddle.side, pos, shape.dimensions, storage.paddleTrans);
+            updateTransformationResource(paddle.side, pos, shape.dimensions, paddleTrans);
             updateVelocity(
                 pos,
                 vel,
                 shape.dimensions.height ?? shape.dimensions.width,
-                storage.gameStore.lastFrameDeltaTime,
+                gameStore.lastFrameDeltaTime,
                 paddle.side == EPaddleSide.Left
-                    ? storage.gameStore.input.actions.leftPaddleMovement
-                    : storage.gameStore.input.actions.rightPaddleMovement
+                    ? gameStore.input.actions.leftPaddleMovement
+                    : gameStore.input.actions.rightPaddleMovement
             );
         });
     })

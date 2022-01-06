@@ -1,22 +1,19 @@
-import {Actions, createSystem, Storage} from "sim-ecs";
+import {createSystem, Storage, WriteResource} from "sim-ecs";
 import {GameStore} from "../models/game-store";
 
-// todo: we need a system storage
-let lastTransition = Date.now();
-
-export const BeforeStepSystem = createSystem(Actions, Storage<{ gameStore: GameStore }>())
-    .withSetupFunction((actions, storage) => {
-        storage.gameStore = actions.getResource(GameStore);
-    })
-    .withRunFunction((actions, storage) => {
+export const BeforeStepSystem = createSystem(
+    WriteResource(GameStore),
+    WriteResource(CanvasRenderingContext2D),
+    Storage<{ lastTransition: number }>({ lastTransition: 0 })
+)
+    .withRunFunction((gameStore, ctx, storage) => {
         { // Update delta time
             const now = Date.now();
-            storage.gameStore.lastFrameDeltaTime = now - lastTransition;
-            lastTransition = now;
+            gameStore.lastFrameDeltaTime = now - storage.lastTransition;
+            storage.lastTransition = now;
         }
 
         { // Clear canvas
-            const ctx = actions.getResource(CanvasRenderingContext2D);
             ctx.beginPath();
             ctx.fillStyle = '#222';
             ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
