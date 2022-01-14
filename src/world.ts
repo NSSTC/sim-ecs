@@ -21,7 +21,7 @@ import {
     IQuery,
     IEntitiesQuery,
 } from "./query";
-import {IScheduler} from "./scheduler/scheduler.spec";
+import {IScheduler} from "./scheduler";
 import {IPipeline} from "./scheduler/pipeline/pipeline.spec";
 import {getQueriesFromSystem, getSystemRunParameters, ISystem} from "./system";
 import {systemRunParamSym} from "./system/_";

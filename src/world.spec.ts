@@ -8,7 +8,7 @@ import {ISerialFormat} from "./serde/serial-format.spec";
 import {ICommands} from "./commands/commands.spec";
 import IEntityBuilder from "./entity-builder.spec";
 import {SerDe} from "./serde/serde";
-import {IScheduler} from "./scheduler/scheduler.spec";
+import {IScheduler} from "./scheduler";
 
 export type TExecutionFunction = ((callback: Function) => any) | typeof setTimeout | typeof requestAnimationFrame;
 export type TGroupHandle = number;
