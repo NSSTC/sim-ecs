@@ -14,9 +14,9 @@ const EventTriggerSystem = createSystem({
     lastEvent: Storage({ timestamp: 0 }),
 })
     /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
-    .withRunFunction(({myEvents, lastEvent}) => {
+    .withRunFunction(async ({myEvents, lastEvent}) => {
         if (Date.now() - lastEvent.timestamp >= 1000) {
-            myEvents.publish(new MyEvent('My event just happened!'));
+            await myEvents.publish(new MyEvent('My event just happened!'));
             lastEvent.timestamp = Date.now();
         }
     })
