@@ -36,6 +36,10 @@ export class EventBus implements IEventBus {
         subscriberList.add(handler);
     }
 
+    subscribeReader<T extends TObjectProto>(reader: IEventReader<T>) {
+        this.subscribe(reader.eventType, reader.eventHandler);
+    }
+
     unsubscribe<T extends TObjectProto>(Event: T, handler: TSubscriber<T>): void {
         let subscriberList = this.subscribers.get(Event);
 
@@ -45,5 +49,9 @@ export class EventBus implements IEventBus {
         }
 
         subscriberList.delete(handler);
+    }
+
+    unsubscribeReader<T extends TObjectProto>(reader: EventReader<T>): void {
+        this.unsubscribe(reader.eventType, reader.eventHandler);
     }
 }

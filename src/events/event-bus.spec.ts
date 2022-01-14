@@ -9,5 +9,7 @@ export interface IEventBus {
     createWriter<T extends TObjectProto>(): IEventWriter<T>
     publish(event: Object): Promise<void>
     subscribe<T extends TObjectProto>(Event: T, handler: TSubscriber<T>): void
+    subscribeReader<T extends TObjectProto>(reader: IEventReader<T>): void
     unsubscribe<T extends TObjectProto>(Event: T, handler: TSubscriber<T>): void
+    unsubscribeReader<T extends TObjectProto>(reader: IEventReader<T>): void
 }
