@@ -49,7 +49,7 @@ export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {
         }
     }
 
-    getOne(): DATA | undefined {
+    getFirst(): DATA | undefined {
         return this.queryResult.values().next().value;
     }
 
