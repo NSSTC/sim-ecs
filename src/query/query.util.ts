@@ -1,15 +1,17 @@
 // todo: this is dangerous! The exposed interface should be reduced to prevent direct modifications in systems
 import {
-    accessDescSym,
-    EAccess, EExistence,
-    ETargetType, existenceDescSym,
+    EAccess,
+    EExistence,
+    ETargetType,
     IAccessDescriptor,
     IExistenceDescriptor,
-    TAccessQueryParameter, TOptionalAccessQueryParameter
+    TAccessQueryParameter,
+    TOptionalAccessQueryParameter
 } from "./query.spec";
 import {TObjectProto, TTypeProto} from "../_.spec";
 import {IEntity, TTag} from "../entity.spec";
 import {Entity} from "../entity";
+import {accessDescSym, existenceDescSym} from "./_";
 
 export function ReadEntity(uuid?: string): TAccessQueryParameter<TTypeProto<Readonly<IEntity>>> {
     return Object.assign({}, Entity, {

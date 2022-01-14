@@ -1,15 +1,15 @@
-import {IAccessQuery, IQuery, TExistenceQuery} from "../query/query.spec";
+import {IAccessQuery, IComponentsQuery, IEntitiesQuery} from "../query";
 import {TObjectProto, TTypeProto} from "../_.spec";
 import {ISystemActions} from "../world.spec";
 import {systemResourceTypeSym, systemRunParamSym} from "./_";
 
-export type TSystemParameter = IQuery<IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>> | ISystemActions | ISystemResource<TObjectProto> | ISystemStorage;
-export type TSystemParameters = Array<TSystemParameter>;
-export type TSystemFunction<PARAMS extends TSystemParameters = TSystemParameters> = (...params: PARAMS) => void | Promise<void>;
+export type TSystemParameter = IEntitiesQuery | IComponentsQuery<IAccessQuery<TObjectProto>> | ISystemActions | ISystemResource<TObjectProto> | ISystemStorage;
+export type TSystemParameterDesc = { [name: string]: TSystemParameter };
+export type TSystemFunction<PDESC extends TSystemParameterDesc> = (params: PDESC) => void | Promise<void>;
 
-export interface ISystem<PDESC extends TSystemParameters = TSystemParameters> {
+export interface ISystem<PDESC extends TSystemParameterDesc = TSystemParameterDesc> {
     [systemRunParamSym]?: PDESC
-    readonly parameters: PDESC
+    readonly parameterDesc: PDESC
     readonly runFunction: TSystemFunction<PDESC>
     readonly setupFunction: TSystemFunction<PDESC>
 }

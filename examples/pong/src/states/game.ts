@@ -1,4 +1,4 @@
-import {ITransitionActions, Query, SerialFormat, State, TGroupHandle, With} from "sim-ecs";
+import {ITransitionActions, queryEntities, SerialFormat, State, TGroupHandle, With} from "sim-ecs";
 import {gamePrefab} from "../prefabs/game";
 import {EPaddleSide, Paddle} from "../components/paddle";
 import {Position} from "../components/position";
@@ -53,7 +53,10 @@ const createGameFromSaveData = async function (actions: ITransitionActions) {
     const prefabHandle = actions.commands.load(SerialFormat.fromArray(savablePrefab));
     await actions.flushCommands();
 
-    for (const entity of actions.getEntities(new Query([With(Paddle), With(Shape)]))) {
+    for (const entity of actions.getEntities(queryEntities(
+        With(Paddle),
+        With(Shape),
+    ))) {
         entity
             .addComponent(new Position(
                 entity.getComponent(Paddle)!.side == EPaddleSide.Left
@@ -69,7 +72,10 @@ const createGameFromSaveData = async function (actions: ITransitionActions) {
 const setScoreCaptionMod = function (actions: ITransitionActions) {
     const score = actions.getResource(ScoreBoard);
 
-    for (const entity of actions.getEntities(new Query([With(Paddle), With(UIItem)]))) {
+    for (const entity of actions.getEntities(queryEntities(
+        With(Paddle),
+        With(UIItem),
+    ))) {
         const ui = entity.getComponent(UIItem)!;
         const paddle = entity.getComponent(Paddle)!;
 

@@ -1,13 +1,12 @@
 import {IEntity} from "./entity.spec";
 import {ISystem} from "./system";
 import {IIStateProto, IState} from "./state.spec";
-import {TObjectProto, TTypeProto} from "./_.spec";
-import {IAccessDescriptor, IAccessQuery, TExistenceQuery} from "./query/query.spec";
+import {TTypeProto} from "./_.spec";
+import {IAccessDescriptor, IEntitiesQuery} from "./query";
 import {ISerDe, TSerDeOptions, TSerializer} from "./serde/serde.spec";
 import {ISerialFormat} from "./serde/serial-format.spec";
 import {ICommands} from "./commands/commands.spec";
 import IEntityBuilder from "./entity-builder.spec";
-import {Query} from "./query/query";
 import {SerDe} from "./serde/serde";
 import {IScheduler} from "./scheduler/scheduler.spec";
 
@@ -51,7 +50,7 @@ export interface IPartialWorld {
      * Query entities and find the ones with a certain combination of component
      * @param query
      */
-    getEntities(query?: Query<IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>>): IterableIterator<IEntity>
+    getEntities(query?: IEntitiesQuery): IterableIterator<IEntity>
 
     /**
      * Get a resource which was previously stored
@@ -75,7 +74,7 @@ export interface IPartialWorld {
      * @param query
      * @param options
      */
-    save<C extends Object, T extends IAccessDescriptor<C>>(query?: Query<TExistenceQuery<TObjectProto>>, options?: TSerDeOptions<TSerializer>): ISerialFormat
+    save<C extends Object, T extends IAccessDescriptor<C>>(query?: IEntitiesQuery, options?: TSerDeOptions<TSerializer>): ISerialFormat
 }
 
 /**
@@ -97,7 +96,7 @@ export interface ISystemActions {
      * Query entities and find the ones with a certain combination of component
      * @param query
      */
-    getEntities(query?: Query<IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>>): IterableIterator<IEntity>
+    getEntities(query?: IEntitiesQuery): IterableIterator<IEntity>
 
     /**
      * Get a resource which was previously stored

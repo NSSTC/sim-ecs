@@ -1,20 +1,20 @@
 import {Position} from "../components/position";
-import {createSystem, Query, Read, Storage, WriteResource} from "sim-ecs";
+import {createSystem, queryComponents, Read, Storage, WriteResource} from "sim-ecs";
 import {UIItem} from "../components/ui-item";
 import {relToScreenCoords} from "../app/util";
 
-export const RenderUISystem = createSystem(
-    WriteResource(CanvasRenderingContext2D),
-    Storage<{ toScreenCoords: (x: number, y: number) => [number, number] }>({ toScreenCoords: () => [0, 0] }),
-    new Query({
+export const RenderUISystem = createSystem({
+    ctx: WriteResource(CanvasRenderingContext2D),
+    storage: Storage<{ toScreenCoords: (x: number, y: number) => [number, number] }> ({toScreenCoords: () => [0, 0]}),
+    query: queryComponents({
         pos: Read(Position),
         ui: Read(UIItem)
     })
-)
-    .withSetupFunction((ctx, storage) => {
+})
+    .withSetupFunction(({ctx, storage}) => {
         storage.toScreenCoords = relToScreenCoords.bind(undefined, ctx.canvas);
     })
-    .withRunFunction((ctx, storage, query) => {
+    .withRunFunction(({ctx, storage, query}) => {
         ctx.textBaseline = 'top';
 
         return query.execute(({pos, ui}) => {

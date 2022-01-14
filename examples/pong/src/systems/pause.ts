@@ -4,8 +4,11 @@ import {GameState} from "../states/game";
 import {PauseState} from "../states/pause";
 
 
-export const PauseSystem = createSystem(Actions, ReadResource(GameStore))
-    .withRunFunction((actions, gameStore) => {
+export const PauseSystem = createSystem({
+    actions: Actions,
+    gameStore: ReadResource(GameStore),
+})
+    .withRunFunction(({actions, gameStore}) => {
         const isGameState = gameStore.currentState?.constructor == GameState;
         const isPauseState = gameStore.currentState?.constructor == PauseState;
 

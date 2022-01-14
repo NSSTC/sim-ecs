@@ -11,7 +11,7 @@ export async function defaultSchedulingAlgorithm(actions: ISystemActions, system
     let system;
 
     for (system of systems) {
-        promises.push(system.runFunction.apply(system, system[systemRunParamSym]!));
+        promises.push(system.runFunction.call(system, system[systemRunParamSym]!));
     }
 
     await Promise.all(promises);

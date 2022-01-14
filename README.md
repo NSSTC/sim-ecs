@@ -130,11 +130,11 @@ Systems are the logic, which operates on data sets (components).
 They are logic building blocks which separate concerns and make the world move.
 
 ```typescript
-const CountSystem = createSystem(
-    new Query({counterObj: Write(Counter)})
-)
+const CountSystem = createSystem({
+    query: queryComponents({counterObj: Write(Counter)}),
+})
     // this function is called every time the world needs to be updated. Put your logic in there
-    .withRunFunction(query => 
+    .withRunFunction(({query}) => 
         query.execute(({counterObj}) => 
             console.log(++counterObj.a)
         )
@@ -318,7 +318,7 @@ saveToFile(jsonPrefab, 'prefab.json');
 ```typescript
 // filtering what should be saved is also possible,
 // so that only certain data is saved and not all data of the whole world
-const saveData = world.save(new Query([With(Player)])).toJSON();
+const saveData = world.save(queryEntities(With(Player))).toJSON();
 localStorage.setItem('save', saveData);
 ```
 
@@ -345,7 +345,7 @@ const syncedEntity = world.buildEntity(entityId).build();
 // in order to fetch an entity with a given ID, the ECS's function can be used
 const entityFromIdGetter = getEntity(entityId);
 // or inside a Query:
-const {entityFromIdQuery} = new Query({ entityFromIdQuery: ReadEntity(entityId) }).getOne();
+const {entityFromIdQuery} = queryComponents({ entityFromIdQuery: ReadEntity(entityId) }).getOne();
 ```
 
 

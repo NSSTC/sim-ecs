@@ -1,6 +1,6 @@
 import {TObjectProto, TTypeProto} from "../_.spec";
 import {IEntity, TTag} from "../entity.spec";
-import IWorld from "../world.spec";
+import {accessDescSym, addEntitySym, clearEntitiesSym, existenceDescSym, removeEntitySym, setEntitiesSym} from "./_";
 
 export type TAccessQueryParameter<C extends TObjectProto> = C & IAccessDescriptor<InstanceType<C>>;
 export type TOptionalAccessQueryParameter<C extends TObjectProto | undefined> = IAccessDescriptor<C extends TObjectProto ? InstanceType<C> : undefined> & C extends TObjectProto ? C : undefined;
@@ -8,13 +8,6 @@ export interface IAccessQuery<C extends TObjectProto> { [componentName: string]:
 
 export type TExistenceQueryParameter<C extends TObjectProto> = IExistenceDescriptor<C>;
 export type TExistenceQuery<C extends TObjectProto> = Array<TExistenceQueryParameter<C>>;
-
-export const addEntitySym = Symbol();
-export const clearEntitiesSym = Symbol();
-export const removeEntitySym = Symbol();
-export const setEntitiesSym = Symbol();
-export const accessDescSym: unique symbol = Symbol();
-export const existenceDescSym: unique symbol = Symbol();
 
 export enum EAccess {
     meta,
@@ -31,6 +24,11 @@ export enum ETargetType {
     component,
     entity,
     tag,
+}
+
+export enum EQueryType {
+    Components,
+    Entities,
 }
 
 export type TAccessQueryData<DESC extends IAccessQuery<TObjectProto>> = {
@@ -58,21 +56,21 @@ export interface IExistenceDescriptor<C extends TObjectProto> {
 }
 
 
-export interface IQuery<
-    DESC extends IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>,
-    DATA =
-        DESC extends TExistenceQuery<TObjectProto>
-            ? IEntity
-            : DESC extends IAccessQuery<TObjectProto>
-                ? TAccessQueryData<DESC>
-                : never
-    > {
+export interface IQuery<DESC, DATA> {
     readonly descriptor: DESC
+    readonly queryType: EQueryType
+
+    [addEntitySym](entity: IEntity): void
+    [clearEntitiesSym](): void
+    [removeEntitySym](entity: IEntity): void
+    [setEntitiesSym](entities: IterableIterator<IEntity>): void
 
     execute(handler: (data: DATA) => Promise<void> | void): Promise<void>
     getOne(): DATA | undefined
-    iter(world?: IWorld): IterableIterator<DATA>
+    iter(): IterableIterator<DATA>
     matchesEntity(entity: IEntity): boolean
 }
 
-export interface IQueryProto<D extends IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>> { new(): IQuery<D> }
+export interface IComponentsQuery<DESC extends IAccessQuery<TObjectProto>> extends IQuery<DESC, TAccessQueryData<DESC>> {}
+export interface IEntitiesQuery extends IQuery<TExistenceQuery<TObjectProto>, IEntity> {}
+//export interface IQueryProto<D extends IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>> { new(): IQuery<D> }

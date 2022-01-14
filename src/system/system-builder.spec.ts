@@ -1,13 +1,11 @@
-import {ISystem, TSystemParameters, TSystemFunction} from "./system.spec";
+import {ISystem, TSystemFunction, TSystemParameterDesc} from "./system.spec";
 
-export interface ISystemBuilder<PARAMS extends TSystemParameters> {
-    parameters: PARAMS
-    setupFunction: TSystemFunction<PARAMS>
-    runFunction: TSystemFunction<PARAMS>
+export interface ISystemBuilder<PARAMDESC extends TSystemParameterDesc> {
+    parameterDesc: PARAMDESC
+    setupFunction: TSystemFunction<PARAMDESC>
+    runFunction: TSystemFunction<PARAMDESC>
 
-    build(): ISystem<PARAMS>
-    // todo: only take "blueprint" parameters here
-    withRunParameters(params: TSystemParameters): ISystemBuilder<PARAMS>
-    withRunFunction(fn: TSystemFunction<PARAMS>): ISystemBuilder<PARAMS>
-    withSetupFunction(fn: TSystemFunction<PARAMS>): ISystemBuilder<PARAMS>
+    build(): ISystem<PARAMDESC>
+    withRunFunction(fn: TSystemFunction<PARAMDESC>): ISystemBuilder<PARAMDESC>
+    withSetupFunction(fn: TSystemFunction<PARAMDESC>): ISystemBuilder<PARAMDESC>
 }

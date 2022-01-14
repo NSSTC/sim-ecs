@@ -1,19 +1,19 @@
-import {Actions, createSystem, Query, Storage, Write, WriteResource} from "sim-ecs";
+import {Actions, createSystem, queryComponents, Storage, Write, WriteResource} from "sim-ecs";
 import {UIItem} from "../components/ui-item";
 import {EMovement, GameStore} from "../models/game-store";
 import {EActions} from "../app/actions";
 import {GameState} from "../states/game";
 
 
-export const MenuSystem = createSystem(
-    Actions,
-    WriteResource(GameStore),
-    Storage<{ menuAction: EActions }>({ menuAction: EActions.Play }),
-    new Query({
+export const MenuSystem = createSystem({
+    actions: Actions,
+    gameStore: WriteResource(GameStore),
+    storage: Storage<{ menuAction: EActions }> ({menuAction: EActions.Play}),
+    query: queryComponents({
         uiItem: Write(UIItem)
     }),
-)
-    .withRunFunction((actions, gameStore, storage, query) => {
+})
+    .withRunFunction(({actions, gameStore, storage, query}) => {
         // todo: use index
         if (gameStore.input.actions.menuMovement == EMovement.down) {
             switch (storage.menuAction) {

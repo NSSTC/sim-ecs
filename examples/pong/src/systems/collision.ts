@@ -1,17 +1,17 @@
-import {createSystem, Query, Read, ReadEntity, Write} from "sim-ecs";
+import {createSystem, Query, queryComponents, Read, ReadEntity, Write} from "sim-ecs";
 import {Shape} from "../components/shape";
 import {Collision} from "../components/collision";
 import {Position} from "../components/position";
 
-export const CollisionSystem = createSystem(
-    new Query({
+export const CollisionSystem = createSystem({
+    query: queryComponents({
         collision: Write(Collision),
         entity: ReadEntity(),
         position: Read(Position),
         shape: Read(Shape)
     }),
-)
-    .withRunFunction(query => {
+})
+    .withRunFunction(({query}) => {
         const rects = Array.from(query.iter()).map(({collision, entity, position, shape}) => {
             // ideally, this should be two separate steps,
             // but JS would loop twice.
