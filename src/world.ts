@@ -10,25 +10,22 @@ import {
 } from "./world.spec";
 import {IEntity} from "./entity.spec";
 import {IState, State, IIStateProto} from "./state";
-import {TExecutor, TObjectProto, TTypeProto} from "./_.spec";
+import {TExecutor, TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
 import {SerDe, TDeserializer, TSerDeOptions, TSerializer} from "./serde/serde";
 import {ISerialFormat} from "./serde/serial-format";
 import {Commands} from "./commands/commands";
 import {CommandsAggregator} from "./commands/commands-aggregator";
 import {
-    clearEntitiesSym,
     IAccessDescriptor,
-    IAccessQuery,
     IQuery,
-    setEntitiesSym,
-    TExistenceQuery,
-    Query,
-} from "./query/query";
+    IEntitiesQuery,
+} from "./query";
 import {IScheduler} from "./scheduler/scheduler.spec";
 import {IPipeline} from "./scheduler/pipeline/pipeline.spec";
 import {getQueriesFromSystem, getSystemRunParameters, ISystem} from "./system";
 import {systemRunParamSym} from "./system/_";
+import {clearEntitiesSym, setEntitiesSym} from "./query/_";
 
 export * from './world.spec';
 
@@ -48,7 +45,7 @@ export class World implements IWorld {
         nextHandle: 0,
         entityLinks: new Map<number, IEntity[]>(),
     };
-    protected queries: Set<IQuery<IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>>> = new Set();
+    protected queries: Set<IQuery<unknown, unknown>> = new Set();
     public resources = new Map<{ new(): Object }, Object>();
     protected runPromise?: Promise<void> = undefined;
     protected defaultScheduler: IScheduler;
@@ -191,7 +188,7 @@ export class World implements IWorld {
         return this._commandsAggregator.executeAll();
     }
 
-    getEntities(query?: Query<IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>>): IterableIterator<IEntity> {
+    getEntities(query?: IEntitiesQuery): IterableIterator<IEntity> {
         if (!query) {
             return this.entities.keys();
         }
@@ -249,8 +246,8 @@ export class World implements IWorld {
     maintain(): void {
         let query;
         for (query of this.queries) {
-            (query as Query<any>)[clearEntitiesSym]();
-            (query as Query<any>)[setEntitiesSym](this.entities.values());
+            query[clearEntitiesSym]();
+            query[setEntitiesSym](this.entities.values());
         }
 
         this._dirty = false;
@@ -312,7 +309,7 @@ export class World implements IWorld {
                 for (system of stage.systems) {
                     if (!system[systemRunParamSym]) {
                         system[systemRunParamSym] = getSystemRunParameters(system, this.systemWorld);
-                        await system.setupFunction.apply(system, system[systemRunParamSym]!);
+                        await system.setupFunction.call(system, system[systemRunParamSym]!);
                         this.systems.add(system);
                     }
 
@@ -466,7 +463,7 @@ export class World implements IWorld {
         this.shouldRunSystems = false;
     }
 
-    save<C extends Object, T extends IAccessDescriptor<C>>(query?: Query<TExistenceQuery<TObjectProto>>, options?: TSerDeOptions<TSerializer>): ISerialFormat {
+    save<C extends Object, T extends IAccessDescriptor<C>>(query?: IEntitiesQuery, options?: TSerDeOptions<TSerializer>): ISerialFormat {
         return this.serde.serialize({entities: this.getEntities(query)}, options);
     }
 }

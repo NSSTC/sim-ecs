@@ -1,4 +1,4 @@
-import {createSystem, Query, Read, WithTag, Write, WriteResource} from "sim-ecs";
+import {createSystem, queryComponents, Read, WithTag, Write, WriteResource} from "sim-ecs";
 import {Velocity} from "../components/velocity";
 import {Collision} from "../components/collision";
 import {EWallSide, EWallType, Wall} from "../components/wall";
@@ -9,16 +9,16 @@ import {defaultBallPositionX, defaultBallPositionY} from "../prefabs/game";
 import {ETags} from "../models/tags";
 
 
-export const BallSystem = createSystem(
-    WriteResource(ScoreBoard),
-    new Query({
+export const BallSystem = createSystem({
+    scoreBoard: WriteResource(ScoreBoard),
+    query: queryComponents({
         _ball: WithTag(ETags.ball),
         collisionData: Read(Collision),
         pos: Write(Position),
         vel: Write(Velocity),
     })
-)
-    .withRunFunction((scoreBoard, query) => {
+})
+    .withRunFunction(({scoreBoard, query}) => {
         let wallCollisionHorizontal = false;
         let wallCollisionVertical = EWallSide.None;
         let paddleCollision = false;

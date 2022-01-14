@@ -1,4 +1,4 @@
-import {createSystem, Query, Read, ReadResource, Write} from "sim-ecs";
+import {createSystem, queryComponents, Read, ReadResource, Write} from "sim-ecs";
 import {EMovement, GameStore} from "../models/game-store";
 import {EPaddleSide, Paddle} from "../components/paddle";
 import {Position} from "../components/position";
@@ -8,20 +8,17 @@ import {PaddleTransforms} from "../models/paddle-transforms";
 import {Dimensions} from "../models/dimensions";
 import {Transform} from "../models/transform";
 
-
-
-export const PaddleSystem = createSystem(
-    ReadResource(GameStore),
-    ReadResource(CanvasRenderingContext2D),
-    ReadResource(PaddleTransforms),
-    new Query({
+export const PaddleSystem = createSystem({
+    gameStore: ReadResource(GameStore),
+    paddleTrans: ReadResource(PaddleTransforms),
+    query: queryComponents({
         paddle: Read(Paddle),
         pos: Read(Position),
         shape: Read(Shape),
         vel: Write(Velocity)
     }),
-)
-    .withRunFunction((gameStore, ctx, paddleTrans, query) => {
+})
+    .withRunFunction(({gameStore, paddleTrans, query}) => {
         return query.execute(({paddle, pos, shape, vel}) => {
             updateTransformationResource(paddle.side, pos, shape.dimensions, paddleTrans);
             updateVelocity(

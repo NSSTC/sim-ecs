@@ -1,12 +1,12 @@
 import {createSystem, Storage, WriteResource} from "sim-ecs";
 import {GameStore} from "../models/game-store";
 
-export const BeforeStepSystem = createSystem(
-    WriteResource(GameStore),
-    WriteResource(CanvasRenderingContext2D),
-    Storage<{ lastTransition: number }>({ lastTransition: 0 })
-)
-    .withRunFunction((gameStore, ctx, storage) => {
+export const BeforeStepSystem = createSystem({
+    gameStore: WriteResource(GameStore),
+    ctx: WriteResource(CanvasRenderingContext2D),
+    storage: Storage<{ lastTransition: number }>({ lastTransition: 0 })
+})
+    .withRunFunction(({gameStore, ctx, storage}) => {
         { // Update delta time
             const now = Date.now();
             gameStore.lastFrameDeltaTime = now - storage.lastTransition;

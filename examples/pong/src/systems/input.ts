@@ -11,15 +11,15 @@ interface IInputEvent {
     type: EKeyState
 }
 
-export const InputSystem = createSystem(
-    WriteResource(GameStore),
-    Storage<IInputEvent[]>([]),
-)
-    .withSetupFunction((gameStore, inputEvents) => {
+export const InputSystem = createSystem({
+    gameStore: WriteResource(GameStore),
+    inputEvents: Storage<IInputEvent[]> ([]),
+})
+    .withSetupFunction(({inputEvents}) => {
         window.addEventListener('keydown', event => inputEvents.push({key: event.key, type: EKeyState.Down}));
         window.addEventListener('keyup', event => inputEvents.push({key: event.key, type: EKeyState.Up}));
     })
-    .withRunFunction((gameStore, inputEvents) => {
+    .withRunFunction(({gameStore, inputEvents}) => {
         { // Reset input actions
             gameStore.input.actions.menuConfirm = false;
             gameStore.input.actions.menuMovement = EMovement.halt;
