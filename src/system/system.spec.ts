@@ -1,9 +1,16 @@
 import {IAccessQuery, IComponentsQuery, IEntitiesQuery} from "../query";
 import {TObjectProto, TTypeProto} from "../_.spec";
 import {ISystemActions} from "../world.spec";
-import {systemResourceTypeSym, systemRunParamSym} from "./_";
+import {systemEventReaderSym, systemEventWriterSym, systemResourceTypeSym, systemRunParamSym} from "./_";
+import {IEventReader, IEventWriter} from "../events";
 
-export type TSystemParameter = IEntitiesQuery | IComponentsQuery<IAccessQuery<TObjectProto>> | ISystemActions | ISystemResource<TObjectProto> | ISystemStorage;
+export type TSystemParameter =
+    IEntitiesQuery
+    | IEventReader<TObjectProto>
+    | IComponentsQuery<IAccessQuery<TObjectProto>>
+    | ISystemActions
+    | ISystemResource<TObjectProto>
+    | ISystemStorage;
 export type TSystemParameterDesc = { [name: string]: TSystemParameter };
 export type TSystemFunction<PDESC extends TSystemParameterDesc> = (params: PDESC) => void | Promise<void>;
 
@@ -20,7 +27,13 @@ export interface ISystemResource<T extends Object> {
 
 interface ISystemStorage {}
 
-export const Actions: ISystemActions = { __phantom: undefined } as unknown as ISystemActions;
+export const Actions: ISystemActions = { [Symbol()]: undefined } as unknown as ISystemActions;
+
+export function ReadEvents<T extends TObjectProto>(type: T): IEventReader<T> {
+    return {
+        [systemEventReaderSym]: type,
+    } as unknown as IEventReader<T>;
+}
 
 export function ReadResource<T extends Object>(type: TTypeProto<T>): ISystemResource<T> & Readonly<T> {
     return {
@@ -30,6 +43,12 @@ export function ReadResource<T extends Object>(type: TTypeProto<T>): ISystemReso
 
 export function Storage<T>(initializer: T): ISystemStorage & T {
     return initializer as ISystemStorage & T;
+}
+
+export function WriteEvents<T extends TObjectProto>(type: T): IEventWriter<T> {
+    return {
+        [systemEventWriterSym]: type,
+    } as unknown as IEventWriter<T>;
 }
 
 export function WriteResource<T extends Object>(type: TTypeProto<T>): ISystemResource<T> & T {

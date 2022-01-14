@@ -66,7 +66,7 @@ export interface IQuery<DESC, DATA> {
     [setEntitiesSym](entities: IterableIterator<IEntity>): void
 
     execute(handler: (data: DATA) => Promise<void> | void): Promise<void>
-    getOne(): DATA | undefined
+    getFirst(): DATA | undefined
     iter(): IterableIterator<DATA>
     matchesEntity(entity: IEntity): boolean
 }
