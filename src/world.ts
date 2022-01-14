@@ -27,6 +27,7 @@ import {getQueriesFromSystem, getSystemRunParameters, ISystem} from "./system";
 import {systemRunParamSym} from "./system/_";
 import {clearEntitiesSym, setEntitiesSym} from "./query/_";
 import {EventBus} from "./events/event-bus";
+import {EventReader} from "./events/event-reader";
 
 export * from './world.spec';
 
@@ -274,6 +275,7 @@ export class World implements IWorld {
     }
 
     async popState(): Promise<void> {
+        this.unsubscribeEventsOfSchedulerSystems(this.currentScheduler!);
         await this.pda.pop()?.deactivate(this.transitionWorld);
 
         const newState = this.pda.state;
@@ -285,9 +287,14 @@ export class World implements IWorld {
         this.currentScheduler = this.stateSchedulers.get(newState.constructor as IIStateProto) ?? this.defaultScheduler;
         await this.preparePipeline(this.currentScheduler.pipeline);
         this.currentSchedulerExecutor = this.currentScheduler.getExecutor(this.getStageWorld());
+        this.subscribeEventsOfSchedulerSystems(this.currentScheduler);
     }
 
     async pushState(NewState: IIStateProto): Promise<void> {
+        if (this.currentScheduler) {
+            this.unsubscribeEventsOfSchedulerSystems(this.currentScheduler);
+        }
+
         await this.pda.state?.deactivate(this.transitionWorld);
         this.pda.push(NewState);
 
@@ -302,6 +309,7 @@ export class World implements IWorld {
         }
 
         this.currentSchedulerExecutor = this.currentScheduler.getExecutor(this.getStageWorld());
+        this.subscribeEventsOfSchedulerSystems(this.currentScheduler);
     }
 
     protected async preparePipeline(pipeline: IPipeline): Promise<void> {
@@ -471,5 +479,33 @@ export class World implements IWorld {
 
     save<C extends Object, T extends IAccessDescriptor<C>>(query?: IEntitiesQuery, options?: TSerDeOptions<TSerializer>): ISerialFormat {
         return this.serde.serialize({entities: this.getEntities(query)}, options);
+    }
+
+    protected subscribeEventsOfSchedulerSystems(scheduler: IScheduler) {
+        const systems = scheduler.pipeline.getGroups().map(g => g.stages).flat().map(s => s.systems).flat();
+        let system;
+        let systemParam;
+
+        for (system of systems) {
+            for (systemParam of Object.values(system.parameterDesc)) {
+                if (systemParam instanceof EventReader) {
+                    this.eventBus.subscribeReader(systemParam);
+                }
+            }
+        }
+    }
+
+    protected unsubscribeEventsOfSchedulerSystems(scheduler: IScheduler) {
+        const systems = scheduler.pipeline.getGroups().map(g => g.stages).flat().map(s => s.systems).flat();
+        let system;
+        let systemParam;
+
+        for (system of systems) {
+            for (systemParam of Object.values(system.parameterDesc)) {
+                if (systemParam instanceof EventReader) {
+                    this.eventBus.unsubscribeReader(systemParam);
+                }
+            }
+        }
     }
 }
