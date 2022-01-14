@@ -4,7 +4,7 @@ import {GameStore} from "../models/game-store";
 export const BeforeStepSystem = createSystem({
     gameStore: WriteResource(GameStore),
     ctx: WriteResource(CanvasRenderingContext2D),
-    storage: Storage<{ lastTransition: number }>({ lastTransition: 0 })
+    storage: Storage({ lastTransition: 0 })
 })
     .withRunFunction(({gameStore, ctx, storage}) => {
         { // Update delta time

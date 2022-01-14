@@ -8,7 +8,7 @@ import {GameState} from "../states/game";
 export const MenuSystem = createSystem({
     actions: Actions,
     gameStore: WriteResource(GameStore),
-    storage: Storage<{ menuAction: EActions }> ({menuAction: EActions.Play}),
+    storage: Storage({ menuAction: EActions.Play }),
     query: queryComponents({
         uiItem: Write(UIItem)
     }),

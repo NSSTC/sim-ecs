@@ -11,7 +11,7 @@ class MyEvent {
 
 const EventTriggerSystem = createSystem({
     myEvents: WriteEvents(MyEvent),
-    lastEvent: Storage<{ timestamp: number }>({ timestamp: 0 }),
+    lastEvent: Storage({ timestamp: 0 }),
 })
     /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
     .withRunFunction(({myEvents, lastEvent}) => {
