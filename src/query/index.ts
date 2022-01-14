@@ -1,7 +1,7 @@
 import {IAccessQuery, IComponentsQuery, IEntitiesQuery, TExistenceQuery} from "./query.spec";
-import {TObjectProto} from "../../dist/_.spec";
 import {EntitiesQuery} from "./entities-query";
 import {ComponentsQuery} from "./components-query";
+import {TObjectProto} from "../_.spec";
 
 export * from "./query";
 
