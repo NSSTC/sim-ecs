@@ -6,7 +6,7 @@ import {World} from "../world";
 import {TObjectProto} from "../_.spec";
 import {SerDe} from "../serde/serde";
 import {dataStructDeserializer, dataStructSerializer} from "./world-builder.util";
-import {IScheduler, Scheduler} from "../scheduler/scheduler";
+import {IScheduler, Scheduler} from "../scheduler";
 import {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
 import {IIStateProto} from "../state.spec";
 
