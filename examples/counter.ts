@@ -19,33 +19,31 @@ const CounterSystem = createSystem({
     query: queryComponents({
         info: Write(CounterInfo),
     }),
-})
+}).withRunFunction(({actions, query}) => {
     /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
-    .withRunFunction(({actions, query}) => {
-        /// there are two ways to go over the query result:
-        /// 1. you can use regular loops:
-        let info;
-        for ({info} of query.iter()) {
-            info.count++;
+    /// there are two ways to go over the query result:
+    /// 1. you can use regular loops:
+    let info;
+    for ({info} of query.iter()) {
+        info.count++;
 
-            // after every ten steps, write out a log message
-            if (info.count % 10 == 0) {
-                console.log(`The current count is ${info.count} / ${info.limit}!`);
-            }
-
-            // if the limit is reached, set the exit field to true
-            if (info.count == info.limit) {
-                console.log('Time to exit!');
-                actions.commands.stopRun();
-            }
+        // after every ten steps, write out a log message
+        if (info.count % 10 == 0) {
+            console.log(`The current count is ${info.count} / ${info.limit}!`);
         }
 
-        /// 2. at the cost of iteration speed, you can use a callback function, too:
-        // query.execute(({info}) => {
-        //     info.count++;
-        // });
-    })
-    .build();
+        // if the limit is reached, set the exit field to true
+        if (info.count == info.limit) {
+            console.log('Time to exit!');
+            actions.commands.stopRun();
+        }
+    }
+
+    /// 2. at the cost of iteration speed, you can use a callback function, too:
+    // query.execute(({info}) => {
+    //     info.count++;
+    // });
+}).build();
 
 /// then, we need a world which will hold our systems and entities
 const world = buildWorld()
