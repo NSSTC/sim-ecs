@@ -1,17 +1,24 @@
 import {IEventReader} from "./event-reader.spec";
-import {IEventBus} from "./event-bus.spec";
+import {IEventBus, TSubscriber} from "./event-bus.spec";
 import {TObjectProto} from "../_.spec";
 
 export class EventReader<T extends TObjectProto> implements IEventReader<T> {
+    protected _eventHandler: TSubscriber<T> = event => { this.eventCache.push(event) };
     protected eventCache: InstanceType<T>[] = [];
 
     constructor(
         protected bus: IEventBus,
-        protected eventType: T,
+        protected _eventType: T,
     ) {
-        bus.subscribe(eventType, event => {
-            this.eventCache.push(event);
-        });
+        bus.subscribe(_eventType, this._eventHandler);
+    }
+
+    get eventHandler(): TSubscriber<T> {
+        return this._eventHandler;
+    }
+
+    get eventType(): Readonly<T> {
+        return this._eventType;
     }
 
     async execute(handler: (event: InstanceType<T>) => (void | Promise<void>)): Promise<void> {
