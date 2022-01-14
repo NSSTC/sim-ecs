@@ -26,6 +26,7 @@ import {IPipeline} from "./scheduler/pipeline/pipeline.spec";
 import {getQueriesFromSystem, getSystemRunParameters, ISystem} from "./system";
 import {systemRunParamSym} from "./system/_";
 import {clearEntitiesSym, setEntitiesSym} from "./query/_";
+import {EventBus} from "./events/event-bus";
 
 export * from './world.spec';
 
@@ -36,9 +37,11 @@ export class World implements IWorld {
     protected _dirty = false;
     protected _name?: string;
     protected _serde: SerDe;
+    protected _systemWorld: ISystemActions;
     protected currentScheduler?: IScheduler;
     protected currentSchedulerExecutor?: TExecutor;
     public entities: Set<IEntity> = new Set();
+    public readonly eventBus: EventBus = new EventBus();
     protected pda = new PushDownAutomaton<IState>();
     private lastRunPreparation?: IStaticRunConfiguration;
     private groups = {
@@ -52,7 +55,6 @@ export class World implements IWorld {
     protected shouldRunSystems = false;
     protected stateSchedulers: Map<IIStateProto, IScheduler>;
     protected systems = new Set<ISystem>();
-    protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
 
     constructor(options: IWorldConstructorOptions) {
@@ -66,7 +68,7 @@ export class World implements IWorld {
         this._commandsAggregator = new CommandsAggregator(this);
         this._commands = new Commands(this, this._commandsAggregator);
 
-        this.systemWorld = Object.freeze({
+        this._systemWorld = Object.freeze({
             get commands() {
                 return self._commands;
             },
@@ -114,6 +116,10 @@ export class World implements IWorld {
 
     get serde() {
         return this._serde;
+    }
+
+    get systemWorld(): Readonly<ISystemActions> {
+        return this._systemWorld;
     }
 
     addEntity(entity: IEntity) {
@@ -220,7 +226,7 @@ export class World implements IWorld {
     getStageWorld(): IStageAction {
         return {
             systems: this.systems,
-            systemActions: this.systemWorld,
+            systemActions: this._systemWorld,
         };
     }
 
@@ -308,7 +314,7 @@ export class World implements IWorld {
             for (stage of syncPoint.stages) {
                 for (system of stage.systems) {
                     if (!system[systemRunParamSym]) {
-                        system[systemRunParamSym] = getSystemRunParameters(system, this.systemWorld);
+                        system[systemRunParamSym] = getSystemRunParameters(system, this);
                         await system.setupFunction.call(system, system[systemRunParamSym]!);
                         this.systems.add(system);
                     }
