@@ -6,13 +6,32 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "keywords": [
+    "bevy",
+    "code-splitting",
+    "component",
+    "data",
+    "data-driven",
+    "decoupling",
     "ecs",
     "entity",
-    "component",
-    "system",
+    "event",
+    "game",
+    "game-dev",
+    "hecs",
+    "legion",
+    "modularization",
+    "prefab",
+    "scheduler",
+    "scheduling",
     "simulation",
     "sim",
-    "sim-ecs"
+    "sim-ecs",
+    "state",
+    "specs",
+    "splitting",
+    "system",
+    "typescript",
+    "world"
   ],
   "dependencies": {
     "tslib": "^2.3.1"
@@ -36,6 +55,7 @@
     "doc": "typedoc src/index.ts --out docs --includeVersion",
     "coverage": "nyc -r lcov -e .ts -x \"**/*.test.ts\" -x \"**/*.spec.ts\" -x \"src/tests\" npm run test",
     "counter": "ts-node -P tsconfig.json examples/counter.ts",
+    "events": "ts-node -P tsconfig.json examples/events.ts",
     "prepare": "npm run build",
     "test": "mocha -r ts-node/register src/**/*.test.ts"
   }
