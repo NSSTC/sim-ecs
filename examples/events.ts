@@ -11,27 +11,22 @@ class MyEvent {
 
 const EventTriggerSystem = createSystem({
     myEvents: WriteEvents(MyEvent),
-    lastEvent: Storage({ timestamp: 0 }),
-})
-    /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
-    .withRunFunction(async ({myEvents, lastEvent}) => {
-        if (Date.now() - lastEvent.timestamp >= 1000) {
-            await myEvents.publish(new MyEvent('My event just happened!'));
-            lastEvent.timestamp = Date.now();
-        }
-    })
-    .build();
+    lastEvent: Storage({timestamp: 0}),
+}).withRunFunction(async ({myEvents, lastEvent}) => {
+    if (Date.now() - lastEvent.timestamp >= 1000) {
+        await myEvents.publish(new MyEvent('My event just happened!'));
+        lastEvent.timestamp = Date.now();
+    }
+}).build();
 
 const EventListenerSystem = createSystem({
     myEvents: ReadEvents(MyEvent),
-})
-    .withRunFunction(({myEvents}) => {
-        let myEvent;
-        for (myEvent of myEvents.iter()) {
-            console.log(myEvent.message);
-        }
-    })
-    .build();
+}).withRunFunction(({myEvents}) => {
+    let myEvent;
+    for (myEvent of myEvents.iter()) {
+        console.log(myEvent.message);
+    }
+}).build();
 
 
 buildWorld()
