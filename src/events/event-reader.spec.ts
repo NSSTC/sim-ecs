@@ -1,5 +1,5 @@
 import {TObjectProto} from "../_.spec";
-import {TSubscriber} from "./event-bus.spec";
+import {TSubscriber} from "./_";
 
 export interface IEventReader<T extends TObjectProto> {
     readonly eventHandler: TSubscriber<T>

@@ -1,6 +1,6 @@
 import {IEntity, TTag} from "./entity.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
-import {registerEntity} from "./ecs";
+import {registerEntity} from "./ecs/ecs-entity";
 
 export * from './entity.spec';
 

@@ -5,7 +5,7 @@ import {
     ISerDeDataSet,
     ISerDeOperations,
     TCustomDeserializer,
-    TDeserializer, TEntity,
+    TDeserializer,
     TSerDeOptions,
     TSerializer
 } from "./serde.spec";
@@ -14,6 +14,7 @@ import {SerialFormat} from "./serial-format";
 import {IEntity, TTag} from "../entity.spec";
 import {getDefaultDeserializer, getDefaultSerializer} from "./default-handlers";
 import {Entity} from "../entity";
+import {TEntity} from "./_";
 
 export * from "./serde.spec";
 

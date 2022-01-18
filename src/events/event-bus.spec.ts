@@ -1,8 +1,7 @@
 import {TObjectProto} from "../_.spec";
 import {IEventReader} from "./event-reader.spec";
 import {IEventWriter} from "./event-writer.spec";
-
-export type TSubscriber<T extends TObjectProto> = (event: InstanceType<T>) => Promise<void> | void;
+import {TSubscriber} from "./_";
 
 export interface IEventBus {
     createReader<T extends TObjectProto>(Event: T): IEventReader<T>

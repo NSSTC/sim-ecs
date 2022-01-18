@@ -48,7 +48,7 @@ export class Commands implements ICommands {
     }
 
     buildEntity(): CommandEntityBuilder {
-        return new CommandEntityBuilder(this);
+        return new CommandEntityBuilder(this.world, this.aggregator);
     }
 
     clearEntities(): void {

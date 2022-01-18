@@ -1,4 +1,4 @@
-export * from './ecs';
+export * from './ecs/ecs-world';
 export * from './entity';
 export * from './entity-builder';
 export * from './query';

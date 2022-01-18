@@ -1,5 +1,5 @@
 import {ISerialFormat} from "./serial-format.spec";
-import {TEntity} from "./serde.spec";
+import {TEntity} from "./_";
 
 export * from "./serial-format.spec";
 

@@ -4,7 +4,7 @@ import {
 } from "./world-builder.spec";
 import {World} from "../world";
 import {TObjectProto} from "../_.spec";
-import {SerDe} from "../serde";
+import {ISerDe} from "../serde";
 import {dataStructDeserializer, dataStructSerializer} from "./world-builder.util";
 import {IScheduler, Scheduler} from "../scheduler";
 import {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
@@ -17,8 +17,11 @@ export class WorldBuilder implements IWorldBuilder {
     protected callbacks: Set<(world: World) => void> = new Set();
     protected name?: string;
     protected defaultScheduler: IScheduler = new Scheduler();
-    protected serde = new SerDe();
     protected stateSchedulers = new Map<IIStateProto, IScheduler>();
+
+    constructor(
+        protected serde: ISerDe,
+    ) {}
 
     addCallback(cb: (world: World) => void): WorldBuilder {
         this.callbacks.add(cb);
