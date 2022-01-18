@@ -1,7 +1,6 @@
 import {IEntity} from "../entity.spec";
 import {TTypeProto} from "../_.spec";
-import {ISerialFormat} from "../serde/serial-format.spec";
-import {TDeserializer, TSerDeOptions} from "../serde/serde.spec";
+import {TDeserializer, TSerDeOptions, ISerialFormat} from "../serde";
 import {IWorld, TGroupHandle} from "../world.spec";
 import {IIStateProto} from "../state.spec";
 import {ICommandEntityBuilder} from "./command-entity-builder.spec";
