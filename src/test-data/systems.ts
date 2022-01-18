@@ -1,25 +1,15 @@
-import {System} from "../system";
+import {Actions, createSystem} from "../system";
 import {C1} from "./components";
-import {Query, Write} from "../query/query";
+import {Write} from "../query";
+import {queryComponents} from "../query";
+import {ISystemActions} from "../world.spec";
 
-export class S1 extends System {
-    readonly query = new Query({ c1: Write(C1) });
+export const S1 = (handler?: (c1:C1)=>void) => createSystem({
+    query: queryComponents({ c1: Write(C1) })
+}).withRunFunction(({query}) => {
+    return query.execute(({c1}) => handler?.(c1));
+}).build();
 
-    constructor(public handler?: (data: { c1: C1 }) => void) {
-        super();
-    }
-
-    run() {
-        this.query.execute(entry => this.handler?.(entry));
-    }
-}
-
-export class S2 extends System {
-    constructor(public handler?: () => void) {
-        super();
-    }
-
-    run() {
-        this.handler?.();
-    }
-}
+export const S2 = (handler?: (actions: ISystemActions)=>void) => createSystem({ actions: Actions })
+    .withRunFunction(({actions}) => handler?.(actions))
+    .build();
