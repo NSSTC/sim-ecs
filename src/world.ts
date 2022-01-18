@@ -12,10 +12,8 @@ import {IEntity} from "./entity.spec";
 import {IState, State, IIStateProto} from "./state";
 import {TExecutor, TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
-import {SerDe, TDeserializer, TSerDeOptions, TSerializer} from "./serde/serde";
-import {ISerialFormat} from "./serde/serial-format";
-import {Commands} from "./commands/commands";
-import {CommandsAggregator} from "./commands/commands-aggregator";
+import {ISerialFormat, SerDe, TDeserializer, TSerDeOptions, TSerializer} from "./serde";
+import {Commands, CommandsAggregator} from "./commands";
 import {
     IAccessDescriptor,
     IQuery,

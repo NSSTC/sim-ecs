@@ -1,6 +1,6 @@
 import IWorld from "../world.spec";
 import {TObjectProto} from "../_.spec";
-import {ISerDeOperations} from "../serde/serde.spec";
+import {ISerDeOperations} from "../serde";
 import {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
 import {IScheduler} from "../scheduler";
 import {IIStateProto} from "../state.spec";

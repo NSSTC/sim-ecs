@@ -3,11 +3,9 @@ import {ISystem} from "./system";
 import {IIStateProto, IState} from "./state.spec";
 import {TTypeProto} from "./_.spec";
 import {IAccessDescriptor, IEntitiesQuery} from "./query";
-import {ISerDe, TSerDeOptions, TSerializer} from "./serde/serde.spec";
-import {ISerialFormat} from "./serde/serial-format.spec";
-import {ICommands} from "./commands/commands.spec";
+import {ISerDe, ISerialFormat, SerDe, TSerDeOptions, TSerializer} from "./serde";
+import {ICommands} from "./commands";
 import IEntityBuilder from "./entity-builder.spec";
-import {SerDe} from "./serde/serde";
 import {IScheduler} from "./scheduler";
 
 export type TExecutionFunction = ((callback: Function) => any) | typeof setTimeout | typeof requestAnimationFrame;
