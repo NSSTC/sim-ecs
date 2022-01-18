@@ -1,5 +1,5 @@
-import {assert} from 'chai';
-import {Query, Read, ReadEntity, Write} from "./query";
+import {Read, ReadEntity, Write} from "./query";
+import {queryComponents} from "./index";
 
 class Component {
     health = 100
@@ -7,7 +7,7 @@ class Component {
 
 describe('Test Query', () => {
     it('pop', () => {
-        const query = new Query({
+        const query = queryComponents({
             entity: ReadEntity(),
             testR: Read(Component),
             testW: Write(Component),

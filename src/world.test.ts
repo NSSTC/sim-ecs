@@ -1,11 +1,10 @@
 import {assert} from "chai";
 import * as Components from "./test-data/components";
 import * as Systems from "./test-data/systems";
-import IWorld from "./world.spec";
+import IWorld, {ISystemActions} from "./world.spec";
 import {World} from "./world";
 import {buildWorld} from "./ecs";
 import {C1} from "./test-data/components";
-import {ISystem} from "./system.spec";
 
 
 describe('Manage Resources', () => {
@@ -44,17 +43,12 @@ describe('Build Entities', () => {
 });
 
 describe('Run Systems', () => {
-    const op = (data: { c1: C1 }) => {
-        data.c1.a++;
+    const op = (c1: C1 ) => {
+        c1.a++;
     }
 
-    it('register', () => {
-        const world = buildWorld().withSystem(Systems.S1).build();
-        assert.equal(world.systemInfos.size, 1, 'System was not registered');
-    });
-
     it('dispatch', async () => {
-        const world = buildWorld().withSystem(Systems.S1.bind(undefined, op)).build();
+        const world = buildWorld().withDefaultScheduling(root => root.addNewStage(stage => stage.addSystem(Systems.S1(op)))).build();
         const entity = world.buildEntity().with(Components.C1).build();
         const c1 = entity.getComponent(Components.C1);
 
@@ -67,7 +61,7 @@ describe('Run Systems', () => {
     });
 
     it('run', async () => {
-        const world = buildWorld().withSystem(Systems.S1.bind(undefined, op)).build();
+        const world = buildWorld().withDefaultScheduling(root => root.addNewStage(stage => stage.addSystem(Systems.S1(op)))).build();
         const entity = world.buildEntity().with(Components.C1).build();
         const c1 = entity.getComponent(Components.C1);
         let runFinished = false;
@@ -97,21 +91,22 @@ describe('Delete Entities', () => {
     });
 
     it('delete during run', async () => {
-        const world = buildWorld().withSystem(new Systems.S2() as ISystem).build();
+        const op = (actions: ISystemActions) => {
+            if (counter == 0) {
+                counter++;
+                actions.commands.removeEntity(entity);
+            }
+            else {
+                actions.commands.stopRun();
+            }
+        };
+        const world = buildWorld().withDefaultScheduling(root => root.addNewStage(stage => stage.addSystem(Systems.S2(op)))).build();
         const entity = world.buildEntity().with(Components.C1).build();
 
         await world.run({
-            afterStepHandler: async actions => {
-                if (counter == 0) {
-                    counter++;
-                    actions.commands.removeEntity(entity);
-                }
-                else {
-                    actions.commands.stopRun();
-                }
-            }
+            // this helps speed up the test by executing the loop in a blocking way
+            executionFunction: (fn: Function) => fn(),
         });
-
         assert.equal(Array.from(world.getEntities()).length, 0, 'Did not remove entity');
     });
 });
