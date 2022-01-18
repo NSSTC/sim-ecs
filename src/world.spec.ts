@@ -3,7 +3,7 @@ import {ISystem} from "./system";
 import {IIStateProto, IState} from "./state.spec";
 import {TTypeProto} from "./_.spec";
 import {IAccessDescriptor, IEntitiesQuery} from "./query";
-import {ISerDe, ISerialFormat, SerDe, TSerDeOptions, TSerializer} from "./serde";
+import {ISerDe, ISerialFormat, TSerDeOptions, TSerializer} from "./serde";
 import {ICommands} from "./commands";
 import IEntityBuilder from "./entity-builder.spec";
 import {IScheduler} from "./scheduler";
@@ -31,7 +31,7 @@ export interface IWorldConstructorOptions {
     name?: string
     defaultScheduler: IScheduler
     stateSchedulers: Map<IIStateProto, IScheduler>
-    serde?: SerDe
+    serde?: ISerDe
 }
 
 export interface IPartialWorld {

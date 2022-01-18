@@ -5,7 +5,6 @@ import {ISerialFormat} from "./serial-format.spec";
 /// stores the constructor name and the data blob on indices 0 and 1 accordingly
 export type TCustomDeserializer = (data: unknown) => Object;
 export type TDeserializer = (constructorName: string, data: unknown) => Object;
-export type TEntity = { [componentName: string]: unknown }
 export type TSerDeOptions<T> = {
     fallbackHandler?: T,
     useDefaultHandler?: boolean,

@@ -1,10 +1,8 @@
 import {Entity} from "./entity";
 import {EntityBuilder} from "./entity-builder";
 import {
-    IRunConfiguration, IStageAction,
+    IRunConfiguration,
     IStaticRunConfiguration,
-    ISystemActions,
-    ITransitionActions,
     IWorld, IWorldConstructorOptions,
     TGroupHandle
 } from "./world.spec";
@@ -12,7 +10,7 @@ import {IEntity} from "./entity.spec";
 import {IState, State, IIStateProto} from "./state";
 import {TExecutor, TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
-import {ISerialFormat, SerDe, TDeserializer, TSerDeOptions, TSerializer} from "./serde";
+import {ISerDe, ISerialFormat, SerDe, TDeserializer, TSerDeOptions, TSerializer} from "./serde";
 import {Commands, CommandsAggregator} from "./commands";
 import {
     IAccessDescriptor,
@@ -26,6 +24,7 @@ import {systemRunParamSym} from "./system/_";
 import {clearEntitiesSym, setEntitiesSym} from "./query/_";
 import {EventBus} from "./events/event-bus";
 import {EventReader} from "./events/event-reader";
+import {IStageAction, ISystemActions, ITransitionActions} from "./world.spec";
 
 export * from './world.spec';
 
@@ -35,7 +34,7 @@ export class World implements IWorld {
     protected _commands: Commands;
     protected _dirty = false;
     protected _name?: string;
-    protected _serde: SerDe;
+    protected _serde: ISerDe;
     protected _systemWorld: ISystemActions;
     protected currentScheduler?: IScheduler;
     protected currentSchedulerExecutor?: TExecutor;

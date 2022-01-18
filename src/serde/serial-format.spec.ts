@@ -1,4 +1,4 @@
-import {TEntity} from "./serde.spec";
+import {TEntity} from "./_";
 
 export interface ISerialFormat extends Array<TEntity> {
     /**

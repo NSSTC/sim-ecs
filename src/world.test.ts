@@ -3,7 +3,7 @@ import * as Components from "./test-data/components";
 import * as Systems from "./test-data/systems";
 import IWorld, {ISystemActions} from "./world.spec";
 import {World} from "./world";
-import {buildWorld} from "./ecs";
+import {buildWorld} from "./ecs/ecs-world";
 import {C1} from "./test-data/components";
 
 
