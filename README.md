@@ -395,47 +395,39 @@ Platform: Windows_NT win32 x64 v10.0.19043
 CPU: AMD Ryzen 7 3700X 8-Core Processor@3600MHz
 
 Bench           v0.2.0
-TypeScript      v4.4.3
+TypeScript      v4.5.4
 TS-Lib          v2.3.1
-TS-Node         v10.2.1
+TS-Node         v10.4.0
 
 Ape-ECS         v1.3.1
-bitecs          v0.3.21-5
+bitecs          v0.3.34
 sim-ecs         v0.5.0
 tick-knock      v4.0.2
 
 
  Default Suite / Simple Insert
 --------------------------------
-    Ape-ECS 75 ops/s ± 1.3%
-    bitecs 8333 ops/s ± 1.8%
-    sim-ecs 352 ops/s ± 0.85%
-    tick-knock 562 ops/s ± 0.95%
+    Ape-ECS 80 ops/s ± 0.90%
+    bitecs 5000 ops/s ± 1.8%
+    sim-ecs 325 ops/s ± 0.78%
+    tick-knock 556 ops/s ± 0.94%
 
 
 
  Default Suite / Simple Iter
 --------------------------------
-    Ape-ECS 166 ops/s ± 0.15%
-    bitecs Infinity ops/s ± NaN%
-    sim-ecs Infinity ops/s ± NaN%
-    sim-ecs CB 25000 ops/s ± 1.9%
-    tick-knock 32 ops/s ± 0.17%
-
-
-
- Default Suite / Schedule
---------------------------------
-    bitecs 30 ops/s ± 0.029%
-    sim-ecs 1000 ops/s ± 0.0%
-    sim-ecs CB 70 ops/s ± 0.17%
+    Ape-ECS 166 ops/s ± 0.28%
+    bitecs 50000 ops/s ± 1.029%
+    sim-ecs 25000 ops/s ± 0.013%
+    tick-knock 30 ops/s ± 0.11%
 
 
 
  Default Suite / Serialize
 --------------------------------
 Ape-ECS SerializeSave file size: 450.1962890625 KB
-    Ape-ECS 56 ops/s ± 1.2%
+    Ape-ECS 66 ops/s ± 1.2%
 sim-ecs SerializeSave file size: 67.3837890625 KB
-    sim-ecs 127 ops/s ± 1.4%
+    sim-ecs 95 ops/s ± 1.6%
+
 ```

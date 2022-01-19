@@ -1,4 +1,4 @@
-import {buildWorld, ISystemActions, Query, Read, System, World, Write} from '../../../../../src';
+import {buildWorld, createSystem, queryComponents, Read, World, Write} from '../../../../../src';
 import {IBenchmark} from "../../benchmark.spec";
 import {CheckEndSystem, CounterResource} from "./_";
 
@@ -17,19 +17,18 @@ class Velocity {
 }
 
 
-class SimpleIterSystem extends System {
-    query = new Query({
+const SimpleIterSystem = createSystem({
+    query: queryComponents({
         pos: Write(Position),
         vel: Read(Velocity)
-    });
-
-    run(actions: ISystemActions) {
-        let pos, vel;
-        for ({pos, vel} of this.query.iter()) {
-            pos.x += vel.x;
-        }
+    })
+}).withRunFunction(({query}) => {
+    let pos, vel;
+    for ({pos, vel} of query.iter()) {
+        pos.x += vel.x;
     }
-}
+}).build();
+
 
 export class Benchmark implements IBenchmark {
     readonly name = 'sim-ecs';
