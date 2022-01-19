@@ -1,4 +1,4 @@
-import {ISystemActions, System} from "../../../../../src";
+import {Actions, createSystem, WriteResource, ISystemActions} from "../../../../../src";
 
 export class CounterResource {
     count = 0
@@ -8,16 +8,12 @@ export class CounterResource {
     ) {}
 }
 
-export class CheckEndSystem extends System {
-    protected counter!: CounterResource;
-
-    setup(actions: ISystemActions): void | Promise<void> {
-        this.counter = actions.getResource(CounterResource);
+export const CheckEndSystem = createSystem({
+    actions: Actions,
+    counter: WriteResource(CounterResource),
+}).withRunFunction(({actions, counter}) => {
+    if (counter.count++ >= counter.requiredIterCount) {
+        actions.commands.stopRun();
     }
+}).build();
 
-    run(actions: ISystemActions): void {
-        if (this.counter.count++ >= this.counter.requiredIterCount) {
-            actions.commands.stopRun();
-        }
-    }
-}

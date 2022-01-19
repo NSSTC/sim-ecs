@@ -1,4 +1,4 @@
-import {buildWorld, ISystemActions, Query, System, World, Write} from '../../../../../src';
+import {buildWorld, createSystem, queryComponents, World, Write} from '../../../../../src';
 import {IBenchmark} from "../../benchmark.spec";
 import {CheckEndSystem, CounterResource} from "./_";
 
@@ -9,47 +9,43 @@ class D { constructor(public val: number) {} }
 class E { constructor(public val: number) {} }
 
 
-class ABSystem extends System {
-    query = new Query({
+const ABSystem = createSystem({
+    query: queryComponents({
         a: Write(A),
         b: Write(B)
-    });
-
-    run(actions: ISystemActions) {
-        let a, b;
-        for ({a, b} of this.query.iter()) {
-            [a.val, b.val] = [b.val, a.val];
-        }
+    })
+}).withRunFunction(({query}) => {
+    let a, b;
+    for ({a, b} of query.iter()) {
+        [a.val, b.val] = [b.val, a.val];
     }
-}
+}).build();
 
-class CDSystem extends System {
-    query = new Query({
+
+const CDSystem = createSystem({
+    query: queryComponents({
         c: Write(C),
         d: Write(D)
-    });
-
-    run(actions: ISystemActions) {
-        let c, d;
-        for ({c, d} of this.query.iter()) {
-            [c.val, d.val] = [d.val, c.val];
-        }
+    })
+}).withRunFunction(({query}) => {
+    let c, d;
+    for ({c, d} of query.iter()) {
+        [c.val, d.val] = [d.val, c.val];
     }
-}
+}).build();
 
-class CESystem extends System {
-    query = new Query({
+const CESystem = createSystem({
+    query: queryComponents({
         c: Write(C),
         e: Write(E)
-    });
-
-    run(actions: ISystemActions) {
-        let c, e;
-        for ({c, e} of this.query.iter()) {
-            [c.val, e.val] = [e.val, c.val];
-        }
+    })
+}).withRunFunction(({query}) => {
+    let c, e;
+    for ({c, e} of query.iter()) {
+        [c.val, e.val] = [e.val, c.val];
     }
-}
+}).build();
+
 
 export class Benchmark implements IBenchmark {
     readonly name = 'sim-ecs';
@@ -115,7 +111,7 @@ export class Benchmark implements IBenchmark {
     }
 
     reset() {
-        this.count = 0;
+        this.world.getResource(CounterResource).count = 0;
     }
 
     async init(): Promise<void> {

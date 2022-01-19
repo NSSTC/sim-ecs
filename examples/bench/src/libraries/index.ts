@@ -7,9 +7,8 @@ import {IBenchmarkConstructor} from "../benchmark.spec";
 
 export const scheduleBenchmarks: IBenchmarkConstructor[] = [
     //ApeECS.Schedule,
-    BitECS.Schedule,
-    SimECS.Schedule,
-    SimECS.Schedule_CB,
+    //BitECS.Schedule,
+    //SimECS.Schedule,
     //TickKnock.Schedule,
 ];
 
@@ -29,6 +28,5 @@ export const simpleIterBenchmarks: IBenchmarkConstructor[] = [
     ApeECS.SimpleIter,
     BitECS.SimpleIter,
     SimECS.SimpleIter,
-    SimECS.SimpleIter_CB,
     TickKnock.SimpleIter,
 ];
