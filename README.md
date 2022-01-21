@@ -58,7 +58,7 @@ or for a game directly.
 
 ## Examples
 
-For quickly seeing the ECS in action, there are two examples available: A counter and a game of Pong.
+For quickly seeing the ECS in action, there are several examples available.
 You can find them in the `/examples` directory.
 
 
@@ -69,6 +69,16 @@ It increases a number a few times and then terminates. You can run it using:
 
 ```
 $ npm run counter
+``` 
+
+
+### Events
+
+The events example demonstrates how to use the event bus to write and read events.
+It will print a message every second and can be executed with:
+
+```
+$ npm run events
 ``` 
 
 
@@ -100,7 +110,7 @@ const world = buildWorld().build();
 
 ## Scheduling a run
 
-In sim-ecs, a run has to be planned ahead. This is done by giving a developer the means to pu systems into stages
+In sim-ecs, a run has to be planned ahead. This is done by giving a developer the means to put systems into stages
 and then decide in which order stages should run and if they run in parallel.
 
 One thing to add is that a pipeline, which contains the entire program order, is made up of "Sync Points". These
@@ -187,27 +197,6 @@ If no state is passed to the dispatcher, all systems are run by default.
 While the world is running (using `run()`), the state can be changed using commands.
 Single calls to `dispatch()` do not offer the benefits of a PDA.
 
-```typescript
-class GameState extends State {
-    activate() {
-        console.log('Game State is active, now!');
-    }
-    
-    deactivate() {
-        console.log('Game State is inactive, now!');
-    }
-}
-
-class GameSystem extends System {
-    readonly query = new Query({ /* ... */ });
-    readonly states = [GameState];
-    
-    run() { /* ... */ }
-}
-
-world.dispatch(GameState);
-world.run({ initialState: GameState });
-``` 
 
 ## Update loop
 
