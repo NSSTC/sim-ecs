@@ -48,6 +48,13 @@ Sim-ecs was created out of the lack of a fast, featured ECS library for TypeScri
 the requirements in a big, agile game project. While there are other ECS libraries available,
 they do not necessarily cater to that goal and will have short-comings in such an environment.
 
+Sim-ecs comes with batteries included to make sure everything fits together and is simple to use.
+The focus is on developer-friendliness (by supporting full type/intention support in the IDE),
+support for a variety of scenarios and performance.
+
+Since sim-ecs implements many bevy-ecs RFCs, it is very featured and modern. It can be used inside a generic game engine
+or for a game directly.
+
 
 ## Examples
 
@@ -135,9 +142,7 @@ const CountSystem = createSystem({
 })
     // this function is called every time the world needs to be updated. Put your logic in there
     .withRunFunction(({query}) => 
-        query.execute(({counterObj}) => 
-            console.log(++counterObj.a)
-        )
+        query.execute(({counterObj}) => console.log(++counterObj.a))
     )
     .build();
 ```
@@ -156,7 +161,7 @@ class Counter {
 ```
 
 In case you have advanced components, it is possible to pass a serializer and deserializer
-to the entity builder later on. If you don't do so, it is assumed that the component is a simple key:value map.
+to the entity builder later on. If you don't do so, it is assumed that the component is a simple data struct.
 You can also use a default-type de-/serializer on save/load, which allows for a variety of standard types (such as `Date`) as components.
 
 
@@ -220,15 +225,15 @@ update();
 
 However, sim-ecs has to do a lot of calculations on each dispatch,
 so it offers its own `run()` method, which is optimized for continuously executing the system logic.
-It is the recommended way of running the ECS for simulations!
+**This is the recommended way of running the ECS for simulations:**
 
 ```typescript
 world.run();
 ```
 
 The run-method can be fed an options object to further configure the runner,
-and from within a transition-handler or the systems, certain actions can be called
-which influence how the runner acts. For example on transition, the state can be changed.
+and from within the systems, certain actions can be called
+which influence how the runner acts. For example the state can be changed.
 
 
 ## Commands
@@ -345,7 +350,7 @@ const syncedEntity = world.buildEntity(entityId).build();
 // in order to fetch an entity with a given ID, the ECS's function can be used
 const entityFromIdGetter = getEntity(entityId);
 // or inside a Query:
-const {entityFromIdQuery} = queryComponents({ entityFromIdQuery: ReadEntity(entityId) }).getOne();
+const {entityFromIdQuery} = queryComponents({ entityFromIdQuery: ReadEntity(entityId) }).getFirst();
 ```
 
 
@@ -366,16 +371,16 @@ Please open a PR for any improvement!
 
 ### Features
 
-| Feature | sim-ecs | bitecs | tick-knock | ape-ecs |
-| ---: | :---: | :---: | :---: | :---: |
-| Data first | x | x* | | |
-| Full typing/intention support | x | | x | | 
-| Everything can be used as a Component | x | | x | |
-| Consistency check at transpile time (thanks to typing) | x | | | | 
-| Full async-support | x | | | |
-| Save / Load world | x | | | x |
-| Full prefab support | x | | | |
-| State Management | x | | | |
+|                                                       Feature | sim-ecs | bitecs | tick-knock | ape-ecs |
+|--------------------------------------------------------------:| :---: | :---: | :---: | :---: |
+|                                                    Data first | x | x* | | |
+| Batteries included (Prefabs, Events, Complex Scheduler, etc.) | x | | | |
+|                                 Full typing/intention support | x | | x | | 
+|                         Everything can be used as a Component | x | | x | |
+|        Consistency check at transpile time (thanks to typing) | x | | | | 
+|                                            Full async-support | x | | | |
+|                                             Save / Load world | x | | | x |
+|                                              State Management | x | | | |
 
 \* only works with numeric fields on components
 
@@ -384,7 +389,7 @@ Please open a PR for any improvement!
 Please take the results with a grain of salt. These are benchmarks, so they are synthetic.
 An actual application will use a mix out of everything and more, and depending on that may have a different experience.
 
-Date: 25th September 2021
+Date: 19th January 2022
 
 ```
 --------------------------------------------------------------------------------

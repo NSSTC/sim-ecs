@@ -8,12 +8,12 @@ class CounterInfo {
     limit = 100;
 }
 
-/// systems process data. We declare what kind of input we need in the above Data struct,
+/// systems process data. We declare what kind of input we need in the struct below,
 /// and then define the processing code here
 const CounterSystem = createSystem({
-    /// The actions interface allows
+    /// The Actions interface allows access to world-operations, like adding entities or changing the state
     actions: Actions,
-    /// our data-structure we want to use to interact with the world
+    /// the query to get all matching entities
     /// we can define our own fields. The value is either Write() or Read() of a specific prototype.
     /// the fields will be filled with actual objects of the given prototypes during system execution
     query: queryComponents({
