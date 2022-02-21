@@ -1,8 +1,8 @@
-import {IAccessQuery, IComponentsQuery, IEntitiesQuery} from "../query";
-import {TObjectProto, TTypeProto} from "../_.spec";
-import {ISystemActions} from "../world.spec";
+import type {IAccessQuery, IComponentsQuery, IEntitiesQuery} from "../query";
+import type {TObjectProto, TTypeProto} from "../_.spec";
+import type {ISystemActions} from "../world.spec";
 import {systemEventReaderSym, systemEventWriterSym, systemResourceTypeSym, systemRunParamSym} from "./_";
-import {IEventReader, IEventWriter} from "../events";
+import type {IEventReader, IEventWriter} from "../events";
 
 export type TSystemParameter =
     IEntitiesQuery
@@ -16,6 +16,7 @@ export type TSystemFunction<PDESC extends TSystemParameterDesc> = (params: PDESC
 
 export interface ISystem<PDESC extends TSystemParameterDesc = TSystemParameterDesc> {
     [systemRunParamSym]?: PDESC
+    readonly name: string
     readonly parameterDesc: PDESC
     readonly runFunction: TSystemFunction<PDESC>
     readonly setupFunction: TSystemFunction<PDESC>

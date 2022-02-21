@@ -19,31 +19,36 @@ const CounterSystem = createSystem({
     query: queryComponents({
         info: Write(CounterInfo),
     }),
-}).withRunFunction(({actions, query}) => {
+})
+    /// it is useful to also give every System a unique name,
+    /// which will show up in error messages and help during debugging
+    .withName('CounterSystem')
     /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
-    /// there are two ways to go over the query result:
-    /// 1. you can use regular loops:
-    let info;
-    for ({info} of query.iter()) {
-        info.count++;
+    .withRunFunction(({actions, query}) => {
+        /// there are two ways to go over the query result:
+        /// 1. you can use regular loops:
+        let info;
+        for ({info} of query.iter()) {
+            info.count++;
 
-        // after every ten steps, write out a log message
-        if (info.count % 10 == 0) {
-            console.log(`The current count is ${info.count} / ${info.limit}!`);
+            // after every ten steps, write out a log message
+            if (info.count % 10 == 0) {
+                console.log(`The current count is ${info.count} / ${info.limit}!`);
+            }
+
+            // if the limit is reached, set the exit field to true
+            if (info.count == info.limit) {
+                console.log('Time to exit!');
+                actions.commands.stopRun();
+            }
         }
 
-        // if the limit is reached, set the exit field to true
-        if (info.count == info.limit) {
-            console.log('Time to exit!');
-            actions.commands.stopRun();
-        }
-    }
-
-    /// 2. at the cost of iteration speed, you can use a callback function, too:
-    // query.execute(({info}) => {
-    //     info.count++;
-    // });
-}).build();
+        /// 2. at the cost of iteration speed, you can use a callback function, too:
+        // query.execute(({info}) => {
+        //     info.count++;
+        // });
+    })
+    .build();
 
 /// then, we need a world which will hold our systems and entities
 const world = buildWorld()

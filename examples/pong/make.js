@@ -152,7 +152,7 @@ const log = (...strs) => console.log.apply(console.log, ['[make]'].concat(strs))
 
         const handler = (err, stats) => { // Stats Object
             if (err || stats.hasErrors()) {
-                rej({err, further: stats.compilation.errors});
+                rej({err, further: stats.compilation.systemErrors});
                 return;
             }
 

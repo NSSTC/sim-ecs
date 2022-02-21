@@ -1,16 +1,17 @@
-import {
-    Actions,
+import type {
     ISystem,
     ISystemResource,
-    Storage,
     TSystemParameter,
     TSystemParameterDesc,
 } from "./system.spec";
-import {ISystemBuilder, SystemBuilder} from "./system-builder";
-import {IQuery, Query} from "../query";
-import {TObjectProto} from "../_.spec";
+import {Actions, Storage} from "./system.spec";
+import {SystemBuilder} from "./system-builder";
+import type {IQuery} from "../query";
+import {Query} from "../query";
+import type {TObjectProto} from "../_.spec";
 import {systemEventReaderSym, systemEventWriterSym, systemResourceTypeSym} from "./_";
-import {World} from "../world";
+import type {World} from "../world";
+import type {ISystemBuilder} from "./system-builder.spec";
 
 
 export * from "./system.spec";
