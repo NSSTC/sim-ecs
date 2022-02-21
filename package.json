@@ -37,26 +37,34 @@
     "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.0",
-    "@types/mocha": "^9.0.0",
-    "chai": "^4.3.4",
-    "mocha": "^9.1.3",
-    "nyc": "^15.1.0",
-    "ts-node": "^10.4.0",
-    "typedoc": "^0.22.10",
-    "typescript": "^4.5.4"
+    "@types/chai": "~4.3.0",
+    "@types/mocha": "~9.1.0",
+    "chai": "~4.3.6",
+    "madge": "~5.0.1",
+    "mocha": "~9.2.1",
+    "nyc": "~15.1.0",
+    "ts-node": "~10.5.0",
+    "typedoc": "~0.22.12",
+    "typescript": "^4.5.5"
   },
   "files": [
     "dist"
   ],
   "scripts": {
+    "prebuild": "npm run loop-test-ts",
+
     "bench": "cd examples/bench && npm run bench",
     "build": "tsc --project . && npm run doc",
     "doc": "typedoc src/index.ts --out docs --includeVersion",
     "coverage": "nyc -r lcov -e .ts -x \"**/*.test.ts\" -x \"**/*.spec.ts\" -x \"src/tests\" npm run test",
-    "counter": "ts-node -P tsconfig.json examples/counter.ts",
-    "events": "ts-node -P tsconfig.json examples/events.ts",
+    "example-counter": "ts-node -P tsconfig.json examples/counter.ts",
+    "example-system-error": "ts-node -P tsconfig.json examples/system-error.ts",
+    "example-events": "ts-node -P tsconfig.json examples/events.ts",
+    "loop-test-js": "madge -c .",
+    "loop-test-ts": "madge -c  --extensions ts --warning --orphans ./src",
     "prepare": "npm run build",
-    "test": "mocha -r ts-node/register src/**/*.test.ts"
+    "test": "mocha -r ts-node/register src/**/*.test.ts",
+
+    "postbuild": "npm run loop-test-js"
   }
 }
