@@ -1,30 +1,34 @@
 import {Entity} from "./entity";
 import {EntityBuilder} from "./entity-builder";
-import {
+import type {
     IRunConfiguration,
     IStaticRunConfiguration,
-    IWorld, IWorldConstructorOptions,
+    IWorld,
+    IWorldConstructorOptions,
     TGroupHandle
 } from "./world.spec";
-import {IEntity} from "./entity.spec";
-import {IState, State, IIStateProto} from "./state";
-import {TExecutor, TTypeProto} from "./_.spec";
+import type {IEntity} from "./entity.spec";
+import type {IState, IIStateProto} from "./state";
+import {State} from "./state";
+import type {TExecutor, TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
-import {ISerDe, ISerialFormat, SerDe, TDeserializer, TSerDeOptions, TSerializer} from "./serde";
+import type {ISerDe, ISerialFormat, TDeserializer, TSerDeOptions, TSerializer} from "./serde";
+import {SerDe} from "./serde";
 import {Commands, CommandsAggregator} from "./commands";
-import {
+import type {
     IAccessDescriptor,
     IQuery,
     IEntitiesQuery,
 } from "./query";
-import {IScheduler} from "./scheduler";
-import {IPipeline} from "./scheduler/pipeline/pipeline.spec";
-import {getQueriesFromSystem, getSystemRunParameters, ISystem} from "./system";
+import type {IScheduler} from "./scheduler";
+import type {IPipeline} from "./scheduler/pipeline/pipeline.spec";
+import type {ISystem} from "./system";
+import {getQueriesFromSystem, getSystemRunParameters} from "./system";
 import {systemRunParamSym} from "./system/_";
 import {clearEntitiesSym, setEntitiesSym} from "./query/_";
 import {EventBus} from "./events/event-bus";
 import {EventReader} from "./events/event-reader";
-import {IStageAction, ISystemActions, ITransitionActions} from "./world.spec";
+import type {IStageAction, ISystemActions, ITransitionActions} from "./world.spec";
 
 export * from './world.spec';
 
@@ -283,7 +287,7 @@ export class World implements IWorld {
         await newState.activate(this.transitionWorld);
         this.currentScheduler = this.stateSchedulers.get(newState.constructor as IIStateProto) ?? this.defaultScheduler;
         await this.preparePipeline(this.currentScheduler.pipeline);
-        this.currentSchedulerExecutor = this.currentScheduler.getExecutor(this.getStageWorld());
+        this.currentSchedulerExecutor = this.currentScheduler.getExecutor(this);
         this.subscribeEventsOfSchedulerSystems(this.currentScheduler);
     }
 
@@ -305,7 +309,7 @@ export class World implements IWorld {
             throw new Error(`There is no DefaultScheduler or Scheduler for ${NewState.name}!`);
         }
 
-        this.currentSchedulerExecutor = this.currentScheduler.getExecutor(this.getStageWorld());
+        this.currentSchedulerExecutor = this.currentScheduler.getExecutor(this);
         this.subscribeEventsOfSchedulerSystems(this.currentScheduler);
     }
 
@@ -440,7 +444,7 @@ export class World implements IWorld {
 
             {
                 const execFn = preparedConfig.executionFunction;
-                this.currentSchedulerExecutor = this.currentScheduler!.getExecutor(this.getStageWorld());
+                this.currentSchedulerExecutor = this.currentScheduler!.getExecutor(this);
 
                 const cleanUp = async () => {
                     await this.pda.state?.deactivate(this.transitionWorld);
@@ -458,8 +462,26 @@ export class World implements IWorld {
                         return;
                     }
 
-                    await this.currentSchedulerExecutor!();
-                    await this._commandsAggregator.executeAll();
+                    try {
+                        await this.currentSchedulerExecutor!();
+                    } catch (error) {
+                        if (typeof error == 'object' && error != null) {
+                            await this.eventBus.publish(error);
+                        } else {
+                            throw error;
+                        }
+                    }
+
+                    try {
+                        await this._commandsAggregator.executeAll();
+                    } catch (error) {
+                        if (typeof error == 'object' && error != null) {
+                            await this.eventBus.publish(error);
+                        } else {
+                            throw error;
+                        }
+                    }
+
                     execFn(mainLoop);
                 }
 

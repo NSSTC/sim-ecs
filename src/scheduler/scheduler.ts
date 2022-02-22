@@ -1,20 +1,16 @@
 import {IScheduler} from "./scheduler.spec";
 import {IPipeline, Pipeline} from "./pipeline/pipeline";
-import {IStageAction} from "../world.spec";
 import {TExecutor} from "../_.spec";
+import {World} from "../world";
 
 export * from "./scheduler.spec";
 
 
 export async function defaultSchedulingAlgorithm(stageExecutors: TExecutor[]) {
-    const setPromises = [];
     let stageExecutor;
-
     for (stageExecutor of stageExecutors) {
-        setPromises.push(stageExecutor());
+        await stageExecutor();
     }
-
-    await Promise.all(setPromises);
 }
 
 export class Scheduler implements IScheduler {
@@ -38,12 +34,12 @@ export class Scheduler implements IScheduler {
         this._pipeline = newPipeline;
     }
 
-    getExecutor(actions: IStageAction): TExecutor {
+    getExecutor(world: World): TExecutor {
         const stageExecutors: TExecutor[] = [];
 
         for (const group of this._pipeline.getGroups()) {
             for (const stage of group.stages) {
-                stageExecutors.push(stage.getExecutor(actions));
+                stageExecutors.push(stage.getExecutor(world));
             }
         }
 

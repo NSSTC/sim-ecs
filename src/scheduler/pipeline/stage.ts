@@ -1,20 +1,27 @@
-import {IStage} from "./stage.spec";
-import {ISystem} from "../../system";
-import {IStageAction, ISystemActions} from "../../world.spec";
-import {TExecutor} from "../../_.spec";
+import type {IStage} from "./stage.spec";
+import type {ISystem} from "../../system";
+import type {TExecutor, TTypeProto} from "../../_.spec";
 import {systemRunParamSym} from "../../system/_";
+import {SystemError} from "../../world/error";
+import type {World} from "../../world";
 
 export * from "./stage.spec";
 
-export async function defaultSchedulingAlgorithm(actions: ISystemActions, systems: ISystem[]): Promise<void> {
-    const promises = [];
+export async function defaultSchedulingAlgorithm(world: World, systems: ISystem[]): Promise<void> {
     let system;
 
     for (system of systems) {
-        promises.push(system.runFunction.call(system, system[systemRunParamSym]!));
+        try {
+            // todo: check WRITE constraints to speed it up...
+            await system.runFunction.call(system, system[systemRunParamSym]!);
+        } catch (error) {
+            if (error instanceof Error && !!system) {
+                await world.eventBus.publish(new SystemError(error, system.constructor as TTypeProto<ISystem>));
+            } else {
+                throw error;
+            }
+        }
     }
-
-    await Promise.all(promises);
 }
 
 export class Stage implements IStage {
@@ -26,7 +33,7 @@ export class Stage implements IStage {
         return this;
     }
 
-    getExecutor(actions: IStageAction): TExecutor {
-        return () => this.schedulingAlgorithm(actions.systemActions, Array.from(this.systems));
+    getExecutor(world: World): TExecutor {
+        return () => this.schedulingAlgorithm(world, Array.from(this.systems));
     }
 }

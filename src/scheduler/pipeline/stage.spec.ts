@@ -1,8 +1,8 @@
-import {IStageAction, ISystemActions} from "../../world.spec";
 import {ISystem} from "../../system";
 import {TExecutor} from "../../_.spec";
+import {World} from "../../world";
 
-export type TSchedulingAlgorithm = (actions: ISystemActions, systems: ISystem[]) => Promise<void>;
+export type TSchedulingAlgorithm = (world: World, systems: ISystem[]) => Promise<void>;
 
 export interface IStage {
     schedulingAlgorithm: TSchedulingAlgorithm
@@ -16,7 +16,7 @@ export interface IStage {
 
     /**
      * Get executor to run this stage once
-     * @param actions
+     * @param world
      */
-    getExecutor(actions: IStageAction): TExecutor
+    getExecutor(world: World): TExecutor
 }

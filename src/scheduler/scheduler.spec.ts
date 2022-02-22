@@ -1,6 +1,6 @@
-import {IPipeline} from "./pipeline/pipeline.spec";
-import {IStageAction} from "../world.spec";
-import {TExecutor} from "../_.spec";
+import type {IPipeline} from "./pipeline/pipeline.spec";
+import type {TExecutor} from "../_.spec";
+import type {World} from "../world";
 
 export type TSchedulingAlgorithm = (stageExecutors: TExecutor[]) => Promise<void>;
 
@@ -19,5 +19,5 @@ export interface IScheduler {
     /**
      * Execute this schedule once
      */
-    getExecutor(actions: IStageAction): TExecutor
+    getExecutor(world: World): TExecutor
 }

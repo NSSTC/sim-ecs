@@ -6,3 +6,5 @@ export * from './serde';
 export * from './state';
 export * from './system';
 export * from './world';
+export * from './world/error';
+export * from './world/error.spec';

@@ -12,7 +12,9 @@ npm install sim-ecs
 - [Why use sim-ecs](#why-use-sim-ecs)
 - [Examples](#examples)
   - [Counter](#counter)
+  - [Events](#events)
   - [Pong](#pong)
+  - [System Error](#system-error)
 - [Where is the Documentation](#where-is-the-documentation)
 - [Creating the ECS and a World](#creating-the-ecs-and-a-world)
 - [Setting Resources](#setting-resources)
@@ -68,7 +70,7 @@ The counter example is a very small, minimal example to get a quick overview.
 It increases a number a few times and then terminates. You can run it using:
 
 ```
-$ npm run counter
+$ npm run example-counter
 ``` 
 
 
@@ -78,7 +80,7 @@ The events example demonstrates how to use the event bus to write and read event
 It will print a message every second and can be executed with:
 
 ```
-$ npm run events
+$ npm run example-events
 ``` 
 
 
@@ -91,6 +93,17 @@ It is recommended to use readily available libraries for these parts for any rea
 
 You will need to build Pong from its directory.
 Then, you can open the `index.html` in the public folder to run the game.  
+
+
+### System Error
+
+Error handling is very simple with sim-ecs. It uses the events system to catch and provide handling opportunities
+without aborting the execution.
+The System-Error example demonstrates how error handling works with a simple example.
+
+```
+$ npm run example-system-error
+``` 
 
 
 ## Where is the Documentation
