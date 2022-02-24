@@ -13,6 +13,10 @@ import {IEntity, TTag} from "../entity.spec";
 import {Entity} from "../entity";
 import {accessDescSym, existenceDescSym} from "./_";
 
+export function ArrayOf<C extends Object>(componentPrototype: TTypeProto<C>): Array<TTypeProto<C>> {
+    return [componentPrototype];
+}
+
 export function ReadEntity(uuid?: string): TAccessQueryParameter<TTypeProto<Readonly<IEntity>>> {
     return Object.assign({}, Entity, {
         [accessDescSym]: {
@@ -24,8 +28,8 @@ export function ReadEntity(uuid?: string): TAccessQueryParameter<TTypeProto<Read
     } as IAccessDescriptor<Entity>);
 }
 
-export function Read<C extends Object>(componentPrototype: TTypeProto<C>): TAccessQueryParameter<TTypeProto<Readonly<C>>> {
-    return Object.assign({}, componentPrototype.prototype, {
+export function Read<C extends Object, T extends TTypeProto<C> | Array<TTypeProto<C>>>(componentPrototype: T): T extends Array<TTypeProto<C>> ? TAccessQueryParameter<ReadonlyArray<any>> : TAccessQueryParameter<TTypeProto<Readonly<C>>> {
+    return Object.assign({}, Array.isArray(componentPrototype) ? componentPrototype[0].prototype : componentPrototype.prototype, {
         [accessDescSym]: {
             optional: false,
             target: componentPrototype,
@@ -35,8 +39,8 @@ export function Read<C extends Object>(componentPrototype: TTypeProto<C>): TAcce
     } as IAccessDescriptor<C>);
 }
 
-export function ReadOptional<C extends Object>(componentPrototype: TTypeProto<C>): TOptionalAccessQueryParameter<TTypeProto<Readonly<C>>> {
-    return Object.assign({}, componentPrototype.prototype, {
+export function ReadOptional<C extends Object, T extends TTypeProto<C> | Array<TTypeProto<C>>>(componentPrototype: T): TOptionalAccessQueryParameter<TTypeProto<Readonly<C>>> {
+    return Object.assign({}, Array.isArray(componentPrototype) ? componentPrototype[0].prototype : componentPrototype.prototype, {
         [accessDescSym]: {
             optional: true,
             target: componentPrototype,
@@ -46,8 +50,8 @@ export function ReadOptional<C extends Object>(componentPrototype: TTypeProto<C>
     } as IAccessDescriptor<C>);
 }
 
-export function Write<C extends Object>(componentPrototype: TTypeProto<C>): TAccessQueryParameter<TTypeProto<C>> {
-    return Object.assign({}, componentPrototype.prototype, {
+export function Write<C extends Object, T extends TTypeProto<C> | Array<TTypeProto<C>>>(componentPrototype: T): TAccessQueryParameter<T> {
+    return Object.assign({}, Array.isArray(componentPrototype) ? componentPrototype[0].prototype : componentPrototype.prototype, {
         [accessDescSym]: {
             optional: false,
             target: componentPrototype,
@@ -57,8 +61,8 @@ export function Write<C extends Object>(componentPrototype: TTypeProto<C>): TAcc
     } as IAccessDescriptor<C>);
 }
 
-export function WriteOptional<C extends Object>(componentPrototype: TTypeProto<C>): TOptionalAccessQueryParameter<TTypeProto<C>> {
-    return Object.assign({}, componentPrototype.prototype, {
+export function WriteOptional<C extends Object, T extends TTypeProto<C> | Array<TTypeProto<C>>>(componentPrototype: T): TOptionalAccessQueryParameter<T> {
+    return Object.assign({}, Array.isArray(componentPrototype) ? componentPrototype[0].prototype : componentPrototype.prototype, {
         [accessDescSym]: {
             optional: true,
             target: componentPrototype,
@@ -68,10 +72,10 @@ export function WriteOptional<C extends Object>(componentPrototype: TTypeProto<C
     } as IAccessDescriptor<C>);
 }
 
-export function With<C extends Object>(componentPrototype: TTypeProto<C>): IExistenceDescriptor<TTypeProto<C>> {
+export function With<C extends Object, T extends TTypeProto<C> | Array<TTypeProto<C>>>(componentPrototype: T): T extends Array<TTypeProto<C>> ? IExistenceDescriptor<T[0]> : IExistenceDescriptor<TTypeProto<C>> {
     return {
         [existenceDescSym]: {
-            target: componentPrototype,
+            target: Array.isArray(componentPrototype) ? componentPrototype[0] : componentPrototype,
             targetType: ETargetType.component,
             type: EExistence.set,
         }
@@ -94,10 +98,10 @@ export function WithTag(tag: TTag): TAccessQueryParameter<TObjectProto> & IExist
     } as TAccessQueryParameter<TObjectProto> & IExistenceDescriptor<TObjectProto>;
 }
 
-export function Without<C extends Object>(componentPrototype: TTypeProto<C>): IExistenceDescriptor<TTypeProto<C>> {
+export function Without<C extends Object, T extends TTypeProto<C> | Array<TTypeProto<C>>>(componentPrototype: T): T extends Array<TTypeProto<C>> ? IExistenceDescriptor<T[0]> : IExistenceDescriptor<TTypeProto<C>> {
     return {
         [existenceDescSym]: {
-            target: componentPrototype,
+            target: Array.isArray(componentPrototype) ? componentPrototype[0] : componentPrototype,
             targetType: ETargetType.component,
             type: EExistence.unset,
         }

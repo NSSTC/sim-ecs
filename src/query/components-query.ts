@@ -9,7 +9,7 @@ import {TObjectProto, TTypeProto} from "../_.spec";
 import {IEntity, TTag} from "../entity.spec";
 import {accessDescSym, addEntitySym} from "./_";
 
-export class ComponentsQuery<DESC extends IAccessQuery<TObjectProto>> extends Query<DESC, TAccessQueryData<DESC>> implements IComponentsQuery<DESC> {
+export class ComponentsQuery<DESC extends IAccessQuery<TObjectProto | Array<TObjectProto>>> extends Query<DESC, TAccessQueryData<DESC>> implements IComponentsQuery<DESC> {
     constructor(
         protected queryDescriptor: DESC,
     ) {

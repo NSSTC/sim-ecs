@@ -2,9 +2,12 @@ import {TObjectProto, TTypeProto} from "../_.spec";
 import {IEntity, TTag} from "../entity.spec";
 import {accessDescSym, addEntitySym, clearEntitiesSym, existenceDescSym, removeEntitySym, setEntitiesSym} from "./_";
 
-export type TAccessQueryParameter<C extends TObjectProto> = C & IAccessDescriptor<InstanceType<C>>;
-export type TOptionalAccessQueryParameter<C extends TObjectProto | undefined> = IAccessDescriptor<C extends TObjectProto ? InstanceType<C> : undefined> & C extends TObjectProto ? C : undefined;
-export interface IAccessQuery<C extends TObjectProto> { [componentName: string]: TAccessQueryParameter<C> | TOptionalAccessQueryParameter<C> }
+export type TAccessQueryParameter<C extends TObjectProto | Array<TObjectProto> | ReadonlyArray<TObjectProto>> = C & (C extends Array<TObjectProto>
+    ? IAccessDescriptor<InstanceType<C[0]>>
+    : (C extends TObjectProto ? IAccessDescriptor<Array<InstanceType<C>>> : never)
+);
+export type TOptionalAccessQueryParameter<C extends TObjectProto | Array<TObjectProto> | undefined> = IAccessDescriptor<C extends TObjectProto ? InstanceType<C> : undefined> & C extends TObjectProto ? C : undefined;
+export interface IAccessQuery<C extends TObjectProto | Array<TObjectProto>> { [componentName: string]: TAccessQueryParameter<C> | TOptionalAccessQueryParameter<C> }
 
 export type TExistenceQueryParameter<C extends TObjectProto> = IExistenceDescriptor<C>;
 export type TExistenceQuery<C extends TObjectProto> = Array<TExistenceQueryParameter<C>>;
@@ -31,10 +34,14 @@ export enum EQueryType {
     Entities,
 }
 
-export type TAccessQueryData<DESC extends IAccessQuery<TObjectProto>> = {
-    [P in keyof DESC]: DESC[P] extends TAccessQueryParameter<TObjectProto>
-        ? Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>>
-        : (Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>> | undefined)
+export type TAccessQueryData<DESC extends IAccessQuery<TObjectProto | Array<TObjectProto>>> = {
+    [P in keyof DESC]: DESC[P] extends TAccessQueryParameter<Array<TObjectProto>>
+        ? Required<Omit<Array<InstanceType<DESC[P][0]>>, keyof IAccessDescriptor<Object>>>
+        : DESC[P] extends TAccessQueryParameter<TObjectProto>
+            ? Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>>
+            : DESC[P] extends Array<TObjectProto>
+                ? (Required<Omit<InstanceType<DESC[P][0]>, keyof IAccessDescriptor<Object>>> | undefined)
+                : DESC[P] extends TObjectProto ? (Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>> | undefined) : never
 }
 
 export interface IAccessDescriptor<C extends Object | undefined> {
@@ -71,6 +78,5 @@ export interface IQuery<DESC, DATA> {
     matchesEntity(entity: IEntity): boolean
 }
 
-export interface IComponentsQuery<DESC extends IAccessQuery<TObjectProto>> extends IQuery<DESC, TAccessQueryData<DESC>> {}
+export interface IComponentsQuery<DESC extends IAccessQuery<TObjectProto | Array<TObjectProto>>> extends IQuery<DESC, TAccessQueryData<DESC>> {}
 export interface IEntitiesQuery extends IQuery<TExistenceQuery<TObjectProto>, IEntity> {}
-//export interface IQueryProto<D extends IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>> { new(): IQuery<D> }

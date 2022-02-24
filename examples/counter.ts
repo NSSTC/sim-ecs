@@ -1,4 +1,4 @@
-import {Actions, buildWorld, createSystem, queryComponents, Write} from "../src";
+import {Actions, ArrayOf, buildWorld, createSystem, Read, queryComponents, Write} from "../src";
 
 
 /// a component.
@@ -17,7 +17,8 @@ const CounterSystem = createSystem({
     /// we can define our own fields. The value is either Write() or Read() of a specific prototype.
     /// the fields will be filled with actual objects of the given prototypes during system execution
     query: queryComponents({
-        info: Write(CounterInfo),
+        info: Write(ArrayOf(CounterInfo)),
+        t: Write(Date),
     }),
 })
     /// it is useful to also give every System a unique name,
@@ -28,8 +29,8 @@ const CounterSystem = createSystem({
         /// there are two ways to go over the query result:
         /// 1. you can use regular loops:
         let info;
-        for ({info} of query.iter()) {
-            info.count++;
+        for ({info, t} of query.iter()) {
+            info[0].count++;
 
             // after every ten steps, write out a log message
             if (info.count % 10 == 0) {

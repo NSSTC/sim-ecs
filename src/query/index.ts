@@ -5,7 +5,7 @@ import {TObjectProto} from "../_.spec";
 
 export * from "./query";
 
-export function queryComponents<DESC extends IAccessQuery<TObjectProto>>(query: DESC): IComponentsQuery<DESC> {
+export function queryComponents<DESC extends IAccessQuery<TObjectProto | Array<TObjectProto>>>(query: DESC): IComponentsQuery<DESC> {
     return new ComponentsQuery(query);
 }
 
