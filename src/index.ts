@@ -8,3 +8,4 @@ export * from './system';
 export * from './world';
 export * from './world/error';
 export * from './world/error.spec';
+export * from './world/events';

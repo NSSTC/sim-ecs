@@ -29,6 +29,7 @@ import {clearEntitiesSym, setEntitiesSym} from "./query/_";
 import {EventBus} from "./events/event-bus";
 import {EventReader} from "./events/event-reader";
 import type {IStageAction, ISystemActions, ITransitionActions} from "./world.spec";
+import {EntityAdded, EntityRemoved} from "./world/events";
 
 export * from './world.spec';
 
@@ -127,6 +128,8 @@ export class World implements IWorld {
     addEntity(entity: IEntity) {
         if (!this.entities.has(entity)) {
             this.entities.add(entity);
+            // todo: wait for it
+            this.eventBus.publish(new EntityAdded(entity));
             this._dirty = true;
         }
     }
@@ -156,7 +159,11 @@ export class World implements IWorld {
     }
 
     clearEntities() {
-        this.entities.clear();
+        let entity;
+        for (entity of this.entities) {
+            this.removeEntity(entity);
+        }
+
         this.clearGroups();
     }
 
@@ -171,8 +178,7 @@ export class World implements IWorld {
 
     createEntity(): Entity {
         const entity = new Entity();
-        this.entities.add(entity);
-        this._dirty = true;
+        this.addEntity(entity);
         return entity;
     }
 
@@ -371,6 +377,8 @@ export class World implements IWorld {
 
     removeEntity(entity: IEntity) {
         this.entities.delete(entity);
+        // todo: wait for it
+        this.eventBus.publish(new EntityRemoved(entity));
         this._dirty = true;
     }
 
