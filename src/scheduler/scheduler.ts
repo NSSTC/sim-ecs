@@ -41,6 +41,10 @@ export class Scheduler implements IScheduler {
             for (const stage of group.stages) {
                 stageExecutors.push(stage.getExecutor(world));
             }
+
+            stageExecutors.push(async () => {
+                await group.executeOnSyncHandlers();
+            });
         }
 
         return () => this.schedulingAlgorithm(stageExecutors);

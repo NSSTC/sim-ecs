@@ -8,11 +8,27 @@ export class SyncPoint implements ISyncPoint {
     after?: ISyncPoint;
     before?: ISyncPoint;
     stages: IStage[] = [];
+    protected syncPointHandlers = new Set<Function>();
 
     addNewStage(handler: (stage: IStage) => void): SyncPoint {
         const stage = new Stage();
         this.stages.push(stage);
         handler(stage);
+        return this;
+    }
+
+    addOnSyncHandler(handler: Function): SyncPoint {
+        this.syncPointHandlers.add(handler);
+        return this;
+    }
+
+    async executeOnSyncHandlers(): Promise<SyncPoint> {
+        let handler;
+
+        for (handler of this.syncPointHandlers) {
+            await handler();
+        }
+
         return this;
     }
 
@@ -37,6 +53,11 @@ export class SyncPoint implements ISyncPoint {
             }
         }
 
+        return this;
+    }
+
+    removeOnSyncHandler(handler: Function): SyncPoint {
+        this.syncPointHandlers.delete(handler);
         return this;
     }
 }

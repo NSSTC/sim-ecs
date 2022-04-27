@@ -460,9 +460,28 @@ export class World implements IWorld {
                         await state.destroy(this.transitionWorld);
                     }
 
+                    {
+                        let syncPoint;
+                        for (syncPoint of this.currentScheduler!.pipeline!.getGroups()) {
+                            syncPoint.removeOnSyncHandler(syncHandler);
+                        }
+                    }
+
                     this.runPromise = undefined;
                     resolver();
                 };
+
+                const syncHandler = async () => {
+                    try {
+                        await this._commandsAggregator.executeAll();
+                    } catch (error) {
+                        if (typeof error == 'object' && error != null) {
+                            await this.eventBus.publish(error);
+                        } else {
+                            throw error;
+                        }
+                    }
+                }
 
                 const mainLoop = async () => {
                     if (!this.shouldRunSystems) {
@@ -480,17 +499,14 @@ export class World implements IWorld {
                         }
                     }
 
-                    try {
-                        await this._commandsAggregator.executeAll();
-                    } catch (error) {
-                        if (typeof error == 'object' && error != null) {
-                            await this.eventBus.publish(error);
-                        } else {
-                            throw error;
-                        }
-                    }
-
                     execFn(mainLoop);
+                }
+
+                {
+                    let syncPoint;
+                    for (syncPoint of this.currentScheduler!.pipeline!.getGroups()) {
+                        syncPoint.addOnSyncHandler(syncHandler);
+                    }
                 }
 
                 execFn(mainLoop);
