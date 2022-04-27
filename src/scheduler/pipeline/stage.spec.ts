@@ -2,10 +2,10 @@ import {ISystem} from "../../system";
 import {TExecutor} from "../../_.spec";
 import {World} from "../../world";
 
-export type TSchedulingAlgorithm = (world: World, systems: ISystem[]) => Promise<void>;
+export type TStageSchedulingAlgorithm = (world: World, systems: ISystem[]) => Promise<void>;
 
 export interface IStage {
-    schedulingAlgorithm: TSchedulingAlgorithm
+    schedulingAlgorithm: TStageSchedulingAlgorithm
     systems: ISystem[]
 
     /**

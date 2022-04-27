@@ -2,11 +2,11 @@ import {buildWorld, createSystem, queryComponents, World, Write} from '../../../
 import {IBenchmark} from "../../benchmark.spec";
 import {CheckEndSystem, CounterResource} from "./_";
 
-class A { constructor(public val: number) {} }
-class B { constructor(public val: number) {} }
-class C { constructor(public val: number) {} }
-class D { constructor(public val: number) {} }
-class E { constructor(public val: number) {} }
+class A { constructor(public val: number = 0) {} }
+class B { constructor(public val: number = 0) {} }
+class C { constructor(public val: number = 0) {} }
+class D { constructor(public val: number = 0) {} }
+class E { constructor(public val: number = 0) {} }
 
 
 const ABSystem = createSystem({
@@ -77,35 +77,25 @@ export class Benchmark implements IBenchmark {
 
         for (let i = 0; i < 10000; i++) {
             this.world.buildEntity()
-                .with(A, 0)
-                .with(B, 0)
+                .withAll(A, B)
                 .build();
         }
 
         for (let i = 0; i < 10000; i++) {
             this.world.buildEntity()
-                .with(A, 0)
-                .with(B, 0)
-                .with(C, 0)
+                .withAll(A, B, C)
                 .build();
         }
 
         for (let i = 0; i < 10000; i++) {
             this.world.buildEntity()
-                .with(A, 0)
-                .with(B, 0)
-                .with(C, 0)
-                .with(D, 0)
+                .withAll(A, B, C, D)
                 .build();
         }
 
         for (let i = 0; i < 10000; i++) {
             this.world.buildEntity()
-                .with(A, 0)
-                .with(B, 0)
-                .with(C, 0)
-                .with(D, 0)
-                .with(E, 0)
+                .withAll(A, B, C, D, E)
                 .build();
         }
     }

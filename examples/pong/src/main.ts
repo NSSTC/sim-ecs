@@ -1,27 +1,19 @@
 import {buildWorld, IWorld} from "sim-ecs";
-import {PaddleSystem} from "./systems/paddle";
-import {InputSystem} from "./systems/input";
 import {GameStore} from "./models/game-store";
 import {MenuState} from "./states/menu";
 import {UIItem} from "./components/ui-item";
-import {MenuSystem} from "./systems/menu";
-import {PauseSystem} from "./systems/pause";
 import {Paddle} from "./components/paddle";
 import {Position} from "./components/position";
-import {BallSystem} from "./systems/ball";
 import {Velocity} from "./components/velocity";
-import {RenderUISystem} from "./systems/render-ui";
-import {RenderGameSystem} from "./systems/render-game";
 import {Shape} from "./components/shape";
-import {AnimationSystem} from "./systems/animation";
 import {ScoreBoard} from "./models/score-board";
 import {PaddleTransforms} from "./models/paddle-transforms";
 import {Dimensions} from "./models/dimensions";
-import {CollisionSystem} from "./systems/collision";
 import {Collision} from "./components/collision";
 import {Wall} from "./components/wall";
-import {BeforeStepSystem} from "./systems/before-step";
 import {PauseState} from "./states/pause";
+import {defaultSchedule} from "./schedules/default";
+import {pauseSchedule} from "./schedules/pause";
 
 
 const cleanup = () => {
@@ -38,28 +30,8 @@ const cleanup = () => {
 
 const createWorld = () => {
     return buildWorld()
-        .withDefaultScheduling(root => root
-            .addNewStage(stage => stage.addSystem(BeforeStepSystem))
-            .addNewStage(stage => stage.addSystem(InputSystem))
-            .addNewStage(stage => stage
-                .addSystem(MenuSystem)
-                .addSystem(PaddleSystem)
-                .addSystem(PauseSystem))
-            .addNewStage(stage => stage.addSystem(CollisionSystem))
-            .addNewStage(stage => stage.addSystem(BallSystem))
-            .addNewStage(stage => stage.addSystem(AnimationSystem))
-            .addNewStage(stage => stage
-                .addSystem(RenderGameSystem)
-                .addSystem(RenderUISystem))
-        )
-        .withStateScheduling(PauseState, root => root
-            .addNewStage(stage => stage.addSystem(BeforeStepSystem))
-            .addNewStage(stage => stage.addSystem(InputSystem))
-            .addNewStage(stage => stage.addSystem(PauseSystem))
-            .addNewStage(stage => stage
-                .addSystem(RenderGameSystem)
-                .addSystem(RenderUISystem))
-        )
+        .withDefaultScheduling(root => root.fromPrefab(defaultSchedule))
+        .withStateScheduling(PauseState, root => root.fromPrefab(pauseSchedule))
         .withComponents(
             Collision,
             Paddle,

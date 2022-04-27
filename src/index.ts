@@ -2,6 +2,7 @@ export * from './ecs/ecs-world';
 export * from './entity';
 export * from './entity-builder';
 export * from './query';
+export * from './scheduler';
 export * from './serde';
 export * from './state';
 export * from './system';

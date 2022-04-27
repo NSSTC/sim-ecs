@@ -1,4 +1,4 @@
-import {Actions, buildWorld, createSystem, queryComponents, Write} from "../src";
+import {Actions, buildWorld, createSystem, ISyncPointPrefab, queryComponents, Write} from "../src";
 
 
 /// a component.
@@ -50,10 +50,30 @@ const CounterSystem = createSystem({
     })
     .build();
 
+// in order to execute all systems in the right order, we can create prefabs for execution schedules
+// we can do so by defining what is happening in between sync-points
+
+// sync-points are defined moments in the schedule, when no system runs, and the ECS can sync updates,
+//   like adding and removing entities or components, to all system caches.
+//   It is useful to keep the amount of these sync-points to a minimum for a speedy execution!
+//   The ECS will always have one sync-point, which is the "root" sync-point.
+//   This means that syncing will always happen between each step.
+
+// for our simple logic, we only need one sync-point, which will be reached after the below plan has been executed
+const executionSchedule: ISyncPointPrefab = {
+    // each sync point contains stages, which are work units with a defined (custom or default) scheduler
+    stages: [
+        // each stage also contains several systems, which are orchestrated by the stage's scheduler
+        [
+            CounterSystem,
+        ],
+    ],
+};
+
 /// then, we need a world which will hold our systems and entities
 const world = buildWorld()
-    /// we can inform the world about our processing logic by adding the above defined system
-    .withDefaultScheduling(root => root.addNewStage(stage => stage.addSystem(CounterSystem)))
+    /// we can inform the world about our processing logic by adding the above defined prefab
+    .withDefaultScheduling(root => root.fromPrefab(executionSchedule))
     /// we can register components types at this level in order to enable saving (serialization) and loading (deserialization) of them
     .withComponent(CounterInfo)
     .build();
@@ -61,7 +81,11 @@ const world = buildWorld()
 /// in order to do something, we still need to add data, which can be processed.
 /// think of this like filling up your database, whereas each entity is a row and each component is a column
 world
+    /// the commands interface is a safe way to mutate the world, since all changes are always buffered until a good moment,
+    /// for example after each step, all commands are applied
+    /// doing so makes sure that there are no race conditions between different systems accessing entities simultaneously
     .commands
+    /// invoking the entity builder in this way automatically adds the entity to the world
     .buildEntity()
     .with(CounterInfo)
     .build();

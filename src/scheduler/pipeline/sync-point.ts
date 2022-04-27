@@ -1,5 +1,6 @@
-import {ISyncPoint} from "./sync-point.spec";
+import {ISyncPoint, ISyncPointPrefab} from "./sync-point.spec";
 import {IStage, Stage} from "./stage";
+import {ISystem} from "../../system";
 
 export * from "./sync-point.spec";
 
@@ -12,6 +13,30 @@ export class SyncPoint implements ISyncPoint {
         const stage = new Stage();
         this.stages.push(stage);
         handler(stage);
+        return this;
+    }
+
+    fromPrefab({after, before, stages = []}: ISyncPointPrefab): SyncPoint {
+        this.after = after
+            ? new SyncPoint().fromPrefab(after)
+            : undefined;
+        this.before = before
+            ? new SyncPoint().fromPrefab(before)
+            : undefined;
+        this.stages.length = 0;
+
+        {
+            let stage: ISystem[];
+            let system: ISystem;
+            for (stage of stages) {
+                this.addNewStage(newStage => {
+                    for (system of stage) {
+                        newStage.addSystem(system);
+                    }
+                });
+            }
+        }
+
         return this;
     }
 }

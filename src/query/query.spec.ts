@@ -73,4 +73,3 @@ export interface IQuery<DESC, DATA> {
 
 export interface IComponentsQuery<DESC extends IAccessQuery<TObjectProto>> extends IQuery<DESC, TAccessQueryData<DESC>> {}
 export interface IEntitiesQuery extends IQuery<TExistenceQuery<TObjectProto>, IEntity> {}
-//export interface IQueryProto<D extends IAccessQuery<TObjectProto> | TExistenceQuery<TObjectProto>> { new(): IQuery<D> }

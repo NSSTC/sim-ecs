@@ -7,7 +7,7 @@ import type {World} from "../../world";
 
 export * from "./stage.spec";
 
-export async function defaultSchedulingAlgorithm(world: World, systems: ISystem[]): Promise<void> {
+export async function defaultStageSchedulingAlgorithm(world: World, systems: ISystem[]): Promise<void> {
     let system;
 
     for (system of systems) {
@@ -25,7 +25,7 @@ export async function defaultSchedulingAlgorithm(world: World, systems: ISystem[
 }
 
 export class Stage implements IStage {
-    schedulingAlgorithm = defaultSchedulingAlgorithm;
+    schedulingAlgorithm = defaultStageSchedulingAlgorithm;
     systems: ISystem[] = [];
 
     addSystem(System: ISystem): Stage {
