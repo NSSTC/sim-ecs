@@ -20,7 +20,7 @@ import type {
     IQuery,
     IEntitiesQuery,
 } from "./query";
-import type {IScheduler} from "./scheduler";
+import type {IScheduler} from "./scheduler/scheduler.spec";
 import type {IPipeline} from "./scheduler/pipeline/pipeline.spec";
 import type {ISystem} from "./system";
 import {getQueriesFromSystem, getSystemRunParameters} from "./system";

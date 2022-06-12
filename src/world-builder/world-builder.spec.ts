@@ -1,9 +1,9 @@
-import IWorld from "../world.spec";
-import {TObjectProto} from "../_.spec";
-import {ISerDeOperations} from "../serde";
-import {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
-import {IScheduler} from "../scheduler";
-import {IIStateProto} from "../state.spec";
+import type IWorld from "../world.spec";
+import type {TObjectProto} from "../_.spec";
+import type {ISerDeOperations} from "../serde";
+import type {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
+import type {IScheduler} from "../scheduler/scheduler.spec";
+import type {IIStateProto} from "../state.spec";
 
 export interface IComponentRegistrationOptions {
     serDe: ISerDeOperations

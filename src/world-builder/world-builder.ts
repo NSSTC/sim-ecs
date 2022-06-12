@@ -1,14 +1,15 @@
-import {
+import type {
     IComponentRegistrationOptions,
     IWorldBuilder,
 } from "./world-builder.spec";
 import {World} from "../world";
-import {TObjectProto} from "../_.spec";
-import {ISerDe} from "../serde";
+import type {TObjectProto} from "../_.spec";
+import type {ISerDe} from "../serde";
 import {dataStructDeserializer, dataStructSerializer} from "./world-builder.util";
-import {IScheduler, Scheduler} from "../scheduler";
-import {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
-import {IIStateProto} from "../state.spec";
+import {type IScheduler, Scheduler} from "../scheduler/scheduler";
+import type {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
+import type {IIStateProto} from "../state.spec";
+import {addSyncPoint} from "../ecs/ecs-sync-point";
 
 
 export * from './world-builder.spec';
