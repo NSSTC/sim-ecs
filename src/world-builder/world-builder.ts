@@ -44,6 +44,43 @@ export class WorldBuilder implements IWorldBuilder {
         return world;
     }
 
+    protected checkSyncPointLoop(root: ISyncPoint): void {
+        if (this.hasSyncPointLoop(root)) {
+            throw new Error('The sync-points provided form a loop!');
+        }
+    }
+
+    protected hasSyncPointLoop(root: ISyncPoint): boolean {
+        const check = (root: ISyncPoint, direction: 'after' | 'before') => {
+            const syncPoints = new Set<ISyncPoint>();
+            let currentSyncPoint = root;
+            let lookAheadSyncPoint = currentSyncPoint[direction];
+
+            while (lookAheadSyncPoint) {
+                if (syncPoints.has(lookAheadSyncPoint)) {
+                    return true;
+                }
+
+                currentSyncPoint = lookAheadSyncPoint;
+                lookAheadSyncPoint = currentSyncPoint[direction];
+
+                syncPoints.add(currentSyncPoint);
+            }
+
+            return false;
+        };
+
+        if (check(root, 'after')) {
+            return true;
+        }
+
+        if (check(root, 'before')) {
+            return true;
+        }
+
+        return false;
+    }
+
     protected registerAllNamedSyncPoints(root: ISyncPoint) {
         let currentSyncPoint = root;
 
@@ -98,8 +135,12 @@ export class WorldBuilder implements IWorldBuilder {
     }
 
     withDefaultScheduler(scheduler: IScheduler): IWorldBuilder {
+        const root = scheduler.pipeline.root;
+
+        this.checkSyncPointLoop(root);
         this.defaultScheduler = scheduler;
-        this.registerAllNamedSyncPoints(scheduler.pipeline.root);
+        this.registerAllNamedSyncPoints(root);
+
         return this;
     }
 
@@ -109,8 +150,12 @@ export class WorldBuilder implements IWorldBuilder {
     }
 
     withDefaultScheduling(planner: (root: ISyncPoint) => void): WorldBuilder {
-        planner(this.defaultScheduler.pipeline.root);
-        this.registerAllNamedSyncPoints(this.defaultScheduler.pipeline.root);
+        const root = this.defaultScheduler.pipeline.root;
+
+        this.checkSyncPointLoop(root);
+        planner(root);
+        this.registerAllNamedSyncPoints(root);
+
         return this;
     }
 
@@ -119,8 +164,14 @@ export class WorldBuilder implements IWorldBuilder {
             throw new Error(`A scheduler was already assigned to ${state.name}!`);
         }
 
-        this.stateSchedulers.set(state, scheduler);
-        this.registerAllNamedSyncPoints(scheduler.pipeline.root);
+        {
+            const root = scheduler.pipeline.root;
+
+            this.checkSyncPointLoop(root);
+            this.stateSchedulers.set(state, scheduler);
+            this.registerAllNamedSyncPoints(root);
+        }
+
         return this;
     }
 
@@ -131,9 +182,12 @@ export class WorldBuilder implements IWorldBuilder {
 
         {
             const scheduler = new Scheduler();
+            const root = scheduler.pipeline.root;
+
             this.stateSchedulers.set(state, scheduler);
-            this.registerAllNamedSyncPoints(scheduler.pipeline.root);
-            planner(scheduler.pipeline.root);
+            planner(root);
+            this.checkSyncPointLoop(root);
+            this.registerAllNamedSyncPoints(root);
         }
 
         return this;
