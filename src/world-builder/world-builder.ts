@@ -74,6 +74,11 @@ export class WorldBuilder implements IWorldBuilder {
         }
     }
 
+    updateRootSyncPoint(updater: (root: ISyncPoint) => void): WorldBuilder {
+        updater(this.defaultScheduler.pipeline.root);
+        return this;
+    }
+
     withComponent(Component: TObjectProto, options?: IComponentRegistrationOptions): WorldBuilder {
         this.serde.registerTypeHandler(
             Component,

@@ -16,6 +16,12 @@ export interface IWorldBuilder {
     build(): IWorld
 
     /**
+     * Transform the root sync point
+     * @param updater
+     */
+    updateRootSyncPoint(updater: (root: ISyncPoint) => void): IWorldBuilder
+
+    /**
      * Register a component in the world
      * @param Component
      * @param options
