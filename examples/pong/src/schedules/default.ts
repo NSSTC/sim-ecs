@@ -8,11 +8,13 @@ import {BallSystem} from "../systems/ball";
 import {AnimationSystem} from "../systems/animation";
 import {RenderGameSystem} from "../systems/render-game";
 import {RenderUISystem} from "../systems/render-ui";
+import {InputSystem} from "../systems/input";
 
 
 export const defaultSchedule: ISyncPointPrefab = {
     stages: [
         [BeforeStepSystem],
+        [InputSystem],
         [
             MenuSystem,
             PaddleSystem,
