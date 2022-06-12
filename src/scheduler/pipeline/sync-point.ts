@@ -7,8 +7,11 @@ export * from "./sync-point.spec";
 export class SyncPoint implements ISyncPoint {
     after?: ISyncPoint;
     before?: ISyncPoint;
+    name?: string
     stages: IStage[] = [];
     protected syncPointHandlers = new Set<Function>();
+
+
 
     addNewStage(handler: (stage: IStage) => void): SyncPoint {
         const stage = new Stage();

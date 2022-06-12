@@ -3,6 +3,7 @@ import {ISystem} from "../../system";
 
 
 export interface ISyncPointPrefab {
+    name?: string
     after?: ISyncPointPrefab
     before?: ISyncPointPrefab
     stages?: ISystem<any>[][]
@@ -11,6 +12,7 @@ export interface ISyncPointPrefab {
 export interface ISyncPoint {
     after?: ISyncPoint
     before?: ISyncPoint
+    name?: string
     stages: IStage[]
 
     /**

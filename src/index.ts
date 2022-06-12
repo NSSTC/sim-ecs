@@ -1,3 +1,4 @@
+export * from './ecs/ecs-sync-point';
 export * from './ecs/ecs-world';
 export * from './entity';
 export * from './entity-builder';

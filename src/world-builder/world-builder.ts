@@ -43,6 +43,36 @@ export class WorldBuilder implements IWorldBuilder {
         return world;
     }
 
+    protected registerAllNamedSyncPoints(root: ISyncPoint) {
+        let currentSyncPoint = root;
+
+        // register root
+        if (root.name) {
+            addSyncPoint(root);
+        }
+
+        // register all sync-points before root
+        while (currentSyncPoint.before) {
+            currentSyncPoint = currentSyncPoint.before;
+
+            if (currentSyncPoint.name) {
+                addSyncPoint(currentSyncPoint);
+            }
+        }
+
+        // reset to root
+        currentSyncPoint = root;
+
+        // register all sync-points after root
+        while (currentSyncPoint.after) {
+            currentSyncPoint = currentSyncPoint.after;
+
+            if (currentSyncPoint.name) {
+                addSyncPoint(currentSyncPoint);
+            }
+        }
+    }
+
     withComponent(Component: TObjectProto, options?: IComponentRegistrationOptions): WorldBuilder {
         this.serde.registerTypeHandler(
             Component,
@@ -63,6 +93,7 @@ export class WorldBuilder implements IWorldBuilder {
 
     withDefaultScheduler(scheduler: IScheduler): IWorldBuilder {
         this.defaultScheduler = scheduler;
+        this.registerAllNamedSyncPoints(scheduler.pipeline.root);
         return this;
     }
 
@@ -73,6 +104,7 @@ export class WorldBuilder implements IWorldBuilder {
 
     withDefaultScheduling(planner: (root: ISyncPoint) => void): WorldBuilder {
         planner(this.defaultScheduler.pipeline.root);
+        this.registerAllNamedSyncPoints(this.defaultScheduler.pipeline.root);
         return this;
     }
 
@@ -82,6 +114,7 @@ export class WorldBuilder implements IWorldBuilder {
         }
 
         this.stateSchedulers.set(state, scheduler);
+        this.registerAllNamedSyncPoints(scheduler.pipeline.root);
         return this;
     }
 
@@ -93,6 +126,7 @@ export class WorldBuilder implements IWorldBuilder {
         {
             const scheduler = new Scheduler();
             this.stateSchedulers.set(state, scheduler);
+            this.registerAllNamedSyncPoints(scheduler.pipeline.root);
             planner(scheduler.pipeline.root);
         }
 
