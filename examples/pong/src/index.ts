@@ -1,4 +1,4 @@
 import 'regenerator-runtime'
-import "./index.pug"
+import "./index.html"
 import "./main.scss"
 import './main';

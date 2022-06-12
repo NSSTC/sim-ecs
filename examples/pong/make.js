@@ -74,25 +74,15 @@ const log = (...strs) => console.log.apply(console.log, ['[make]'].concat(strs))
                         use: [
                             "file-loader?name=[name].html",
                             "extract-loader",
-                            "html-loader",
+                            {
+                                loader: "html-loader",
+                                options: {
+                                    sources: {
+                                        urlFilter: (_attribute, value, _resourcePath) => !/bundle\.js$/i.test(value),
+                                    },
+                                }
+                            },
                         ]
-                    },
-                    {// index file
-                        test: /index\.pug$/i,
-                        include: path.resolve(__dirname, 'src/index.pug'),
-                        use: [
-                            "file-loader?name=[name].html",
-                            "extract-loader",
-                            "raw-loader",
-                            "pug-html-loader"
-                        ],
-                    },
-                    {// pug templates
-                        test: /((?!index).+)\.(pug|jade)$/i,
-                        exclude: path.resolve(__dirname, 'src', 'index.pug'),
-                        use: [
-                            "pug-loader"
-                        ],
                     },
                     {// typescript
                         test: /\.tsx?$/i,
@@ -152,6 +142,10 @@ const log = (...strs) => console.log.apply(console.log, ['[make]'].concat(strs))
 
         const handler = (err, stats) => { // Stats Object
             if (err || stats.hasErrors()) {
+                if (Array.isArray(stats.compilation.errors)) {
+                    stats.compilation.errors.forEach(err => console.error(err));
+                }
+
                 rej({err, further: stats.compilation.systemErrors});
                 return;
             }
