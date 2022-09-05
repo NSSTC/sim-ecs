@@ -21,10 +21,10 @@ export function buildWorld(): IWorldBuilder {
 }
 
 /**
- * Find a world with a name
+ * Get a world with a name
  * @param name
  */
-export function findWorld(name: string): IWorld | undefined {
+export function getWorld(name: string): IWorld | undefined {
     let world;
     for (world of worlds) {
         if (world.name == name) {
