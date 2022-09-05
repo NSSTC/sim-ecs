@@ -2,7 +2,7 @@ import type {ISystemBuilder} from "./system-builder.spec";
 import type {ISystem, TSystemFunction, TSystemParameterDesc} from "./system.spec";
 
 export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements ISystemBuilder<PARAMDESC> {
-    name: string = '';
+    systemName: string = '';
     parameterDesc: PARAMDESC;
     setupFunction: TSystemFunction<PARAMDESC> = () => {};
     runFunction: TSystemFunction<PARAMDESC> = () => {};
@@ -15,7 +15,7 @@ export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements IS
     build(): ISystem<PARAMDESC> {
         const self = this;
         const System = class implements ISystem<PARAMDESC> {
-            readonly name = self.name;
+            readonly name = self.systemName;
             readonly parameterDesc = self.parameterDesc;
             readonly runFunction = self.runFunction;
             readonly setupFunction = self.setupFunction;
@@ -31,8 +31,20 @@ export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements IS
         return new System();
     }
 
-    withName(name: string): ISystemBuilder<PARAMDESC> {
-        this.name = name;
+    name(name: string): SystemBuilder<PARAMDESC> {
+        return this.withName(name);
+    }
+
+    run(fn: TSystemFunction<PARAMDESC>): SystemBuilder<PARAMDESC> {
+        return this.withRunFunction(fn);
+    }
+
+    setup(fn: TSystemFunction<PARAMDESC>): SystemBuilder<PARAMDESC> {
+        return this.withSetupFunction(fn);
+    }
+
+    withName(name: string): SystemBuilder<PARAMDESC> {
+        this.systemName = name;
         return this;
     }
 
@@ -46,3 +58,9 @@ export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements IS
         return this;
     }
 }
+
+// Change alias refs for better performance
+
+SystemBuilder.prototype.name = SystemBuilder.prototype.withName;
+SystemBuilder.prototype.run = SystemBuilder.prototype.withRunFunction;
+SystemBuilder.prototype.setup = SystemBuilder.prototype.withSetupFunction;

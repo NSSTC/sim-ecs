@@ -16,7 +16,7 @@ export * from './world-builder.spec';
 
 export class WorldBuilder implements IWorldBuilder {
     protected callbacks: Set<(world: World) => void> = new Set();
-    protected name?: string;
+    protected worldName?: string;
     protected defaultScheduler: IScheduler = new Scheduler();
     protected stateSchedulers = new Map<IIStateProto, IScheduler>();
 
@@ -31,7 +31,7 @@ export class WorldBuilder implements IWorldBuilder {
 
     build(): World {
         const world = new World({
-            name: this.name,
+            name: this.worldName,
             defaultScheduler: this.defaultScheduler!,
             serde: this.serde,
             stateSchedulers: this.stateSchedulers,
@@ -44,10 +44,22 @@ export class WorldBuilder implements IWorldBuilder {
         return world;
     }
 
+    c(Component: TObjectProto, options?: IComponentRegistrationOptions): WorldBuilder {
+        return this.withComponent(Component, options);
+    }
+
     protected checkSyncPointLoop(root: ISyncPoint): void {
         if (this.hasSyncPointLoop(root)) {
             throw new Error('The sync-points provided form a loop!');
         }
+    }
+
+    component(Component: TObjectProto, options?: IComponentRegistrationOptions): WorldBuilder {
+        return this.withComponent(Component, options);
+    }
+
+    components(...Components: TObjectProto[]): WorldBuilder {
+        return this.withComponents(...Components);
     }
 
     protected hasSyncPointLoop(root: ISyncPoint): boolean {
@@ -79,6 +91,10 @@ export class WorldBuilder implements IWorldBuilder {
         }
 
         return false;
+    }
+
+    name(name: string): WorldBuilder {
+        return this.withName(name);
     }
 
     protected registerAllNamedSyncPoints(root: ISyncPoint) {
@@ -145,7 +161,7 @@ export class WorldBuilder implements IWorldBuilder {
     }
 
     withName(name: string): WorldBuilder {
-        this.name = name;
+        this.worldName = name;
         return this;
     }
 
@@ -193,3 +209,12 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 }
+
+
+// Change alias refs for better performance
+
+WorldBuilder.prototype.c = WorldBuilder.prototype.withComponent;
+WorldBuilder.prototype.component = WorldBuilder.prototype.withComponent;
+WorldBuilder.prototype.components = WorldBuilder.prototype.withComponents;
+WorldBuilder.prototype.name = WorldBuilder.prototype.withName;
+

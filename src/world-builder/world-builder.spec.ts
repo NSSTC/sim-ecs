@@ -16,6 +16,32 @@ export interface IWorldBuilder {
     build(): IWorld
 
     /**
+     * Alias for [withComponent]{@link IWorldBuilder#withComponent}
+     * @param Component
+     * @param options
+     */
+    c(Component: TObjectProto, options?: IComponentRegistrationOptions): IWorldBuilder
+
+    /**
+     * Alias for [withComponent]{@link IWorldBuilder#withComponent}
+     * @param Component
+     * @param options
+     */
+    component(Component: TObjectProto, options?: IComponentRegistrationOptions): IWorldBuilder
+
+    /**
+     * Alias for [withComponent]{@link IWorldBuilder#withComponent}
+     * @param Components
+     */
+    components(...Components: TObjectProto[]): IWorldBuilder
+
+    /**
+     * Alias for [withName]{@link IWorldBuilder#withName}
+     * @param name
+     */
+    name(name: string): IWorldBuilder
+
+    /**
      * Transform the root sync point
      * @param updater
      */
