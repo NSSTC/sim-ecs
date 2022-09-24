@@ -16,6 +16,7 @@ import {accessDescSym, existenceDescSym} from "./_";
 export function ReadEntity(uuid?: string): TAccessQueryParameter<TTypeProto<Readonly<IEntity>>> {
     return Object.assign({}, Entity, {
         [accessDescSym]: {
+            optional: false,
             data: uuid,
             target: Entity,
             targetType: ETargetType.entity,
