@@ -55,6 +55,7 @@
 
     "bench": "cd examples/bench && npm run bench",
     "build": "tsc --project . && npm run doc",
+    "ci": "npm run prebuild && tsc --project . && npm run postbuild",
     "doc": "typedoc src/index.ts --out docs --includeVersion",
     "coverage": "nyc -r lcov -e .ts -x \"**/*.test.ts\" -x \"**/*.spec.ts\" -x \"src/tests\" npm run test",
     "example-counter": "ts-node -P tsconfig.json examples/counter.ts",
