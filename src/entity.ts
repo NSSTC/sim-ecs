@@ -1,6 +1,6 @@
 import {IEntity, TTag} from "./entity.spec";
 import {TObjectProto, TTypeProto} from "./_.spec";
-import {registerEntity} from "./ecs/ecs-entity";
+import {registerEntity, unregisterEntity} from "./ecs/ecs-entity";
 
 export * from './entity.spec';
 
@@ -68,6 +68,10 @@ export class Entity implements IEntity {
         return this.components.has(component);
     }
 
+    hasId(): boolean {
+        return this.uuid !== undefined;
+    }
+
     hasTag(tag: TTag): boolean {
         return this.tags.has(tag);
     }
@@ -75,6 +79,13 @@ export class Entity implements IEntity {
     removeComponent(component: Object | TObjectProto): Entity {
         this.components.delete(this.getConstructor(component));
         return this;
+    }
+
+    removeId(unregister: boolean = true) {
+        this.uuid = undefined;
+        if (unregister) {
+            unregisterEntity(this);
+        }
     }
 
     removeTag(tag: TTag): Entity {
