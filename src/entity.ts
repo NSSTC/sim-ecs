@@ -4,8 +4,10 @@ import {registerEntity, unregisterEntity} from "./ecs/ecs-entity";
 
 export * from './entity.spec';
 
+let idCounter = BigInt(0);
+
 export class Entity implements IEntity {
-    static uuidFn?: () => string;
+    static uuidFn: () => string = () => (idCounter++).toString();
     protected components: Map<TObjectProto, Object> = new Map();
     protected tags: Set<TTag> = new Set();
 
@@ -16,7 +18,7 @@ export class Entity implements IEntity {
     }
 
     get id() {
-        if (!this.uuid && Entity.uuidFn) {
+        if (!this.uuid) {
             this.uuid = Entity.uuidFn();
             registerEntity(this);
         }

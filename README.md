@@ -336,9 +336,9 @@ In order to keep several instances in sync, sim-ecs provides tooling.
 Especially when writing networked simulations, it is very important to keep certain entities in sync.
 
 ```typescript
-// initialize UUID mechanism
+// OPTIONALLY initialize UUID mechanism
 import {uuid} from 'your-favorit-uuid-library';
-Entity.uuidFn = uuid;
+Entity.uuidFn = uuid; // type: () => string
 
 // at the source, entities can be created as normal
 const entity = world.buildEntity().build();
