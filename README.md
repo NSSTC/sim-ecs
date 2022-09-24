@@ -10,6 +10,7 @@ npm install sim-ecs
 
 - [Considerations](#considerations)
 - [Why use sim-ecs](#why-use-sim-ecs)
+  - [Runtime requirements](#runtime-requirements)
 - [Examples](#examples)
   - [Counter](#counter)
   - [Events](#events)
@@ -56,6 +57,23 @@ support for a variety of scenarios and performance.
 
 Since sim-ecs implements many bevy-ecs RFCs, it is very featured and modern. It can be used inside a generic game engine
 or for a game directly.
+
+
+### Runtime requirements
+
+If using the prebuilt library, "ES2020" was used as a target. Hence, this is the matrix:
+
+| App              | Version | Comment                              |
+|------------------|---------|--------------------------------------|
+| Chrome           | 80+     | Desktop and mobile                   |
+| Edge             | 80+     |                                      |
+| Safari           | 14.1+   | Desktop and mobile                   |
+| Firefox          | 80+     | Desktop (no exact mobile data)       |
+| Opera            | 67+     | Desktop                              |
+| Samsung Internet | 13.0+   |                                      |
+| NodeJS           | 12+     | Dependencies and tooling require 12+ |
+| Deno             | -       | ESM + TS is a blocker                |
+| Bun              | -       | Not tested, yet                      |
 
 
 ## Examples
