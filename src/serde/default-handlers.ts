@@ -77,11 +77,13 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
             }
 
             case 'object': {
-                if (typeof data != 'object') {
+                const parsedData = JSON.parse(data as string);
+
+                if (typeof parsedData != 'object') {
                     throw new Error(`Cannot deserialize Object with data of type ${typeof data}! Object expected!`);
                 }
 
-                return data as Object;
+                return parsedData as Object;
             }
 
             case 'set': {
