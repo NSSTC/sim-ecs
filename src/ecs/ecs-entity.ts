@@ -31,13 +31,7 @@ export function getEntity(id: string): IEntity | undefined {
  * @param entity
  */
 export function registerEntity(entity: IEntity) {
-    const id = entity.id;
-
-    if (!id) {
-        throw new Error('Could not get ID from entity, did you forget to register a generator or pass an ID?');
-    }
-
-    entities.set(id, new WeakRef(entity));
+    entities.set(entity.id, new WeakRef(entity));
 }
 
 /**
@@ -49,6 +43,6 @@ export function unregisterEntity(entity: IEntity): void {
         return;
     }
 
-    entities.delete(entity.id!);
+    entities.delete(entity.id);
     entity.removeId(false);
 }

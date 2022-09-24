@@ -7,7 +7,7 @@ export interface IEntity {
      * UUID to identify the entity across instances
      * The ID is generated and must be manually maintained when syncing with another instance
      */
-    readonly id?: string
+    readonly id: string
 
     /**
      * Add a component to this entity
