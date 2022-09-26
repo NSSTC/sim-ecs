@@ -47,11 +47,6 @@ export interface IEntity {
     hasComponent(component: typeof Object | TObjectProto): boolean
 
     /**
-     * Check if the entity has been assigned an ID, yet
-     */
-    hasId(): boolean
-
-    /**
      * Check if this entity has a given tag
      * @param tag
      */
@@ -62,12 +57,6 @@ export interface IEntity {
      * @param component
      */
     removeComponent(component: Object | TObjectProto): IEntity
-
-    /**
-     * Reset the entity ID and by default unregister the ID as well
-     * @param unregister
-     */
-    removeId(unregister?: boolean): void
 
     /**
      * Remove a tag from this entity

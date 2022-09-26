@@ -2,6 +2,7 @@ import {expect} from 'chai';
 import {SerDe} from "./serde";
 import {Entity, IEntity} from "../entity";
 import {SerialFormat} from "./serial-format";
+import {clearRegistry} from "../ecs/ecs-entity";
 
 describe('Test SerDe', () => {
     const compare = (entity1: IEntity, entity2: IEntity | undefined) => {
@@ -34,6 +35,10 @@ describe('Test SerDe', () => {
         useDefaultHandler: true,
         useRegisteredHandlers: false,
     };
+
+    afterEach(() => {
+        clearRegistry();
+    });
 
 
     it('DEFAULT HANDLERS: serialize -> deserialize empty entity', () => {
