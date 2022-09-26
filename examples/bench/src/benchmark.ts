@@ -1,15 +1,10 @@
-import * as Benchmark from "benchmark";
 import {suites} from "./suites";
-import {IBenchmark, IBenchmarkConstructor, ICaseResult, ISuiteResult} from "./benchmark.spec";
-import {hrtime} from 'process';
+import {IBenchmarkConstructor, ISuiteResult} from "./benchmark.spec";
 import {scheduleBenchmarks, serializeBenchmarks, simpleInsertBenchmarks, simpleIterBenchmarks} from "./libraries";
 
 (async () => {
     const iterCount = 1000;
     const probeCount = 50;
-    let deltaTime: bigint;
-    let result: ISuiteResult;
-    let startTime: bigint;
 
     const libBenches: { name: string, bench: IBenchmarkConstructor[] }[] = [
         { name: 'Simple Insert', bench: simpleInsertBenchmarks },
