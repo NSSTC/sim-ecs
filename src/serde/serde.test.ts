@@ -91,6 +91,21 @@ describe('Test SerDe', () => {
         }
     });
 
+    it('DEFAULT HANDLERS: serialize -> deserialize Entity references', () => {
+        const entity1 = new Entity();
+        const component = { entity1 };
+
+        entity1.addComponent(component);
+
+        {
+            const entity2 = doSerDe(entity1);
+            compare(entity1, entity2);
+
+            const entity1_asterisk = (Array.from(entity2.getComponents())[0] as typeof component).entity1;
+            expect(entity1).eq(entity1_asterisk);
+        }
+    });
+
     it('DEFAULT HANDLERS: serialize -> deserialize Tag', () => {
         const entity1 = new Entity();
 

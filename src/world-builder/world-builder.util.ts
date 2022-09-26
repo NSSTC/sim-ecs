@@ -1,7 +1,8 @@
 import {TObjectProto} from "../_.spec";
+import {IDeserializerOutput} from "../serde";
 
 // todo: read the Constructor parameters in order to throw early if a field is missing
-export function dataStructDeserializer(Constructor: TObjectProto, data: unknown): Object {
+export function dataStructDeserializer(Constructor: TObjectProto, data: unknown): IDeserializerOutput {
     if (typeof data != 'object') {
         throw new Error(`Cannot default-deserialize ${Constructor.name}, because the data is of type ${typeof data}!`);
     }
@@ -12,7 +13,10 @@ export function dataStructDeserializer(Constructor: TObjectProto, data: unknown)
         obj[kv[0]] = kv[1];
     }
 
-    return obj;
+    return {
+        containsRefs: false,
+        data: obj,
+    };
 }
 
 export function dataStructSerializer(component: unknown): unknown {

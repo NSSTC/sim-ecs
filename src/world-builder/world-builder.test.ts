@@ -20,7 +20,7 @@ describe('Test WorldBuilder', () => {
 
         const jsonObj = JSON.stringify(component);
         const serializedObj = dataStructSerializer(component);
-        const deserializedObj = dataStructDeserializer(Component, serializedObj);
+        const deserializedObj = dataStructDeserializer(Component, serializedObj).data;
 
         expect(JSON.stringify(serializedObj)).eq(jsonObj);
         expect(deserializedObj).deep.eq(component);

@@ -1,6 +1,6 @@
 import {TObjectProto} from "../_.spec";
 import {
-    CTagMarker,
+    CTagMarker, IDeserializerOutput,
     ISerDe,
     ISerDeDataSet,
     ISerDeOperations,
@@ -15,6 +15,9 @@ import {IEntity, TTag} from "../entity.spec";
 import {getDefaultDeserializer, getDefaultSerializer} from "./default-handlers";
 import {Entity} from "../entity";
 import {TEntity} from "./_";
+import {Reference} from "./referencing";
+import {EReferenceType} from "./referencing.spec";
+import {getEntity} from "../ecs/ecs-entity";
 
 export * from "./serde.spec";
 
@@ -28,6 +31,8 @@ export class SerDe implements ISerDe {
             fallbackHandler: options?.fallbackHandler,
         };
         const entities: IEntity[] = [];
+        const componentsWithRefs: Object[] = [];
+        let deserializerOut: IDeserializerOutput;
         let entity: Entity;
         let serialComponentData: unknown;
         let serialComponentName: string;
@@ -39,7 +44,12 @@ export class SerDe implements ISerDe {
 
             for ([serialComponentName, serialComponentData] of Object.entries(serialEntity)) {
                 if (finalOptions.useRegisteredHandlers && this.typeHandlers.has(serialComponentName)) {
-                    entity.addComponent(this.typeHandlers.get(serialComponentName)!.deserializer(serialComponentData));
+                    deserializerOut = this.typeHandlers.get(serialComponentName)!.deserializer(serialComponentData);
+                    entity.addComponent(deserializerOut.data);
+
+                    if (deserializerOut.containsRefs) {
+                        componentsWithRefs.push(deserializerOut.data);
+                    }
                 } else if (serialComponentName == CTagMarker) {
                     if (!Array.isArray(serialComponentData)) {
                         throw new Error('Expected array of tags for the hash identifier!');
@@ -53,11 +63,45 @@ export class SerDe implements ISerDe {
                         entity.addTag(tag);
                     }
                 } else if (finalOptions.useDefaultHandler) {
-                    entity.addComponent(getDefaultDeserializer(finalOptions.fallbackHandler)(serialComponentName, serialComponentData));
+                    deserializerOut = getDefaultDeserializer(finalOptions.fallbackHandler)(serialComponentName, serialComponentData);
+                    entity.addComponent(deserializerOut.data);
+
+                    if (deserializerOut.containsRefs) {
+                        componentsWithRefs.push(deserializerOut.data);
+                    }
                 }
             }
 
             entities.push(entity);
+        }
+
+        {
+            const replaceRef = (obj: Record<string, any>) => {
+                let key: string;
+                let value;
+
+                for ([key, value] of Object.entries(obj)) {
+                    if (value instanceof Reference) {
+                        switch (value.type) {
+                            case EReferenceType.Entity: {
+                                obj[key] = getEntity(value.id);
+                                break;
+                            }
+                            default: {
+                                obj[key] = value.id;
+                            }
+                        }
+                    } else if (typeof value == 'object') {
+                        replaceRef(value);
+                    }
+                }
+            };
+
+            let component;
+
+            for (component of componentsWithRefs) {
+                replaceRef(component);
+            }
         }
 
         return {

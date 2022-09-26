@@ -3,8 +3,8 @@ import {TObjectProto} from "../_.spec";
 import {ISerialFormat} from "./serial-format.spec";
 
 /// stores the constructor name and the data blob on indices 0 and 1 accordingly
-export type TCustomDeserializer = (data: unknown) => Object;
-export type TDeserializer = (constructorName: string, data: unknown) => Object;
+export type TCustomDeserializer = (data: unknown) => IDeserializerOutput;
+export type TDeserializer = (constructorName: string, data: unknown) => IDeserializerOutput;
 export type TSerDeOptions<T> = {
     fallbackHandler?: T,
     useDefaultHandler?: boolean,
@@ -13,6 +13,11 @@ export type TSerDeOptions<T> = {
 export type TSerializable = unknown;
 export type TSerializer = (component: unknown) => TSerializable;
 
+
+export interface IDeserializerOutput {
+    containsRefs: boolean
+    data: Object
+}
 
 export interface ISerDeDataSet {
     entities: IterableIterator<IEntity>
@@ -53,4 +58,6 @@ export interface ISerDe {
 }
 
 
+export const CMarkerSeparator = '|';
+export const CRefMarker = '*****';
 export const CTagMarker = '#Tags';
