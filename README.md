@@ -130,6 +130,8 @@ Anything which is not explained in detail enough in this README can be found in 
 You will notice that there are spec-files. These contain the specification for a certain class,
 which usually means an interface with comments on what the methods do.
 
+Also, there is a [generated API-documentation](https://nsstc.github.io/sim-ecs/) available!
+
 
 ## Creating the ECS and a World
 
