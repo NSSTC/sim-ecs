@@ -455,7 +455,7 @@ tick-knock      v4.1.0
  Default Suite / Serialize
 --------------------------------
 Ape-ECS SerializeSave file size: 417.3427734375 KB
-    Ape-ECS 74 ops/s ± 1.3%
-sim-ecs SerializeSave file size: 67.3837890625 KB
-    sim-ecs 142 ops/s ± 1.7%
+    Ape-ECS 69 ops/s ± 1.5%
+sim-ecs SerializeSave file size: 78.9951171875 KB
+    sim-ecs 121 ops/s ± 1.5%
 ```

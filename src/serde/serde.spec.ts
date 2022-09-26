@@ -58,6 +58,7 @@ export interface ISerDe {
 }
 
 
+export const CIdMarker = '#ID';
 export const CMarkerSeparator = '|';
 export const CRefMarker = '*****';
 export const CTagMarker = '#Tags';

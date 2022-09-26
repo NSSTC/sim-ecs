@@ -1,5 +1,6 @@
 import {TObjectProto} from "../_.spec";
 import {
+    CIdMarker,
     CTagMarker, IDeserializerOutput,
     ISerDe,
     ISerDeDataSet,
@@ -31,25 +32,28 @@ export class SerDe implements ISerDe {
             fallbackHandler: options?.fallbackHandler,
         };
         const entities: IEntity[] = [];
+        const components = [];
         const componentsWithRefs: Object[] = [];
+        const tags: TTag[] = [];
+        let component;
         let deserializerOut: IDeserializerOutput;
-        let entity: Entity;
+        let id: string = '';
         let serialComponentData: unknown;
         let serialComponentName: string;
         let serialEntity: TEntity;
         let tag: TTag;
 
         for (serialEntity of data) {
-            entity = new Entity();
-
             for ([serialComponentName, serialComponentData] of Object.entries(serialEntity)) {
                 if (finalOptions.useRegisteredHandlers && this.typeHandlers.has(serialComponentName)) {
                     deserializerOut = this.typeHandlers.get(serialComponentName)!.deserializer(serialComponentData);
-                    entity.addComponent(deserializerOut.data);
+                    components.push(deserializerOut.data);
 
                     if (deserializerOut.containsRefs) {
                         componentsWithRefs.push(deserializerOut.data);
                     }
+                } else if (serialComponentName == CIdMarker) {
+                    id = serialComponentData as string;
                 } else if (serialComponentName == CTagMarker) {
                     if (!Array.isArray(serialComponentData)) {
                         throw new Error('Expected array of tags for the hash identifier!');
@@ -60,11 +64,11 @@ export class SerDe implements ISerDe {
                             throw new Error('Tags must be of type string or number!');
                         }
 
-                        entity.addTag(tag);
+                        tags.push(tag);
                     }
                 } else if (finalOptions.useDefaultHandler) {
                     deserializerOut = getDefaultDeserializer(finalOptions.fallbackHandler)(serialComponentName, serialComponentData);
-                    entity.addComponent(deserializerOut.data);
+                    components.push(deserializerOut.data);
 
                     if (deserializerOut.containsRefs) {
                         componentsWithRefs.push(deserializerOut.data);
@@ -72,7 +76,26 @@ export class SerDe implements ISerDe {
                 }
             }
 
-            entities.push(entity);
+            if (!id) {
+                throw new Error('Serial format is missing an entity id!');
+            }
+
+            {
+                const entity = new Entity(id);
+
+                for (tag of tags) {
+                    entity.addTag(tag);
+                }
+
+                for (component of components) {
+                    entity.addComponent(component);
+                }
+
+                entities.push(entity);
+            }
+
+            tags.length = 0;
+            components.length = 0;
         }
 
         {
@@ -138,7 +161,9 @@ export class SerDe implements ISerDe {
         let tags: TTag[];
 
         for (entity of data.entities) {
-            serialEntity = {};
+            serialEntity = {
+                [CIdMarker]: entity.id,
+            };
 
             for (component of entity.getComponents()) {
                 if (finalOptions.useRegisteredHandlers && this.typeHandlers.has(component.constructor.name)) {

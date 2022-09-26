@@ -101,8 +101,8 @@ describe('Test SerDe', () => {
             const entity2 = doSerDe(entity1);
             compare(entity1, entity2);
 
-            const entity1_asterisk = (Array.from(entity2.getComponents())[0] as typeof component).entity1;
-            expect(entity1).eq(entity1_asterisk);
+            expect(entity1.getComponents().next().value.entity1.id).eq(entity2.getComponents().next().value.entity1.id);
+            expect(entity1.id).eq(entity2.id);
         }
     });
 
