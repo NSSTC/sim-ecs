@@ -1,6 +1,8 @@
 import {readFileSync} from "fs-extra";
 import {arch, cpus, release, platform, type} from 'os';
 
+const nodeVersion = process.version;
+
 const benchVersion = JSON.parse(readFileSync('package.json').toString()).version;
 const tsVersion = JSON.parse(readFileSync('node_modules/typescript/package.json').toString()).version;
 const tsLibVersion = JSON.parse(readFileSync('node_modules/tslib/package.json').toString()).version;
@@ -23,6 +25,7 @@ TypeScript ECS Bench
 
 Platform: ${type()} ${platform()} ${arch()} v${release()}
 CPU: ${getUniqueCPUs().map(cpu => `${cpu.model.trim()}@${cpu.speed}MHz`).join(', ')}
+NodeJS: ${nodeVersion}
 
 Bench\t\tv${benchVersion}
 TypeScript\tv${tsVersion}

@@ -398,43 +398,44 @@ Date: 19th January 2022
 TypeScript ECS Bench
 --------------------------------------------------------------------------------
 
-Platform: Windows_NT win32 x64 v10.0.19043
+Platform: Windows_NT win32 x64 v10.0.22000
 CPU: AMD Ryzen 7 3700X 8-Core Processor@3600MHz
+NodeJS: v18.9.1
 
 Bench           v0.2.0
-TypeScript      v4.5.4
-TS-Lib          v2.3.1
-TS-Node         v10.4.0
+TypeScript      v4.8.3
+TS-Lib          v2.4.0
+TS-Node         v10.9.1
 
 Ape-ECS         v1.3.1
-bitecs          v0.3.34
-sim-ecs         v0.5.0
-tick-knock      v4.0.2
+bitecs          v0.3.38
+sim-ecs         v0.6.0
+tick-knock      v4.1.0
+
 
 
  Default Suite / Simple Insert
 --------------------------------
-    Ape-ECS 80 ops/s ± 0.90%
-    bitecs 5000 ops/s ± 1.8%
-    sim-ecs 325 ops/s ± 0.78%
-    tick-knock 556 ops/s ± 0.94%
+    Ape-ECS 86 ops/s ± 0.32%
+    bitecs 536 ops/s ± 1.0%
+    sim-ecs 136 ops/s ± 1.7%
+    tick-knock 603 ops/s ± 1.1%
 
 
 
  Default Suite / Simple Iter
 --------------------------------
-    Ape-ECS 166 ops/s ± 0.28%
-    bitecs 50000 ops/s ± 1.029%
-    sim-ecs 25000 ops/s ± 0.013%
-    tick-knock 30 ops/s ± 0.11%
+    Ape-ECS 162 ops/s ± 0.092%
+    bitecs 1135 ops/s ± 0.34%
+    sim-ecs 117151 ops/s ± 1.1%
+    tick-knock 39 ops/s ± 0.29%
 
 
 
  Default Suite / Serialize
 --------------------------------
-Ape-ECS SerializeSave file size: 450.1962890625 KB
-    Ape-ECS 66 ops/s ± 1.2%
+Ape-ECS SerializeSave file size: 417.3427734375 KB
+    Ape-ECS 74 ops/s ± 1.3%
 sim-ecs SerializeSave file size: 67.3837890625 KB
-    sim-ecs 95 ops/s ± 1.6%
-
+    sim-ecs 142 ops/s ± 1.7%
 ```

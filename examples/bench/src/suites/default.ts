@@ -38,7 +38,7 @@ const defaultSuite = {
             for (let i = 0; i < this.probeCount; i++) {
                 const start = process.hrtime.bigint();
                 await bench.run();
-                runTimes.push(Number((process.hrtime.bigint() - start) / BigInt(1000000)));
+                runTimes.push(Number(process.hrtime.bigint() - start) / 1000000);
                 await bench.reset();
             }
 

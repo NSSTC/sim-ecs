@@ -8,7 +8,6 @@ import {
     Types
 } from 'bitecs';
 import { IBenchmark } from '../../benchmark.spec';
-import {Type} from "typedoc/dist/lib/models";
 
 const A = defineComponent({ val: Types.ui32 });
 const B = defineComponent({ val: Types.ui32 });
