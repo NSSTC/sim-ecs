@@ -1,7 +1,7 @@
 import {ICommands} from "./commands.spec";
 import {IEntity} from "../entity.spec";
 import {TTypeProto} from "../_.spec";
-import {TDeserializer, TSerDeOptions, ISerialFormat} from "../serde";
+import {TDeserializer, ISerDeOptions, ISerialFormat} from "../serde";
 import IWorld, {TGroupHandle} from "../world.spec";
 import {IIStateProto} from "../state.spec";
 import {World} from "../world";
@@ -16,7 +16,7 @@ export class Commands implements ICommands {
         public readonly aggregator: ICommandsAggregator,
     ) {}
 
-    addEntity(entity: IEntity) {
+    addEntity(entity: IEntity): void {
         this.aggregator.addCommand(() => this.world.addEntity(entity));
     }
 
@@ -55,13 +55,13 @@ export class Commands implements ICommands {
         this.aggregator.addCommand(() => this.world.entities.clear());
     }
 
-    load(prefab: ISerialFormat, options?: TSerDeOptions<TDeserializer>): TGroupHandle {
+    load(prefab: ISerialFormat, options?: ISerDeOptions<TDeserializer>): TGroupHandle {
         const handle = this.world.createGroup();
         this.aggregator.addCommand(() => { this.world.load(prefab, options, handle) });
         return handle;
     }
 
-    maintain() {
+    maintain(): void {
         this.aggregator.triggerMaintain();
     }
 

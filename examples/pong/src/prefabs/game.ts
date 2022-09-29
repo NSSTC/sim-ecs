@@ -4,6 +4,7 @@ import {UIItem} from "../components/ui-item";
 import {Position} from "../components/position";
 import {Collision} from "../components/collision";
 import {EWallSide, EWallType, Wall} from "../components/wall";
+import {CResourceMarker, CResourceMarkerValue} from "sim-ecs";
 
 
 export const defaultBallPositionX = 0.49;
@@ -13,6 +14,13 @@ export const defaultBallVelocityY = 0.007 / 2;
 
 // This could also be pure JSON, but in order to use TS types and have static checks it is recommended to write it as TS array.
 export const gamePrefab = [
+    { // Resources
+        [CResourceMarker]: CResourceMarkerValue,
+        ScoreBoard: {
+            left: 0,
+            right: 0,
+        }
+    },
     { // Left wall
         Wall: <Wall>{
             wallSide: EWallSide.Left,

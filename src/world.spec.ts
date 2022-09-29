@@ -2,15 +2,15 @@ import type {IEntity} from "./entity.spec";
 import type {ISystem} from "./system";
 import type {IIStateProto, IState} from "./state.spec";
 import type {TTypeProto} from "./_.spec";
-import type {IAccessDescriptor, IEntitiesQuery} from "./query";
-import type {ISerDe, ISerialFormat, TSerDeOptions, TSerializer} from "./serde";
+import type {IEntitiesQuery} from "./query";
+import type {ISerDe, ISerialFormat, ISerDeOptions, TSerializer} from "./serde";
 import type {ICommands} from "./commands";
 import type IEntityBuilder from "./entity-builder.spec";
 import type {IScheduler} from "./scheduler/scheduler.spec";
+import {TObjectProto} from "./_.spec";
 
 export type TExecutionFunction = ((callback: Function) => any) | typeof setTimeout | typeof requestAnimationFrame;
 export type TGroupHandle = number;
-export type TStates = Map<IIStateProto, Set<ISystem>>;
 
 export interface IRunConfiguration {
     executionFunction?: TExecutionFunction
@@ -20,11 +20,6 @@ export interface IRunConfiguration {
 export interface IStaticRunConfiguration {
     executionFunction: TExecutionFunction
     initialState: IIStateProto,
-}
-
-export interface ISystemInfo {
-    dependencies: Set<ISystem>
-    system: ISystem
 }
 
 export interface IWorldConstructorOptions {
@@ -59,7 +54,13 @@ export interface IPartialWorld {
     /**
      * Get all resources stored in this world. Useful for debugging
      */
-    getResources(): IterableIterator<unknown>
+    getResources(types?: TObjectProto[]): IterableIterator<Object>
+
+    /**
+     * Check if a resource was stored
+     * @param type
+     */
+    hasResource<T extends Object>(type: TTypeProto<T>): boolean
 
     /**
      * Re-calculate all entity, component and system dependencies and connections
@@ -69,10 +70,9 @@ export interface IPartialWorld {
     /**
      * Prepare a savable version of the current world.
      * The query can be used to only save a sub-set with specific conditions
-     * @param query
      * @param options
      */
-    save<C extends Object, T extends IAccessDescriptor<C>>(query?: IEntitiesQuery, options?: TSerDeOptions<TSerializer>): ISerialFormat
+    save(options?: ISerDeOptions<TSerializer>): ISerialFormat
 }
 
 /**
@@ -101,6 +101,12 @@ export interface ISystemActions {
      * @param type
      */
     getResource<T extends Object>(type: TTypeProto<T>): T
+
+    /**
+     * Check if a resource was stored
+     * @param type
+     */
+    hasResource<T extends Object>(type: TTypeProto<T>): boolean
 }
 
 /**
@@ -187,5 +193,4 @@ export interface IWorld extends IPartialWorld {
     run(configuration?: IRunConfiguration): Promise<void>
 }
 
-export type TWorldProto = { new(): IWorld };
 export default IWorld;

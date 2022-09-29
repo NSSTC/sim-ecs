@@ -1,8 +1,9 @@
 import {expect} from 'chai';
-import {SerDe} from "./serde";
+import {ISerDeOptions, SerDe} from "./serde";
 import {Entity, IEntity} from "../entity";
 import {SerialFormat} from "./serial-format";
 import {clearRegistry} from "../ecs/ecs-entity";
+import {dataStructDeserializer, dataStructSerializer} from "../world-builder/world-builder.util";
 
 describe('Test SerDe', () => {
     const compare = (entity1: IEntity, entity2: IEntity | undefined) => {
@@ -26,10 +27,14 @@ describe('Test SerDe', () => {
             expect(Object.entries(Array.from(entity1.getComponents())).toString()).eq(Object.entries(Array.from(entity2!.getComponents())).toString());
         }
     };
-    const doSerDe = (entity1: IEntity) => {
-        const serial = serde.serialize({entities: [entity1].values()}, options).toJSON();
-        return serde.deserialize(SerialFormat.fromJSON(serial), options).entities.next().value;
+    const doSerDe = (entity1: IEntity, resources: Record<string, Object> = {}, serdeOptions?: ISerDeOptions<never>) => {
+        const serial = serde.serialize({
+            entities: [entity1].values(),
+            resources,
+        }, serdeOptions ?? options).toJSON();
+        return serde.deserialize(SerialFormat.fromJSON(serial), serdeOptions ?? options);
     };
+    const doSerDeFirstEntity = (entity1: IEntity) => doSerDe(entity1).entities.next().value;
     const serde = new SerDe();
     const options = {
         useDefaultHandler: true,
@@ -43,7 +48,7 @@ describe('Test SerDe', () => {
 
     it('DEFAULT HANDLERS: serialize -> deserialize empty entity', () => {
         const entity1 = new Entity();
-        compare(entity1, doSerDe(entity1));
+        compare(entity1, doSerDeFirstEntity(entity1));
     });
 
     it('DEFAULT HANDLERS: serialize -> deserialize Array component', () => {
@@ -52,7 +57,7 @@ describe('Test SerDe', () => {
         entity1.addComponent([42, 17, 1337, 20.365]);
 
         {
-            const entity2 = doSerDe(entity1);
+            const entity2 = doSerDeFirstEntity(entity1);
 
             compare(entity1, entity2);
             expect(entity1.getComponent(Array)?.pop()).eq(entity2!.getComponent(Array)?.pop()).not.eq(undefined);
@@ -64,7 +69,7 @@ describe('Test SerDe', () => {
 
         entity1.addComponent({});
 
-        compare(entity1, doSerDe(entity1));
+        compare(entity1, doSerDeFirstEntity(entity1));
     });
 
     it('DEFAULT HANDLERS: serialize -> deserialize non-empty Object component', () => {
@@ -75,7 +80,7 @@ describe('Test SerDe', () => {
             bar: 'baz',
         });
 
-        compare(entity1, doSerDe(entity1));
+        compare(entity1, doSerDeFirstEntity(entity1));
     });
 
     it('DEFAULT HANDLERS: serialize -> deserialize Date component', () => {
@@ -84,7 +89,7 @@ describe('Test SerDe', () => {
         entity1.addComponent(new Date(0));
 
         {
-            const entity2 = doSerDe(entity1);
+            const entity2 = doSerDeFirstEntity(entity1);
 
             compare(entity1, entity2);
             expect(entity1.getComponent(Date)!.toString()).eq(entity2!.getComponent(Date)!.toString());
@@ -98,7 +103,7 @@ describe('Test SerDe', () => {
         entity1.addComponent(component);
 
         {
-            const entity2 = doSerDe(entity1);
+            const entity2 = doSerDeFirstEntity(entity1);
             compare(entity1, entity2);
 
             expect(entity1.getComponents().next().value.entity1.id).eq(entity2.getComponents().next().value.entity1.id);
@@ -111,6 +116,29 @@ describe('Test SerDe', () => {
 
         entity1.addTag('test');
 
-        compare(entity1, doSerDe(entity1));
+        compare(entity1, doSerDeFirstEntity(entity1));
+    });
+
+    it('DEFAULT HANDLERS: serialize -> deserialize Resources', () => {
+        serde.registerTypeHandler(ResourceA, dataStructDeserializer.bind(undefined, ResourceA), dataStructSerializer);
+
+        const out = doSerDe(new Entity(), {
+            resA: new ResourceA(),
+        }, {
+            useDefaultHandler: true,
+            useRegisteredHandlers: true,
+        });
+
+        const res2 = out.resources[ResourceA.name] as ResourceA | undefined;
+
+        expect(res2).not.eq(undefined);
+        expect(res2!.foo).eq(42);
+
+        serde.unregisterTypeHandler(ResourceA);
     });
 });
+
+
+class ResourceA {
+    foo = 42;
+}

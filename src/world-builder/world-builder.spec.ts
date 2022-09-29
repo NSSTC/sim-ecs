@@ -5,7 +5,7 @@ import type {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
 import type {IScheduler} from "../scheduler/scheduler.spec";
 import type {IIStateProto} from "../state.spec";
 
-export interface IComponentRegistrationOptions {
+export interface IObjectRegistrationOptions {
     serDe: ISerDeOperations
 }
 
@@ -20,14 +20,14 @@ export interface IWorldBuilder {
      * @param Component
      * @param options
      */
-    c(Component: TObjectProto, options?: IComponentRegistrationOptions): IWorldBuilder
+    c(Component: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder
 
     /**
      * Alias for [withComponent]{@link IWorldBuilder#withComponent}
      * @param Component
      * @param options
      */
-    component(Component: TObjectProto, options?: IComponentRegistrationOptions): IWorldBuilder
+    component(Component: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder
 
     /**
      * Alias for [withComponent]{@link IWorldBuilder#withComponent}
@@ -42,6 +42,20 @@ export interface IWorldBuilder {
     name(name: string): IWorldBuilder
 
     /**
+     * Alias for [withResource]{@link IWorldBuilder#withResource}
+     * @param Resource
+     * @param options
+     */
+    r(Resource: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder
+
+    /**
+     * Alias for [withResource]{@link IWorldBuilder#withResource}
+     * @param Resource
+     * @param options
+     */
+    resource(Resource: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder
+
+    /**
      * Transform the root sync point
      * @param updater
      */
@@ -52,7 +66,7 @@ export interface IWorldBuilder {
      * @param Component
      * @param options
      */
-    withComponent(Component: TObjectProto, options?: IComponentRegistrationOptions): IWorldBuilder
+    withComponent(Component: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder
 
     /**
      * Register several components with default options in the world
@@ -67,16 +81,29 @@ export interface IWorldBuilder {
     withDefaultScheduler(scheduler: IScheduler): IWorldBuilder
 
     /**
+     * Create and add a default schedule
+     * @param planner
+     */
+    withDefaultScheduling(planner: (root: ISyncPoint) => void): IWorldBuilder
+
+    /**
      * Give the world a name
      * @param name
      */
     withName(name: string): IWorldBuilder
 
     /**
-     * Create and add a default schedule
-     * @param planner
+     * Register settings for a resource type (for serDe)
+     * @param Resource
+     * @param options
      */
-    withDefaultScheduling(planner: (root: ISyncPoint) => void): IWorldBuilder
+    withResource(Resource: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder
+
+    /**
+     * Register several resources for serDe
+     * @param Resources
+     */
+    withResources(Resources: TObjectProto[]): IWorldBuilder
 
     /**
      * Add a per-state custom scheduler

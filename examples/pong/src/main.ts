@@ -14,6 +14,8 @@ import {Wall} from "./components/wall";
 import {PauseState} from "./states/pause";
 import {defaultSchedule} from "./schedules/default";
 import {pauseSchedule} from "./schedules/pause";
+import {GameState} from "./states/game";
+import {gameSchedule} from "./schedules/game";
 
 
 const cleanup = () => {
@@ -31,7 +33,9 @@ const cleanup = () => {
 const createWorld = () => {
     return buildWorld()
         .withDefaultScheduling(root => root.fromPrefab(defaultSchedule))
+        .withStateScheduling(GameState, root => root.fromPrefab(gameSchedule))
         .withStateScheduling(PauseState, root => root.fromPrefab(pauseSchedule))
+        .r(ScoreBoard)
         .withComponents(
             Collision,
             Paddle,
@@ -61,7 +65,6 @@ const initGame = (world: IWorld) => {
 
     world.addResource(GameStore);
     world.addResource(renderContext);
-    world.addResource(ScoreBoard);
     world.addResource(
         PaddleTransforms,
         {

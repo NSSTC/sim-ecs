@@ -10,13 +10,12 @@ import type {
 import type {IEntity} from "./entity.spec";
 import type {IState, IIStateProto} from "./state";
 import {State} from "./state";
-import type {TExecutor, TTypeProto} from "./_.spec";
+import type {TExecutor, TObjectProto, TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
-import type {ISerDe, ISerialFormat, TDeserializer, TSerDeOptions, TSerializer} from "./serde";
+import type {ISerDe, ISerDeOptions, ISerialFormat, TDeserializer, TSerializer} from "./serde";
 import {SerDe} from "./serde";
 import {Commands, CommandsAggregator} from "./commands";
 import type {
-    IAccessDescriptor,
     IQuery,
     IEntitiesQuery,
 } from "./query";
@@ -52,7 +51,7 @@ export class World implements IWorld {
         entityLinks: new Map<number, IEntity[]>(),
     };
     protected queries: Set<IQuery<unknown, unknown>> = new Set();
-    public resources = new Map<{ new(): Object }, Object>();
+    public resources = new Map<TObjectProto, Object>();
     protected runPromise?: Promise<void> = undefined;
     protected defaultScheduler: IScheduler;
     protected shouldRunSystems = false;
@@ -80,6 +79,7 @@ export class World implements IWorld {
             },
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
+            hasResource: this.hasResource.bind(this),
         });
 
         this.transitionWorld = Object.freeze({
@@ -96,6 +96,7 @@ export class World implements IWorld {
             getEntities: this.getEntities.bind(this),
             getResource: this.getResource.bind(this),
             getResources: this.getResources.bind(this),
+            hasResource: this.hasResource.bind(this),
             maintain: this.maintain.bind(this),
             save: this.save.bind(this),
         });
@@ -227,8 +228,21 @@ export class World implements IWorld {
         return this.resources.get(type) as T;
     }
 
-    getResources(): IterableIterator<unknown> {
-        return this.resources.values();
+    *getResources(types?: TObjectProto[]): IterableIterator<Object> {
+        if (!types) {
+            return this.resources.values();
+        }
+
+        {
+            let resource;
+            let type;
+
+            for ([type, resource] of this.resources.entries()) {
+                if (types.includes(type)) {
+                    yield resource;
+                }
+            }
+        }
     }
 
     getStageWorld(): IStageAction {
@@ -238,18 +252,50 @@ export class World implements IWorld {
         };
     }
 
-    load(prefab: ISerialFormat, options?: TSerDeOptions<TDeserializer>, intoGroup?: TGroupHandle): TGroupHandle {
+    hasResource<T extends Object>(obj: T | TTypeProto<T>): boolean {
+        let type: TTypeProto<T>;
+
+        if (typeof obj === 'object') {
+            type = obj.constructor as TTypeProto<T>;
+        } else {
+            type = obj;
+        }
+
+        return this.resources.has(type);
+    }
+
+    load(prefab: ISerialFormat, options?: ISerDeOptions<TDeserializer>, intoGroup?: TGroupHandle): TGroupHandle {
         let groupHandle = intoGroup;
         if (groupHandle == undefined || !this.groups.entityLinks.has(groupHandle)) {
             groupHandle = this.createGroup();
         }
 
-        const entities = this.groups.entityLinks.get(groupHandle)!;
-        let entity: IEntity;
+        const serdeOut = this._serde.deserialize(prefab, options);
 
-        for (entity of this._serde.deserialize(prefab, options).entities) {
-            this.addEntity(entity);
-            entities.push(entity);
+        {
+            const entities = this.groups.entityLinks.get(groupHandle)!;
+            let entity: IEntity;
+
+            for (entity of serdeOut.entities) {
+                this.addEntity(entity);
+                entities.push(entity);
+            }
+        }
+
+        {
+            let resource;
+
+            for (resource of Object.values(serdeOut.resources)) {
+                if (options?.replaceResources) {
+                    if (this.hasResource(resource)) {
+                        this.replaceResource(resource);
+                    } else {
+                        this.addResource(resource);
+                    }
+                } else {
+                    this.addResource(resource);
+                }
+            }
         }
 
         return groupHandle;
@@ -308,6 +354,7 @@ export class World implements IWorld {
         const newState = this.pda.state! as State;
         await newState.create(this.transitionWorld);
         await newState.activate(this.transitionWorld);
+        await this._commandsAggregator.executeAll();
         this.currentScheduler = this.stateSchedulers.get(NewState) ?? this.defaultScheduler;
         await this.preparePipeline(this.currentScheduler.pipeline);
 
@@ -405,7 +452,7 @@ export class World implements IWorld {
         this.merge(world);
     }
 
-    replaceResource<T extends Object>(obj: T | TTypeProto<T>, ...args: unknown[]) {
+    replaceResource<T extends Object>(obj: T | TTypeProto<T>, ...args: unknown[]): void {
         let type: TTypeProto<T>;
 
         if (typeof obj === 'object') {
@@ -491,6 +538,7 @@ export class World implements IWorld {
 
                     try {
                         await this.currentSchedulerExecutor!();
+                        await this._commandsAggregator.executeAll();
                     } catch (error) {
                         if (typeof error == 'object' && error != null) {
                             await this.eventBus.publish(error);
@@ -520,8 +568,11 @@ export class World implements IWorld {
         this.shouldRunSystems = false;
     }
 
-    save<C extends Object, T extends IAccessDescriptor<C>>(query?: IEntitiesQuery, options?: TSerDeOptions<TSerializer>): ISerialFormat {
-        return this.serde.serialize({entities: this.getEntities(query)}, options);
+    save(options?: ISerDeOptions<TSerializer>): ISerialFormat {
+        return this.serde.serialize({
+            entities: this.getEntities(options?.entities),
+            resources: Object.fromEntries(options?.resources?.map(type => [type.constructor.name, this.getResource(type)!]) ?? []),
+        }, options);
     }
 
     protected subscribeEventsOfSchedulerSystems(scheduler: IScheduler) {

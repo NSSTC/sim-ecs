@@ -1,11 +1,11 @@
-import {TDeserializer, TSerializer} from "./serde.spec";
+import type {TDeserializer, TSerializer} from "./serde.spec";
 import {Entity} from "../entity";
 import {Reference} from "./referencing";
 import {EReferenceType} from "./referencing.spec";
 
 
 export const getDefaultSerializer = function (customSerializer?: TSerializer): TSerializer {
-    const serializeObjectReplacer = function (key: string, value: Object) {
+    const serializeObjectReplacer = function (key: string, value: Object): string | Object {
         return value instanceof Entity
             ? new Reference(EReferenceType.Entity, value.id).toString()
             : value;

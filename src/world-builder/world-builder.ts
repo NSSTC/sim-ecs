@@ -1,5 +1,5 @@
 import type {
-    IComponentRegistrationOptions,
+    IObjectRegistrationOptions,
     IWorldBuilder,
 } from "./world-builder.spec";
 import {World} from "../world";
@@ -44,7 +44,7 @@ export class WorldBuilder implements IWorldBuilder {
         return world;
     }
 
-    c(Component: TObjectProto, options?: IComponentRegistrationOptions): WorldBuilder {
+    c(Component: TObjectProto, options?: IObjectRegistrationOptions): WorldBuilder {
         return this.withComponent(Component, options);
     }
 
@@ -54,7 +54,7 @@ export class WorldBuilder implements IWorldBuilder {
         }
     }
 
-    component(Component: TObjectProto, options?: IComponentRegistrationOptions): WorldBuilder {
+    component(Component: TObjectProto, options?: IObjectRegistrationOptions): WorldBuilder {
         return this.withComponent(Component, options);
     }
 
@@ -97,6 +97,14 @@ export class WorldBuilder implements IWorldBuilder {
         return this.withName(name);
     }
 
+    r(Resource: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder {
+        return this.withResource(Resource, options);
+    }
+
+    resource(Resource: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder {
+        return this.withResource(Resource, options);
+    }
+
     protected registerAllNamedSyncPoints(root: ISyncPoint) {
         let currentSyncPoint = root;
 
@@ -132,7 +140,7 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withComponent(Component: TObjectProto, options?: IComponentRegistrationOptions): WorldBuilder {
+    withComponent(Component: TObjectProto, options?: IObjectRegistrationOptions): WorldBuilder {
         this.serde.registerTypeHandler(
             Component,
             options?.serDe?.deserializer ?? dataStructDeserializer.bind(undefined, Component),
@@ -160,17 +168,35 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withName(name: string): WorldBuilder {
-        this.worldName = name;
-        return this;
-    }
-
     withDefaultScheduling(planner: (root: ISyncPoint) => void): WorldBuilder {
         const root = this.defaultScheduler.pipeline.root;
 
         this.checkSyncPointLoop(root);
         planner(root);
         this.registerAllNamedSyncPoints(root);
+
+        return this;
+    }
+
+    withName(name: string): WorldBuilder {
+        this.worldName = name;
+        return this;
+    }
+
+    withResource(Resource: TObjectProto, options?: IObjectRegistrationOptions): WorldBuilder {
+        this.serde.registerTypeHandler(
+            Resource,
+            options?.serDe?.deserializer ?? dataStructDeserializer.bind(undefined, Resource),
+            options?.serDe?.serializer ?? dataStructSerializer
+        );
+
+        return this;
+    }
+
+    withResources(Resources: TObjectProto[]): WorldBuilder {
+        for (const Resource of Resources) {
+            this.withResource(Resource);
+        }
 
         return this;
     }
@@ -217,4 +243,5 @@ WorldBuilder.prototype.c = WorldBuilder.prototype.withComponent;
 WorldBuilder.prototype.component = WorldBuilder.prototype.withComponent;
 WorldBuilder.prototype.components = WorldBuilder.prototype.withComponents;
 WorldBuilder.prototype.name = WorldBuilder.prototype.withName;
-
+WorldBuilder.prototype.r = WorldBuilder.prototype.withResource;
+WorldBuilder.prototype.resource = WorldBuilder.prototype.withResource;

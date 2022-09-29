@@ -1,18 +1,25 @@
 import {IEntity} from "../entity.spec";
-import {TObjectProto} from "../_.spec";
+import type {TObjectProto} from "../_.spec";
 import {ISerialFormat} from "./serial-format.spec";
+import {IEntitiesQuery} from "../query";
 
 /// stores the constructor name and the data blob on indices 0 and 1 accordingly
 export type TCustomDeserializer = (data: unknown) => IDeserializerOutput;
 export type TDeserializer = (constructorName: string, data: unknown) => IDeserializerOutput;
-export type TSerDeOptions<T> = {
-    fallbackHandler?: T,
-    useDefaultHandler?: boolean,
-    useRegisteredHandlers?: boolean,
-};
 export type TSerializable = unknown;
 export type TSerializer = (component: unknown) => TSerializable;
 
+
+export interface ISerDeOptions<T extends TSerializer | TDeserializer> {
+    // this is true by default!
+    autoAssignId?: boolean
+    entities?: IEntitiesQuery
+    fallbackHandler?: T
+    replaceResources?: boolean
+    resources?: TObjectProto[]
+    useDefaultHandler?: boolean
+    useRegisteredHandlers?: boolean
+}
 
 export interface IDeserializerOutput {
     containsRefs: boolean
@@ -21,6 +28,7 @@ export interface IDeserializerOutput {
 
 export interface ISerDeDataSet {
     entities: IterableIterator<IEntity>
+    resources: Record<string, Object>
 }
 
 export interface ISerDeOperations {
@@ -34,7 +42,7 @@ export interface ISerDe {
      * @param data
      * @param options
      */
-    deserialize(data: ISerialFormat, options?: TSerDeOptions<TDeserializer>): ISerDeDataSet
+    deserialize(data: ISerialFormat, options?: ISerDeOptions<TDeserializer>): ISerDeDataSet
 
     /**
      * Get an overview over all registered type handlers; useful for debugging
@@ -54,11 +62,19 @@ export interface ISerDe {
      * @param data
      * @param options
      */
-    serialize(data: ISerDeDataSet, options?: TSerDeOptions<TSerializer>): ISerialFormat
+    serialize(data: ISerDeDataSet, options?: ISerDeOptions<TSerializer>): ISerialFormat
+
+    /**
+     * Remove a type handler registration
+     * @param Type
+     */
+    unregisterTypeHandler(Type: TObjectProto): void
 }
 
 
 export const CIdMarker = '#ID';
 export const CMarkerSeparator = '|';
 export const CRefMarker = '*****';
-export const CTagMarker = '#Tags';
+export const CResourceMarker = '#RES';
+export const CResourceMarkerValue = 1;
+export const CTagMarker = '#TAGS';

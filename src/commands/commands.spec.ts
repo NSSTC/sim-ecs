@@ -1,6 +1,6 @@
 import {IEntity} from "../entity.spec";
 import {TTypeProto} from "../_.spec";
-import {TDeserializer, TSerDeOptions, ISerialFormat} from "../serde";
+import {TDeserializer, ISerDeOptions, ISerialFormat} from "../serde";
 import {IWorld, TGroupHandle} from "../world.spec";
 import {IIStateProto} from "../state.spec";
 import {ICommandEntityBuilder} from "./command-entity-builder.spec";
@@ -41,7 +41,7 @@ export interface ICommands {
      * @param prefab
      * @param options
      */
-    load(prefab: ISerialFormat, options?: TSerDeOptions<TDeserializer>): TGroupHandle
+    load(prefab: ISerialFormat, options?: ISerDeOptions<TDeserializer>): TGroupHandle
 
     /**
      * Also trigger a maintain on the next execution
