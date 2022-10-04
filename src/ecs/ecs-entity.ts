@@ -7,12 +7,14 @@ const entities = new Map<string, WeakRef<IEntity>>();
  * Remove any referenced deleted entities
  */
 export function cleanRegistry(): void {
+    let entity;
     let entityRef;
-    let entityId;
 
-    for ([entityId, entityRef] of entities.entries()) {
-        if (!entityRef.deref()) {
-            entities.delete(entityId);
+    for (entityRef of entities.values()) {
+        entity = entityRef.deref();
+
+        if (entity) {
+            unregisterEntity(entity);
         }
     }
 }
@@ -39,10 +41,5 @@ export function registerEntity(entity: IEntity) {
  * @param entity
  */
 export function unregisterEntity(entity: IEntity): void {
-    if (!entity.hasId()) {
-        return;
-    }
-
     entities.delete(entity.id);
-    entity.removeId(false);
 }
