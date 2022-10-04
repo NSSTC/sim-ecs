@@ -1,6 +1,6 @@
 {
   "name": "sim-ecs",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "license": "MPL 2.0",
   "repository": "https://github.com/NSSTC/sim-ecs.git",
   "main": "dist/index.js",
