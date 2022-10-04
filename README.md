@@ -10,12 +10,12 @@ npm install sim-ecs
 
 - [Considerations](#considerations)
 - [Why use sim-ecs](#why-use-sim-ecs)
-  - [Runtime requirements](#runtime-requirements)
+    - [Runtime requirements](#runtime-requirements)
 - [Examples](#examples)
-  - [Counter](#counter)
-  - [Events](#events)
-  - [Pong](#pong)
-  - [System Error](#system-error)
+    - [Counter](#counter)
+    - [Events](#events)
+    - [Pong](#pong)
+    - [System Error](#system-error)
 - [Where is the Documentation](#where-is-the-documentation)
 - [Creating the ECS and a World](#creating-the-ecs-and-a-world)
 - [Setting Resources](#setting-resources)
@@ -29,8 +29,8 @@ npm install sim-ecs
 - [Syncing instances](#syncing-instances)
 - [Building for Production](#building-for-production)
 - [Comparison with other TS ECS libs](#comparison-with-other-ts-ecs-libs)
-  - [Features](#features)
-  - [Performance](#performance)
+    - [Features](#features)
+    - [Performance](#performance)
 
 
 ## Considerations
@@ -110,7 +110,7 @@ Since it is an ECS demo, other parts of the game code may be minimal, like rende
 It is recommended to use readily available libraries for these parts for any real endeavour, like BabylonJS.
 
 You will need to build Pong from its directory.
-Then, you can open the `index.html` in the public folder to run the game.  
+Then, you can open the `index.html` in the public folder to run the game.
 
 
 ### System Error
@@ -161,6 +161,40 @@ const world = buildWorld()
     .build();
 ```
 
+Since this is a very verbose way, sim-ecs also adds a data-driven approach,
+which enables schedules to be stored as simple arrays which can even be loaded without logic.
+The Pong example demonstrates this by providing several schedules, stored as separate data. In short:
+
+```typescript
+import {buildWorld, ISyncPointPrefab} from "sim-ecs";
+
+const gameSchedule: ISyncPointPrefab = {
+    stages: [
+        // Stage is executed sequentially (order guaranteed!)
+        [BeforeStepSystem],
+        [InputSystem],
+        [
+            // Systems inside a stage are executed in parallel, if possible (no order guaranteed!)
+            MenuSystem,
+            PaddleSystem,
+            PauseSystem,
+        ],
+        [CollisionSystem],
+        [BallSystem],
+        [AnimationSystem],
+        [
+            RenderGameSystem,
+            RenderUISystem,
+        ],
+        [ErrorSystem],
+    ],
+};
+
+const world = buildWorld()
+    .withDefaultScheduling(root => root.fromPrefab(gameSchedule))
+    .build();
+```
+
 
 ## Setting Resources
 
@@ -184,7 +218,7 @@ const CountSystem = createSystem({
     query: queryComponents({counterObj: Write(Counter)}),
 })
     // this function is called every time the world needs to be updated. Put your logic in there
-    .withRunFunction(({query}) => 
+    .withRunFunction(({query}) =>
         query.execute(({counterObj}) => console.log(++counterObj.a))
     )
     .build();
@@ -299,9 +333,9 @@ const prefab = [
     },
     {
         Position: <Position>{
-            x: 0, 
+            x: 0,
             y: 1,
-        }, 
+        },
         Monster: <Monster>{
             hostileToPlayer: true,
             type: MonsterTypes.Tiger,
@@ -310,7 +344,7 @@ const prefab = [
             current: 100,
             max: 250,
         }
-    }, 
+    },
 ];
 
 
