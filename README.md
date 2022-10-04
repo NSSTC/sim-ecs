@@ -214,28 +214,16 @@ Single calls to `dispatch()` do not offer the benefits of a PDA.
 ## Update loop
 
 The update loop (for example game loop) is what keeps simulations running.
-In this loop, the world is dispatched on each step (then it waits for 500ms for slower output).
+In order to provide an efficient way of driving the ECS, sim-ecs offers its own built-in loop:
 
 ```typescript
-const update = function () {
-    world.dispatch();
-    setTimeout(update, 500);
-};
-
-update();
+world.run() // run() will drive the simulation based on the data provided to set up the world
+    .catch(console.error) // this won't catch non-fatal errors, see error example!
+    .then(() => console.log('Finished.'));
 ```
 
-However, sim-ecs has to do a lot of calculations on each dispatch,
-so it offers its own `run()` method, which is optimized for continuously executing the system logic.
-**This is the recommended way of running the ECS for simulations:**
-
-```typescript
-world.run();
-```
-
-The run-method can be fed an options object to further configure the runner,
-and from within the systems, certain actions can be called
-which influence how the runner acts. For example the state can be changed.
+While this is the recommended way to drive a simulation, sim-ecs also offers a step-wise execution: `world.dispatch()`.
+Note, though, that each step will need to run the preparation logic, which introduces overhead!
 
 
 ## Commands
