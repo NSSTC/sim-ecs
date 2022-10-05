@@ -1,4 +1,4 @@
-import {IQuery, EQueryType,} from "./query.spec";
+import {EQueryType, IQuery} from "./query.spec";
 import {IEntity} from "../entity";
 import {addEntitySym, clearEntitiesSym, removeEntitySym, setEntitiesSym} from "./_";
 
@@ -22,16 +22,20 @@ export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {
         return this._queryType;
     }
 
+    /** @internal */
     abstract [addEntitySym](entity: IEntity): void;
 
+    /** @internal */
     [clearEntitiesSym]() {
         this.queryResult.clear();
     }
 
+    /** @internal */
     [removeEntitySym](entity: IEntity) {
         this.queryResult.delete(entity)
     }
 
+    /** @internal */
     [setEntitiesSym](entities: IterableIterator<IEntity>) {
         let entity;
 
