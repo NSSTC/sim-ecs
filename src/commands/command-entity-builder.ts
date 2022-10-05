@@ -19,7 +19,7 @@ export class CommandEntityBuilder implements ICommandEntityBuilder {
     }
 
     with(component: Object | TObjectProto, ...args: unknown[]): CommandEntityBuilder {
-        this.entity.addComponent(this.asComponent(component));
+        this.entity.addComponent(component, ...args);
         return this;
     }
 
@@ -31,11 +31,5 @@ export class CommandEntityBuilder implements ICommandEntityBuilder {
         }
 
         return this;
-    }
-
-    protected asComponent(component: Object | TObjectProto, ...args: unknown[]): Object {
-        return typeof component === 'object'
-            ? component
-            : new (component.prototype.constructor.bind(component, ...Array.from(arguments).slice(1)))();
     }
 }

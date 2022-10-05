@@ -12,8 +12,9 @@ export interface IEntity {
     /**
      * Add a component to this entity
      * @param component
+     * @param args
      */
-    addComponent(component: Object | TObjectProto): IEntity
+    addComponent(component: Object | TObjectProto, ...args: unknown[]): IEntity
 
     /**
      * Add a tag to this entity

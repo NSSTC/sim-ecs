@@ -27,8 +27,7 @@ const CounterSystem = createSystem({
     .withRunFunction(({actions, query}) => {
         /// there are two ways to go over the query result:
         /// 1. you can use regular loops:
-        let info;
-        for ({info} of query.iter()) {
+        for (const {info} of query.iter()) {
             info.count++;
 
             // after every ten steps, write out a log message

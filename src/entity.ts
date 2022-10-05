@@ -20,8 +20,8 @@ export class Entity implements IEntity {
         registerEntity(this);
     }
 
-    addComponent(component: Object | TObjectProto): Entity {
-        const obj = this.asObject(component);
+    addComponent(component: Object | TObjectProto, ...args: unknown[]): Entity {
+        const obj = this.asObject(component, ...args);
 
         if (this.hasComponent(obj.constructor as typeof Object)) {
             throw new Error(`Component "${obj.constructor.name}" already exists on entity!`)

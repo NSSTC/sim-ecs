@@ -20,7 +20,7 @@ export class EntityBuilder implements IEntityBuilder {
     }
 
     with(component: Object | TObjectProto, ...args: unknown[]): EntityBuilder {
-        this.entity.addComponent(component);
+        this.entity.addComponent(component, ...args);
         return this;
     }
 
