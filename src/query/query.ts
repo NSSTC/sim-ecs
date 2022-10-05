@@ -62,4 +62,8 @@ export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {
     }
 
     abstract matchesEntity(entity: IEntity): boolean;
+
+    toArray(): DATA[] {
+        return Array.from(this.queryResult.values());
+    }
 }

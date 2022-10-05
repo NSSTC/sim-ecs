@@ -55,7 +55,6 @@ export interface IExistenceDescriptor<C extends TObjectProto> {
     }
 }
 
-
 export interface IQuery<DESC, DATA> {
     readonly descriptor: DESC
     readonly queryType: EQueryType
@@ -69,6 +68,7 @@ export interface IQuery<DESC, DATA> {
     getFirst(): DATA | undefined
     iter(): IterableIterator<DATA>
     matchesEntity(entity: IEntity): boolean
+    toArray(): DATA[]
 }
 
 export interface IComponentsQuery<DESC extends IAccessQuery<TObjectProto>> extends IQuery<DESC, TAccessQueryData<DESC>> {}
