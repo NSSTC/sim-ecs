@@ -61,7 +61,7 @@ or for a game directly.
 
 ### Runtime requirements
 
-If using the prebuilt library, "ES2020" was used as a target. Hence, this is the matrix:
+If using the prebuilt library, "ES2020" was selected as the build target. Hence, this is the matrix:
 
 | App              | Version | Comment                        |
 |------------------|---------|--------------------------------|
