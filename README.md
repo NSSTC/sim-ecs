@@ -73,7 +73,7 @@ If using the prebuilt library, "ES2020" was selected as the build target. Hence,
 | Samsung Internet | 13.0+   |                                |
 | NodeJS           | 14+     |                                |
 | Deno             | -       | ESM + TS is a blocker          |
-| Bun              | -       | Not tested, yet                |
+| Bun              | 0.2.2+  |                                |
 
 
 ## Examples
