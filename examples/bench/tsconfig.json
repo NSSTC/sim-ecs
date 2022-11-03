@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "alwaysStrict": true,
+    "declaration": true,
+    "declarationDir": "dist",
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
@@ -9,13 +11,21 @@
       "esnext",
       "dom"
     ],
-    "module": "commonjs",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "noImplicitAny": true,
+    "outDir": "dist",
     "preserveConstEnums": true,
     "removeComments": true,
     "sourceMap": true,
     "strict": true,
     "target": "es2020"
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "files": [
+    "src/index.ts"
+  ]
 }

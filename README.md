@@ -35,7 +35,7 @@ npm install sim-ecs
 
 ## Considerations
 
-This ECS is inspired by SPECS, Legion and bevy-ecs (three Rust ECS libraries), however optimized for TypeScript.
+This ECS is inspired by SPECS and bevy-ecs (two Rust ECS libraries), however optimized for TypeScript.
 It is built for easy usage (DX) and high iteration speed.
 The trade-off is that insertion and deletion are slower,
 however there are optimizations and opinionations in place to still make it fast.
@@ -433,20 +433,20 @@ Please open a PR for any improvement!
 Please take the results with a grain of salt. These are benchmarks, so they are synthetic.
 An actual application will use a mix out of everything and more, and depending on that may have a different experience.
 
-Date: 19th January 2022
+Date: 3rd November 2022
 
 ```
 --------------------------------------------------------------------------------
 TypeScript ECS Bench
 --------------------------------------------------------------------------------
 
-Platform: Windows_NT win32 x64 v10.0.22000
+Platform: Windows_NT win32 x64 v10.0.22621
 CPU: AMD Ryzen 7 3700X 8-Core Processor@3600MHz
 NodeJS: v18.9.1
 
 Bench           v0.2.0
-TypeScript      v4.8.3
-TS-Lib          v2.4.0
+TypeScript      v4.8.4
+TS-Lib          v2.4.1
 TS-Node         v10.9.1
 
 Ape-ECS         v1.3.1
@@ -455,29 +455,28 @@ sim-ecs         v0.6.0
 tick-knock      v4.1.0
 
 
-
  Default Suite / Simple Insert
 --------------------------------
-    Ape-ECS 86 ops/s ± 0.32%
-    bitecs 536 ops/s ± 1.0%
-    sim-ecs 136 ops/s ± 1.7%
-    tick-knock 603 ops/s ± 1.1%
+    Ape-ECS 88 ops/s ± 0.46%
+    bitecs 547 ops/s ± 1.0%
+    sim-ecs 124 ops/s ± 1.7%
+    tick-knock 659 ops/s ± 1.2%
 
 
 
  Default Suite / Simple Iter
 --------------------------------
-    Ape-ECS 162 ops/s ± 0.092%
-    bitecs 1135 ops/s ± 0.34%
-    sim-ecs 117151 ops/s ± 1.1%
-    tick-knock 39 ops/s ± 0.29%
+    Ape-ECS 153 ops/s ± 0.25%
+    bitecs 1091 ops/s ± 0.45%
+    sim-ecs 122941 ops/s ± 1.2%
+    tick-knock 31 ops/s ± 0.088%
 
 
 
  Default Suite / Serialize
 --------------------------------
-Ape-ECS SerializeSave file size: 417.3427734375 KB
-    Ape-ECS 69 ops/s ± 1.5%
-sim-ecs SerializeSave file size: 78.9951171875 KB
-    sim-ecs 121 ops/s ± 1.5%
+Ape-ECS SerializeSave file size: 450.1962890625 KB
+    Ape-ECS 60 ops/s ± 1.2%
+sim-ecs SerializeSave file size: 83.01953125 KB
+    sim-ecs 94 ops/s ± 1.7%
 ```
