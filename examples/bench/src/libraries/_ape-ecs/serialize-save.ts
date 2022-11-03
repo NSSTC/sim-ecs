@@ -39,7 +39,7 @@ export class Benchmark implements IBenchmark {
 
         {
             const json = JSON.stringify(this.world.getObject());
-            console.log(`Ape-ECS SerializeSave file size: ${new TextEncoder().encode(json).length / 1024} KB`);
+            console.log(`${this.name} SerializeSave file size: ${new TextEncoder().encode(json).length / 1024} KB`);
         }
     }
 

@@ -433,12 +433,12 @@ Please open a PR for any improvement!
 Please take the results with a grain of salt. These are benchmarks, so they are synthetic.
 An actual application will use a mix out of everything and more, and depending on that may have a different experience.
 
-Date: 3rd November 2022
-
 ```
 --------------------------------------------------------------------------------
 TypeScript ECS Bench
 --------------------------------------------------------------------------------
+
+3rd November 2022
 
 Platform: Windows_NT win32 x64 v10.0.22621
 CPU: AMD Ryzen 7 3700X 8-Core Processor@3600MHz
@@ -451,6 +451,7 @@ TS-Node         v10.9.1
 
 Ape-ECS         v1.3.1
 bitecs          v0.3.38
+Javelin         v1.0.0-alpha.13
 sim-ecs         v0.6.0
 tick-knock      v4.1.0
 
@@ -459,6 +460,7 @@ tick-knock      v4.1.0
 --------------------------------
     Ape-ECS 88 ops/s ± 0.46%
     bitecs 547 ops/s ± 1.0%
+    javelin 195 ops/s ± 0.36%
     sim-ecs 124 ops/s ± 1.7%
     tick-knock 659 ops/s ± 1.2%
 
@@ -468,6 +470,7 @@ tick-knock      v4.1.0
 --------------------------------
     Ape-ECS 153 ops/s ± 0.25%
     bitecs 1091 ops/s ± 0.45%
+    javelin 105 ops/s ± 0.26%
     sim-ecs 122941 ops/s ± 1.2%
     tick-knock 31 ops/s ± 0.088%
 
@@ -475,8 +478,10 @@ tick-knock      v4.1.0
 
  Default Suite / Serialize
 --------------------------------
-Ape-ECS SerializeSave file size: 450.1962890625 KB
-    Ape-ECS 60 ops/s ± 1.2%
-sim-ecs SerializeSave file size: 83.01953125 KB
-    sim-ecs 94 ops/s ± 1.7%
+Ape-ECS SerializeSave file size: 417.3427734375 KB
+    Ape-ECS 74 ops/s ± 1.3%
+Javelin SerializeSave file size: 31.1455078125 KB
+    Javelin 633 ops/s ± 1.3%
+sim-ecs SerializeSave file size: 92.677734375 KB
+    sim-ecs 123 ops/s ± 1.5%
 ```

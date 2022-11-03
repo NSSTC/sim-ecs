@@ -67,7 +67,7 @@ export class Benchmark implements IBenchmark {
         }
     }
 
-    reset() {
+    reset(): void {
         this.count = 0;
     }
 
@@ -79,7 +79,7 @@ export class Benchmark implements IBenchmark {
         });
     }
 
-    run() {
+    run(): Promise<void> {
         return this.world.run({}, true);
     }
 }

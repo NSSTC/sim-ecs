@@ -52,7 +52,7 @@ export class Benchmark implements IBenchmark {
 
         {
             const json = this.world.save().toJSON();
-            console.log(`sim-ecs SerializeSave file size: ${new TextEncoder().encode(json).length / 1024} KB`);
+            console.log(`${this.name} SerializeSave file size: ${new TextEncoder().encode(json).length / 1024} KB`);
         }
     }
 
