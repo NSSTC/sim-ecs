@@ -7,7 +7,7 @@ export * from './entity.spec';
 let idCounter = BigInt(0);
 
 export class Entity implements IEntity {
-    static uuidFn: () => string = () => (idCounter++).toString();
+    static uuidFn: () => string = () => `${Date.now()}_${(idCounter++).toString()}`;
     protected components: Map<TObjectProto, Object> = new Map();
     public readonly id: string;
     protected tags: Set<TTag> = new Set();
