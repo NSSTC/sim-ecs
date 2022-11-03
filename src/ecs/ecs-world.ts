@@ -1,5 +1,5 @@
 import {IWorld} from "../world.spec";
-import {IWorldBuilder, WorldBuilder} from "../world-builder";
+import {IWorldBuilder, WorldBuilder} from "../world/world-builder";
 import {SerDe} from "../serde";
 
 const worlds = new Set<IWorld>();

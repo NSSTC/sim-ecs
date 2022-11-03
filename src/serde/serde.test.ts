@@ -3,7 +3,7 @@ import {ISerDeOptions, SerDe} from "./serde";
 import {Entity, IEntity} from "../entity";
 import {SerialFormat} from "./serial-format";
 import {clearRegistry} from "../ecs/ecs-entity";
-import {dataStructDeserializer, dataStructSerializer} from "../world-builder/world-builder.util";
+import {dataStructDeserializer, dataStructSerializer} from "../world/world-builder.util";
 
 describe('Test SerDe', () => {
     const compare = (entity1: IEntity, entity2: IEntity | undefined) => {
