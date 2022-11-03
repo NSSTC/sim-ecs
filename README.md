@@ -63,17 +63,17 @@ or for a game directly.
 
 If using the prebuilt library, "ES2020" was selected as the build target. Hence, this is the matrix:
 
-| App              | Version | Comment                        |
-|------------------|---------|--------------------------------|
-| Chrome           | 80+     | Desktop and mobile             |
-| Edge             | 80+     |                                |
-| Safari           | 14.1+   | Desktop and mobile             |
-| Firefox          | 80+     | Desktop (no exact mobile data) |
-| Opera            | 67+     | Desktop                        |
-| Samsung Internet | 13.0+   |                                |
-| NodeJS           | 14+     |                                |
-| Deno             | -       | ESM + TS is a blocker          |
-| Bun              | 0.2.2+  |                                |
+| App              | Version | Comment                     |
+|------------------|---------|-----------------------------|
+| Chrome           | 80+     | Desktop and mobile          |
+| Edge             | 80+     |                             |
+| Safari           | 14.1+   | Desktop and mobile          |
+| Firefox          | 80+     | Desktop (no info on mobile) |
+| Opera            | 67+     | Desktop                     |
+| Samsung Internet | 13.0+   |                             |
+| NodeJS           | 14+     |                             |
+| Deno             | -       | ESM + TS is a blocker       |
+| Bun              | 0.2.2+  |                             |
 
 
 ## Examples
