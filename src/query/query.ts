@@ -1,5 +1,5 @@
-import {EQueryType, IQuery} from "./query.spec";
-import {IEntity} from "../entity";
+import {EQueryType, type IQuery} from "./query.spec";
+import type {IEntity} from "../entity";
 import {addEntitySym, clearEntitiesSym, removeEntitySym, setEntitiesSym} from "./_";
 
 export * from "./query.spec";

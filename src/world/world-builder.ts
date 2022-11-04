@@ -4,7 +4,7 @@ import type {
 } from "./world-builder.spec";
 import {World} from "../world";
 import type {TObjectProto} from "../_.spec";
-import type {ISerDe} from "../serde";
+import type {ISerDe} from "../serde/serde.spec";
 import {dataStructDeserializer, dataStructSerializer} from "./world-builder.util";
 import {type IScheduler, Scheduler} from "../scheduler/scheduler";
 import type {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";

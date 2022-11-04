@@ -1,4 +1,4 @@
-import {ITransitionActions} from "./world.spec";
+import type {ITransitionActions} from "./world.spec";
 
 export interface IState {
     /**

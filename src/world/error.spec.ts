@@ -1,5 +1,5 @@
-import {TTypeProto} from "../_.spec";
-import {ISystem} from "../system";
+import type {TTypeProto} from "../_.spec";
+import type {ISystem} from "../system/system.spec";
 
 export interface ISystemError {
     readonly cause: Error

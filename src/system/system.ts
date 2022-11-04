@@ -6,8 +6,8 @@ import type {
 } from "./system.spec";
 import {Actions, Storage} from "./system.spec";
 import {SystemBuilder} from "./system-builder";
-import type {IQuery} from "../query";
-import {Query} from "../query";
+import type {IQuery} from "../query/query.spec";
+import {Query} from "../query/query";
 import type {TObjectProto} from "../_.spec";
 import {systemEventReaderSym, systemEventWriterSym, systemResourceTypeSym} from "./_";
 import type {World} from "../world";

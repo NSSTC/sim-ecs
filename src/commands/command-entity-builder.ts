@@ -1,8 +1,8 @@
 import {Entity} from "../entity";
-import {ICommandEntityBuilder} from "./command-entity-builder.spec";
-import {TObjectProto} from "../_.spec";
-import {ICommandsAggregator} from "./commands-aggregator.spec";
-import IWorld from "../world.spec";
+import type {ICommandEntityBuilder} from "./command-entity-builder.spec";
+import type {TObjectProto} from "../_.spec";
+import type {ICommandsAggregator} from "./commands-aggregator.spec";
+import type {IWorld} from "../world.spec";
 
 export * from './command-entity-builder.spec';
 

@@ -1,4 +1,4 @@
-import {TEntity} from "./_";
+import type {TEntity} from "./_";
 
 export interface ISerialFormat extends Array<TEntity> {
     /**

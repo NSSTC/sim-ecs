@@ -1,5 +1,5 @@
 import type {IStage} from "./stage.spec";
-import type {ISystem} from "../../system";
+import type {ISystem} from "../../system/system.spec";
 import type {TExecutor, TTypeProto} from "../../_.spec";
 import {systemRunParamSym} from "../../system/_";
 import {SystemError} from "../../world/error";

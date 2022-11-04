@@ -1,10 +1,10 @@
-import {IEventBus} from "./event-bus.spec";
-import {TObjectProto} from "../_.spec";
-import {IEventReader} from "./event-reader.spec";
-import {IEventWriter} from "./event-writer.spec";
+import type {IEventBus} from "./event-bus.spec";
+import type {TObjectProto} from "../_.spec";
+import type {IEventReader} from "./event-reader.spec";
+import type {IEventWriter} from "./event-writer.spec";
 import {EventReader} from "./event-reader";
 import {EventWriter} from "./event-writer";
-import {TSubscriber} from "./_";
+import type {TSubscriber} from "./_";
 
 export class EventBus implements IEventBus {
     protected subscribers = new Map<TObjectProto, Set<TSubscriber<TObjectProto>>>();

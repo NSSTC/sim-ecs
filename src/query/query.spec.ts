@@ -1,6 +1,6 @@
-import {TObjectProto, TTypeProto} from "../_.spec";
-import {IEntity, TTag} from "../entity.spec";
-import {accessDescSym, addEntitySym, clearEntitiesSym, existenceDescSym, removeEntitySym, setEntitiesSym} from "./_";
+import type {TObjectProto, TTypeProto} from "../_.spec";
+import type {IEntity, TTag} from "../entity.spec";
+import type {accessDescSym, addEntitySym, clearEntitiesSym, existenceDescSym, removeEntitySym, setEntitiesSym} from "./_";
 
 export type TAccessQueryParameter<C extends TObjectProto> = C & IAccessDescriptor<InstanceType<C>>;
 export type TOptionalAccessQueryParameter<C extends TObjectProto | undefined> = IAccessDescriptor<C extends TObjectProto ? InstanceType<C> : undefined> & C extends TObjectProto ? C : undefined;

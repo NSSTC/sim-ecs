@@ -1,5 +1,5 @@
-import {IPipeline} from "./pipeline.spec";
-import {ISyncPoint, SyncPoint} from "./sync-point";
+import type {IPipeline} from "./pipeline.spec";
+import {type ISyncPoint, SyncPoint} from "./sync-point";
 
 export * from "./pipeline.spec";
 

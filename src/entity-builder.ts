@@ -1,6 +1,6 @@
-import {Entity} from "./entity";
-import IEntityBuilder from "./entity-builder.spec";
-import {TObjectProto} from "./_.spec";
+import {Entity, type TEntityId} from "./entity";
+import type {IEntityBuilder} from "./entity-builder.spec";
+import type {TObjectProto} from "./_.spec";
 
 export * from './entity-builder.spec';
 
@@ -8,7 +8,7 @@ export class EntityBuilder implements IEntityBuilder {
     protected components = new Map<Object | TObjectProto, unknown[]>();
 
     constructor(
-        protected uuid?: string,
+        protected uuid?: TEntityId,
         protected callback?: (entity: Entity) => void
     ) {}
 

@@ -1,5 +1,5 @@
 // todo: this PushDownAutomaton could get its own package on npm
-import {TTypeProto} from "./_.spec";
+import type {TTypeProto} from "./_.spec";
 
 export interface IPushDownAutomaton<T> {
     readonly state?: T

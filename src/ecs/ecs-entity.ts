@@ -1,6 +1,6 @@
-import {IEntity} from "../entity.spec";
+import type {IEntity, TEntityId} from "../entity.spec";
 
-const entities = new Map<string, WeakRef<IEntity>>();
+const entities = new Map<TEntityId, WeakRef<IEntity>>();
 
 
 /**
@@ -23,13 +23,12 @@ export function clearRegistry(): void {
  * Get a tracked entity
  * @param id
  */
-export function getEntity(id: string): IEntity | undefined {
+export function getEntity(id: TEntityId): IEntity | undefined {
     return entities.get(id)?.deref();
 }
 
 /**
  * Register an entity by its ID
- * Only useful for tracking entities with ID
  * @param entity
  */
 export function registerEntity(entity: IEntity) {
@@ -37,9 +36,17 @@ export function registerEntity(entity: IEntity) {
 }
 
 /**
- * Remove an entity and reset its ID
+ * Remove an entity
  * @param entity
  */
 export function unregisterEntity(entity: IEntity): void {
-    entities.delete(entity.id);
+    unregisterEntityId(entity.id);
+}
+
+/**
+ * Remove an entity by id
+ * @param id
+ */
+export function unregisterEntityId(id: TEntityId): void {
+    entities.delete(id);
 }

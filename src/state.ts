@@ -1,5 +1,5 @@
-import {IState, IIStateProto} from "./state.spec";
-import {ITransitionActions} from "./world.spec";
+import type {IState, IIStateProto} from "./state.spec";
+import type {ITransitionActions} from "./world.spec";
 
 export * from './state.spec';
 

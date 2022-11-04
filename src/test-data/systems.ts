@@ -1,8 +1,8 @@
-import {Actions, createSystem} from "../system";
+import {Actions, createSystem} from "../system/system";
 import {C1} from "./components";
-import {Write} from "../query";
-import {queryComponents} from "../query";
-import {ISystemActions} from "../world.spec";
+import {Write} from "../query/query";
+import {queryComponents} from "../ecs/ecs-query";
+import type {ISystemActions} from "../world.spec";
 
 export const S1 = (handler?: (c1:C1)=>void) => createSystem({
     query: queryComponents({ c1: Write(C1) })

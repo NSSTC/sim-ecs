@@ -1,11 +1,12 @@
-import {ICommands} from "./commands.spec";
-import {IEntity} from "../entity.spec";
-import {TTypeProto} from "../_.spec";
-import {TDeserializer, ISerDeOptions, ISerialFormat} from "../serde";
-import IWorld, {TGroupHandle} from "../world.spec";
-import {IIStateProto} from "../state.spec";
+import type {ICommands} from "./commands.spec";
+import type {IEntity} from "../entity.spec";
+import type {TTypeProto} from "../_.spec";
+import type {TDeserializer, ISerDeOptions} from "../serde/serde.spec";
+import type {ISerialFormat} from "../serde/serial-format.spec";
+import type {IWorld, TGroupHandle} from "../world.spec";
+import type {IIStateProto} from "../state.spec";
 import {World} from "../world";
-import {ICommandsAggregator, TCommand} from "./commands-aggregator.spec";
+import type {ICommandsAggregator, TCommand} from "./commands-aggregator.spec";
 import {CommandEntityBuilder} from "./command-entity-builder";
 
 export * from "./commands.spec";

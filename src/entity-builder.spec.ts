@@ -1,5 +1,5 @@
-import {IEntity} from "./entity.spec";
-import {TObjectProto} from "./_.spec";
+import type {IEntity} from "./entity.spec";
+import type {TObjectProto} from "./_.spec";
 
 export interface IEntityBuilder {
     /**

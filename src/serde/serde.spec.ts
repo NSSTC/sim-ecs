@@ -1,7 +1,7 @@
-import {IEntity} from "../entity.spec";
+import type {IEntity} from "../entity.spec";
 import type {TObjectProto} from "../_.spec";
-import {ISerialFormat} from "./serial-format.spec";
-import {IEntitiesQuery} from "../query";
+import type {ISerialFormat} from "./serial-format.spec";
+import type {IEntitiesQuery} from "../query/query.spec";
 
 /// stores the constructor name and the data blob on indices 0 and 1 accordingly
 export type TCustomDeserializer = (data: unknown) => IDeserializerOutput;

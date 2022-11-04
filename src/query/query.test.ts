@@ -1,5 +1,5 @@
 import {Read, ReadEntity, Write} from "./query";
-import {queryComponents} from "./index";
+import {queryComponents} from "../ecs/ecs-query";
 
 class Component {
     health = 100

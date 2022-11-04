@@ -1,13 +1,14 @@
 import type {IEntity} from "./entity.spec";
-import type {ISystem} from "./system";
+import type {ISystem} from "./system/system.spec";
 import type {IIStateProto, IState} from "./state.spec";
 import type {TTypeProto} from "./_.spec";
-import type {IEntitiesQuery} from "./query";
-import type {ISerDe, ISerialFormat, ISerDeOptions, TSerializer} from "./serde";
-import type {ICommands} from "./commands";
+import type {IEntitiesQuery} from "./query/query.spec";
+import type {ISerDe, ISerDeOptions, TSerializer} from "./serde/serde.spec";
+import type {ISerialFormat} from "./serde/serial-format.spec";
+import type {ICommands} from "./commands/commands.spec";
 import type IEntityBuilder from "./entity-builder.spec";
 import type {IScheduler} from "./scheduler/scheduler.spec";
-import {TObjectProto} from "./_.spec";
+import type {TObjectProto} from "./_.spec";
 
 export type TExecutionFunction = ((callback: Function) => any) | typeof setTimeout | typeof requestAnimationFrame;
 export type TGroupHandle = number;

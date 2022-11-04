@@ -1,7 +1,7 @@
-import {IScheduler} from "./scheduler.spec";
-import {IPipeline, Pipeline} from "./pipeline/pipeline";
-import {TExecutor} from "../_.spec";
-import {World} from "../world";
+import type {IScheduler} from "./scheduler.spec";
+import {type IPipeline, Pipeline} from "./pipeline/pipeline";
+import type {TExecutor} from "../_.spec";
+import type {World} from "../world";
 
 export * from "./scheduler.spec";
 

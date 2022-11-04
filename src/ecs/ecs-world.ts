@@ -1,6 +1,6 @@
-import {IWorld} from "../world.spec";
-import {IWorldBuilder, WorldBuilder} from "../world/world-builder";
-import {SerDe} from "../serde";
+import type {IWorld} from "../world.spec";
+import {type IWorldBuilder, WorldBuilder} from "../world/world-builder";
+import {SerDe} from "../serde/serde";
 
 const worlds = new Set<IWorld>();
 

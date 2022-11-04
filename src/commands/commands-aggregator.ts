@@ -1,5 +1,5 @@
-import {ICommandsAggregator, TCommand} from "./commands-aggregator.spec";
-import IWorld from "../world.spec";
+import type {ICommandsAggregator, TCommand} from "./commands-aggregator.spec";
+import type {IWorld} from "../world.spec";
 
 export * from "./commands-aggregator.spec";
 

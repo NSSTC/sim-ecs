@@ -1,5 +1,5 @@
-import {IStage} from "./stage.spec";
-import {ISystem} from "../../system";
+import type {IStage} from "./stage.spec";
+import type {ISystem} from "../../system/system.spec";
 
 
 export interface ISyncPointPrefab {

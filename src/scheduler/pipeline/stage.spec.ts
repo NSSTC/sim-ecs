@@ -1,5 +1,5 @@
-import {ISystem} from "../../system";
-import {TExecutor} from "../../_.spec";
+import type {ISystem} from "../../system/system.spec";
+import type {TExecutor} from "../../_.spec";
 import {World} from "../../world";
 
 export type TStageSchedulingAlgorithm = (world: World, systems: ISystem[]) => Promise<void>;

@@ -1,5 +1,5 @@
-import {IEntity, TTag} from "./entity.spec";
-import {TObjectProto, TTypeProto} from "./_.spec";
+import type {IEntity, TEntityId, TTag} from "./entity.spec";
+import type {TObjectProto, TTypeProto} from "./_.spec";
 import {registerEntity} from "./ecs/ecs-entity";
 
 export * from './entity.spec';
@@ -7,12 +7,12 @@ export * from './entity.spec';
 let idCounter = BigInt(0);
 
 export class Entity implements IEntity {
-    static uuidFn: () => string = () => `${Date.now()}_${(idCounter++).toString()}`;
+    static uuidFn: () => TEntityId = () => `${Date.now()}_${(idCounter++).toString()}`;
     protected components: Map<TObjectProto, Object> = new Map();
-    public readonly id: string;
+    public readonly id: TEntityId;
     protected tags: Set<TTag> = new Set();
 
-    constructor(uuid?: string) {
+    constructor(uuid?: TEntityId) {
         this.id = uuid
             ? uuid
             : Entity.uuidFn();

@@ -1,6 +1,6 @@
-import {ISystemError} from "./error.spec";
-import {TTypeProto} from "../_.spec";
-import {ISystem} from "../system/system.spec";
+import type {ISystemError} from "./error.spec";
+import type {TTypeProto} from "../_.spec";
+import type {ISystem} from "../system/system.spec";
 
 export class SystemError implements ISystemError {
     constructor(

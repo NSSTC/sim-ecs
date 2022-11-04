@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {dataStructDeserializer, dataStructSerializer} from "./world-builder.util";
 import {WorldBuilder} from "./world-builder";
-import {SerDe} from "../serde";
+import {SerDe} from "../serde/serde";
 
 describe('Test WorldBuilder', () => {
     const worldName = 'world1' as const;

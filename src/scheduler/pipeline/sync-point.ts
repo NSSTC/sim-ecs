@@ -1,6 +1,6 @@
-import {ISyncPoint, ISyncPointPrefab} from "./sync-point.spec";
-import {IStage, Stage} from "./stage";
-import {ISystem} from "../../system";
+import type {ISyncPoint, ISyncPointPrefab} from "./sync-point.spec";
+import {type IStage, Stage} from "./stage";
+import type {ISystem} from "../../system/system.spec";
 
 export * from "./sync-point.spec";
 

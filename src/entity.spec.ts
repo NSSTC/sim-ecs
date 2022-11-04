@@ -1,5 +1,6 @@
-import {TObjectProto, TTypeProto} from "./_.spec";
+import type {TObjectProto, TTypeProto} from "./_.spec";
 
+export type TEntityId = string;
 export type TTag = number | string;
 
 export interface IEntity {
@@ -7,7 +8,7 @@ export interface IEntity {
      * UUID to identify the entity across instances
      * The ID is generated and must be manually maintained when syncing with another instance
      */
-    readonly id: string
+    readonly id: TEntityId
 
     /**
      * Add a component to this entity

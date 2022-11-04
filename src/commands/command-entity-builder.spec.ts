@@ -1,4 +1,4 @@
-import {TObjectProto} from "../_.spec";
+import type {TObjectProto} from "../_.spec";
 
 export interface ICommandEntityBuilder {
     /**

@@ -12,17 +12,19 @@ import type {IState, IIStateProto} from "./state";
 import {State} from "./state";
 import type {TExecutor, TObjectProto, TTypeProto} from "./_.spec";
 import {PushDownAutomaton} from "./pda";
-import type {ISerDe, ISerDeOptions, ISerialFormat, TDeserializer, TSerializer} from "./serde";
-import {SerDe} from "./serde";
-import {Commands, CommandsAggregator} from "./commands";
+import type {ISerDe, ISerDeOptions, TDeserializer, TSerializer} from "./serde/serde.spec";
+import type {ISerialFormat} from "./serde/serial-format.spec";
+import {SerDe} from "./serde/serde";
+import {Commands} from "./commands/commands";
+import {CommandsAggregator} from "./commands/commands-aggregator";
 import type {
     IQuery,
     IEntitiesQuery,
-} from "./query";
+} from "./query/query.spec";
 import type {IScheduler} from "./scheduler/scheduler.spec";
 import type {IPipeline} from "./scheduler/pipeline/pipeline.spec";
-import type {ISystem} from "./system";
-import {getQueriesFromSystem, getSystemRunParameters} from "./system";
+import type {ISystem} from "./system/system.spec";
+import {getQueriesFromSystem, getSystemRunParameters} from "./system/system";
 import {systemRunParamSym} from "./system/_";
 import {clearEntitiesSym, setEntitiesSym} from "./query/_";
 import {EventBus} from "./events/event-bus";

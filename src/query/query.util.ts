@@ -1,15 +1,12 @@
-// todo: this is dangerous! The exposed interface should be reduced to prevent direct modifications in systems
-import {
-    EAccess,
-    EExistence,
-    ETargetType,
+import type {
     IAccessDescriptor,
     IExistenceDescriptor,
     TAccessQueryParameter,
     TOptionalAccessQueryParameter
 } from "./query.spec";
-import {TObjectProto, TTypeProto} from "../_.spec";
-import {IEntity, TTag} from "../entity.spec";
+import {EAccess, EExistence, ETargetType} from "./query.spec";
+import type {TObjectProto, TTypeProto} from "../_.spec";
+import type {IEntity, TTag} from "../entity.spec";
 import {Entity} from "../entity";
 import {accessDescSym, existenceDescSym} from "./_";
 
