@@ -29,14 +29,16 @@ const EventListenerSystem = createSystem({
 }).build();
 
 
-buildWorld()
+const prepWorld = buildWorld()
     .withDefaultScheduling(root => root
         /// Stages will run after one another, however the systems inside may run in any order and even in parallel
         .addNewStage(stage => stage.addSystem(EventTriggerSystem))
         /// So, if we want to receive the shutdown event on the same step, we need to use a later stage
         .addNewStage(stage => stage.addSystem(EventListenerSystem))
     )
-    .build()
-    .run()
-    .catch(console.error)
-    .then(() => console.log('Finished.'));
+    .build();
+
+(async () => {
+    const runWorld = await prepWorld.prepareRun();
+    await runWorld.start();
+})().catch(console.error).then(() => console.log('Finished.'));

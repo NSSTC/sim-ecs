@@ -1,24 +1,26 @@
 import type {ICommands} from "./commands.spec";
-import type {IEntity} from "../entity.spec";
-import type {TTypeProto} from "../_.spec";
-import type {TDeserializer, ISerDeOptions} from "../serde/serde.spec";
-import type {ISerialFormat} from "../serde/serial-format.spec";
-import type {IWorld, TGroupHandle} from "../world.spec";
-import type {IIStateProto} from "../state.spec";
-import {World} from "../world";
-import type {ICommandsAggregator, TCommand} from "./commands-aggregator.spec";
+import type {IEntity} from "../../../entity/entity.spec";
+import type {TTypeProto} from "../../../_.spec";
+import type {TDeserializer, ISerDeOptions} from "../../../serde/serde.spec";
+import type {ISerialFormat} from "../../../serde/serial-format.spec";
+import type {TGroupHandle} from "../../world.spec";
+import type {IIStateProto} from "../../../state/state.spec";
+import type {TCommand} from "./commands-aggregator.spec";
 import {CommandEntityBuilder} from "./command-entity-builder";
+import {RuntimeWorld} from "../runtime-world";
+import type {IPreptimeWorld} from "../../preptime/preptime-world.spec";
 
 export * from "./commands.spec";
 
 export class Commands implements ICommands {
+    protected commands: TCommand[] = [];
+
     constructor(
-        public readonly world: World,
-        public readonly aggregator: ICommandsAggregator,
+        public readonly world: RuntimeWorld,
     ) {}
 
     addEntity(entity: IEntity): void {
-        this.aggregator.addCommand(() => this.world.addEntity(entity));
+        this.commands.push(() => this.world.addEntity(entity));
     }
 
     addResource<T extends Object>(obj: TTypeProto<T> | T, ...args: unknown[]): T {
@@ -33,76 +35,78 @@ export class Commands implements ICommands {
             instance = new (obj.prototype.constructor.bind(obj, ...Array.from(arguments).slice(1)))();
         }
 
-        if (this.world.resources.has(type)) {
+        if (this.world.data.resources.has(type)) {
             throw new Error(`Resource with name "${type.name}" already exists!`);
         }
 
-        this.aggregator.addCommand(() => {
-            if (this.world.resources.has(type)) {
+        this.commands.push(() => {
+            if (this.world.data.resources.has(type)) {
                 throw new Error(`Resource with name "${type.name}" already exists!`);
             }
 
-            this.world.resources.set(type, instance);
+            this.world.data.resources.set(type, instance);
         });
 
         return instance;
     }
 
     buildEntity(): CommandEntityBuilder {
-        return new CommandEntityBuilder(this.world, this.aggregator);
+        return new CommandEntityBuilder(this.world, this);
     }
 
     clearEntities(): void {
-        this.aggregator.addCommand(() => this.world.entities.clear());
+        this.commands.push(() => this.world.data.entities.clear());
+    }
+
+    async executeAll(): Promise<void> {
+        for (let command = this.commands.shift(); !!command; command = this.commands.shift()) {
+            await command();
+        }
     }
 
     load(prefab: ISerialFormat, options?: ISerDeOptions<TDeserializer>): TGroupHandle {
         const handle = this.world.createGroup();
-        this.aggregator.addCommand(() => { this.world.load(prefab, options, handle) });
+        this.commands.push(() => { this.world.load(prefab, options, handle) });
         return handle;
     }
 
-    maintain(): void {
-        this.aggregator.triggerMaintain();
-    }
-
-    merge(world: IWorld): TGroupHandle {
+    merge(world: IPreptimeWorld): TGroupHandle {
         const handle = this.world.createGroup();
-        this.aggregator.addCommand(() => { this.world.merge(world, handle) });
+        this.commands.push(() => { this.world.merge(world, handle) });
         return handle;
     }
 
     popState(): void {
-        this.aggregator.addCommand(() => this.world.popState());
+        this.commands.push(() => this.world.popState());
     }
 
     pushState(NewState: IIStateProto): void {
-        this.aggregator.addCommand(() => this.world.pushState(NewState));
+        this.commands.push(() => this.world.pushState(NewState));
     }
 
     queueCommand(command: TCommand) {
-        this.aggregator.addCommand(command);
+        this.commands.push(command);
     }
 
     removeEntity(entity: IEntity): void {
-        this.aggregator.addCommand(() => this.world.removeEntity(entity));
+        this.commands.push(() => this.world.removeEntity(entity));
     }
 
     removeGroup(handle: TGroupHandle): void {
-        this.aggregator.addCommand(() => this.world.removeGroup(handle));
+        this.commands.push(() => this.world.removeGroup(handle));
     }
 
     removeResource<T extends Object>(type: TTypeProto<T>): void {
-        if (!this.world.resources.has(type)) {
+        if (!this.world.data.resources.has(type)) {
             throw new Error(`Resource with name "${type.name}" does not exists!`);
         }
 
-        this.aggregator.addCommand(() => {
-            if (!this.world.resources.has(type)) {
+        this.commands.push(() => {
+            if (!this.world.data.resources.has(type)) {
                 throw new Error(`Resource with name "${type.name}" does not exists!`);
             }
 
-            this.world.resources.delete(type);
+            this.world.data.resources.delete(type);
         });
     }
 
@@ -115,21 +119,21 @@ export class Commands implements ICommands {
             type = obj;
         }
 
-        if (!this.world.resources.has(type)) {
+        if (!this.world.data.resources.has(type)) {
             throw new Error(`Resource with name "${type.name}" does not exists!`);
         }
 
-        this.aggregator.addCommand(() => {
-            if (!this.world.resources.has(type)) {
+        this.commands.push(() => {
+            if (!this.world.data.resources.has(type)) {
                 throw new Error(`Resource with name "${type.name}" does not exists!`);
             }
 
-            this.world.resources.delete(type);
+            this.world.data.resources.delete(type);
             this.world.addResource(obj, ...args);
         });
     }
 
     stopRun(): void {
-        this.aggregator.addCommand(() => this.world.stopRun());
+        this.commands.push(() => this.world.stop());
     }
 }

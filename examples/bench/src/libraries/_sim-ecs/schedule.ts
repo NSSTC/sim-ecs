@@ -1,5 +1,5 @@
-import {buildWorld, createSystem, queryComponents, World, Write} from '../../../../../src';
-import {IBenchmark} from "../../benchmark.spec";
+import {buildWorld, createSystem, IPreptimeWorld, IRuntimeWorld, queryComponents, Write} from '../../../../../src';
+import type {IBenchmark} from "../../benchmark.spec";
 import {CheckEndSystem, CounterResource} from "./_";
 
 class A { constructor(public val: number = 0) {} }
@@ -50,12 +50,13 @@ const CESystem = createSystem({
 export class Benchmark implements IBenchmark {
     readonly name = 'sim-ecs';
     count = 0;
-    world: World;
+    prepWorld: IPreptimeWorld;
+    runWorld!: IRuntimeWorld;
 
     constructor(
         protected iterCount: number
     ) {
-        this.world = buildWorld()
+        this.prepWorld = buildWorld()
             .withDefaultScheduling(root => root
                 .addNewStage(stage => stage
                     .addSystem(ABSystem)
@@ -65,54 +66,53 @@ export class Benchmark implements IBenchmark {
                 )
             )
             .withComponents(A, B, C, D, E)
-            .build() as World;
+            .build();
 
-        this.world.addResource(CounterResource, iterCount);
+        this.prepWorld.addResource(CounterResource, iterCount);
 
         for (let i = 0; i < 10000; i++) {
-            this.world.buildEntity()
+            this.prepWorld.buildEntity()
                 .with(A, 0)
                 .build();
         }
 
         for (let i = 0; i < 10000; i++) {
-            this.world.buildEntity()
+            this.prepWorld.buildEntity()
                 .withAll(A, B)
                 .build();
         }
 
         for (let i = 0; i < 10000; i++) {
-            this.world.buildEntity()
+            this.prepWorld.buildEntity()
                 .withAll(A, B, C)
                 .build();
         }
 
         for (let i = 0; i < 10000; i++) {
-            this.world.buildEntity()
+            this.prepWorld.buildEntity()
                 .withAll(A, B, C, D)
                 .build();
         }
 
         for (let i = 0; i < 10000; i++) {
-            this.world.buildEntity()
+            this.prepWorld.buildEntity()
                 .withAll(A, B, C, D, E)
                 .build();
         }
     }
 
     reset() {
-        this.world.getResource(CounterResource).count = 0;
+        this.prepWorld.getResource(CounterResource).count = 0;
     }
 
     async init(): Promise<void> {
-        await this.world.flushCommands();
-        await this.world.prepareRun({
+        this.runWorld = await this.prepWorld.prepareRun({
             // to make the comparison fair, we will iterate in a sync loop over the steps, just like the others do
             executionFunction: (fn: Function) => fn(),
         });
     }
 
     run() {
-        return this.world.run({}, true);
+        return this.runWorld.start();
     }
 }

@@ -1,5 +1,5 @@
 import type IPushDownAutomaton from "./pda.spec";
-import type {TTypeProto} from "./_.spec";
+import type {TTypeProto} from "../_.spec";
 
 type TStateNode<T> = {
     state: T,

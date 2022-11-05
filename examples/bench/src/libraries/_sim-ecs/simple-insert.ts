@@ -1,4 +1,4 @@
-import {buildWorld, IWorld} from '../../../../../src';
+import {buildWorld, IPreptimeWorld} from '../../../../../src';
 import { IBenchmark } from '../../benchmark.spec';
 
 class Transform {}
@@ -8,12 +8,14 @@ class Velocity { x = 1 }
 
 export class Benchmark implements IBenchmark {
     readonly name = 'sim-ecs';
-    world!: IWorld;
+    world!: IPreptimeWorld;
 
     constructor(
         protected readonly iterCount: number
-    ) {
-        this.world = buildWorld()
+    ) {}
+
+    async init(): Promise<void> {
+        this.world = await buildWorld()
             .withComponents(
                 Transform,
                 Position,
@@ -23,11 +25,8 @@ export class Benchmark implements IBenchmark {
             .build();
     }
 
-    init(): Promise<void> | void {}
-
     async reset() {
-        this.world.commands.clearEntities();
-        await this.world.flushCommands();
+        this.world.clearEntities();
     }
 
     run() {

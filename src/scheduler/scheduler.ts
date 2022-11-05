@@ -1,7 +1,10 @@
 import type {IScheduler} from "./scheduler.spec";
 import {type IPipeline, Pipeline} from "./pipeline/pipeline";
 import type {TExecutor} from "../_.spec";
-import type {World} from "../world";
+import {systemRunParamSym} from "../system/_";
+import {getSystemRunParameters, ISystem} from "../system/system";
+import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec";
+import {IEventBus} from "../events/event-bus.spec";
 
 export * from "./scheduler.spec";
 
@@ -14,32 +17,32 @@ export async function defaultSchedulingAlgorithm(stageExecutors: TExecutor[]) {
 }
 
 export class Scheduler implements IScheduler {
-    protected _isPrepared = false;
-    protected _pipeline: IPipeline = new Pipeline();
+    #isPrepared = false;
+    #pipeline: IPipeline = new Pipeline();
     schedulingAlgorithm = defaultSchedulingAlgorithm;
 
     get isPrepared(): boolean {
-        return this._isPrepared;
+        return this.#isPrepared;
     }
 
     get pipeline(): IPipeline {
-        return this._pipeline;
+        return this.#pipeline;
     }
 
     set pipeline(newPipeline: IPipeline) {
-        if (this._isPrepared) {
+        if (this.#isPrepared) {
             throw new Error('This scheduler was already prepared or is executing and cannot be changed right now!');
         }
 
-        this._pipeline = newPipeline;
+        this.#pipeline = newPipeline;
     }
 
-    getExecutor(world: World): TExecutor {
+    getExecutor(eventBus: IEventBus): TExecutor {
         const stageExecutors: TExecutor[] = [];
 
-        for (const group of this._pipeline.getGroups()) {
+        for (const group of this.#pipeline.getGroups()) {
             for (const stage of group.stages) {
-                stageExecutors.push(stage.getExecutor(world));
+                stageExecutors.push(stage.getExecutor(eventBus));
             }
 
             stageExecutors.push(async () => {
@@ -48,5 +51,39 @@ export class Scheduler implements IScheduler {
         }
 
         return () => this.schedulingAlgorithm(stageExecutors);
+    }
+
+    getSystems(): Set<ISystem> {
+        const systems = new Set<ISystem>();
+        let group, stage, system;
+
+        for (group of this.pipeline.getGroups()) {
+            for (stage of group.stages) {
+                for (system of stage.systems) {
+                    systems.add(system);
+                }
+            }
+        }
+
+        return systems;
+    }
+
+    async prepare(world: IRuntimeWorld): Promise<void> {
+        let stage;
+        let syncPoint;
+        let system;
+
+        this.#isPrepared = false;
+
+        for (syncPoint of this.pipeline.getGroups().values()) {
+            for (stage of syncPoint.stages) {
+                for (system of stage.systems) {
+                    system[systemRunParamSym] = getSystemRunParameters(system, world);
+                    await system.setupFunction.call(system, system[systemRunParamSym]!);
+                }
+            }
+        }
+
+        this.#isPrepared = true;
     }
 }

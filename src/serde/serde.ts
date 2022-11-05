@@ -17,9 +17,9 @@ import type {
 } from "./serde.spec";
 import type {ISerialFormat} from "./serial-format.spec";
 import {SerialFormat} from "./serial-format";
-import type {IEntity, TTag} from "../entity.spec";
+import type {IEntity, TEntityId, TTag} from "../entity/entity.spec";
 import {getDefaultDeserializer, getDefaultSerializer} from "./default-handlers";
-import {Entity} from "../entity";
+import {Entity} from "../entity/entity";
 import type {TEntity} from "./_";
 import {Reference} from "./referencing";
 import {EReferenceType} from "./referencing.spec";
@@ -45,7 +45,7 @@ export class SerDe implements ISerDe {
             const tags: TTag[] = [];
             let component;
             let deserializerOut: IDeserializerOutput;
-            let id: string | undefined;
+            let id: TEntityId | undefined = undefined;
             let serialComponentData: unknown;
             let serialComponentName: string;
             let serialEntity: TEntity;

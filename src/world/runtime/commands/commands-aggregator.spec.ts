@@ -11,9 +11,4 @@ export interface ICommandsAggregator {
      * Execute all commands which have been aggregated
      */
     executeAll(): Promise<void>
-
-    /**
-     * Also maintain on the next execution
-     */
-    triggerMaintain(): void
 }

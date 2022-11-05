@@ -35,12 +35,14 @@ const ErrorHandlerSystem = createSystem({
     .build();
 
 
-buildWorld()
+const prepWorld = buildWorld()
     .withDefaultScheduling(root => root
         .addNewStage(stage => stage.addSystem(ErrorTriggerSystem))
         .addNewStage(stage => stage.addSystem(ErrorHandlerSystem))
     )
-    .build()
-    .run()
-    .catch(console.error)
-    .then(() => console.log('Finished.'));
+    .build();
+
+(async () => {
+    const runWorld = await prepWorld.prepareRun();
+    await runWorld.start();
+})().catch(console.error).then(() => console.log('Finished.'));

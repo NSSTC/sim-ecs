@@ -1,8 +1,8 @@
-import {Entity} from "../entity";
+import {Entity} from "../../../entity/entity";
 import type {ICommandEntityBuilder} from "./command-entity-builder.spec";
-import type {TObjectProto} from "../_.spec";
-import type {ICommandsAggregator} from "./commands-aggregator.spec";
-import type {IWorld} from "../world.spec";
+import type {TObjectProto} from "../../../_.spec";
+import type {IWorld} from "../../world.spec";
+import {ICommands} from "./commands.spec";
 
 export * from './command-entity-builder.spec';
 
@@ -11,11 +11,11 @@ export class CommandEntityBuilder implements ICommandEntityBuilder {
 
     constructor(
         protected world: IWorld,
-        protected commandsAggregator: ICommandsAggregator,
+        protected commands: ICommands
     ) {}
 
     build(): void {
-        this.commandsAggregator.addCommand(() => this.world.addEntity(this.entity));
+        this.commands.addEntity(this.entity);
     }
 
     with(component: Object | TObjectProto, ...args: unknown[]): CommandEntityBuilder {

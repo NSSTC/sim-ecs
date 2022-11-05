@@ -1,4 +1,12 @@
-import {buildWorld, createSystem, queryComponents, Read, World, Write} from '../../../../../src';
+import {
+    buildWorld,
+    createSystem,
+    IPreptimeWorld,
+    IRuntimeWorld,
+    queryComponents,
+    Read,
+    Write
+} from '../../../../../src';
 import {IBenchmark} from "../../benchmark.spec";
 import {CheckEndSystem, CounterResource} from "./_";
 
@@ -33,12 +41,13 @@ const SimpleIterSystem = createSystem({
 export class Benchmark implements IBenchmark {
     readonly name = 'sim-ecs';
     count = 0;
-    world: World;
+    prepWorld: IPreptimeWorld;
+    runWorld!: IRuntimeWorld;
 
     constructor(
         protected iterCount: number
     ) {
-        this.world = buildWorld()
+        this.prepWorld = buildWorld()
             .withDefaultScheduling(root => root
                 .addNewStage(stage => stage
                     .addSystem(SimpleIterSystem)
@@ -51,12 +60,12 @@ export class Benchmark implements IBenchmark {
                 Rotation,
                 Velocity,
             )
-            .build() as World;
+            .build();
 
-        this.world.addResource(CounterResource, iterCount);
+        this.prepWorld.addResource(CounterResource, iterCount);
 
         for (let i = 0; i < 1000; i++) {
-            this.world.buildEntity()
+            this.prepWorld.buildEntity()
                 .withAll(
                     Transform,
                     Position,
@@ -72,14 +81,12 @@ export class Benchmark implements IBenchmark {
     }
 
     async init(): Promise<void> {
-        await this.world.flushCommands();
-        await this.world.prepareRun({
-            // to make the comparison fair, we will iterate in a sync loop over the steps, just like the others do
-            executionFunction: (fn: Function) => fn(),
+        this.runWorld = await this.prepWorld.prepareRun({
+            executionFunction: (fn: Function) => fn()
         });
     }
 
     run(): Promise<void> {
-        return this.world.run({}, true);
+        return this.runWorld.start();
     }
 }

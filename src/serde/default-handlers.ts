@@ -1,5 +1,5 @@
 import type {TDeserializer, TSerializer} from "./serde.spec";
-import {Entity} from "../entity";
+import {Entity} from "../entity/entity";
 import {Reference} from "./referencing";
 import {EReferenceType} from "./referencing.spec";
 

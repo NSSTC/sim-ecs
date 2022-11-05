@@ -1,14 +1,15 @@
-import type {IWorld} from "../world.spec";
 import {type IWorldBuilder, WorldBuilder} from "../world/world-builder";
 import {SerDe} from "../serde/serde";
+import type {IPreptimeWorld} from "../world/preptime/preptime-world.spec";
+import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec";
 
-const worlds = new Set<IWorld>();
+const worlds = new Set<IPreptimeWorld | IRuntimeWorld>();
 
 /**
  * Register a world
  * @param world
  */
-export function addWorld(world: IWorld) {
+export function addWorld(world: IPreptimeWorld | IRuntimeWorld) {
     worlds.add(world);
 }
 
@@ -24,7 +25,7 @@ export function buildWorld(): IWorldBuilder {
  * Get a world with a name
  * @param name
  */
-export function getWorld(name: string): IWorld | undefined {
+export function getWorld(name: string): IPreptimeWorld | IRuntimeWorld | undefined {
     let world;
     for (world of worlds) {
         if (world.name == name) {
@@ -36,7 +37,7 @@ export function getWorld(name: string): IWorld | undefined {
 /**
  * Iterate over all registered worlds
  */
-export function getWorlds(): IterableIterator<IWorld> {
+export function getWorlds(): IterableIterator<IPreptimeWorld | IRuntimeWorld> {
     return worlds.values();
 }
 
@@ -44,6 +45,6 @@ export function getWorlds(): IterableIterator<IWorld> {
  * Remove a world
  * @param world
  */
-export function removeWorld(world: IWorld) {
+export function removeWorld(world: IPreptimeWorld | IRuntimeWorld) {
     worlds.delete(world);
 }

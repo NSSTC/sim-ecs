@@ -1,7 +1,7 @@
 import type {IEntitiesQuery, TExistenceQuery} from "./query.spec";
 import {EExistence, EQueryType, ETargetType} from "./query.spec";
 import {Query} from "./query";
-import type {IEntity, TTag} from "../entity.spec";
+import type {IEntity, TTag} from "../entity/entity.spec";
 import {addEntitySym, existenceDescSym} from "./_";
 import type {TObjectProto} from "../_.spec";
 

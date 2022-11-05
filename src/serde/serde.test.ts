@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {type ISerDeOptions, SerDe} from "./serde";
-import {Entity, type IEntity} from "../entity";
+import {Entity, type IEntity} from "../entity/entity";
 import {SerialFormat} from "./serial-format";
 import {clearRegistry} from "../ecs/ecs-entity";
 import {dataStructDeserializer, dataStructSerializer} from "../world/world-builder.util";

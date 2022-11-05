@@ -1,6 +1,8 @@
 import type {IPipeline} from "./pipeline/pipeline.spec";
 import type {TExecutor} from "../_.spec";
-import type {World} from "../world";
+import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec";
+import {IEventBus} from "../events/event-bus.spec";
+import {ISystem} from "../system/system.spec";
 
 export type TSchedulingAlgorithm = (stageExecutors: TExecutor[]) => Promise<void>;
 
@@ -19,5 +21,16 @@ export interface IScheduler {
     /**
      * Execute this schedule once
      */
-    getExecutor(world: World): TExecutor
+    getExecutor(eventBus: IEventBus): TExecutor
+
+    /**
+     * Get all unique systems in this schedule
+     */
+    getSystems(): Set<ISystem>
+
+    /**
+     * Prepare this scheduler for usage
+     * @param world
+     */
+    prepare(world: IRuntimeWorld): Promise<void>
 }

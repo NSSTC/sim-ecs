@@ -1,8 +1,8 @@
 import type {ISystem} from "../../system/system.spec";
 import type {TExecutor} from "../../_.spec";
-import {World} from "../../world";
+import {IEventBus} from "../../events/event-bus.spec";
 
-export type TStageSchedulingAlgorithm = (world: World, systems: ISystem[]) => Promise<void>;
+export type TStageSchedulingAlgorithm = (systems: ISystem[], eventBus: IEventBus) => Promise<void>;
 
 export interface IStage {
     schedulingAlgorithm: TStageSchedulingAlgorithm
@@ -16,7 +16,7 @@ export interface IStage {
 
     /**
      * Get executor to run this stage once
-     * @param world
+     * @param eventBus
      */
-    getExecutor(world: World): TExecutor
+    getExecutor(eventBus: IEventBus): TExecutor
 }

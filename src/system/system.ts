@@ -10,8 +10,8 @@ import type {IQuery} from "../query/query.spec";
 import {Query} from "../query/query";
 import type {TObjectProto} from "../_.spec";
 import {systemEventReaderSym, systemEventWriterSym, systemResourceTypeSym} from "./_";
-import type {World} from "../world";
 import type {ISystemBuilder} from "./system-builder.spec";
+import {IRuntimeWorld} from "../world/runtime/runtime-world";
 
 
 export * from "./system.spec";
@@ -33,7 +33,7 @@ export function getQueriesFromSystem(system: ISystem): IQuery<unknown, unknown>[
     return queries;
 }
 
-export function getSystemRunParameters(system: ISystem, world: World): TSystemParameterDesc {
+export function getSystemRunParameters(system: ISystem, world: IRuntimeWorld): TSystemParameterDesc {
     let runParameters = {};
 
     for (const param of Object.entries(system.parameterDesc)) {
@@ -42,7 +42,7 @@ export function getSystemRunParameters(system: ISystem, world: World): TSystemPa
                 configurable: false,
                 enumerable: true,
                 writable: false,
-                value: world.systemWorld,
+                value: world.systemActions,
             });
         } else if (param[1] == Storage) {
             Object.defineProperty(runParameters, param[0], {

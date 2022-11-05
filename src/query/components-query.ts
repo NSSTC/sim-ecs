@@ -7,7 +7,7 @@ import type {
 import {EQueryType, ETargetType} from "./query.spec";
 import {Query} from "./query";
 import type {TObjectProto, TTypeProto} from "../_.spec";
-import type {IEntity, TTag} from "../entity.spec";
+import type {IEntity, TTag} from "../entity/entity.spec";
 import {accessDescSym, addEntitySym} from "./_";
 
 export class ComponentsQuery<DESC extends IAccessQuery<TObjectProto>> extends Query<DESC, TAccessQueryData<DESC>> implements IComponentsQuery<DESC> {

@@ -1,4 +1,4 @@
-import type {TObjectProto, TTypeProto} from "./_.spec";
+import type {TObjectProto, TTypeProto} from "../_.spec";
 
 export type TEntityId = string;
 export type TTag = number | string;

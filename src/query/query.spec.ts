@@ -1,5 +1,5 @@
 import type {TObjectProto, TTypeProto} from "../_.spec";
-import type {IEntity, TTag} from "../entity.spec";
+import type {IEntity, TTag} from "../entity/entity.spec";
 import type {accessDescSym, addEntitySym, clearEntitiesSym, existenceDescSym, removeEntitySym, setEntitiesSym} from "./_";
 
 export type TAccessQueryParameter<C extends TObjectProto> = C & IAccessDescriptor<InstanceType<C>>;
@@ -58,6 +58,7 @@ export interface IExistenceDescriptor<C extends TObjectProto> {
 export interface IQuery<DESC, DATA> {
     readonly descriptor: DESC
     readonly queryType: EQueryType
+    readonly resultLength: number
 
     [addEntitySym](entity: IEntity): void
     [clearEntitiesSym](): void

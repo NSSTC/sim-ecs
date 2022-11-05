@@ -1,12 +1,13 @@
-import type {IEntity} from "../entity.spec";
-import type {TTypeProto} from "../_.spec";
-import type {TDeserializer, ISerDeOptions} from "../serde/serde.spec";
-import type {ISerialFormat} from "../serde/serial-format.spec";
-import type {IWorld, TGroupHandle} from "../world.spec";
-import type {IIStateProto} from "../state.spec";
+import type {IEntity} from "../../../entity/entity.spec";
+import type {TTypeProto} from "../../../_.spec";
+import type {TDeserializer, ISerDeOptions} from "../../../serde/serde.spec";
+import type {ISerialFormat} from "../../../serde/serial-format.spec";
+import type {IWorld, TGroupHandle} from "../../world.spec";
+import type {IIStateProto} from "../../../state/state.spec";
 import type {ICommandEntityBuilder} from "./command-entity-builder.spec";
-import type {TCommand} from "./commands-aggregator.spec";
 
+
+export type TCommand = () => Promise<void> | void;
 
 /**
  * Commands is an async interface, which aggregates commands for later execution.
@@ -43,11 +44,6 @@ export interface ICommands {
      * @param options
      */
     load(prefab: ISerialFormat, options?: ISerDeOptions<TDeserializer>): TGroupHandle
-
-    /**
-     * Also trigger a maintain on the next execution
-     */
-    maintain(): void
 
     /**
      * Merge entities from another world into this one

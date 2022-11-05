@@ -1,15 +1,10 @@
 import type {ICommandsAggregator, TCommand} from "./commands-aggregator.spec";
-import type {IWorld} from "../world.spec";
+
 
 export * from "./commands-aggregator.spec";
 
 export class CommandsAggregator implements ICommandsAggregator {
     commands: TCommand[] = [];
-    doMaintain = false;
-
-    constructor(
-        protected world: IWorld,
-    ) {}
 
     addCommand(command: TCommand): void {
         this.commands.push(command);
@@ -19,13 +14,5 @@ export class CommandsAggregator implements ICommandsAggregator {
         for (let command = this.commands.shift(); !!command; command = this.commands.shift()) {
             await command();
         }
-
-        if (this.doMaintain) {
-            this.world.maintain();
-        }
-    }
-
-    triggerMaintain() {
-        this.doMaintain = true;
     }
 }

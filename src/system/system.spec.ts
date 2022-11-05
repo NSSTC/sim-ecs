@@ -1,6 +1,6 @@
 import type {IAccessQuery, IComponentsQuery, IEntitiesQuery} from "../query/query.spec";
 import type {TObjectProto, TTypeProto} from "../_.spec";
-import type {ISystemActions} from "../world.spec";
+import type {ISystemActions} from "../world/actions.spec";
 import {systemEventReaderSym, systemEventWriterSym, systemResourceTypeSym, systemRunParamSym} from "./_";
 import type {IEventReader} from "../events/event-reader.spec";
 import type {IEventWriter} from "../events/event-writer.spec";

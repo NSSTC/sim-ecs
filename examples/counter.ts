@@ -1,32 +1,32 @@
 import {Actions, buildWorld, createSystem, ISyncPointPrefab, queryComponents, Write} from "../src";
 
 
-/// a component.
-/// holds our counter and a limit to how far we want to count before stopping
+// a component.
+// holds our counter and a limit to how far we want to count before stopping
 class CounterInfo {
     count = 0;
     limit = 100;
 }
 
-/// systems process data. We declare what kind of input we need in the struct below,
-/// and then define the processing code here
+// systems process data. We declare what kind of input we need in the struct below,
+// and then define the processing code here
 const CounterSystem = createSystem({
-    /// The Actions interface allows access to world-operations, like adding entities or changing the state
+    // The Actions interface allows access to world-operations, like adding entities or changing the state
     actions: Actions,
-    /// the query to get all matching entities
-    /// we can define our own fields. The value is either Write() or Read() of a specific prototype.
-    /// the fields will be filled with actual objects of the given prototypes during system execution
+    // the query to get all matching entities
+    // we can define our own fields. The value is either Write() or Read() of a specific prototype.
+    // the fields will be filled with actual objects of the given prototypes during system execution
     query: queryComponents({
         info: Write(CounterInfo),
     }),
 })
-    /// it is useful to also give every System a unique name,
-    /// which will show up in error messages and help during debugging
+    // it is useful to also give every System a unique name,
+    // which will show up in error messages and help during debugging
     .withName('CounterSystem')
-    /// the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
+    // the logic goes here. Just iterate over the data-set and make your relevant changes for a single step
     .withRunFunction(({actions, query}) => {
-        /// there are two ways to go over the query result:
-        /// 1. you can use regular loops:
+        // there are two ways to go over the query result:
+        // 1. you can use regular loops:
         for (const {info} of query.iter()) {
             info.count++;
 
@@ -35,14 +35,17 @@ const CounterSystem = createSystem({
                 console.log(`The current count is ${info.count} / ${info.limit}!`);
             }
 
-            // if the limit is reached, set the exit field to true
+            // if the limit is reached, exit
             if (info.count == info.limit) {
                 console.log('Time to exit!');
+                /// the commands interface is a safe way to mutate the world, since all changes are always buffered until a good moment,
+                /// for example after each step, all commands are applied
+                /// doing so makes sure that there are no race conditions between different systems accessing entities simultaneously
                 actions.commands.stopRun();
             }
         }
 
-        /// 2. at the cost of iteration speed, you can use a callback function, too:
+        // 2. at the cost of iteration speed, you can use a callback function, too:
         // query.execute(({info}) => {
         //     info.count++;
         // });
@@ -69,27 +72,30 @@ const executionSchedule: ISyncPointPrefab = {
     ],
 };
 
-/// then, we need a world which will hold our systems and entities
+// then, we need a world which will hold our systems and entities.
+// sim-ecs is separated into preparation worlds and runtime worlds.
+// They are optimized for different requirements.
+// buildWorld() will create the preparation world.
 const world = buildWorld()
-    /// we can inform the world about our processing logic by adding the above defined prefab
+    // we can inform the world about our processing logic by adding the above defined prefab
     .withDefaultScheduling(root => root.fromPrefab(executionSchedule))
-    /// we can register components types at this level in order to enable saving (serialization) and loading (deserialization) of them
+    // we can register components types at this level in order to enable saving (serialization) and loading (deserialization) of them
     .withComponent(CounterInfo)
     .build();
 
-/// in order to do something, we still need to add data, which can be processed.
-/// think of this like filling up your database, whereas each entity is a row and each component is a column
+// in order to do something, we still need to add data, which can be processed.
+// think of this like filling up your database, whereas each entity is a row and each component is a column
 world
-    /// the commands interface is a safe way to mutate the world, since all changes are always buffered until a good moment,
-    /// for example after each step, all commands are applied
-    /// doing so makes sure that there are no race conditions between different systems accessing entities simultaneously
-    .commands
     /// invoking the entity builder in this way automatically adds the entity to the world
     .buildEntity()
     .with(CounterInfo)
     .build();
 
-/// when everything is added, it's time to run the simulation
-/// sim-ecs provides a main-loop, which is optimized for iteration speed of the systems and data
-/// it is highly recommended to use it:
-world.run().catch(console.error).then(() => console.log('Finished.'));
+(async () => {
+    // when everything is added, it's time to run the simulation
+    // to do so, a runtime environment must be prepared:
+    const runWorld = await world.prepareRun();
+
+    // sim-ecs provides an optimized main-loop, but can also do single steps
+    await runWorld.start();
+})().catch(console.error).then(() => console.log('Finished.'));

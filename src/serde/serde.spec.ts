@@ -1,4 +1,4 @@
-import type {IEntity} from "../entity.spec";
+import type {IEntity} from "../entity/entity.spec";
 import type {TObjectProto} from "../_.spec";
 import type {ISerialFormat} from "./serial-format.spec";
 import type {IEntitiesQuery} from "../query/query.spec";

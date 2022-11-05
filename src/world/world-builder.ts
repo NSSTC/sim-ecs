@@ -2,20 +2,20 @@ import type {
     IObjectRegistrationOptions,
     IWorldBuilder,
 } from "./world-builder.spec";
-import {World} from "../world";
 import type {TObjectProto} from "../_.spec";
 import type {ISerDe} from "../serde/serde.spec";
 import {dataStructDeserializer, dataStructSerializer} from "./world-builder.util";
 import {type IScheduler, Scheduler} from "../scheduler/scheduler";
 import type {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
-import type {IIStateProto} from "../state.spec";
+import type {IIStateProto} from "../state/state.spec";
 import {addSyncPoint} from "../ecs/ecs-sync-point";
+import {PreptimeWorld} from "./preptime/preptime-world";
 
 
 export * from './world-builder.spec';
 
 export class WorldBuilder implements IWorldBuilder {
-    protected callbacks: Set<(world: World) => void> = new Set();
+    protected callbacks: Set<(world: PreptimeWorld) => void> = new Set();
     protected worldName?: string;
     protected defaultScheduler: IScheduler = new Scheduler();
     protected stateSchedulers = new Map<IIStateProto, IScheduler>();
@@ -24,14 +24,13 @@ export class WorldBuilder implements IWorldBuilder {
         protected serde: ISerDe,
     ) {}
 
-    addCallback(cb: (world: World) => void): WorldBuilder {
+    addCallback(cb: (world: PreptimeWorld) => void): WorldBuilder {
         this.callbacks.add(cb);
         return this;
     }
 
-    build(): World {
-        const world = new World({
-            name: this.worldName,
+    build(): PreptimeWorld {
+        const world = new PreptimeWorld(this.worldName, {
             defaultScheduler: this.defaultScheduler!,
             serde: this.serde,
             stateSchedulers: this.stateSchedulers,

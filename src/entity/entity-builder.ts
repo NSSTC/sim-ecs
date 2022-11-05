@@ -1,6 +1,6 @@
 import {Entity, type TEntityId} from "./entity";
 import type {IEntityBuilder} from "./entity-builder.spec";
-import type {TObjectProto} from "./_.spec";
+import type {TObjectProto} from "../_.spec";
 
 export * from './entity-builder.spec';
 

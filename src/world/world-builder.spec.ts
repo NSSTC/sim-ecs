@@ -1,9 +1,9 @@
-import type IWorld from "../world.spec";
 import type {TObjectProto} from "../_.spec";
 import type {ISerDeOperations} from "../serde/serde.spec";
 import type {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
 import type {IScheduler} from "../scheduler/scheduler.spec";
-import type {IIStateProto} from "../state.spec";
+import type {IIStateProto} from "../state/state.spec";
+import type {IPreptimeWorld} from "./preptime/preptime-world.spec";
 
 export interface IObjectRegistrationOptions {
     serDe: ISerDeOperations
@@ -13,7 +13,7 @@ export interface IWorldBuilder {
     /**
      * Build the execution unit
      */
-    build(): IWorld
+    build(): IPreptimeWorld
 
     /**
      * Alias for [withComponent]{@link IWorldBuilder#withComponent}

@@ -1,5 +1,5 @@
 import {EQueryType, type IQuery} from "./query.spec";
-import type {IEntity} from "../entity";
+import type {IEntity} from "../entity/entity";
 import {addEntitySym, clearEntitiesSym, removeEntitySym, setEntitiesSym} from "./_";
 
 export * from "./query.spec";
@@ -20,6 +20,10 @@ export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {
 
     get queryType(): EQueryType {
         return this._queryType;
+    }
+
+    get resultLength(): number {
+        return this.queryResult.size;
     }
 
     /** @internal */

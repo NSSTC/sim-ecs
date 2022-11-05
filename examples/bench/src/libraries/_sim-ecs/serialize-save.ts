@@ -1,4 +1,4 @@
-import {buildWorld, IWorld, SerialFormat} from '../../../../../src';
+import {buildWorld, IPreptimeWorld, SerialFormat} from '../../../../../src';
 import {IBenchmark} from "../../benchmark.spec";
 
 class Transform {}
@@ -8,8 +8,8 @@ class Velocity { x = 1 }
 
 export class Benchmark implements IBenchmark {
     readonly name = 'sim-ecs';
-    world: IWorld;
-    world2: IWorld;
+    world: IPreptimeWorld;
+    world2: IPreptimeWorld;
 
     constructor(
         protected iterCount: number
@@ -37,7 +37,7 @@ export class Benchmark implements IBenchmark {
 
     async init(): Promise<void> {
         for (let i = 0; i < 1000; i++) {
-            this.world.commands.buildEntity()
+            this.world.buildEntity()
                 .withAll(
                     Transform,
                     Position,
@@ -47,9 +47,6 @@ export class Benchmark implements IBenchmark {
                 .build();
         }
 
-        await this.world.flushCommands();
-        this.world.maintain();
-
         {
             const json = this.world.save().toJSON();
             console.log(`${this.name} SerializeSave file size: ${new TextEncoder().encode(json).length / 1024} KB`);
@@ -58,7 +55,6 @@ export class Benchmark implements IBenchmark {
 
     async run() {
         const json = this.world.save().toJSON();
-        this.world2.commands.load(SerialFormat.fromJSON(json));
-        await this.world2.flushCommands();
+        this.world2.load(SerialFormat.fromJSON(json));
     }
 }
