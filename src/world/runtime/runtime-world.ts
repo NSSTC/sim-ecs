@@ -157,59 +157,57 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
 
         (async () => {
             await this.pushState(this.config.initialState);
-            await this.commands.executeAll();
-        })().catch(err => this.awaiterReject(err));
-
-        {
-            const execFn = this.executionFunction;
-            const syncHandler = async () => {
-                try {
-                    await this.commands.executeAll();
-                } catch (error) {
-                    if (typeof error == 'object' && error != null) {
-                        await this.eventBus.publish(error);
-                    } else {
-                        throw error;
-                    }
-                }
-            }
-
-            const cleanUp = () => {
-                this.pda.clear();
-                this.awaiterResolve();
-                this.#awaiter = undefined;
-            };
-
-            const mainLoop = async () => {
-                if (!this.shouldRunSystems) {
-                    cleanUp();
-                    return;
-                }
-
-                try {
-                    await this.currentSchedulerExecutor!();
-                    await this.commands.executeAll();
-                } catch (error) {
-                    if (typeof error == 'object' && error != null) {
-                        await this.eventBus.publish(error);
-                    } else {
-                        throw error;
-                    }
-                }
-
-                execFn(mainLoop);
-            }
 
             {
-                let syncPoint;
-                for (syncPoint of this.currentScheduler!.pipeline!.getGroups()) {
-                    syncPoint.addOnSyncHandler(syncHandler);
+                const execFn = this.executionFunction;
+                const syncHandler = async () => {
+                    try {
+                        await this.commands.executeAll();
+                    } catch (error) {
+                        if (typeof error == 'object' && error != null) {
+                            await this.eventBus.publish(error);
+                        } else {
+                            throw error;
+                        }
+                    }
                 }
-            }
 
-            this.shouldRunSystems = true;
-            execFn(mainLoop);
-        }
+                const cleanUp = () => {
+                    this.pda.clear();
+                    this.awaiterResolve();
+                    this.#awaiter = undefined;
+                };
+
+                const mainLoop = async () => {
+                    if (!this.shouldRunSystems) {
+                        cleanUp();
+                        return;
+                    }
+
+                    try {
+                        await this.currentSchedulerExecutor!();
+                    } catch (error) {
+                        if (typeof error == 'object' && error != null) {
+                            await this.eventBus.publish(error);
+                        } else {
+                            throw error;
+                        }
+                    }
+
+                    execFn(mainLoop);
+                }
+
+                {
+                    let syncPoint;
+                    for (syncPoint of this.currentScheduler!.pipeline!.getGroups()) {
+                        syncPoint.addOnSyncHandler(syncHandler);
+                    }
+                }
+
+                this.shouldRunSystems = true;
+                execFn(mainLoop);
+            }
+        })().catch(err => this.awaiterReject(err));
 
         return this.#awaiter;
     }
