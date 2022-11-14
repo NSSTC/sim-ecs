@@ -26,7 +26,7 @@ export async function pushState(this: RuntimeWorld, NewState: IIStateProto): Pro
     }
 
     await this.pda.state?.deactivate(this.transitionWorld);
-    this.pda.push(NewState);
+    await this.pda.push(NewState);
 
     const newState = this.pda.state! as State;
     await newState.create(this.transitionWorld);

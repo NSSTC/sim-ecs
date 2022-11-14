@@ -1,14 +1,10 @@
-import {buildWorld, IWorld} from "sim-ecs";
-import {GameStore} from "./models/game-store";
-import {MenuState} from "./states/menu";
+import {buildWorld, IPreptimeWorld} from "sim-ecs";
 import {UIItem} from "./components/ui-item";
 import {Paddle} from "./components/paddle";
 import {Position} from "./components/position";
 import {Velocity} from "./components/velocity";
 import {Shape} from "./components/shape";
 import {ScoreBoard} from "./models/score-board";
-import {PaddleTransforms} from "./models/paddle-transforms";
-import {Dimensions} from "./models/dimensions";
 import {Collision} from "./components/collision";
 import {Wall} from "./components/wall";
 import {PauseState} from "./states/pause";
@@ -16,6 +12,10 @@ import {defaultSchedule} from "./schedules/default";
 import {pauseSchedule} from "./schedules/pause";
 import {GameState} from "./states/game";
 import {gameSchedule} from "./schedules/game";
+import {GameStore} from "./models/game-store";
+import {PaddleTransforms} from "./models/paddle-transforms";
+import {Dimensions} from "./models/dimensions";
+import {MenuState} from "./states/menu";
 
 
 const cleanup = () => {
@@ -36,6 +36,18 @@ const createWorld = () => {
         .withStateScheduling(GameState, root => root.fromPrefab(gameSchedule))
         .withStateScheduling(PauseState, root => root.fromPrefab(pauseSchedule))
         .r(ScoreBoard)
+        .r(GameStore)
+        .r(PaddleTransforms, {
+            constructorArgs: [
+                {
+                    dimensions: new Dimensions(0, 0),
+                    position: new Position(0, 0),
+                }, {
+                    dimensions: new Dimensions(0, 0),
+                    position: new Position(0, 0),
+                },
+            ]
+        })
         .withComponents(
             Collision,
             Paddle,
@@ -48,7 +60,7 @@ const createWorld = () => {
         .build();
 };
 
-const initGame = (world: IWorld) => {
+const initGame = async (world: IPreptimeWorld) => {
     const canvasEle = document.querySelector('canvas');
     if (!canvasEle) throw new Error('Could not find canvas element!');
 
@@ -63,7 +75,6 @@ const initGame = (world: IWorld) => {
     renderContext.imageSmoothingEnabled = true;
     renderContext.imageSmoothingQuality = 'high';
 
-    world.addResource(GameStore);
     world.addResource(renderContext);
     world.addResource(
         PaddleTransforms,
@@ -75,24 +86,31 @@ const initGame = (world: IWorld) => {
             dimensions: new Dimensions(0, 0),
             position: new Position(0, 0),
         });
-};
-
-const runGame = (world: IWorld) => {
-    return world.run({
-        initialState: MenuState,
-    });
-}
-
-// main function
-(async () => {
-    const world = createWorld();
 
     if (localStorage.getItem('dev') === 'true') {
         // @ts-ignore
-        window.world = world;
+        window.prepWorld = world;
+    }
+};
+
+const runGame = async (world: IPreptimeWorld) => {
+    const runWorld = await world.prepareRun({
+        initialState: MenuState,
+    });
+
+    if (localStorage.getItem('dev') === 'true') {
+        // @ts-ignore
+        window.runWorld = runWorld;
     }
 
-    initGame(world);
+    await runWorld.start();
+}
+
+// main function
+window.addEventListener('DOMContentLoaded', () => (async () => {
+    const world = createWorld();
+
+    await initGame(world);
     await runGame(world);
     cleanup();
-})().catch(console.error);
+})().catch(console.error));

@@ -1,24 +1,18 @@
-import type {IPrepOptions, IPreptimeWorld, IPreptimeWorldConfig} from "./preptime-world.spec";
-import type {IWorldData} from "../world.spec";
+import type {IPreptimeOptions, IPreptimeWorld, IPreptimeWorldConfig} from "./preptime-world.spec";
 import {SerDe} from "../../serde/serde";
 import {Scheduler} from "../../scheduler/scheduler";
 import {
-    addEntity,
     buildEntity,
     clearEntities,
     createEntity,
     getEntities,
-    hasEntity,
-    removeEntity,
 } from "../common/world_entities";
 import {
-    addResource,
     clearResources,
     getResource,
     getResources,
     hasResource,
     removeResource,
-    replaceResource,
 } from "../common/world_resources";
 import {
     addEntitiesToGroup,
@@ -29,23 +23,26 @@ import {
     getGroupEntities,
     removeGroup,
 } from "../common/world_groups";
-import {load, save} from "../common/world_prefabs";
+import {addEntity, hasEntity, removeEntity} from "./preptime-world_entities";
+import {addResource} from "./preptime-world_resources";
+import {load, save} from "./preptime-world_prefabs";
 import {merge} from "../common/world_misc";
 import type {IRuntimeWorld} from "../runtime/runtime-world.spec";
 import {RuntimeWorld} from "../runtime/runtime-world";
 import {State} from "../../state/state";
+import {IPreptimeData} from "./preptime-world.spec";
 
 export * from "./preptime-world.spec";
 
 
 export class PreptimeWorld implements IPreptimeWorld {
     public config: IPreptimeWorldConfig;
-    public data: IWorldData;
+    public data: IPreptimeData;
 
     constructor(
         public name?: string,
         $config?: Partial<IPreptimeWorldConfig>,
-        $data?: Partial<IWorldData>,
+        $data?: Partial<IPreptimeData>,
     ) {
         {
             const config = $config
@@ -55,7 +52,6 @@ export class PreptimeWorld implements IPreptimeWorld {
             this.config = {
                 defaultScheduler: config.defaultScheduler ?? new Scheduler(),
                 serde: config.serde ?? new SerDe(),
-                states: config.states ?? new Set(),
                 stateSchedulers: config.stateSchedulers ?? new Map(),
             };
         }
@@ -76,7 +72,9 @@ export class PreptimeWorld implements IPreptimeWorld {
         }
     }
 
-    async prepareRun(options?: Partial<IPrepOptions>): Promise<IRuntimeWorld> {
+    public async prepareRun(options?: Partial<IPreptimeOptions>): Promise<IRuntimeWorld> {
+        // todo: don't copy the refs, copy all objects
+
         const name = this.name
             ? this.name + '_run'
             : 'NO_NAME';
@@ -86,11 +84,10 @@ export class PreptimeWorld implements IPreptimeWorld {
             Object.assign({
                 executionFunction: options?.executionFunction,
                 initialState: options?.initialState ?? State,
+
             }, this.config),
             this.data,
         );
-
-        // todo: don't copy the refs, copy all objects
 
         await runWorld.prepare();
         return runWorld;
@@ -138,5 +135,4 @@ export class PreptimeWorld implements IPreptimeWorld {
     public getResources = getResources;
     public hasResource = hasResource;
     public removeResource = removeResource;
-    public replaceResource = replaceResource;
 }

@@ -1,10 +1,11 @@
-import {EPaddleSide, Paddle} from "../components/paddle";
-import {Shape} from "../components/shape";
-import {UIItem} from "../components/ui-item";
-import {Position} from "../components/position";
-import {Collision} from "../components/collision";
-import {EWallSide, EWallType, Wall} from "../components/wall";
+import {EPaddleSide, type Paddle} from "../components/paddle";
+import {type Shape} from "../components/shape";
+import {type UIItem} from "../components/ui-item";
+import {type Position} from "../components/position";
+import {type Collision} from "../components/collision";
+import {EWallSide, EWallType, type Wall} from "../components/wall";
 import {CResourceMarker, CResourceMarkerValue} from "sim-ecs";
+import {type ScoreBoard} from "../models/score-board";
 
 
 export const defaultBallPositionX = 0.49;
@@ -19,100 +20,118 @@ export const gamePrefab = [
         ScoreBoard: {
             left: 0,
             right: 0,
-        }
+        } satisfies ScoreBoard
     },
     { // Left wall
-        Wall: <Wall>{
+        Wall: {
             wallSide: EWallSide.Left,
             wallType: EWallType.Vertical,
-        },
-        Collision: <Collision>{},
-        Position: <Position>{
+        } satisfies Wall,
+        Collision: {
+            collisionObjects: [],
+            occurred: false,
+        } satisfies Collision,
+        Position: {
             x: -1,
             y: 0,
-        },
-        Shape: <Shape>{
+        } satisfies Position,
+        Shape: {
             color: 'black',
             dimensions: {
                 width: 1,
                 height: 1,
             },
-        },
+        } satisfies Shape,
     },
     { // Right wall
-        Wall: <Wall>{
+        Wall: {
             wallSide: EWallSide.Right,
             wallType: EWallType.Vertical,
-        },
-        Collision: <Collision>{},
-        Position: <Position>{
+        } satisfies Wall,
+        Collision: {
+            collisionObjects: [],
+            occurred: false,
+        } satisfies Collision,
+        Position: {
             x: 1,
             y: 0,
-        },
-        Shape: <Shape>{
+        } satisfies Position,
+        Shape: {
             color: 'black',
             dimensions: {
                 width: 1,
                 height: 1,
             },
-        },
+        } satisfies Shape,
     },
     { // Top wall
-        Wall: <Wall>{wallType: EWallType.Horizontal},
-        Collision: <Collision>{},
-        Position: <Position>{
+        Wall: {
+            wallSide: EWallSide.None,
+            wallType: EWallType.Horizontal,
+        } satisfies Wall,
+        Collision: {
+            collisionObjects: [],
+            occurred: false,
+        } satisfies Collision,
+        Position: {
             x: 0,
             y: -1,
-        },
-        Shape: <Shape>{
+        } satisfies Position,
+        Shape: {
             color: 'black',
             dimensions: {
                 width: 1,
                 height: 1,
             },
-        },
+        } satisfies Shape,
     },
     { // Bottom wall
-        Wall: <Wall>{wallType: EWallType.Horizontal},
-        Collision: <Collision>{},
-        Position: <Position>{
+        Wall: {
+            wallSide: EWallSide.None,
+            wallType: EWallType.Horizontal,
+        } satisfies Wall,
+        Collision: {
+            collisionObjects: [],
+            occurred: false,
+        } satisfies Collision,
+        Position: {
             x: 0,
             y: 1,
-        },
-        Shape: <Shape>{
+        } satisfies Position,
+        Shape: {
             color: 'black',
             dimensions: {
                 width: 1,
                 height: 1,
             },
-        },
+        } satisfies Shape,
     },
     { // Left points
-        Paddle: <Paddle>{
+        Paddle: {
             side: EPaddleSide.Left,
-        },
-        UIItem: <UIItem>{
+        } satisfies Paddle,
+        UIItem: {
             caption: 'Points Left: {}',
             color: '#ddd',
             fontSize: 24,
-        },
-        Position: <Position>{
+        } satisfies UIItem,
+        Position: {
             x: 0.1,
             y: 0.1,
-        },
+        } satisfies Position,
     },
     { // Right points
-        Paddle: <Paddle>{
+        Paddle: {
             side: EPaddleSide.Right,
-        },
-        UIItem: <UIItem>{
+        } satisfies Paddle,
+        UIItem: {
             caption: 'Points Right: {}',
             color: '#ddd',
             fontSize: 24,
-        },
-        Position: <Position>{
+        } satisfies UIItem,
+        Position: {
             x: 0.1,
             y: 0.15,
-        },
+        } satisfies Position,
     },
 ];

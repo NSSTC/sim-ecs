@@ -84,25 +84,31 @@ You can find them in the `/examples` directory.
 
 ### Counter
 
-The counter example is a very small, minimal example to get a quick overview.
-It increases a number a few times and then terminates. You can run it using:
-
 ```
 $ npm run example-counter
 ``` 
 
+The counter example is a very small, minimal example to get a quick overview.
+It increases a number a few times and then terminates. You can run it using:
+
 
 ### Events
-
-The events example demonstrates how to use the event bus to write and read events.
-It will print a message every second and can be executed with:
 
 ```
 $ npm run example-events
 ``` 
 
+The events example demonstrates how to use the event bus to write and read events.
+It will print a message every second and can be executed with:
+
 
 ### Pong
+
+![Pong can be played with the keyboard and saves on pausing.](./.github/assets/pong.png)
+
+```
+$ cd examples/pong && npm install && npm run start
+``` 
 
 Pong is a full game which can be run in the browser. It demonstrates all features of sim-ecs.
 It comes with numerous components and systems, handles states and makes use of prefabs and saves.
@@ -115,13 +121,15 @@ Then, you can open the `index.html` in the public folder to run the game.
 
 ### System Error
 
-Error handling is very simple with sim-ecs. It uses the events system to catch and provide handling opportunities
-without aborting the execution.
-The System-Error example demonstrates how error handling works with a simple example.
+![On error, detailed information including the system's name can be retrieved](./.github/assets/error.png)
 
 ```
 $ npm run example-system-error
 ``` 
+
+Error handling is very simple with sim-ecs. It uses the events system to catch and provide handling opportunities
+without aborting the execution.
+The System-Error example demonstrates how error handling works with a simple example.
 
 
 ## Where is the Documentation

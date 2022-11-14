@@ -1,4 +1,4 @@
-import {ITransitionActions, SerialFormat, State, TGroupHandle} from "sim-ecs";
+import {type ITransitionActions, SerialFormat, State, type TGroupHandle} from "sim-ecs";
 import {pausePrefab} from "../prefabs/pause";
 import {GameStore} from "../models/game-store";
 import {save} from "../app/persistence";
@@ -12,11 +12,11 @@ export class PauseState extends State {
 
         gameStore.currentState = this;
         this.prefabHandle = actions.commands.load(SerialFormat.fromArray(pausePrefab));
-        actions.commands.maintain();
+        return actions.flushCommands();
     }
 
     deactivate(actions: ITransitionActions) {
         actions.commands.removeGroup(this.prefabHandle);
-        actions.commands.maintain();
+        return actions.flushCommands();
     }
 }

@@ -2,7 +2,7 @@ import type {ISystem} from "../../system/system.spec";
 import type {TExecutor} from "../../_.spec";
 import {IEventBus} from "../../events/event-bus.spec";
 
-export type TStageSchedulingAlgorithm = (systems: ISystem[], eventBus: IEventBus) => Promise<void>;
+export type TStageSchedulingAlgorithm = (systems: ReadonlyArray<ISystem>, eventBus: IEventBus) => Promise<void>;
 
 export interface IStage {
     schedulingAlgorithm: TStageSchedulingAlgorithm

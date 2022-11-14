@@ -1,5 +1,5 @@
 import type {ICommands} from "./commands.spec";
-import type {IEntity} from "../../../entity/entity.spec";
+import type {IEntity, IReadOnlyEntity} from "../../../entity/entity.spec";
 import type {TTypeProto} from "../../../_.spec";
 import type {TDeserializer, ISerDeOptions} from "../../../serde/serde.spec";
 import type {ISerialFormat} from "../../../serde/serial-format.spec";
@@ -9,6 +9,9 @@ import type {TCommand} from "./commands-aggregator.spec";
 import {CommandEntityBuilder} from "./command-entity-builder";
 import {RuntimeWorld} from "../runtime-world";
 import type {IPreptimeWorld} from "../../preptime/preptime-world.spec";
+import {IQuery} from "../../../query/query.spec";
+import {addEntitySym} from "../../../query/_";
+import {Entity} from "../../../entity/entity";
 
 export * from "./commands.spec";
 
@@ -16,11 +19,19 @@ export class Commands implements ICommands {
     protected commands: TCommand[] = [];
 
     constructor(
-        public readonly world: RuntimeWorld,
+        protected readonly world: RuntimeWorld,
+        protected readonly queries: Set<IQuery<unknown, unknown>>,
     ) {}
 
     addEntity(entity: IEntity): void {
-        this.commands.push(() => this.world.addEntity(entity));
+        this.commands.push(() => {
+            this.world.addEntity(entity);
+
+            let query;
+            for (query of this.queries) {
+                query[addEntitySym](entity);
+            }
+        });
     }
 
     addResource<T extends Object>(obj: TTypeProto<T> | T, ...args: unknown[]): T {
@@ -55,18 +66,29 @@ export class Commands implements ICommands {
     }
 
     clearEntities(): void {
-        this.commands.push(() => this.world.data.entities.clear());
+        this.commands.push(() => { this.world.data.entities.clear() });
     }
 
     async executeAll(): Promise<void> {
-        for (let command = this.commands.shift(); !!command; command = this.commands.shift()) {
-            await command();
+        if (this.commands.length > 0) {
+            for (let command = this.commands.shift(); !!command; command = this.commands.shift()) {
+                await command();
+            }
         }
     }
 
     load(prefab: ISerialFormat, options?: ISerDeOptions<TDeserializer>): TGroupHandle {
         const handle = this.world.createGroup();
-        this.commands.push(() => { this.world.load(prefab, options, handle) });
+        this.commands.push(() => {
+            this.world.load(prefab, options, handle);
+
+            let entity, query;
+            for (entity of this.world.getGroupEntities(handle)) {
+                for (query of this.queries) {
+                    query[addEntitySym](entity);
+                }
+            }
+        });
         return handle;
     }
 
@@ -74,6 +96,18 @@ export class Commands implements ICommands {
         const handle = this.world.createGroup();
         this.commands.push(() => { this.world.merge(world, handle) });
         return handle;
+    }
+
+    mutateEntity(entity: IReadOnlyEntity, mutator: (entity: IEntity) => Promise<void> | void): void {
+        if (!(entity instanceof Entity)) {
+            throw new Error(`The entity "${entity.id}" cannot be mutated!`);
+        }
+
+        mutator(entity);
+        this.commands.push(() => {
+            this.world.removeEntity(entity);
+            this.world.addEntity(entity);
+        });
     }
 
     popState(): void {

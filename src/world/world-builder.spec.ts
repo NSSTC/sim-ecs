@@ -9,6 +9,10 @@ export interface IObjectRegistrationOptions {
     serDe: ISerDeOperations
 }
 
+export interface IResourceRegistrationOptions extends IObjectRegistrationOptions{
+    constructorArgs: Array<unknown>
+}
+
 export interface IWorldBuilder {
     /**
      * Build the execution unit
@@ -46,14 +50,14 @@ export interface IWorldBuilder {
      * @param Resource
      * @param options
      */
-    r(Resource: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder
+    r(Resource: TObjectProto, options?: Partial<IResourceRegistrationOptions>): IWorldBuilder
 
     /**
      * Alias for [withResource]{@link IWorldBuilder#withResource}
      * @param Resource
      * @param options
      */
-    resource(Resource: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder
+    resource(Resource: TObjectProto, options?: Partial<IResourceRegistrationOptions>): IWorldBuilder
 
     /**
      * Transform the root sync point
@@ -97,7 +101,7 @@ export interface IWorldBuilder {
      * @param Resource
      * @param options
      */
-    withResource(Resource: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder
+    withResource(Resource: TObjectProto, options?: Partial<IResourceRegistrationOptions>): IWorldBuilder
 
     /**
      * Register several resources for serDe

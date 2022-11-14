@@ -73,7 +73,7 @@ export class SerDe implements ISerDe {
                                     objectsWithRefs.push(deserializerOut.data);
                                 }
 
-                                return [type, deserializerOut.data];
+                                return [type, data ? deserializerOut.data : deserializerOut.type];
                             })
                         );
                     }

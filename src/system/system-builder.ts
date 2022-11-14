@@ -25,7 +25,7 @@ export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements IS
             configurable: true,
             writable: false,
             enumerable: false,
-            value: this.name,
+            value: this.systemName,
         });
 
         return new System();

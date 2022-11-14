@@ -7,7 +7,7 @@ import {
     Read,
     Write
 } from '../../../../../src';
-import {IBenchmark} from "../../benchmark.spec";
+import type {IBenchmark} from "../../benchmark.spec";
 import {CheckEndSystem, CounterResource} from "./_";
 
 class Transform {
@@ -82,8 +82,10 @@ export class Benchmark implements IBenchmark {
 
     async init(): Promise<void> {
         this.runWorld = await this.prepWorld.prepareRun({
+            // to make the comparison fair, we will iterate in a sync loop over the steps, just like the others do
             executionFunction: (fn: Function) => fn()
         });
+        return this.runWorld.transitionActions.flushCommands();
     }
 
     run(): Promise<void> {

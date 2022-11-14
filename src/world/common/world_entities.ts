@@ -5,17 +5,15 @@ import type {IEntitiesQuery} from "../../query/query.spec";
 import {EntityBuilder} from "../../entity/entity-builder";
 import {Entity} from "../../entity/entity";
 import {type RuntimeWorld} from "../runtime/runtime-world";
+import type {IMutableWorld} from "../world.spec";
 
 
-export function addEntity(this: PreptimeWorld | RuntimeWorld, entity: IEntity): void {
-    this.data.entities.add(entity);
+export function buildEntity(this: IMutableWorld, uuid?: string): IEntityBuilder {
+    const self = this;
+    return new EntityBuilder(uuid, entity => self.addEntity(entity));
 }
 
-export function buildEntity(this: PreptimeWorld | RuntimeWorld, uuid?: string): IEntityBuilder {
-    return new EntityBuilder(uuid, entity => this.addEntity(entity));
-}
-
-export function clearEntities(this: PreptimeWorld | RuntimeWorld): void {
+export function clearEntities(this: IMutableWorld & (PreptimeWorld | RuntimeWorld)): void {
     let entity;
     for (entity of this.data.entities) {
         this.removeEntity(entity);
@@ -24,7 +22,7 @@ export function clearEntities(this: PreptimeWorld | RuntimeWorld): void {
     this.clearGroups();
 }
 
-export function createEntity(this: PreptimeWorld | RuntimeWorld): IEntity {
+export function createEntity(this: IMutableWorld): IEntity {
     const entity = new Entity();
     this.addEntity(entity);
     return entity;
@@ -32,18 +30,10 @@ export function createEntity(this: PreptimeWorld | RuntimeWorld): IEntity {
 
 export function getEntities(this: PreptimeWorld | RuntimeWorld, query?: IEntitiesQuery): IterableIterator<IEntity> {
     if (!query) {
-        return this.data.entities.keys();
+        return this.data.entities.values();
     }
 
-    return Array.from(this.data.entities.keys())
+    return Array.from(this.data.entities.values())
         .filter(entity => query.matchesEntity(entity))
         .values();
-}
-
-export function hasEntity(this: PreptimeWorld | RuntimeWorld, entity: IEntity): boolean {
-    return this.data.entities.has(entity);
-}
-
-export function removeEntity(this: PreptimeWorld | RuntimeWorld, entity: IEntity): void {
-    this.data.entities.delete(entity);
 }

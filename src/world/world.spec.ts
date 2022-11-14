@@ -1,28 +1,17 @@
 import type {TObjectProto, TTypeProto} from "../_.spec";
 import type {IEntity} from "../entity/entity.spec";
 import type {ISerDeOptions, TDeserializer, TSerializer} from "../serde/serde.spec";
-import type {InstanceMap} from "../util/instance-map";
-import type {IEntitiesQuery} from "../query/query.spec";
+import type {IEntitiesQuery, TExistenceQuery} from "../query/query.spec";
 import type {IEntityBuilder} from "../entity/entity-builder.spec";
 import type {IRuntimeWorld} from "./runtime/runtime-world.spec";
 import type {ISerialFormat} from "../serde/serial-format.spec";
 import type {IPreptimeWorld} from "./preptime/preptime-world.spec";
+import {RuntimeWorld} from "./runtime/runtime-world";
 
 
 export type TGroupHandle = number;
 
-export interface IWorldData {
-    entities: Set<IEntity>
-    groups: {
-        nextHandle: TGroupHandle,
-        entityLinks: Map<TGroupHandle, Set<IEntity>>,
-    }
-    resources: InstanceMap<TObjectProto>
-}
-
-export interface IWorld extends IImmutableWorld, IMutableWorld {
-    data: IWorldData
-}
+export interface IWorld extends IImmutableWorld, IMutableWorld {}
 
 export interface IImmutableWorld {
     /// ****************************************************************************************************************
@@ -80,7 +69,7 @@ export interface IImmutableWorld {
      * Get all resources stored in this world. Useful for debugging
      * @param types
      */
-    getResources<T extends Object>(types?: Array<TTypeProto<T>> | IterableIterator<TTypeProto<T>>): IterableIterator<T>
+    getResources(types?: TExistenceQuery<any>): IterableIterator<object>
 
     /**
      * Check if a resource was stored
@@ -201,7 +190,7 @@ export interface IMutableWorld {
      * @param type
      * @param args constructor parameters
      */
-    addResource<T extends Object>(type: T | TTypeProto<T>, ...args: Array<unknown>): T
+    addResource<T extends Object>(type: T | TTypeProto<T>, ...args: Array<unknown>): T | TTypeProto<T>
 
     /**
      * Remove all resources from this world
@@ -213,11 +202,4 @@ export interface IMutableWorld {
      * @param type
      */
     removeResource<T extends Object>(type: TTypeProto<T>): void
-
-    /**
-     * Replace a resource from this world with a new value
-     * @param obj
-     * @param args
-     */
-    replaceResource<T extends Object>(obj: T | TTypeProto<T>, ...args: Array<unknown>): void
 }

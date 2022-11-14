@@ -1,6 +1,9 @@
 import {createSystem, Storage, WriteResource} from "sim-ecs";
 import {GameStore} from "../models/game-store";
 
+
+const CFrameTimeCap = 33;
+
 export const BeforeStepSystem = createSystem({
     gameStore: WriteResource(GameStore),
     ctx: WriteResource(CanvasRenderingContext2D),
@@ -9,7 +12,7 @@ export const BeforeStepSystem = createSystem({
     .withRunFunction(({gameStore, ctx, storage}) => {
         { // Update delta time
             const now = Date.now();
-            gameStore.lastFrameDeltaTime = now - storage.lastTransition;
+            gameStore.lastFrameDeltaTime = Math.min(now - storage.lastTransition, CFrameTimeCap);
             storage.lastTransition = now;
         }
 

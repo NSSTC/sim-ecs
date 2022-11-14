@@ -25,6 +25,11 @@ export class SyncPoint implements ISyncPoint {
         return this;
     }
 
+    clearOnSyncHandlers(): ISyncPoint {
+        this.syncPointHandlers.clear();
+        return this;
+    }
+
     async executeOnSyncHandlers(): Promise<SyncPoint> {
         let handler;
 

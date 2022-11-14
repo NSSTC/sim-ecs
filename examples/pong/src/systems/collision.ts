@@ -1,4 +1,4 @@
-import {createSystem, Query, queryComponents, Read, ReadEntity, Write} from "sim-ecs";
+import {createSystem, queryComponents, Read, ReadEntity, Write} from "sim-ecs";
 import {Shape} from "../components/shape";
 import {Collision} from "../components/collision";
 import {Position} from "../components/position";

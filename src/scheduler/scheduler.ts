@@ -45,9 +45,7 @@ export class Scheduler implements IScheduler {
                 stageExecutors.push(stage.getExecutor(eventBus));
             }
 
-            stageExecutors.push(async () => {
-                await group.executeOnSyncHandlers();
-            });
+            stageExecutors.push(() => group.executeOnSyncHandlers() as Promise<unknown> as ReturnType<TExecutor>);
         }
 
         return () => this.schedulingAlgorithm(stageExecutors);

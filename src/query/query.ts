@@ -3,7 +3,17 @@ import type {IEntity} from "../entity/entity";
 import {addEntitySym, clearEntitiesSym, removeEntitySym, setEntitiesSym} from "./_";
 
 export * from "./query.spec";
-export * from "./query.util";
+export {
+    Read,
+    ReadEntity,
+    ReadOptional,
+    With,
+    WithTag,
+    Without,
+    Write,
+    WithoutTag,
+    WriteOptional,
+} from "./query.util";
 
 
 export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {

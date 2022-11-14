@@ -3,6 +3,7 @@ import type {IEntity} from "../../entity/entity.spec";
 import type {IPreptimeWorld} from "../preptime/preptime-world.spec";
 import {type PreptimeWorld} from "../preptime/preptime-world";
 import {type RuntimeWorld} from "../runtime/runtime-world";
+import type {IMutableWorld} from "../world.spec";
 
 
 export function addEntityToGroup(this: PreptimeWorld | RuntimeWorld, groupHandle: TGroupHandle, entity: IEntity): void {
@@ -52,7 +53,7 @@ function getLink(world: PreptimeWorld | RuntimeWorld, groupHandle: TGroupHandle)
     return link;
 }
 
-export function removeGroup(this: PreptimeWorld | RuntimeWorld, groupHandle: TGroupHandle): void {
+export function removeGroup(this: IMutableWorld & (PreptimeWorld | RuntimeWorld), groupHandle: TGroupHandle): void {
     const link = getLink(this, groupHandle);
 
     let entity;

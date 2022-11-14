@@ -1,11 +1,13 @@
-import type {ISerDeOptions, TDeserializer, TSerializer} from "../../serde/serde.spec";
+import type {ISerDeOptions, TSerializer} from "../../serde/serde.spec";
 import type {ISerialFormat} from "../../serde/serial-format.spec";
+import {type RuntimeWorld} from "./runtime-world";
 import type {TGroupHandle} from "../world.spec";
-import {type PreptimeWorld} from "../preptime/preptime-world";
+import type {TDeserializer} from "../../serde/serde.spec";
 import type {IEntity} from "../../entity/entity.spec";
-import {type RuntimeWorld} from "../runtime/runtime-world";
+import type {TObjectProto} from "../../_.spec";
 
-export function load(this: PreptimeWorld | RuntimeWorld, prefab: ISerialFormat, options?: ISerDeOptions<TDeserializer>, intoGroup?: TGroupHandle): TGroupHandle {
+
+export function load(this: RuntimeWorld, prefab: ISerialFormat, options?: ISerDeOptions<TDeserializer>, intoGroup?: TGroupHandle): TGroupHandle {
     let groupHandle = intoGroup;
     if (groupHandle == undefined || !this.data.groups.entityLinks.has(groupHandle)) {
         groupHandle = this.createGroup();
@@ -24,15 +26,12 @@ export function load(this: PreptimeWorld | RuntimeWorld, prefab: ISerialFormat, 
     }
 
     {
-        let resource;
+        let resource: Object | TObjectProto;
         for (resource of Object.values(serdeOut.resources)) {
-            if (options?.replaceResources) {
-                if (this.hasResource(resource)) {
-                    this.replaceResource(resource);
-                } else {
-                    this.addResource(resource);
-                }
+            if (this.hasResource(resource)) {
+                this.replaceResource(resource);
             } else {
+                // @ts-ignore should work
                 this.addResource(resource);
             }
         }
@@ -41,9 +40,12 @@ export function load(this: PreptimeWorld | RuntimeWorld, prefab: ISerialFormat, 
     return groupHandle;
 }
 
-export function save(this: PreptimeWorld | RuntimeWorld, options?: ISerDeOptions<TSerializer>): ISerialFormat {
+export function save(this: RuntimeWorld, options?: ISerDeOptions<TSerializer>): ISerialFormat {
+    const resources = Object.fromEntries(
+        options?.resources?.map(type => [type.constructor.name, (this as RuntimeWorld).getResource(type)!]) ?? []
+    );
     return this.config.serde.serialize({
         entities: this.getEntities(options?.entities),
-        resources: Object.fromEntries(options?.resources?.map(type => [type.constructor.name, this.getResource(type)!]) ?? []),
+        resources,
     }, options);
 }

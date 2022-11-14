@@ -1,32 +1,14 @@
-import type {TTypeProto} from "../../_.spec";
+import type {TObjectProto, TTypeProto} from "../../_.spec";
 import {type PreptimeWorld} from "../preptime/preptime-world";
 import {type RuntimeWorld} from "../runtime/runtime-world";
+import type {TExistenceQuery} from "../../query/query.spec";
 
-export function addResource<T extends Object>(this: PreptimeWorld | RuntimeWorld, obj: T | TTypeProto<T>, ...args: Array<unknown>): T {
-    let type: TTypeProto<T>;
-    let instance: T;
-
-    if (typeof obj === 'object') {
-        type = obj.constructor as TTypeProto<T>;
-        instance = obj;
-    } else {
-        type = obj;
-        instance = new (obj.prototype.constructor.bind(obj, ...Array.from(arguments).slice(1)))();
-    }
-
-    if (this.data.resources.has(type)) {
-        throw new Error(`Resource with name "${type.name}" already exists!`);
-    }
-
-    this.data.resources.set(type, instance);
-    return instance;
-}
 
 export function clearResources(this: PreptimeWorld | RuntimeWorld): void {
     this.data.resources.clear();
 }
 
-export function getResource<T extends Object>(this: PreptimeWorld | RuntimeWorld, type: TTypeProto<T>): T {
+export function getResource<T extends Object>(this: RuntimeWorld, type: TTypeProto<T>): T {
     if (!this.data.resources.has(type)) {
         throw new Error(`Resource of type "${type.name}" does not exist!`);
     }
@@ -34,7 +16,7 @@ export function getResource<T extends Object>(this: PreptimeWorld | RuntimeWorld
     return this.data.resources.get(type) as T;
 }
 
-export function *getResources<T extends Object>(this: PreptimeWorld | RuntimeWorld, types?: Array<TTypeProto<T>> | IterableIterator<TTypeProto<T>>): IterableIterator<T> {
+export function *getResources(this: PreptimeWorld | RuntimeWorld, types?: TExistenceQuery<any>): IterableIterator<object> {
     if (!types) {
         return this.data.resources.values();
     }
@@ -48,8 +30,8 @@ export function *getResources<T extends Object>(this: PreptimeWorld | RuntimeWor
         let type;
 
         for ([type, resource] of this.data.resources.entries()) {
-            if (typesArray.includes(type as TTypeProto<T>)) {
-                yield resource as T;
+            if (typesArray.includes(type as TObjectProto)) {
+                yield resource;
             }
         }
     }
@@ -73,21 +55,4 @@ export function removeResource<T extends Object>(this: PreptimeWorld | RuntimeWo
     }
 
     this.data.resources.delete(type);
-}
-
-export function replaceResource<T extends Object>(this: PreptimeWorld | RuntimeWorld, obj: T | TTypeProto<T>, ...args: Array<unknown>): void {
-    let type: TTypeProto<T>;
-
-    if (typeof obj === 'object') {
-        type = obj.constructor as TTypeProto<T>;
-    } else {
-        type = obj;
-    }
-
-    if (!this.data.resources.has(type)) {
-        throw new Error(`Resource with name "${type.name}" does not exists!`);
-    }
-
-    this.data.resources.delete(type);
-    this.addResource(obj, ...args);
 }

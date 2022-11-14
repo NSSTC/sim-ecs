@@ -20,5 +20,7 @@ export * from './system/system-builder';
 export * from './world/error';
 export * from './world/error.spec';
 export * from './world/events';
+export * from './world/actions.spec';
+export * from './world/world.spec';
 export * from './world/preptime/preptime-world.spec';
 export * from './world/runtime/runtime-world.spec';

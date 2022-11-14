@@ -1,4 +1,4 @@
-import {ISyncPointPrefab} from "sim-ecs";
+import {type ISyncPointPrefab} from "sim-ecs";
 import {BeforeStepSystem} from "../systems/before-step";
 import {InputSystem} from "../systems/input";
 import {PauseSystem} from "../systems/pause";

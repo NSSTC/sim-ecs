@@ -1,12 +1,14 @@
-import type {IRuntimeWorld, IRuntimeWorldInitConfig, TExecutionFunction} from "./runtime-world.spec";
+import type {
+    IRuntimeWorld,
+    IRuntimeWorldInitConfig,
+    IRuntimeWorldInitData,
+    TExecutionFunction,
+} from "./runtime-world.spec";
 import {
-    addEntity,
     buildEntity,
     clearEntities,
-    getEntities,
     createEntity,
-    hasEntity,
-    removeEntity
+    getEntities,
 } from "../common/world_entities";
 import {
     addEntitiesToGroup,
@@ -15,31 +17,36 @@ import {
     clearGroups,
     createGroup,
     getGroupEntities,
-    removeGroup
+    removeGroup,
 } from "../common/world_groups";
 import {merge} from "../common/world_misc";
-import {load, save} from "../common/world_prefabs";
+import {load, save} from "./runtime-world_prefabs";
 import {
-    addResource,
     clearResources,
     getResource,
     getResources,
     hasResource,
     removeResource,
-    replaceResource
 } from "../common/world_resources";
-import {PushDownAutomaton} from "../../pda/pda";
+import {addEntity, hasEntity, removeEntity} from "./runtime-world_entities";
+import {addResource, replaceResource} from "./runtime-world_resources";
+import {SimECSPushDownAutomaton} from "../../pda/sim-ecs-pda";
 import type {IState} from "../../state/state.spec";
 import {popState, pushState} from "./runtime-world_states";
 import {EventBus} from "../../events/event-bus";
 import type {IScheduler} from "../../scheduler/scheduler.spec";
-import type {TExecutor} from "../../_.spec";
-import type {IMutableWorld, IWorldData} from "../world.spec";
+import type {TExecutor, TObjectProto} from "../../_.spec";
+import type {IMutableWorld} from "../world.spec";
 import {Commands} from "./commands/commands";
 import type {ISystemActions, ITransitionActions} from "../actions.spec";
 import {getQueriesFromSystem} from "../../system/system";
+import type {ISystem} from "../../system/system.spec";
 import {setEntitiesSym} from "../../query/_";
-import { IQuery } from "../../query/query.spec";
+import type {IRuntimeWorldData} from "./runtime-world.spec";
+import {Query} from "../../query/query";
+import {registerSystemAddResourceEvent} from "./runtime-world_events";
+import {SimECSPDAPushStateEvent} from "../../events/internal-events";
+import type {ISyncPoint} from "../../scheduler/pipeline/sync-point.spec";
 
 export * from "./runtime-world.spec";
 
@@ -48,41 +55,69 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
     protected awaiterReject!: Function;
     protected awaiterResolve!: Function;
     #awaiter?: Promise<void>;
-    protected readonly commands = new Commands(this);
+    protected readonly commands: Commands;
     protected currentScheduler: IScheduler;
     protected currentSchedulerExecutor?: TExecutor;
+    public data: IRuntimeWorldData;
     public readonly eventBus = new EventBus();
     protected executionFunction: TExecutionFunction;
     protected isPrepared = false;
-    protected readonly pda = new PushDownAutomaton<IState>();
+    protected readonly pda = new SimECSPushDownAutomaton<IState>(this);
+    protected queries = new Set<Query<unknown, unknown>>();
     protected shouldRunSystems = false;
-    systemWorld: ISystemActions;
-    transitionWorld: ITransitionActions;
+    protected systemResourceMap = new Map<ISystem, { paramName: string, resourceType: TObjectProto }>();
+    protected systemWorld: ISystemActions;
+    protected transitionWorld: ITransitionActions;
 
     constructor(
         public name: string,
         public config: IRuntimeWorldInitConfig,
-        public data: IWorldData,
+        $data?: Partial<IRuntimeWorldInitData>,
     ) {
+        this.commands = new Commands(this, this.queries);
         this.currentScheduler = this.config.defaultScheduler;
         this.executionFunction = this.config.executionFunction ?? (
             typeof requestAnimationFrame == 'function'
                 ? requestAnimationFrame
                 : setTimeout
         );
-        this.transitionWorld = this;
+
+        this.data = {
+            entities: $data?.entities ? $data?.entities : new Set(),
+            groups: $data?.groups ?? {
+                entityLinks: new Map(),
+                nextHandle: 0,
+            },
+            resources: new Map(),
+        };
+
+        if ($data?.resources) {
+            for (const [Type, args] of $data.resources) {
+                this.addResource(Type, ...args);
+            }
+        }
 
         {
             const self = this;
             this.systemWorld = {
                 get commands() { return self.commands },
-                get currentState() { return this.currentState },
+                get currentState() { return self.currentState },
                 getEntities: this.getEntities.bind(this),
                 // @ts-ignore TS bug?
                 getResource: this.getResource.bind(this),
                 hasResource: this.hasResource.bind(this),
             };
+            this.transitionWorld = Object.assign({
+                eventBus: this.eventBus,
+                popState: this.popState.bind(this),
+                pushState: this.pushState.bind(this),
+                flushCommands: this.flushCommands.bind(this),
+                save: this.save.bind(this),
+            }, this.systemWorld)
         }
+
+        this.registerSystemAddResourceEvent();
+        //this.registerSystemReplaceResourceEvent();
     }
 
     get awaiter(): Promise<void> | undefined {
@@ -111,15 +146,15 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
 
     public async prepare(): Promise<void> {
         await this.config.defaultScheduler.prepare(this);
+        this.pda.clear();
 
         {
-            const queries = new Set<IQuery<unknown, unknown>>();
             let scheduler;
             let query, system;
 
             for (system of this.config.defaultScheduler.getSystems()) {
                 for (query of getQueriesFromSystem(system)) {
-                    queries.add(query);
+                    this.queries.add(query);
                 }
             }
 
@@ -128,13 +163,13 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
 
                 for (system of scheduler.getSystems()) {
                     for (query of getQueriesFromSystem(system)) {
-                        queries.add(query);
+                        this.queries.add(query);
                     }
                 }
             }
 
-            for (query of queries) {
-                query[setEntitiesSym](this.data.entities.keys());
+            for (query of this.queries) {
+                query[setEntitiesSym](this.data.entities.values());
             }
         }
 
@@ -156,26 +191,45 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
         });
 
         (async () => {
+            const syncPoints = new Set<ISyncPoint>();
+
+            const syncHandler = async () => {
+                try {
+                    await this.commands.executeAll();
+                } catch (error) {
+                    if (typeof error == 'object' && error != null) {
+                        await this.eventBus.publish(error);
+                    } else {
+                        throw error;
+                    }
+                }
+            }
+
+            this.eventBus.subscribe(SimECSPDAPushStateEvent, event => {
+                const stateScheduler = this.config.stateSchedulers.get(event.state) ?? this.config.defaultScheduler;
+                let syncPoint;
+
+                for (syncPoint of stateScheduler.pipeline!.getGroups()) {
+                    syncPoints.add(syncPoint);
+                    syncPoint.addOnSyncHandler(syncHandler);
+                }
+            });
+
             await this.pushState(this.config.initialState);
 
             {
                 const execFn = this.executionFunction;
-                const syncHandler = async () => {
-                    try {
-                        await this.commands.executeAll();
-                    } catch (error) {
-                        if (typeof error == 'object' && error != null) {
-                            await this.eventBus.publish(error);
-                        } else {
-                            throw error;
-                        }
-                    }
-                }
-
                 const cleanUp = () => {
                     this.pda.clear();
                     this.awaiterResolve();
                     this.#awaiter = undefined;
+
+                    {
+                        let syncPoint;
+                        for (syncPoint of syncPoints) {
+                            syncPoint.clearOnSyncHandlers();
+                        }
+                    }
                 };
 
                 const mainLoop = async () => {
@@ -197,17 +251,13 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
                     execFn(mainLoop);
                 }
 
-                {
-                    let syncPoint;
-                    for (syncPoint of this.currentScheduler!.pipeline!.getGroups()) {
-                        syncPoint.addOnSyncHandler(syncHandler);
-                    }
-                }
-
                 this.shouldRunSystems = true;
                 execFn(mainLoop);
             }
-        })().catch(err => this.awaiterReject(err));
+        })().catch(err => {
+            this.awaiterReject(err);
+            this.#awaiter = undefined;
+        });
 
         return this.#awaiter;
     }
@@ -240,6 +290,13 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
     public getEntities = getEntities;
     public hasEntity = hasEntity;
     public removeEntity = removeEntity;
+
+
+    /// ****************************************************************************************************************
+    /// Events
+    /// ****************************************************************************************************************
+
+    protected registerSystemAddResourceEvent = registerSystemAddResourceEvent;
 
 
     /// ****************************************************************************************************************

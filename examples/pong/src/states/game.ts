@@ -1,4 +1,4 @@
-import {ITransitionActions, queryEntities, SerialFormat, State, TGroupHandle, With} from "sim-ecs";
+import {type ITransitionActions, queryEntities, SerialFormat, State, type TGroupHandle, With} from "sim-ecs";
 import {gamePrefab} from "../prefabs/game";
 import {EPaddleSide, Paddle} from "../components/paddle";
 import {Position} from "../components/position";
@@ -25,11 +25,11 @@ export class GameState extends State {
         if (gameStore.continue) {
             this.saveDataPrefabHandle = load(actions);
         } else {
-            this.saveDataPrefabHandle = await createGameFromSaveData(actions);
+            this.saveDataPrefabHandle = await createGameFromPrefab(actions);
         }
 
-        actions.commands.queueCommand(() => setScoreCaptionMod(actions));
-        actions.commands.maintain();
+        await actions.flushCommands();
+        setScoreCaptionMod(actions);
     }
 
     destroy(actions: ITransitionActions) {
@@ -41,7 +41,7 @@ export class GameState extends State {
             actions.commands.removeGroup(this.saveDataPrefabHandle);
         }
 
-        actions.commands.maintain();
+        return actions.flushCommands();
     }
 }
 
@@ -49,7 +49,7 @@ const createNewGame = function (actions: ITransitionActions) {
     return actions.commands.load(SerialFormat.fromArray(gamePrefab));
 };
 
-const createGameFromSaveData = async function (actions: ITransitionActions) {
+const createGameFromPrefab = async function (actions: ITransitionActions) {
     const prefabHandle = actions.commands.load(SerialFormat.fromArray(savablePrefab));
     await actions.flushCommands();
 
@@ -57,13 +57,16 @@ const createGameFromSaveData = async function (actions: ITransitionActions) {
         With(Paddle),
         With(Shape),
     ))) {
-        entity
-            .addComponent(new Position(
-                entity.getComponent(Paddle)!.side == EPaddleSide.Left
-                    ? 0
-                    : 1 - entity.getComponent(Shape)!.dimensions.width,
-            ))
-            .addComponent(new Velocity());
+        actions.commands.mutateEntity(entity, entity => {
+            entity
+                .addComponent(new Position(
+                    entity.getComponent(Paddle)!.side == EPaddleSide.Left
+                        ? 0
+                        : 1 - entity.getComponent(Shape)!.dimensions.width,
+                ))
+                .addComponent(new Velocity());
+            }
+        );
     }
 
     return prefabHandle;

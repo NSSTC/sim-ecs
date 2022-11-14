@@ -26,7 +26,11 @@ export const RenderUISystem = createSystem({
             ctx.font = ui.active
                 ? `${ui.fontSize * 1.2}px serif`
                 : `${ui.fontSize}px serif`;
-            ctx.fillText(ui.finalCaption, screenPos[0], screenPos[1]);
+            ctx.fillText(getFinalCaption(ui), screenPos[0], screenPos[1]);
         });
     })
     .build();
+
+function getFinalCaption(ui: UIItem): string {
+    return ui.captionMod?.(ui.caption) ?? ui.caption;
+}

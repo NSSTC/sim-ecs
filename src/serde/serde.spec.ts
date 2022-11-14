@@ -15,6 +15,10 @@ export interface ISerDeOptions<T extends TSerializer | TDeserializer> {
     autoAssignId?: boolean
     entities?: IEntitiesQuery
     fallbackHandler?: T
+    /**
+     * Replace resources in the world with loaded data
+     * @default true
+     */
     replaceResources?: boolean
     resources?: TObjectProto[]
     useDefaultHandler?: boolean
@@ -24,6 +28,7 @@ export interface ISerDeOptions<T extends TSerializer | TDeserializer> {
 export interface IDeserializerOutput {
     containsRefs: boolean
     data: Object
+    type: TObjectProto
 }
 
 export interface ISerDeDataSet {

@@ -10,14 +10,16 @@ import type {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
 import type {IIStateProto} from "../state/state.spec";
 import {addSyncPoint} from "../ecs/ecs-sync-point";
 import {PreptimeWorld} from "./preptime/preptime-world";
+import {IResourceRegistrationOptions} from "./world-builder.spec";
 
 
 export * from './world-builder.spec';
 
 export class WorldBuilder implements IWorldBuilder {
-    protected callbacks: Set<(world: PreptimeWorld) => void> = new Set();
+    protected callbacks = new Set<(world: PreptimeWorld) => void>();
     protected worldName?: string;
     protected defaultScheduler: IScheduler = new Scheduler();
+    protected resources = new Map<TObjectProto, Array<unknown>>();
     protected stateSchedulers = new Map<IIStateProto, IScheduler>();
 
     constructor(
@@ -30,11 +32,17 @@ export class WorldBuilder implements IWorldBuilder {
     }
 
     build(): PreptimeWorld {
-        const world = new PreptimeWorld(this.worldName, {
-            defaultScheduler: this.defaultScheduler!,
-            serde: this.serde,
-            stateSchedulers: this.stateSchedulers,
-        });
+        const world = new PreptimeWorld(
+            this.worldName,
+            {
+                defaultScheduler: this.defaultScheduler!,
+                serde: this.serde,
+                stateSchedulers: this.stateSchedulers,
+            },
+            {
+                resources: this.resources,
+            }
+        );
 
         for (const cb of this.callbacks) {
             cb(world);
@@ -96,11 +104,11 @@ export class WorldBuilder implements IWorldBuilder {
         return this.withName(name);
     }
 
-    r(Resource: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder {
+    r(Resource: TObjectProto, options?: Partial<IResourceRegistrationOptions>): IWorldBuilder {
         return this.withResource(Resource, options);
     }
 
-    resource(Resource: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder {
+    resource(Resource: TObjectProto, options?: Partial<IResourceRegistrationOptions>): IWorldBuilder {
         return this.withResource(Resource, options);
     }
 
@@ -182,7 +190,8 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withResource(Resource: TObjectProto, options?: IObjectRegistrationOptions): WorldBuilder {
+    withResource(Resource: TObjectProto, options?: Partial<IResourceRegistrationOptions>): WorldBuilder {
+        this.resources.set(Resource, options?.constructorArgs ?? []);
         this.serde.registerTypeHandler(
             Resource,
             options?.serDe?.deserializer ?? dataStructDeserializer.bind(undefined, Resource),

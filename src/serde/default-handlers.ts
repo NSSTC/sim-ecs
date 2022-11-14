@@ -68,6 +68,7 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
                 return {
                     containsRefs: inOut.containsRefs,
                     data: parsedData as Array<unknown>,
+                    type: Array,
                 };
             }
 
@@ -79,6 +80,7 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
                 return {
                     containsRefs: false,
                     data: new Date(data),
+                    type: Date,
                 };
             }
 
@@ -99,6 +101,7 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
                 return {
                     containsRefs: inOut.containsRefs,
                     data: new Map(data as [unknown, unknown][]),
+                    type: Map,
                 };
             }
 
@@ -110,6 +113,7 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
                 return {
                     containsRefs: false,
                     data: data as number,
+                    type: Number,
                 };
             }
 
@@ -124,6 +128,7 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
                 return {
                     containsRefs: inOut.containsRefs,
                     data: parsedData as Object,
+                    type: Object,
                 };
             }
 
@@ -144,6 +149,7 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
                 return {
                     containsRefs: inOut.containsRefs,
                     data: new Set(data as Array<unknown>),
+                    type: Set,
                 };
             }
 
@@ -155,6 +161,7 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
                 return {
                     containsRefs: false,
                     data,
+                    type: String,
                 };
             }
         }

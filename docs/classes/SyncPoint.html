@@ -24,7 +24,7 @@
 <ul class="tsd-hierarchy">
 <li><a href="../interfaces/ISyncPoint.html" class="tsd-signature-type" data-tsd-kind="Interface">ISyncPoint</a></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/f11e943/src/scheduler/pipeline/sync-point.ts#L7">src/scheduler/pipeline/sync-point.ts:7</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/5ec8d6b/src/scheduler/pipeline/sync-point.ts#L7">src/scheduler/pipeline/sync-point.ts:7</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -46,6 +46,7 @@
 <h3 class="tsd-index-heading">Methods</h3>
 <div class="tsd-index-list"><a href="SyncPoint.html#addNewStage" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-2048-path"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)" id="icon-2048-text"></path></svg><span>add<wbr/>New<wbr/>Stage</span></a>
 <a href="SyncPoint.html#addOnSyncHandler" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>add<wbr/>On<wbr/>Sync<wbr/>Handler</span></a>
+<a href="SyncPoint.html#clearOnSyncHandlers" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>clear<wbr/>On<wbr/>Sync<wbr/>Handlers</span></a>
 <a href="SyncPoint.html#executeOnSyncHandlers" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>execute<wbr/>On<wbr/>Sync<wbr/>Handlers</span></a>
 <a href="SyncPoint.html#fromPrefab" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>from<wbr/>Prefab</span></a>
 <a href="SyncPoint.html#removeOnSyncHandler" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>remove<wbr/>On<wbr/>Sync<wbr/>Handler</span></a>
@@ -65,30 +66,30 @@
 <div class="tsd-signature">after<span class="tsd-signature-symbol">?:</span> <a href="../interfaces/ISyncPoint.html" class="tsd-signature-type" data-tsd-kind="Interface">ISyncPoint</a></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ISyncPoint.html">ISyncPoint</a>.<a href="../interfaces/ISyncPoint.html#after">after</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/f11e943/src/scheduler/pipeline/sync-point.ts#L8">src/scheduler/pipeline/sync-point.ts:8</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/5ec8d6b/src/scheduler/pipeline/sync-point.ts#L8">src/scheduler/pipeline/sync-point.ts:8</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="before" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>before</span><a href="#before" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">before<span class="tsd-signature-symbol">?:</span> <a href="../interfaces/ISyncPoint.html" class="tsd-signature-type" data-tsd-kind="Interface">ISyncPoint</a></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ISyncPoint.html">ISyncPoint</a>.<a href="../interfaces/ISyncPoint.html#before">before</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/f11e943/src/scheduler/pipeline/sync-point.ts#L9">src/scheduler/pipeline/sync-point.ts:9</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/5ec8d6b/src/scheduler/pipeline/sync-point.ts#L9">src/scheduler/pipeline/sync-point.ts:9</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="name" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>name</span><a href="#name" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">name<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ISyncPoint.html">ISyncPoint</a>.<a href="../interfaces/ISyncPoint.html#name">name</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/f11e943/src/scheduler/pipeline/sync-point.ts#L10">src/scheduler/pipeline/sync-point.ts:10</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/5ec8d6b/src/scheduler/pipeline/sync-point.ts#L10">src/scheduler/pipeline/sync-point.ts:10</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="stages" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>stages</span><a href="#stages" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">stages<span class="tsd-signature-symbol">:</span> <a href="../interfaces/IStage.html" class="tsd-signature-type" data-tsd-kind="Interface">IStage</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ISyncPoint.html">ISyncPoint</a>.<a href="../interfaces/ISyncPoint.html#stages">stages</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/f11e943/src/scheduler/pipeline/sync-point.ts#L11">src/scheduler/pipeline/sync-point.ts:11</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/5ec8d6b/src/scheduler/pipeline/sync-point.ts#L11">src/scheduler/pipeline/sync-point.ts:11</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a id="syncPointHandlers" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>sync<wbr/>Point<wbr/>Handlers</span><a href="#syncPointHandlers" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">sync<wbr/>Point<wbr/>Handlers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Function</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/f11e943/src/scheduler/pipeline/sync-point.ts#L12">src/scheduler/pipeline/sync-point.ts:12</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/5ec8d6b/src/scheduler/pipeline/sync-point.ts#L12">src/scheduler/pipeline/sync-point.ts:12</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="addNewStage" class="tsd-anchor"></a>
@@ -117,7 +118,7 @@
 <h4 class="tsd-returns-title">Returns <a href="SyncPoint.html" class="tsd-signature-type" data-tsd-kind="Class">SyncPoint</a></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ISyncPoint.html">ISyncPoint</a>.<a href="../interfaces/ISyncPoint.html#addNewStage">addNewStage</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/f11e943/src/scheduler/pipeline/sync-point.ts#L16">src/scheduler/pipeline/sync-point.ts:16</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/5ec8d6b/src/scheduler/pipeline/sync-point.ts#L16">src/scheduler/pipeline/sync-point.ts:16</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="addOnSyncHandler" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>add<wbr/>On<wbr/>Sync<wbr/>Handler</span><a href="#addOnSyncHandler" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -133,7 +134,18 @@
 <h4 class="tsd-returns-title">Returns <a href="SyncPoint.html" class="tsd-signature-type" data-tsd-kind="Class">SyncPoint</a></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ISyncPoint.html">ISyncPoint</a>.<a href="../interfaces/ISyncPoint.html#addOnSyncHandler">addOnSyncHandler</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/f11e943/src/scheduler/pipeline/sync-point.ts#L23">src/scheduler/pipeline/sync-point.ts:23</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/5ec8d6b/src/scheduler/pipeline/sync-point.ts#L23">src/scheduler/pipeline/sync-point.ts:23</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="clearOnSyncHandlers" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>clear<wbr/>On<wbr/>Sync<wbr/>Handlers</span><a href="#clearOnSyncHandlers" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+<li class="tsd-signature tsd-anchor-link" id="clearOnSyncHandlers.clearOnSyncHandlers-1">clear<wbr/>On<wbr/>Sync<wbr/>Handlers<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/ISyncPoint.html" class="tsd-signature-type" data-tsd-kind="Interface">ISyncPoint</a><a href="#clearOnSyncHandlers.clearOnSyncHandlers-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>Remove all sync handlers</p>
+</div>
+<h4 class="tsd-returns-title">Returns <a href="../interfaces/ISyncPoint.html" class="tsd-signature-type" data-tsd-kind="Interface">ISyncPoint</a></h4><aside class="tsd-sources">
+<p>Implementation of <a href="../interfaces/ISyncPoint.html">ISyncPoint</a>.<a href="../interfaces/ISyncPoint.html#clearOnSyncHandlers">clearOnSyncHandlers</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/5ec8d6b/src/scheduler/pipeline/sync-point.ts#L28">src/scheduler/pipeline/sync-point.ts:28</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="executeOnSyncHandlers" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>execute<wbr/>On<wbr/>Sync<wbr/>Handlers</span><a href="#executeOnSyncHandlers" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -144,7 +156,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="SyncPoint.html" class="tsd-signature-type" data-tsd-kind="Class">SyncPoint</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ISyncPoint.html">ISyncPoint</a>.<a href="../interfaces/ISyncPoint.html#executeOnSyncHandlers">executeOnSyncHandlers</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/f11e943/src/scheduler/pipeline/sync-point.ts#L28">src/scheduler/pipeline/sync-point.ts:28</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/5ec8d6b/src/scheduler/pipeline/sync-point.ts#L33">src/scheduler/pipeline/sync-point.ts:33</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="fromPrefab" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>from<wbr/>Prefab</span><a href="#fromPrefab" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -160,7 +172,7 @@
 <h4 class="tsd-returns-title">Returns <a href="SyncPoint.html" class="tsd-signature-type" data-tsd-kind="Class">SyncPoint</a></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ISyncPoint.html">ISyncPoint</a>.<a href="../interfaces/ISyncPoint.html#fromPrefab">fromPrefab</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/f11e943/src/scheduler/pipeline/sync-point.ts#L38">src/scheduler/pipeline/sync-point.ts:38</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/5ec8d6b/src/scheduler/pipeline/sync-point.ts#L43">src/scheduler/pipeline/sync-point.ts:43</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="removeOnSyncHandler" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove<wbr/>On<wbr/>Sync<wbr/>Handler</span><a href="#removeOnSyncHandler" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -176,7 +188,7 @@
 <h4 class="tsd-returns-title">Returns <a href="SyncPoint.html" class="tsd-signature-type" data-tsd-kind="Class">SyncPoint</a></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/ISyncPoint.html">ISyncPoint</a>.<a href="../interfaces/ISyncPoint.html#removeOnSyncHandler">removeOnSyncHandler</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/f11e943/src/scheduler/pipeline/sync-point.ts#L62">src/scheduler/pipeline/sync-point.ts:62</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/NSSTC/sim-ecs/blob/5ec8d6b/src/scheduler/pipeline/sync-point.ts#L67">src/scheduler/pipeline/sync-point.ts:67</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -210,6 +222,7 @@
 <li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="SyncPoint.html#syncPointHandlers" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>sync<wbr/>Point<wbr/>Handlers</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="SyncPoint.html#addNewStage" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>add<wbr/>New<wbr/>Stage</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="SyncPoint.html#addOnSyncHandler" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>add<wbr/>On<wbr/>Sync<wbr/>Handler</a></li>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="SyncPoint.html#clearOnSyncHandlers" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>clear<wbr/>On<wbr/>Sync<wbr/>Handlers</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="SyncPoint.html#executeOnSyncHandlers" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>execute<wbr/>On<wbr/>Sync<wbr/>Handlers</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="SyncPoint.html#fromPrefab" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>from<wbr/>Prefab</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="SyncPoint.html#removeOnSyncHandler" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>remove<wbr/>On<wbr/>Sync<wbr/>Handler</a></li></ul></li></ul></nav></div></div>

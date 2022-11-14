@@ -6,12 +6,12 @@ import type {
 } from "./system.spec";
 import {Actions, Storage} from "./system.spec";
 import {SystemBuilder} from "./system-builder";
-import type {IQuery} from "../query/query.spec";
 import {Query} from "../query/query";
 import type {TObjectProto} from "../_.spec";
 import {systemEventReaderSym, systemEventWriterSym, systemResourceTypeSym} from "./_";
 import type {ISystemBuilder} from "./system-builder.spec";
-import {IRuntimeWorld} from "../world/runtime/runtime-world";
+import {type IRuntimeWorld} from "../world/runtime/runtime-world";
+import {SimECSSystemAddResource} from "../events/internal-events";
 
 
 export * from "./system.spec";
@@ -20,8 +20,8 @@ export function createSystem<T extends TSystemParameterDesc>(parameterDesc: T): 
     return new SystemBuilder(parameterDesc);
 }
 
-export function getQueriesFromSystem(system: ISystem): IQuery<unknown, unknown>[] {
-    const queries: IQuery<unknown, unknown>[] = [];
+export function getQueriesFromSystem(system: ISystem): Query<unknown, unknown>[] {
+    const queries: Query<unknown, unknown>[] = [];
     let param: TSystemParameter;
 
     for (param of Object.values(system.parameterDesc)) {
@@ -36,48 +36,55 @@ export function getQueriesFromSystem(system: ISystem): IQuery<unknown, unknown>[
 export function getSystemRunParameters(system: ISystem, world: IRuntimeWorld): TSystemParameterDesc {
     let runParameters = {};
 
-    for (const param of Object.entries(system.parameterDesc)) {
-        if (param[1] == Actions) {
-            Object.defineProperty(runParameters, param[0], {
+    for (const [paramName, paramDesc] of Object.entries(system.parameterDesc)) {
+        if (paramDesc == Actions) {
+            Object.defineProperty(runParameters, paramName, {
                 configurable: false,
                 enumerable: true,
                 writable: false,
                 value: world.systemActions,
             });
-        } else if (param[1] == Storage) {
-            Object.defineProperty(runParameters, param[0], {
+        } else if (paramDesc == Storage) {
+            Object.defineProperty(runParameters, paramName, {
                 configurable: false,
                 enumerable: true,
                 writable: false,
-                value: param[1],
+                value: paramDesc,
             });
-        } else if (Object.getOwnPropertySymbols(param[1]).includes(systemResourceTypeSym)) {
-            Object.defineProperty(runParameters, param[0], {
+        } else if (Object.getOwnPropertySymbols(paramDesc).includes(systemResourceTypeSym)) {
+            const resourceType = (paramDesc as ISystemResource<TObjectProto>)[systemResourceTypeSym];
+            Object.defineProperty(runParameters, paramName, {
+                configurable: false,
+                enumerable: true,
+                writable: true,
+                value: world.getResource(resourceType),
+            });
+
+            world.eventBus.publish(new SimECSSystemAddResource(
+                system,
+                paramName,
+                resourceType,
+            ));
+        } else if (Object.getOwnPropertySymbols(paramDesc).includes(systemEventReaderSym)) {
+            Object.defineProperty(runParameters, paramName, {
                 configurable: false,
                 enumerable: true,
                 writable: false,
-                value: world.getResource((param[1] as ISystemResource<TObjectProto>)[systemResourceTypeSym]),
+                value: world.eventBus.createReader((paramDesc as any)[systemEventReaderSym]),
             });
-        } else if (Object.getOwnPropertySymbols(param[1]).includes(systemEventReaderSym)) {
-            Object.defineProperty(runParameters, param[0], {
-                configurable: false,
-                enumerable: true,
-                writable: false,
-                value: world.eventBus.createReader((param[1] as any)[systemEventReaderSym]),
-            });
-        } else if (Object.getOwnPropertySymbols(param[1]).includes(systemEventWriterSym)) {
-            Object.defineProperty(runParameters, param[0], {
+        } else if (Object.getOwnPropertySymbols(paramDesc).includes(systemEventWriterSym)) {
+            Object.defineProperty(runParameters, paramName, {
                 configurable: false,
                 enumerable: true,
                 writable: false,
                 value: world.eventBus.createWriter(),
             });
         } else {
-            Object.defineProperty(runParameters, param[0], {
+            Object.defineProperty(runParameters, paramName, {
                 configurable: false,
                 enumerable: true,
                 writable: false,
-                value: param[1],
+                value: paramDesc,
             });
         }
     }

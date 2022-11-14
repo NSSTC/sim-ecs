@@ -10,7 +10,7 @@ export class Pipeline implements IPipeline {
         return this._root;
     }
 
-    getGroups(): Readonly<Array<Readonly<ISyncPoint>>> {
+    getGroups(): ReadonlyArray<Readonly<ISyncPoint>> {
         const orderedPoints: ISyncPoint[] = [];
         const traversePoint = (point: ISyncPoint) => {
             point.before && traversePoint(point.before);

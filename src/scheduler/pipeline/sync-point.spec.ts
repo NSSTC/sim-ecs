@@ -27,6 +27,11 @@ export interface ISyncPoint {
     addOnSyncHandler(handler: Function): ISyncPoint
 
     /**
+     * Remove all sync handlers
+     */
+    clearOnSyncHandlers(): ISyncPoint
+
+    /**
      * Execute all sync handlers
      */
     executeOnSyncHandlers(): Promise<ISyncPoint>

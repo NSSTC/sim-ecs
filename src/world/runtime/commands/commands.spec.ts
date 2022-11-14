@@ -5,6 +5,7 @@ import type {ISerialFormat} from "../../../serde/serial-format.spec";
 import type {IWorld, TGroupHandle} from "../../world.spec";
 import type {IIStateProto} from "../../../state/state.spec";
 import type {ICommandEntityBuilder} from "./command-entity-builder.spec";
+import {IReadOnlyEntity} from "../../../entity/entity.spec";
 
 
 export type TCommand = () => Promise<void> | void;
@@ -50,6 +51,13 @@ export interface ICommands {
      * @param world
      */
     merge(world: IWorld): TGroupHandle
+
+    /**
+     * Provides an environment to securely change an entity's data
+     * @param entity
+     * @param mutator
+     */
+    mutateEntity(entity: IReadOnlyEntity, mutator: (entity: IEntity) => Promise<void> | void): void
 
     /**
      * Revert the running world to a previous state

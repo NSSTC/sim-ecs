@@ -20,6 +20,7 @@
   },
   "scripts": {
     "bench": "ts-node src/index.ts",
-    "bench-js": "tsc --project . && node dist/examples/bench/src/index.js"
+    "bench-js": "npm run build && node dist/examples/bench/src/index.js",
+    "build": "tsc --project ."
   }
 }

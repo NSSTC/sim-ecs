@@ -16,6 +16,7 @@ export function dataStructDeserializer(Constructor: TObjectProto, data: unknown)
     return {
         containsRefs: false,
         data: obj,
+        type: Constructor,
     };
 }
 

@@ -1,4 +1,4 @@
-import {ITransitionActions, queryEntities, SerialFormat, TGroupHandle, WithTag} from "sim-ecs";
+import {type ITransitionActions, queryEntities, SerialFormat, type TGroupHandle, WithTag} from "sim-ecs";
 import {ScoreBoard} from "../models/score-board";
 import {ETags} from "../models/tags";
 
