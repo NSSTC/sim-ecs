@@ -33,11 +33,11 @@ export enum EQueryType {
 
 export type TAccessQueryData<DESC extends IAccessQuery<TObjectProto>> = {
     [P in keyof DESC]: DESC[P] extends TAccessQueryParameter<TObjectProto>
-        ? Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>>
-        : (Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<Object>>> | undefined)
+        ? Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<object>>>
+        : (Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<object>>> | undefined)
 }
 
-export interface IAccessDescriptor<C extends Object | undefined> {
+export interface IAccessDescriptor<C extends object | undefined> {
     [accessDescSym]: {
         readonly data?: string
         readonly optional: boolean

@@ -27,7 +27,7 @@ export interface ICommands {
      * @param type
      * @param args constructor parameters
      */
-    addResource<T extends Object>(type: T | TTypeProto<T>, ...args: unknown[]): T
+    addResource<T extends object>(type: T | TTypeProto<T>, ...args: unknown[]): T
 
     /**
      * Build an entity and add it to this world using an entity builder
@@ -92,14 +92,14 @@ export interface ICommands {
      * Remove a resource from the world
      * @param type
      */
-    removeResource<T extends Object>(type: TTypeProto<T>): void
+    removeResource<T extends object>(type: TTypeProto<T>): void
 
     /**
      * Replace a resource from this world
      * @param type
      * @param args constructor parameters
      */
-    replaceResource<T extends Object>(type: T | TTypeProto<T>, ...args: unknown[]): void
+    replaceResource<T extends object>(type: T | TTypeProto<T>, ...args: unknown[]): void
 
     /**
      * Signal the world to stop its dispatch-loop

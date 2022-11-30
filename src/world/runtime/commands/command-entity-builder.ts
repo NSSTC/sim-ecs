@@ -18,12 +18,12 @@ export class CommandEntityBuilder implements ICommandEntityBuilder {
         this.commands.addEntity(this.entity);
     }
 
-    with(component: Object | TObjectProto, ...args: unknown[]): CommandEntityBuilder {
+    with(component: object | TObjectProto, ...args: unknown[]): CommandEntityBuilder {
         this.entity.addComponent(component, ...args);
         return this;
     }
 
-    withAll(...components: (Object | TObjectProto)[]): CommandEntityBuilder {
+    withAll(...components: (object | TObjectProto)[]): CommandEntityBuilder {
         let component;
 
         for (component of components) {

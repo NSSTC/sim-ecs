@@ -14,7 +14,7 @@ export interface IPreptimeData {
         nextHandle: TGroupHandle,
         entityLinks: Map<TGroupHandle, Set<IEntity>>,
     }
-    resources: Map<Object | TObjectProto, Array<unknown>>
+    resources: Map<object | TObjectProto, Array<unknown>>
 }
 
 export interface IPreptimeOptions {

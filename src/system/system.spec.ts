@@ -23,7 +23,7 @@ export interface ISystem<PDESC extends TSystemParameterDesc = TSystemParameterDe
     readonly setupFunction: TSystemFunction<PDESC>
 }
 
-export interface ISystemResource<T extends Object> {
+export interface ISystemResource<T extends object> {
     [systemResourceTypeSym]: TTypeProto<T>
 }
 
@@ -37,7 +37,7 @@ export function ReadEvents<T extends TObjectProto>(type: T): IEventReader<T> {
     } as unknown as IEventReader<T>;
 }
 
-export function ReadResource<T extends Object>(type: TTypeProto<T>): ISystemResource<T> & Readonly<T> {
+export function ReadResource<T extends object>(type: TTypeProto<T>): ISystemResource<T> & Readonly<T> {
     return {
         [systemResourceTypeSym]: type,
     } as ISystemResource<T> & Readonly<T>;
@@ -53,7 +53,7 @@ export function WriteEvents<T extends TObjectProto>(type: T): IEventWriter<T> {
     } as unknown as IEventWriter<T>;
 }
 
-export function WriteResource<T extends Object>(type: TTypeProto<T>): ISystemResource<T> & T {
+export function WriteResource<T extends object>(type: TTypeProto<T>): ISystemResource<T> & T {
     return {
         [systemResourceTypeSym]: type,
     } as ISystemResource<T> & T;

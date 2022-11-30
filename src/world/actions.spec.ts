@@ -21,6 +21,6 @@ export interface ISystemActions {
     currentState: IState | undefined
 
     getEntities(query?: IEntitiesQuery): IterableIterator<IReadOnlyEntity>
-    getResource<T extends Object>(type: TTypeProto<T>): T
-    hasResource<T extends Object>(type: T | TTypeProto<T>): boolean
+    getResource<T extends object>(type: TTypeProto<T>): T
+    hasResource<T extends object>(type: T | TTypeProto<T>): boolean
 }

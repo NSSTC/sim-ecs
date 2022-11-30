@@ -12,13 +12,13 @@ export interface IEntityBuilder {
      * @param component
      * @param args
      */
-    with(component: Object | TObjectProto, ...args: unknown[]): IEntityBuilder
+    with(component: object | TObjectProto, ...args: unknown[]): IEntityBuilder
 
     /**
      * Add all components to target entity
      * @param component
      */
-    withAll(...component: (Object | TObjectProto)[]): IEntityBuilder
+    withAll(...component: (object | TObjectProto)[]): IEntityBuilder
 }
 
 export type TEntityBuilderProto = { new(): TEntityBuilderProto };

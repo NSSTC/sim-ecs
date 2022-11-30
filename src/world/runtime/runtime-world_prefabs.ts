@@ -26,7 +26,7 @@ export function load(this: RuntimeWorld, prefab: ISerialFormat, options?: ISerDe
     }
 
     {
-        let resource: Object | TObjectProto;
+        let resource: object | TObjectProto;
         for (resource of Object.values(serdeOut.resources)) {
             if (this.hasResource(resource)) {
                 this.replaceResource(resource);

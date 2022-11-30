@@ -25,7 +25,7 @@ export function load(this: PreptimeWorld, prefab: ISerialFormat, options?: ISerD
     }
 
     {
-        let resource: Object | TObjectProto;
+        let resource: object | TObjectProto;
         for (resource of Object.values(serdeOut.resources)) {
             // @ts-ignore should work
             this.addResource(resource);

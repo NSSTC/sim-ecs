@@ -8,7 +8,7 @@ export function clearResources(this: PreptimeWorld | RuntimeWorld): void {
     this.data.resources.clear();
 }
 
-export function getResource<T extends Object>(this: RuntimeWorld, type: TTypeProto<T>): T {
+export function getResource<T extends object>(this: RuntimeWorld, type: TTypeProto<T>): T {
     if (!this.data.resources.has(type)) {
         throw new Error(`Resource of type "${type.name}" does not exist!`);
     }
@@ -37,7 +37,7 @@ export function *getResources(this: PreptimeWorld | RuntimeWorld, types?: TExist
     }
 }
 
-export function hasResource<T extends Object>(this: PreptimeWorld | RuntimeWorld, obj: T | TTypeProto<T>): boolean {
+export function hasResource<T extends object>(this: PreptimeWorld | RuntimeWorld, obj: T | TTypeProto<T>): boolean {
     let type: TTypeProto<T>;
 
     if (typeof obj === 'object') {
@@ -49,7 +49,7 @@ export function hasResource<T extends Object>(this: PreptimeWorld | RuntimeWorld
     return this.data.resources.has(type);
 }
 
-export function removeResource<T extends Object>(this: PreptimeWorld | RuntimeWorld, type: TTypeProto<T>): void {
+export function removeResource<T extends object>(this: PreptimeWorld | RuntimeWorld, type: TTypeProto<T>): void {
     if (!this.data.resources.has(type)) {
         throw new Error(`Resource with name "${type.name}" does not exists!`);
     }

@@ -17,7 +17,7 @@ export class EventBus implements IEventBus {
         return new EventWriter(this);
     }
 
-    async publish(event: Object): Promise<void> {
+    async publish(event: object): Promise<void> {
         const subscribers = this.subscribers.get(event.constructor as TObjectProto) ?? [];
         let handler;
 

@@ -8,7 +8,7 @@ let idCounter = BigInt(0);
 
 export class Entity implements IEntity {
     static uuidFn: () => TEntityId = () => `${Date.now()}_${(idCounter++).toString()}`;
-    protected components: Map<TObjectProto, Object> = new Map();
+    protected components: Map<TObjectProto, object> = new Map();
     public readonly id: TEntityId;
     protected tags: Set<TTag> = new Set();
 
@@ -20,7 +20,7 @@ export class Entity implements IEntity {
         registerEntity(this);
     }
 
-    addComponent(component: Object | TObjectProto, ...args: unknown[]): Entity {
+    addComponent(component: object | TObjectProto, ...args: unknown[]): Entity {
         const obj = this.asObject(component, ...args);
 
         if (this.hasComponent(obj.constructor as typeof Object)) {
@@ -36,21 +36,21 @@ export class Entity implements IEntity {
         return this;
     }
 
-    protected asObject(component: Object | TObjectProto, ...args: unknown[]): Object {
+    protected asObject(component: object | TObjectProto, ...args: unknown[]): object {
         return typeof component === 'object'
             ? component
             : new (component.prototype.constructor.bind(component, ...Array.from(arguments).slice(1)))();
     }
 
-    getComponent<T extends Object>(component: TTypeProto<T>): T | undefined {
+    getComponent<T extends object>(component: TTypeProto<T>): T | undefined {
         return this.components.get(component) as T;
     }
 
-    getComponents(): IterableIterator<Object> {
+    getComponents(): IterableIterator<object> {
         return this.components.values();
     }
 
-    protected getConstructor(component: Object | TObjectProto): TObjectProto {
+    protected getConstructor(component: object | TObjectProto): TObjectProto {
         return typeof component === 'object'
             ? component.constructor as TObjectProto
             : component;
@@ -68,7 +68,7 @@ export class Entity implements IEntity {
         return this.tags.has(tag);
     }
 
-    removeComponent(component: Object | TObjectProto): Entity {
+    removeComponent(component: object | TObjectProto): Entity {
         this.components.delete(this.getConstructor(component));
         return this;
     }

@@ -34,7 +34,7 @@ export class Commands implements ICommands {
         });
     }
 
-    addResource<T extends Object>(obj: TTypeProto<T> | T, ...args: unknown[]): T {
+    addResource<T extends object>(obj: TTypeProto<T> | T, ...args: unknown[]): T {
         let type: TTypeProto<T>;
         let instance: T;
 
@@ -130,7 +130,7 @@ export class Commands implements ICommands {
         this.commands.push(() => this.world.removeGroup(handle));
     }
 
-    removeResource<T extends Object>(type: TTypeProto<T>): void {
+    removeResource<T extends object>(type: TTypeProto<T>): void {
         if (!this.world.data.resources.has(type)) {
             throw new Error(`Resource with name "${type.name}" does not exists!`);
         }
@@ -144,7 +144,7 @@ export class Commands implements ICommands {
         });
     }
 
-    replaceResource<T extends Object>(obj: TTypeProto<T> | T, ...args: unknown[]): void {
+    replaceResource<T extends object>(obj: TTypeProto<T> | T, ...args: unknown[]): void {
         let type: TTypeProto<T>;
 
         if (typeof obj === 'object') {

@@ -5,7 +5,7 @@ import {EReferenceType} from "./referencing.spec";
 
 
 export const getDefaultSerializer = function (customSerializer?: TSerializer): TSerializer {
-    const serializeObjectReplacer = function (key: string, value: Object): string | Object {
+    const serializeObjectReplacer = function (key: string, value: object): string | object {
         return value instanceof Entity
             ? new Reference(EReferenceType.Entity, value.id).toString()
             : value;
@@ -50,10 +50,14 @@ export const getDefaultSerializer = function (customSerializer?: TSerializer): T
 }
 
 export const getDefaultDeserializer = function (customDeserializer?: TDeserializer): TDeserializer {
-    const serializeObjectReviver = (inOut: {containsRefs: boolean} = {containsRefs: false}, key: string, value: any) =>
-        typeof value == 'string' && Reference.isReferenceString(value)
-            ? (inOut.containsRefs = true, Reference.fromString(value))
-            : value;
+    const serializeObjectReviver = (inOut: {containsRefs: boolean} = {containsRefs: false}, key: string, value: any) => {
+        if (value == 'string' && Reference.isReferenceString(value)) {
+            inOut.containsRefs = true;
+            return Reference.fromString(value);
+        }
+
+        return value;
+    };
 
     return (constructorName: string, data: unknown) => {
         switch (constructorName.toLowerCase()) {
@@ -105,18 +109,6 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
                 };
             }
 
-            case 'number': {
-                if (typeof data != 'number') {
-                    throw new Error(`Cannot deserialize Number with data of type ${typeof data}! Number expected!`);
-                }
-
-                return {
-                    containsRefs: false,
-                    data: data as number,
-                    type: Number,
-                };
-            }
-
             case 'object': {
                 const inOut = {containsRefs: false};
                 const parsedData = JSON.parse(data as string, serializeObjectReviver.bind(undefined, inOut));
@@ -127,7 +119,7 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
 
                 return {
                     containsRefs: inOut.containsRefs,
-                    data: parsedData as Object,
+                    data: parsedData as object,
                     type: Object,
                 };
             }
@@ -150,18 +142,6 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
                     containsRefs: inOut.containsRefs,
                     data: new Set(data as Array<unknown>),
                     type: Set,
-                };
-            }
-
-            case 'string': {
-                if (typeof data != 'string') {
-                    throw new Error(`Cannot deserialize String with data of type ${typeof data}! String expected!`);
-                }
-
-                return {
-                    containsRefs: false,
-                    data,
-                    type: String,
                 };
             }
         }

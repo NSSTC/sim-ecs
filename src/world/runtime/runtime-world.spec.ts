@@ -28,7 +28,7 @@ export interface IRuntimeWorldInitData {
         nextHandle: TGroupHandle
         entityLinks: Map<TGroupHandle, Set<IEntity>>
     }
-    resources: Map<Object | TObjectProto, Array<unknown>>
+    resources: Map<object | TObjectProto, Array<unknown>>
 }
 
 export interface IRuntimeWorldInitConfig {
@@ -83,7 +83,7 @@ export interface IRuntimeWorld extends IImmutableWorld {
      * @param obj
      * @param args
      */
-    replaceResource<T extends Object>(obj: T | TTypeProto<T>, ...args: Array<unknown>): void
+    replaceResource<T extends object>(obj: T | TTypeProto<T>, ...args: Array<unknown>): void
 
     /**
      * Start a continuous execution.

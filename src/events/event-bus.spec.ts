@@ -6,7 +6,7 @@ import type {TSubscriber} from "./_";
 export interface IEventBus {
     createReader<T extends TObjectProto>(Event: T): IEventReader<T>
     createWriter<T extends TObjectProto>(): IEventWriter<T>
-    publish(event: Object): Promise<void>
+    publish(event: object): Promise<void>
     subscribe<T extends TObjectProto>(Event: T, handler: TSubscriber<T>): void
     subscribeReader<T extends TObjectProto>(reader: IEventReader<T>): void
     unsubscribe<T extends TObjectProto>(Event: T, handler: TSubscriber<T>): void

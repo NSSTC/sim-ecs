@@ -15,12 +15,12 @@ export interface IReadOnlyEntity {
      * Get a component of a certain type which is associated with this entity
      * @param component
      */
-    getComponent<T extends Object>(component: TTypeProto<T>): T | undefined
+    getComponent<T extends object>(component: TTypeProto<T>): T | undefined
 
     /**
      * Get all components
      */
-    getComponents(): IterableIterator<Object>
+    getComponents(): IterableIterator<object>
 
     /**
      * Get all tags
@@ -46,7 +46,7 @@ export interface IEntity extends IReadOnlyEntity {
      * @param component
      * @param args
      */
-    addComponent(component: Object | TObjectProto, ...args: unknown[]): IEntity
+    addComponent(component: object | TObjectProto, ...args: unknown[]): IEntity
 
     /**
      * Add a tag to this entity
@@ -61,7 +61,7 @@ export interface IEntity extends IReadOnlyEntity {
      * Un-associate a component from this entity
      * @param component
      */
-    removeComponent(component: Object | TObjectProto): IEntity
+    removeComponent(component: object | TObjectProto): IEntity
 
     /**
      * Remove a tag from this entity

@@ -37,11 +37,11 @@ export class SerDe implements ISerDe {
             fallbackHandler: options?.fallbackHandler,
         };
         const entities: IEntity[] = [];
-        let resources: Record<string, Object> = {};
+        let resources: Record<string, object> = {};
 
         {
             const components = [];
-            const objectsWithRefs: Object[] = [];
+            const objectsWithRefs: Array<object> = [];
             const tags: TTag[] = [];
             let component;
             let deserializerOut: IDeserializerOutput;
@@ -192,7 +192,7 @@ export class SerDe implements ISerDe {
         };
         const outData = new SerialFormat();
 
-        const serialize = (chunk: IterableIterator<Object> | Array<Object>, collector: Record<string, unknown>) => {
+        const serialize = (chunk: IterableIterator<object> | Array<object>, collector: Record<string, unknown>) => {
             let item;
             let serialData;
 

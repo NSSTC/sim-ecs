@@ -27,13 +27,13 @@ export interface ISerDeOptions<T extends TSerializer | TDeserializer> {
 
 export interface IDeserializerOutput {
     containsRefs: boolean
-    data: Object
+    data: object
     type: TObjectProto
 }
 
 export interface ISerDeDataSet {
     entities: IterableIterator<IEntity>
-    resources: Record<string, Object>
+    resources: Record<string, object>
 }
 
 export interface ISerDeOperations {

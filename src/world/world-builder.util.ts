@@ -9,7 +9,7 @@ export function dataStructDeserializer(Constructor: TObjectProto, data: unknown)
 
     const obj: { [key: string]: any } = new Constructor();
 
-    for (const kv of Object.entries(data as Object)) {
+    for (const kv of Object.entries(data as object)) {
         obj[kv[0]] = kv[1];
     }
 

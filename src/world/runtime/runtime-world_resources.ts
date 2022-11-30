@@ -4,7 +4,7 @@ import {systemRunParamSym} from "../../system/_";
 import {TSystemParameterDesc} from "../../system/system.spec";
 import {SimECSReplaceResourceEvent, SimECSSystemReplaceResource} from "../../events/internal-events";
 
-export function addResource<T extends Object>(this: RuntimeWorld, obj: T | TTypeProto<T>, ...args: Array<unknown>): T {
+export function addResource<T extends object>(this: RuntimeWorld, obj: T | TTypeProto<T>, ...args: Array<unknown>): T {
     let type: TTypeProto<T>;
     let instance: T;
 
@@ -33,7 +33,7 @@ export function addResource<T extends Object>(this: RuntimeWorld, obj: T | TType
     return instance;
 }
 
-export function replaceResource<T extends Object>(this: RuntimeWorld, obj: T | TTypeProto<T>, ...args: Array<unknown>): void {
+export function replaceResource<T extends object>(this: RuntimeWorld, obj: T | TTypeProto<T>, ...args: Array<unknown>): void {
     let type: TTypeProto<T>;
 
     if (typeof obj === 'object') {

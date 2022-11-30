@@ -27,7 +27,7 @@ describe('Test SerDe', () => {
             expect(Object.entries(Array.from(entity1.getComponents())).toString()).eq(Object.entries(Array.from(entity2!.getComponents())).toString());
         }
     };
-    const doSerDe = (entity1: IEntity, resources: Record<string, Object> = {}, serdeOptions?: ISerDeOptions<never>) => {
+    const doSerDe = (entity1: IEntity, resources: Record<string, object> = {}, serdeOptions?: ISerDeOptions<never>) => {
         const serial = serde.serialize({
             entities: [entity1].values(),
             resources,

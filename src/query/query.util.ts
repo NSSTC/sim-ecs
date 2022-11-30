@@ -23,7 +23,7 @@ export function ReadEntity(uuid?: string): TAccessQueryParameter<TTypeProto<Read
     } as IAccessDescriptor<Entity>);
 }
 
-export function Read<C extends Object>(componentPrototype: TTypeProto<C>): TAccessQueryParameter<TTypeProto<Readonly<C>>> {
+export function Read<C extends object>(componentPrototype: TTypeProto<C>): TAccessQueryParameter<TTypeProto<Readonly<C>>> {
     return Object.assign({}, componentPrototype.prototype, {
         [accessDescSym]: {
             optional: false,
@@ -34,7 +34,7 @@ export function Read<C extends Object>(componentPrototype: TTypeProto<C>): TAcce
     } as IAccessDescriptor<C>);
 }
 
-export function ReadOptional<C extends Object>(componentPrototype: TTypeProto<C>): TOptionalAccessQueryParameter<TTypeProto<Readonly<C>>> {
+export function ReadOptional<C extends object>(componentPrototype: TTypeProto<C>): TOptionalAccessQueryParameter<TTypeProto<Readonly<C>>> {
     return Object.assign({}, componentPrototype.prototype, {
         [accessDescSym]: {
             optional: true,
@@ -45,7 +45,7 @@ export function ReadOptional<C extends Object>(componentPrototype: TTypeProto<C>
     } as IAccessDescriptor<C>);
 }
 
-export function Write<C extends Object>(componentPrototype: TTypeProto<C>): TAccessQueryParameter<TTypeProto<C>> {
+export function Write<C extends object>(componentPrototype: TTypeProto<C>): TAccessQueryParameter<TTypeProto<C>> {
     return Object.assign({}, componentPrototype.prototype, {
         [accessDescSym]: {
             optional: false,
@@ -56,7 +56,7 @@ export function Write<C extends Object>(componentPrototype: TTypeProto<C>): TAcc
     } as IAccessDescriptor<C>);
 }
 
-export function WriteOptional<C extends Object>(componentPrototype: TTypeProto<C>): TOptionalAccessQueryParameter<TTypeProto<C>> {
+export function WriteOptional<C extends object>(componentPrototype: TTypeProto<C>): TOptionalAccessQueryParameter<TTypeProto<C>> {
     return Object.assign({}, componentPrototype.prototype, {
         [accessDescSym]: {
             optional: true,
@@ -67,7 +67,7 @@ export function WriteOptional<C extends Object>(componentPrototype: TTypeProto<C
     } as IAccessDescriptor<C>);
 }
 
-export function With<C extends Object>(componentPrototype: TTypeProto<C>): IExistenceDescriptor<TTypeProto<C>> {
+export function With<C extends object>(componentPrototype: TTypeProto<C>): IExistenceDescriptor<TTypeProto<C>> {
     return {
         [existenceDescSym]: {
             target: componentPrototype,
@@ -93,7 +93,7 @@ export function WithTag(tag: TTag): TAccessQueryParameter<TObjectProto> & IExist
     } as TAccessQueryParameter<TObjectProto> & IExistenceDescriptor<TObjectProto>;
 }
 
-export function Without<C extends Object>(componentPrototype: TTypeProto<C>): IExistenceDescriptor<TTypeProto<C>> {
+export function Without<C extends object>(componentPrototype: TTypeProto<C>): IExistenceDescriptor<TTypeProto<C>> {
     return {
         [existenceDescSym]: {
             target: componentPrototype,
