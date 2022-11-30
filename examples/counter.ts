@@ -76,7 +76,7 @@ const executionSchedule: ISyncPointPrefab = {
 // sim-ecs is separated into preparation worlds and runtime worlds.
 // They are optimized for different requirements.
 // buildWorld() will create the preparation world.
-const world = buildWorld()
+const prepWorld = buildWorld()
     // we can inform the world about our processing logic by adding the above defined prefab
     .withDefaultScheduling(root => root.fromPrefab(executionSchedule))
     // we can register components types at this level in order to enable saving (serialization) and loading (deserialization) of them
@@ -85,7 +85,7 @@ const world = buildWorld()
 
 // in order to do something, we still need to add data, which can be processed.
 // think of this like filling up your database, whereas each entity is a row and each component is a column
-world
+prepWorld
     /// invoking the entity builder in this way automatically adds the entity to the world
     .buildEntity()
     .with(CounterInfo)
@@ -94,7 +94,7 @@ world
 (async () => {
     // when everything is added, it's time to run the simulation
     // to do so, a runtime environment must be prepared:
-    const runWorld = await world.prepareRun();
+    const runWorld = await prepWorld.prepareRun();
 
     // sim-ecs provides an optimized main-loop, but can also do single steps
     await runWorld.start();

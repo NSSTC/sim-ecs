@@ -1,6 +1,8 @@
 import type {ISystemBuilder} from "./system-builder.spec";
 import type {ISystem, TSystemFunction, TSystemParameterDesc} from "./system.spec";
 
+export * from "./system-builder.spec";
+
 export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements ISystemBuilder<PARAMDESC> {
     systemName: string = '';
     parameterDesc: PARAMDESC;

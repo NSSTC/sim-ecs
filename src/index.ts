@@ -5,6 +5,8 @@ export * from './ecs/ecs-world';
 export * from './entity/entity';
 export * from './entity/entity-builder';
 export * from './query/query';
+export * from './events/event-bus';
+export * from './pda/sim-ecs-pda';
 
 // Scheduler exports
 export * from './scheduler/scheduler';
@@ -22,5 +24,6 @@ export * from './world/error.spec';
 export * from './world/events';
 export * from './world/actions.spec';
 export * from './world/world.spec';
-export * from './world/preptime/preptime-world.spec';
-export * from './world/runtime/runtime-world.spec';
+export * from './world/preptime/preptime-world';
+export * from './world/runtime/runtime-world';
+export * from './world/world-builder';

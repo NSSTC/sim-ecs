@@ -6,6 +6,8 @@ import {EventReader} from "./event-reader";
 import {EventWriter} from "./event-writer";
 import type {TSubscriber} from "./_";
 
+export * from "./event-bus.spec";
+
 export class EventBus implements IEventBus {
     protected subscribers = new Map<TObjectProto, Set<TSubscriber<TObjectProto>>>();
 

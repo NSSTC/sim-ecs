@@ -1,5 +1,8 @@
 # sim-ecs
-Type-based, Components-first ECS, which is optimized for simulation needs. Will run in NodeJS and the browser.
+
+A type-based, components-first, fully async batteries-included ECS, which is optimized for simulation needs.
+There's a big emphasis on developer experience, like type-hinting and auto-completions. 
+Sim-ecs will run in NodeJS, BunJS and the browser.
 
 ```
 npm install sim-ecs
@@ -17,9 +20,12 @@ npm install sim-ecs
     - [Pong](#pong)
     - [System Error](#system-error)
 - [Where is the Documentation](#where-is-the-documentation)
-- [Creating the ECS and a World](#creating-the-ecs-and-a-world)
+    - [Creating the ECS and a World](#creating-the-ecs-and-a-world)
+        - [Prepare-Time World](#prepare-time-world)
+        - [Runtime World](#runtime-world)
 - [Setting Resources](#setting-resources)
-- [Defining Systems](#defining-systems)
+    - [Defining Systems](#defining-systems)
+    - [System Parameter Types](#system-parameter-types)
 - [Defining Components](#defining-components)
 - [Adding Entities](#adding-entities)
 - [Working with States](#working-with-states-optional)
@@ -144,10 +150,37 @@ Also, there is a [generated API-documentation](https://nsstc.github.io/sim-ecs/)
 ## Creating the ECS and a World
 
 In an ECS, a world is like a container for entities.
+Sim-ecs comes, by default, with two variants: A prepare-time world and a runtime world.
+
+
+### Prepare-Time World
+
+The prepare-time world is a place which focuses on easily preparing a simulation.
+That means, this is the place where everything should be defined and readied.
 
 ```typescript
-const world = buildWorld().build();
+const prepWorld = buildWorld().build();
 ```
+
+_See
+[IPreptimeWorld](https://nsstc.github.io/sim-ecs/interfaces/IPreptimeWorld.html)
+&nbsp;_
+
+
+### Runtime world
+
+After the preparation is done, a runtime world can be forked, which is optimized for executing a simulation.
+One of the main differences is that this world is not as configurable,
+in order to optimize for what was set up in the prep-time world.
+
+```typescript
+const runWorld = await prepWorld.prepareRun();
+```
+
+_See
+[IRuntimeWorld](https://nsstc.github.io/sim-ecs/interfaces/IRuntimeWorld.html)
+&nbsp;_
+
 
 ## Scheduling a run
 
@@ -160,7 +193,7 @@ can make use of such a feature to add their own Systems at the right place in th
 If that's not necessary, sim-ecs will work fine with just the `root` Sync Point.
 
 ```typescript
-const world = buildWorld()
+const prepWorld = buildWorld()
     .withDefaultScheduling(root => root
         .addNewStage(stage => stage
             .addSystem(CounterSystem)
@@ -198,7 +231,7 @@ const gameSchedule: ISyncPointPrefab = {
     ],
 };
 
-const world = buildWorld()
+const prepWorld = buildWorld()
     .withDefaultScheduling(root => root.fromPrefab(gameSchedule))
     .build();
 ```
@@ -211,7 +244,7 @@ Resources are objects, which can hold certain data, like the start DateTime.
 ```typescript
 // this call implicitely creates a new object of type Date. You can also pass an instance instead.
 // you can pass arguments to the constructor by passing them as additional parameters here
-world.addResource(Date);
+prepWorld.addResource(Date);
 console.log(world.getResource(Date).getDate());
 ```
 
@@ -232,6 +265,58 @@ const CountSystem = createSystem({
     .build();
 ```
 
+_See
+[createSystem()](https://nsstc.github.io/sim-ecs/functions/createSystem.html),
+[ISystemBuilder](https://nsstc.github.io/sim-ecs/classes/SystemBuilder.html)
+&nbsp;_
+
+
+### System Parameter Types
+
+A system can request different types of parameter:
+
+
+```typescript
+const CountSystem = createSystem({
+    // Queries are most obvious, since they allow access to stored data
+    // All parameters form the query, and only entities which match all criteria will be picked
+    query: queryComponents({
+        // Access the entity matching this query
+        entity: ReadEntity(),
+        // Access to a component
+        counterObjR: Read(Counter),
+        // This component may or may not exist, but if it does, it's readonly
+        counterObjRO: ReadOptional(Counter),
+        // Access a component in a mutable way
+        counterObjW: Write(Counter),
+        // This component may or may not exist, but if it does, it's mutable
+        counterObjWO: WriteOptional(Counter),
+        // If the component itself doesn't matter, but it must exist on the entity, this is the way!
+        _counterObjWith: With(Counter),
+        // It's also possible to require tags to be present. There's no value.
+        _tag1: WithTag(ATag),
+        // If the component itself doesn't matter, but it must _not_ exist on the entity, this is the way!
+        _counterObjWithout: WithOut(Counter),
+        // It's also possible to require that the entity does _not_ have a tag
+        _tag2: WithoutTag(ATag),
+    }),
+    // As a way to pass information between systems and event the outside,
+    // sim-ecs provides an event bus. It can be accessed easily from systems:
+    eventReader: ReadEvents(MyEvent),
+    eventWriter: WriteEvents(MyEvent),
+    // If it's necessary to mutate the runnning world, "system actions" can be accessed!
+    actions: Actions,
+    // World-global resources can also be easily be added. Their access is cached, which is a performance boost
+    resourceR: ReadResource(Date),
+    resourceW: WriteResource(Date),
+    // Last but not least, systems also allow for local variables,
+    // which are unique to that system instance within a run.
+    // Please prefer them over putting variables into the module's scope!
+    // They can be declared using a generic (if needed) and initialized in the parameter 
+    systemStorage1: Storage({ foo: 42, bar: 'Hello!' }),
+    systemStorage2: Storage({ data: [1,2,3] }),
+}).build();
+```
 
 ## Defining Components
 
@@ -243,12 +328,19 @@ Any serialize-able object may be a component in sim-ecs.
 class Counter {
     a = 0;
 }
+
+const prepWorld = createWorld().withComponent(Counter).build();
+prepWorld.buildEntity().with(Counter).build();
 ```
 
 In case you have advanced components, it is possible to pass a serializer and deserializer
 to the entity builder later on. If you don't do so, it is assumed that the component is a simple data struct.
 You can also use a default-type de-/serializer on save/load, which allows for a variety of standard types (such as `Date`) as components.
 
+_See
+[buildEntity()](https://nsstc.github.io/sim-ecs/interfaces/IPreptimeWorld.html#buildEntity),
+[IEntityBuilder](https://nsstc.github.io/sim-ecs/interfaces/IEntityBuilder.html)
+&nbsp;_
 
 ## Adding Entities
 
@@ -257,8 +349,13 @@ Entities are automatically added to the world they are built in.
 You can think of entities like rows in a database.
 
 ```typescript
-world.commands.buildEntity().withComponent(Counter).build();
+prepWorld.buildEntity().withComponent(Counter).build();
 ```
+
+_See
+[buildEntity()](https://nsstc.github.io/sim-ecs/interfaces/IPreptimeWorld.html#buildEntity),
+[IEntityBuilder](https://nsstc.github.io/sim-ecs/interfaces/IEntityBuilder.html)
+&nbsp;_
 
 
 ## Working with States (optional)
@@ -270,7 +367,7 @@ States define which systems should run, so that a pause-state can run graphics u
 If no state is passed to the dispatcher, all systems are run by default.
 
 While the world is running (using `run()`), the state can be changed using commands.
-Single calls to `dispatch()` do not offer the benefits of a PDA.
+Single calls to `step()` do not offer the benefits of a PDA.
 
 
 ## Update loop
@@ -279,18 +376,18 @@ The update loop (for example game loop) is what keeps simulations running.
 In order to provide an efficient way of driving the ECS, sim-ecs offers its own built-in loop:
 
 ```typescript
-world.run() // run() will drive the simulation based on the data provided to set up the world
+runWorld.start() // run() will drive the simulation based on the data provided to set up the world
     .catch(console.error) // this won't catch non-fatal errors, see error example!
     .then(() => console.log('Finished.'));
 ```
 
-While this is the recommended way to drive a simulation, sim-ecs also offers a step-wise execution: `world.dispatch()`.
+While this is the recommended way to drive a simulation, sim-ecs also offers a step-wise execution: `runWorld.step()`.
 Note, though, that each step will need to run the preparation logic, which introduces overhead!
 
 
 ## Commands
 
-Commands, accessible using `world.commands` and `actions.commands` in Systems, are a mechanism,
+Commands, accessible using `runWorld.commands` and `actions.commands` in Systems, are a mechanism,
 which queues certain functionality, like adding entities.
 The queue is then worked on at certain sync points, usually at the end of every step.
 This is a safety and comfort mechanism, which guarantees that critical changes can be triggered comfortably,
@@ -357,25 +454,25 @@ const prefab = [
 
 
 // to load from JSON, use SerialFormat.fromJSON() instead!
-const prefabHandle = world.commands.load(SerialFormat.fromArray(prefab));
+const prefabHandle = prepWorld.load(SerialFormat.fromArray(prefab));
 
 // ...
 
 // unloading is also easily possible to clean up the world
-world.commands.unloadPrefab(prefabHandle);
+runWorld.unloadPrefab(prefabHandle);
 ```
 
 ```typescript
 // saving a prefab from the current world. This may be used to write an editor
 // or export a PoC for game designers to improve on
-const jsonPrefab = world.save().toJSON(4);
+const jsonPrefab = runWorld.save().toJSON(4);
 saveToFile(jsonPrefab, 'prefab.json');
 ```
 
 ```typescript
 // filtering what should be saved is also possible,
 // so that only certain data is saved and not all data of the whole world
-const saveData = world.save(queryEntities(With(Player))).toJSON();
+const saveData = runWorld.save(queryEntities(With(Player))).toJSON();
 localStorage.setItem('save', saveData);
 ```
 
@@ -391,13 +488,13 @@ import {uuid} from 'your-favorit-uuid-library';
 Entity.uuidFn = uuid; // type: () => string
 
 // at the source, entities can be created as normal
-const entity = world.buildEntity().build();
+const entity = prepWorld.buildEntity().build();
 
 // IDs are created lazily when getting them for the first time
 const entityId = entity.id;
 
 // on another instance, you can assign the entity ID on entity creation:
-const syncedEntity = world.buildEntity(entityId).build();
+const syncedEntity = prepWorld.buildEntity(entityId).build();
 
 // in order to fetch an entity with a given ID, the ECS's function can be used
 const entityFromIdGetter = getEntity(entityId);
@@ -413,47 +510,26 @@ Some minimizers need to be adjusted. For example WebPack (using Terser) needs to
 The Pong example uses WebPack and demonstrates how to set up WebPack for proper production usage (in `make.js`).
 
 
-## Comparison with other TS ECS libs
-
-In an attempt to make sim-ecs best in class, it is important to compare it to other ECS libraries,
-identify differences and improve based on lessons others already learned.
-That's why a comparison to other libraries is tracked here, as fair as possible!
-Please open a PR for any improvement!
-
-
-### Features
-
-|                                                       Feature | sim-ecs | bitecs | tick-knock | ape-ecs |
-|--------------------------------------------------------------:| :---: | :---: | :---: | :---: |
-|                                                    Data first | x | x* | | |
-| Batteries included (Prefabs, Events, Complex Scheduler, etc.) | x | | | |
-|                                 Full typing/intention support | x | | x | | 
-|                         Everything can be used as a Component | x | | x | |
-|        Consistency check at transpile time (thanks to typing) | x | | | | 
-|                                            Full async-support | x | | | |
-|                                             Save / Load world | x | | | x |
-|                                              State Management | x | | | |
-
-\* only works with numeric fields on components
-
 ### Performance
 
 Please take the results with a grain of salt. These are benchmarks, so they are synthetic.
 An actual application will use a mix out of everything and more, and depending on that may have a different experience.
+
+You can run these benchmarks on your own machine - they are in the `examples/bench` folder.
 
 ```
 --------------------------------------------------------------------------------
 TypeScript ECS Bench
 --------------------------------------------------------------------------------
 
-6th November 2022
+30th November 2022
 
 Platform: Windows_NT win32 x64 v10.0.22621
 CPU: AMD Ryzen 7 3700X 8-Core Processor@3600MHz
-NodeJS: v18.9.1
+NodeJS: v19.2.0
 
 Bench           v0.2.0
-TypeScript      v4.8.4
+TypeScript      v4.9.3
 TS-Lib          v2.4.1
 TS-Node         v10.9.1
 
@@ -466,35 +542,30 @@ tick-knock      v4.1.0
 
  Default Suite / Simple Insert
 --------------------------------
-    Ape-ECS 87 ops/s ± 0.30%
-    bitecs 543 ops/s ± 0.96%
-    javelin 195 ops/s ± 0.38%
-    sim-ecs 113 ops/s ± 1.7%
-    tick-knock 599 ops/s ± 1.2%
+    Ape-ECS 91 ops/s ± 0.36%
+    bitecs 500 ops/s ± 0.96%
+    javelin 172 ops/s ± 0.36%
+    sim-ecs 106 ops/s ± 1.7%
+    tick-knock 468 ops/s ± 1.1%
 
 
 
  Default Suite / Simple Iter
 --------------------------------
-    Ape-ECS 182 ops/s ± 0.061%
-    bitecs 1146 ops/s ± 0.085%
-    javelin 92 ops/s ± 0.33%
-    sim-ecs 3133 ops/s ± 1.6%
-    tick-knock 29 ops/s ± 0.062%
-
-
-
- Default Suite / Schedule
---------------------------------
+    Ape-ECS 167 ops/s ± 0.17%
+    bitecs 1005 ops/s ± 0.34%
+    javelin 105 ops/s ± 0.096%
+    sim-ecs 2106 ops/s ± 1.0%
+    tick-knock 56 ops/s ± 0.11%
 
 
 
  Default Suite / Serialize
 --------------------------------
-Ape-ECS SerializeSave file size: 450.1962890625 KB
-    Ape-ECS 67 ops/s ± 1.3%
-Javelin SerializeSave file size: 31.1474609375 KB
-    Javelin 46 ops/s ± 0.53%
-sim-ecs SerializeSave file size: 96.69140625 KB
-    sim-ecs 123 ops/s ± 1.5%
+Ape-ECS SerializeSave file size: 417.3427734375 KB
+    Ape-ECS 70 ops/s ± 1.4%
+Javelin SerializeSave file size: 31.1455078125 KB
+    Javelin 522 ops/s ± 1.3%
+sim-ecs SerializeSave file size: 92.677734375 KB
+    sim-ecs 125 ops/s ± 1.5%
 ```

@@ -7,10 +7,10 @@ import {scheduleBenchmarks, serializeBenchmarks, simpleInsertBenchmarks, simpleI
     const probeCount = 50;
 
     const libBenches: { name: string, bench: IBenchmarkConstructor[] }[] = [
-        //{ name: 'Simple Insert', bench: simpleInsertBenchmarks },
+        { name: 'Simple Insert', bench: simpleInsertBenchmarks },
         { name: 'Simple Iter', bench: simpleIterBenchmarks },
         //{ name: 'Schedule', bench: scheduleBenchmarks },
-        //{ name: 'Serialize', bench: serializeBenchmarks },
+        { name: 'Serialize', bench: serializeBenchmarks },
     ];
 
     for (const libBench of libBenches) {

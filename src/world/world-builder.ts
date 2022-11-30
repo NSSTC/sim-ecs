@@ -12,7 +12,6 @@ import {addSyncPoint} from "../ecs/ecs-sync-point";
 import {PreptimeWorld} from "./preptime/preptime-world";
 import {IResourceRegistrationOptions} from "./world-builder.spec";
 
-
 export * from './world-builder.spec';
 
 export class WorldBuilder implements IWorldBuilder {

@@ -10,6 +10,8 @@ import {TObjectProto, TTypeProto} from "../../_.spec";
 import {TGroupHandle} from "../world.spec";
 import {ISystem} from "../../system/system.spec";
 
+export * from './commands/commands.spec';
+
 
 export type TExecutionFunction = ((callback: Function) => any) | typeof setTimeout | typeof requestAnimationFrame;
 

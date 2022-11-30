@@ -7,12 +7,12 @@
     "ape-ecs": "1.3.1",
     "benchmark": "^2.1.4",
     "bitecs": "0.3.38",
-    "fs-extra": "^10.1.0",
+    "fs-extra": "^11.1.0",
     "sim-ecs": "file:../../src",
     "tick-knock": "4.1.0",
     "ts-node": "^10.9.1",
     "tslib": "^2.4.1",
-    "typescript": "^4.8.4"
+    "typescript": "^4.9.3"
   },
   "devDependencies": {
     "@types/benchmark": "^2.1.2",

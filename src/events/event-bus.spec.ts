@@ -3,6 +3,8 @@ import type {IEventReader} from "./event-reader.spec";
 import type {IEventWriter} from "./event-writer.spec";
 import type {TSubscriber} from "./_";
 
+export * from "./_";
+
 export interface IEventBus {
     createReader<T extends TObjectProto>(Event: T): IEventReader<T>
     createWriter<T extends TObjectProto>(): IEventWriter<T>

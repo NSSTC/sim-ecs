@@ -49,6 +49,7 @@ import {SimECSPDAPushStateEvent} from "../../events/internal-events";
 import type {ISyncPoint} from "../../scheduler/pipeline/sync-point.spec";
 
 export * from "./runtime-world.spec";
+export * from "./commands/commands.spec";
 
 
 export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
