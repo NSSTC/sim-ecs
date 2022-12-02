@@ -1,11 +1,11 @@
-import {ISystem} from "../system/system.spec";
-import {TObjectProto} from "../_.spec";
-import {IIStateProto} from "../state/state.spec";
+import type {ISystem} from "../system/system.spec";
+import type {TObjectProto} from "../_.spec";
+import type {IIStateProto} from "../state/state.spec";
 
 
 class SimECSPDAEvent {
     constructor(
-        public state: IIStateProto
+        public readonly state: Readonly<IIStateProto>
     ) {}
 }
 
@@ -25,9 +25,9 @@ export class SimECSReplaceResourceEvent<T extends TObjectProto> extends SimECSRe
 
 class SimECSSystemResourceEvent {
     constructor(
-        public system: ISystem,
-        public paramName: string,
-        public resource: TObjectProto,
+        public readonly system: Readonly<ISystem>,
+        public readonly paramName: string,
+        public readonly resource: Readonly<TObjectProto>,
     ) {}
 }
 

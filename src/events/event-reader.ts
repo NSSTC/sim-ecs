@@ -7,11 +7,11 @@ export * from "./event-reader.spec";
 
 export class EventReader<T extends TObjectProto> implements IEventReader<T> {
     protected _eventHandler: TSubscriber<T> = event => { this.eventCache.push(event) };
-    protected eventCache: InstanceType<T>[] = [];
+    protected eventCache: Array<Readonly<InstanceType<T>>> = [];
 
     constructor(
         protected bus: IEventBus,
-        protected _eventType: T,
+        protected _eventType: Readonly<T>,
     ) {
         bus.subscribe(_eventType, this._eventHandler);
     }
@@ -24,18 +24,18 @@ export class EventReader<T extends TObjectProto> implements IEventReader<T> {
         return this._eventType;
     }
 
-    async execute(handler: (event: InstanceType<T>) => (void | Promise<void>)): Promise<void> {
+    async execute(handler: (event: Readonly<InstanceType<T>>) => (void | Promise<void>)): Promise<void> {
         let event;
         for (event of this.iter()) {
             await handler(event);
         }
     }
 
-    getOne(): InstanceType<T> | undefined {
+    getOne(): Readonly<InstanceType<T>> | undefined {
         return this.eventCache.shift();
     }
 
-    iter(): IterableIterator<InstanceType<T>> {
+    iter(): IterableIterator<Readonly<InstanceType<T>>> {
         const events = Array.from(this.eventCache);
         this.eventCache.length = 0;
         return events.values();

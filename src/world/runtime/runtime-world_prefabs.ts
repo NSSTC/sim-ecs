@@ -7,7 +7,12 @@ import type {IEntity} from "../../entity/entity.spec";
 import type {TObjectProto} from "../../_.spec";
 
 
-export function load(this: RuntimeWorld, prefab: ISerialFormat, options?: ISerDeOptions<TDeserializer>, intoGroup?: TGroupHandle): TGroupHandle {
+export function load(
+    this: RuntimeWorld,
+    prefab: Readonly<ISerialFormat>,
+    options?: Readonly<ISerDeOptions<TDeserializer>>,
+    intoGroup?: TGroupHandle,
+): TGroupHandle {
     let groupHandle = intoGroup;
     if (groupHandle == undefined || !this.data.groups.entityLinks.has(groupHandle)) {
         groupHandle = this.createGroup();
@@ -40,9 +45,10 @@ export function load(this: RuntimeWorld, prefab: ISerialFormat, options?: ISerDe
     return groupHandle;
 }
 
-export function save(this: RuntimeWorld, options?: ISerDeOptions<TSerializer>): ISerialFormat {
+export function save(this: RuntimeWorld, options?: Readonly<ISerDeOptions<TSerializer>>): ISerialFormat {
     const resources = Object.fromEntries(
-        options?.resources?.map(type => [type.constructor.name, (this as RuntimeWorld).getResource(type)!]) ?? []
+        options?.resources
+            ?.map(type => [type.constructor.name, (this as RuntimeWorld).getResource(type)!]) ?? []
     );
     return this.config.serde.serialize({
         entities: this.getEntities(options?.entities),

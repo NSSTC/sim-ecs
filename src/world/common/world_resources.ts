@@ -16,7 +16,10 @@ export function getResource<T extends object>(this: RuntimeWorld, type: TTypePro
     return this.data.resources.get(type) as T;
 }
 
-export function *getResources(this: PreptimeWorld | RuntimeWorld, types?: TExistenceQuery<any>): IterableIterator<object> {
+export function *getResources(
+    this: PreptimeWorld | RuntimeWorld,
+    types?: Readonly<TExistenceQuery<any>>,
+): IterableIterator<object> {
     if (!types) {
         return this.data.resources.values();
     }
@@ -37,7 +40,7 @@ export function *getResources(this: PreptimeWorld | RuntimeWorld, types?: TExist
     }
 }
 
-export function hasResource<T extends object>(this: PreptimeWorld | RuntimeWorld, obj: T | TTypeProto<T>): boolean {
+export function hasResource<T extends object>(this: PreptimeWorld | RuntimeWorld, obj: Readonly<T> | TTypeProto<T>): boolean {
     let type: TTypeProto<T>;
 
     if (typeof obj === 'object') {

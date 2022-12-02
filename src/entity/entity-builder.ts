@@ -5,7 +5,7 @@ import type {TObjectProto} from "../_.spec";
 export * from './entity-builder.spec';
 
 export class EntityBuilder implements IEntityBuilder {
-    protected components = new Map<object | TObjectProto, unknown[]>();
+    protected components = new Map<Readonly<object | TObjectProto>, ReadonlyArray<unknown>>();
 
     constructor(
         protected uuid?: TEntityId,
@@ -24,12 +24,12 @@ export class EntityBuilder implements IEntityBuilder {
         return entity;
     }
 
-    with(component: object | TObjectProto, ...args: unknown[]): EntityBuilder {
+    with(component: Readonly<object | TObjectProto>, ...args: ReadonlyArray<unknown>): EntityBuilder {
         this.components.set(component, args);
         return this;
     }
 
-    withAll(...components: (object | TObjectProto)[]): EntityBuilder {
+    withAll(...components: ReadonlyArray<object | TObjectProto>): EntityBuilder {
         let component;
         for (component of components) {
             this.with(component);

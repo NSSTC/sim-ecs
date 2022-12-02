@@ -5,22 +5,22 @@ import type {IEntitiesQuery} from "../query/query.spec";
 import type {ISerDeOptions, TSerializer} from "../serde/serde.spec";
 import type {ISerialFormat} from "../serde/serial-format.spec";
 import type {IEventBus} from "../events/event-bus.spec";
-import {IReadOnlyEntity} from "../entity/entity.spec";
+import type {IReadOnlyEntity} from "../entity/entity.spec";
 
 export interface ITransitionActions extends ISystemActions {
-    eventBus: IEventBus
+    eventBus: Readonly<IEventBus>
 
     flushCommands(): Promise<void>
     popState(): Promise<void>
-    pushState(NewState: IIStateProto): Promise<void>
-    save(options?: ISerDeOptions<TSerializer>): ISerialFormat
+    pushState(NewState: Readonly<IIStateProto>): Promise<void>
+    save(options?: Readonly<ISerDeOptions<TSerializer>>): ISerialFormat
 }
 
 export interface ISystemActions {
-    commands: ICommands
-    currentState: IState | undefined
+    commands: Readonly<ICommands>
+    currentState: Readonly<IState> | undefined
 
-    getEntities(query?: IEntitiesQuery): IterableIterator<IReadOnlyEntity>
+    getEntities(query?: Readonly<IEntitiesQuery>): IterableIterator<IReadOnlyEntity>
     getResource<T extends object>(type: TTypeProto<T>): T
-    hasResource<T extends object>(type: T | TTypeProto<T>): boolean
+    hasResource<T extends object>(type: Readonly<T> | TTypeProto<T>): boolean
 }

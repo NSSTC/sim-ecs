@@ -1,5 +1,5 @@
 import type {TObjectProto} from "../_.spec";
 
 export interface IEventWriter<T extends TObjectProto> {
-    publish(event: InstanceType<T>): Promise<void>
+    publish(event: Readonly<InstanceType<T>>): Promise<void>
 }

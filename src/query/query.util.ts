@@ -8,8 +8,7 @@ import {EAccess, EExistence, ETargetType} from "./query.spec";
 import type {TObjectProto, TTypeProto} from "../_.spec";
 import type {IEntity, TTag} from "../entity/entity.spec";
 import {Entity} from "../entity/entity";
-import {accessDescSym, addEntitySym, existenceDescSym} from "./_";
-import {Query} from "./query";
+import {accessDescSym, existenceDescSym} from "./_";
 
 export function ReadEntity(uuid?: string): TAccessQueryParameter<TTypeProto<Readonly<IEntity>>> {
     return Object.assign({}, Entity, {

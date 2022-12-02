@@ -4,15 +4,15 @@ import type {ISystem} from "../system/system.spec";
 
 export class SystemError implements ISystemError {
     constructor(
-        protected _cause: Error,
-        protected _System: TTypeProto<ISystem>
+        protected _cause: Readonly<Error>,
+        protected _System: Readonly<TTypeProto<ISystem>>
     ) {}
 
     get cause(): Error {
         return this._cause;
     }
 
-    get System(): TTypeProto<ISystem> {
+    get System(): Readonly<TTypeProto<ISystem>> {
         return this._System;
     }
 }

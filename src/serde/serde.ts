@@ -28,20 +28,20 @@ import {getEntity} from "../ecs/ecs-entity";
 export * from "./serde.spec";
 
 export class SerDe implements ISerDe {
-    protected typeHandlers = new Map<string, ISerDeOperations>();
+    protected typeHandlers = new Map<string, Readonly<ISerDeOperations>>();
 
-    deserialize(data: ISerialFormat, options?: ISerDeOptions<TDeserializer>): ISerDeDataSet {
+    deserialize(data: Readonly<ISerialFormat>, options?: Readonly<ISerDeOptions<TDeserializer>>): ISerDeDataSet {
         const finalOptions: typeof options = {
             useDefaultHandler: options?.useDefaultHandler ?? true,
             useRegisteredHandlers: options?.useRegisteredHandlers ?? true,
             fallbackHandler: options?.fallbackHandler,
         };
         const entities: IEntity[] = [];
-        let resources: Record<string, object> = {};
+        let resources: Record<string, Readonly<object>> = {};
 
         {
             const components = [];
-            const objectsWithRefs: Array<object> = [];
+            const objectsWithRefs: Array<Readonly<object>> = [];
             const tags: TTag[] = [];
             let component;
             let deserializerOut: IDeserializerOutput;
@@ -147,11 +147,11 @@ export class SerDe implements ISerDe {
         };
     }
 
-    getRegisteredTypeHandlers(): IterableIterator<[string, ISerDeOperations]> {
+    getRegisteredTypeHandlers(): IterableIterator<[string, Readonly<ISerDeOperations>]> {
         return this.typeHandlers.entries();
     }
 
-    registerTypeHandler(Type: TObjectProto, deserializer: TCustomDeserializer, serializer: TSerializer): void {
+    registerTypeHandler(Type: Readonly<TObjectProto>, deserializer: TCustomDeserializer, serializer: TSerializer): void {
         if (this.typeHandlers.has(Type.name)) {
             throw new Error(`The type "${Type.name}" was already registered!`);
         }
@@ -162,8 +162,8 @@ export class SerDe implements ISerDe {
         });
     }
 
-    serialize(data: ISerDeDataSet, options?: ISerDeOptions<TSerializer>): SerialFormat {
-        const finalOptions: typeof options = {
+    serialize(data: Readonly<ISerDeDataSet>, options?: Readonly<ISerDeOptions<TSerializer>>): SerialFormat {
+        const finalOptions: Readonly<typeof options> = {
             useDefaultHandler: options?.useDefaultHandler ?? true,
             useRegisteredHandlers: options?.useRegisteredHandlers ?? true,
             fallbackHandler: options?.fallbackHandler,
@@ -187,7 +187,7 @@ export class SerDe implements ISerDe {
         };
 
         { // Resources are index 0!
-            const resources: TEntity = {
+            const resources: Readonly<TEntity> = {
                 [CResourceMarker]: CResourceMarkerValue,
             };
 
@@ -224,12 +224,12 @@ export class SerDe implements ISerDe {
         return outData;
     }
 
-    unregisterTypeHandler(Type: TObjectProto): void {
+    unregisterTypeHandler(Type: Readonly<TObjectProto>): void {
         this.typeHandlers.delete(Type.name);
     }
 }
 
-const dereferenceComponentRefs = (component: Record<string, unknown>) => {
+const dereferenceComponentRefs = (component: /* mut */ Record<string, unknown>) => {
     let key: string;
     let value: unknown;
 

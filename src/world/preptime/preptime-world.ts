@@ -30,7 +30,7 @@ import {merge} from "../common/world_misc";
 import type {IRuntimeWorld} from "../runtime/runtime-world.spec";
 import {RuntimeWorld} from "../runtime/runtime-world";
 import {State} from "../../state/state";
-import {IPreptimeData} from "./preptime-world.spec";
+import type {IPreptimeData} from "./preptime-world.spec";
 
 export * from "./preptime-world.spec";
 
@@ -72,7 +72,7 @@ export class PreptimeWorld implements IPreptimeWorld {
         }
     }
 
-    public async prepareRun(options?: Partial<IPreptimeOptions>): Promise<IRuntimeWorld> {
+    public async prepareRun(options?: Readonly<Partial<IPreptimeOptions>>): Promise<IRuntimeWorld> {
         // todo: don't copy the refs, copy all objects
 
         const name = this.name

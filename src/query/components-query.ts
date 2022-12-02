@@ -13,21 +13,21 @@ import {accessDescSym, addEntitySym} from "./_";
 
 export class ComponentsQuery<DESC extends IAccessQuery<TObjectProto>> extends Query<DESC, TAccessQueryData<DESC>> implements IComponentsQuery<DESC> {
     constructor(
-        protected queryDescriptor: DESC,
+        protected queryDescriptor: Readonly<DESC>,
     ) {
         super(EQueryType.Components, queryDescriptor);
     }
 
-    [addEntitySym](entity: IEntity): void {
+    [addEntitySym](entity: Readonly<IEntity>): void {
         if (this.matchesEntity(entity)) {
             this.queryResult.set(entity, this.getComponentDataFromEntity(entity, this.queryDescriptor));
         }
     }
 
-    protected getComponentDataFromEntity(entity: IEntity, descriptor: DESC): TAccessQueryData<DESC> {
-        const components: Record<string, object> = {};
+    protected getComponentDataFromEntity(entity: Readonly<IEntity>, descriptor: Readonly<DESC>): Readonly<TAccessQueryData<DESC>> {
+        const components: Record<string, Readonly<object>> = {};
         let accessDesc;
-        let componentDesc: TObjectProto | TAccessQueryParameter<TObjectProto>;
+        let componentDesc: Readonly<TObjectProto | TAccessQueryParameter<TObjectProto>>;
         let componentName: string;
 
         for ([componentName, componentDesc] of Object.entries(descriptor)) {
@@ -38,11 +38,11 @@ export class ComponentsQuery<DESC extends IAccessQuery<TObjectProto>> extends Qu
                 : entity;
         }
 
-        return components as unknown as TAccessQueryData<DESC>;
+        return components as TAccessQueryData<DESC>;
     }
 
-    matchesEntity(entity: IEntity): boolean {
-        let componentDesc: IAccessDescriptor<TObjectProto | undefined>;
+    matchesEntity(entity: Readonly<IEntity>): boolean {
+        let componentDesc: Readonly<IAccessDescriptor<TObjectProto | undefined>>;
 
         // @ts-ignore todo: figure out typing. Something is still wrong somewhere
         for (componentDesc of Object.values(this.queryDescriptor)) {

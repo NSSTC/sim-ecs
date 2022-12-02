@@ -51,19 +51,6 @@ describe('Test SerDe', () => {
         compare(entity1, doSerDeFirstEntity(entity1));
     });
 
-    it('DEFAULT HANDLERS: serialize -> deserialize Array component', () => {
-        const entity1 = new Entity();
-
-        entity1.addComponent([42, 17, 1337, 20.365]);
-
-        {
-            const entity2 = doSerDeFirstEntity(entity1);
-
-            compare(entity1, entity2);
-            expect(entity1.getComponent(Array)?.pop()).eq(entity2!.getComponent(Array)?.pop()).not.eq(undefined);
-        }
-    });
-
     it('DEFAULT HANDLERS: serialize -> deserialize empty Object component', () => {
         const entity1 = new Entity();
 
@@ -81,19 +68,6 @@ describe('Test SerDe', () => {
         });
 
         compare(entity1, doSerDeFirstEntity(entity1));
-    });
-
-    it('DEFAULT HANDLERS: serialize -> deserialize Date component', () => {
-        const entity1 = new Entity();
-
-        entity1.addComponent(new Date(0));
-
-        {
-            const entity2 = doSerDeFirstEntity(entity1);
-
-            compare(entity1, entity2);
-            expect(entity1.getComponent(Date)!.toString()).eq(entity2!.getComponent(Date)!.toString());
-        }
     });
 
     it('DEFAULT HANDLERS: serialize -> deserialize Entity references', () => {

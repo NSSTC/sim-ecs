@@ -6,14 +6,14 @@ export interface ISyncPointPrefab {
     name?: string
     after?: ISyncPointPrefab
     before?: ISyncPointPrefab
-    stages?: ISystem<any>[][]
+    stages?: Array<Array<Readonly<ISystem<any>>>>
 }
 
 export interface ISyncPoint {
     after?: ISyncPoint
     before?: ISyncPoint
     name?: string
-    stages: IStage[]
+    stages: Array<IStage>
 
     /**
      * Add a stage to this group
@@ -40,7 +40,7 @@ export interface ISyncPoint {
      * Create an execution tree from a schedule-prefab
      * @param prefab
      */
-    fromPrefab(prefab: ISyncPointPrefab): ISyncPoint
+    fromPrefab(prefab: Readonly<ISyncPointPrefab>): ISyncPoint
 
     /**
      * Remove a sync handler

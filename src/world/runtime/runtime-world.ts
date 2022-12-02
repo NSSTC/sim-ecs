@@ -64,9 +64,9 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
     protected executionFunction: TExecutionFunction;
     protected isPrepared = false;
     protected readonly pda = new SimECSPushDownAutomaton<IState>(this);
-    protected queries = new Set<Query<unknown, unknown>>();
+    protected queries = new Set<Readonly<Query<unknown, unknown>>>();
     protected shouldRunSystems = false;
-    protected systemResourceMap = new Map<ISystem, { paramName: string, resourceType: TObjectProto }>();
+    protected systemResourceMap = new Map<Readonly<ISystem>, Readonly<{ paramName: string, resourceType: Readonly<TObjectProto> }>>();
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
 
@@ -84,7 +84,7 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
         );
 
         this.data = {
-            entities: $data?.entities ? $data?.entities : new Set(),
+            entities: new Set($data?.entities ? $data?.entities : new Set()),
             groups: $data?.groups ?? {
                 entityLinks: new Map(),
                 nextHandle: 0,

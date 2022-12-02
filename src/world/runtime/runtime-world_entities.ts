@@ -2,7 +2,7 @@ import {type RuntimeWorld} from "./runtime-world";
 import type {IEntity} from "../../entity/entity.spec";
 import {addEntitySym, removeEntitySym} from "../../query/_";
 
-export function addEntity(this: RuntimeWorld, entity: IEntity): void {
+export function addEntity(this: RuntimeWorld, entity: Readonly<IEntity>): void {
     this.data.entities.add(entity);
 
     {
@@ -13,11 +13,11 @@ export function addEntity(this: RuntimeWorld, entity: IEntity): void {
     }
 }
 
-export function hasEntity(this: RuntimeWorld, entity: IEntity): boolean {
+export function hasEntity(this: RuntimeWorld, entity: Readonly<IEntity>): boolean {
     return this.data.entities.has(entity);
 }
 
-export function removeEntity(this: RuntimeWorld, entity: IEntity): void {
+export function removeEntity(this: RuntimeWorld, entity: Readonly<IEntity>): void {
     this.data.entities.delete(entity);
 
     {

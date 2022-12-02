@@ -3,20 +3,20 @@ import type {ISystem, TSystemFunction, TSystemParameterDesc} from "./system.spec
 
 export * from "./system-builder.spec";
 
-export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements ISystemBuilder<PARAMDESC> {
+export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements ISystemBuilder<Readonly<PARAMDESC>> {
     systemName: string = '';
-    parameterDesc: PARAMDESC;
-    setupFunction: TSystemFunction<PARAMDESC> = () => {};
-    runFunction: TSystemFunction<PARAMDESC> = () => {};
+    parameterDesc: Readonly<PARAMDESC>;
+    setupFunction: TSystemFunction<Readonly<PARAMDESC>> = () => {};
+    runFunction: TSystemFunction<Readonly<PARAMDESC>> = () => {};
 
 
-    constructor(params: PARAMDESC) {
+    constructor(params: Readonly<PARAMDESC>) {
         this.parameterDesc = params;
     }
 
-    build(): ISystem<PARAMDESC> {
+    build(): ISystem<Readonly<PARAMDESC>> {
         const self = this;
-        const System = class implements ISystem<PARAMDESC> {
+        const System = class implements Readonly<ISystem<Readonly<PARAMDESC>>> {
             readonly name = self.systemName;
             readonly parameterDesc = self.parameterDesc;
             readonly runFunction = self.runFunction;
@@ -33,29 +33,29 @@ export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements IS
         return new System();
     }
 
-    name(name: string): SystemBuilder<PARAMDESC> {
+    name(name: string): SystemBuilder<Readonly<PARAMDESC>> {
         return this.withName(name);
     }
 
-    run(fn: TSystemFunction<PARAMDESC>): SystemBuilder<PARAMDESC> {
+    run(fn: TSystemFunction<Readonly<PARAMDESC>>): SystemBuilder<Readonly<PARAMDESC>> {
         return this.withRunFunction(fn);
     }
 
-    setup(fn: TSystemFunction<PARAMDESC>): SystemBuilder<PARAMDESC> {
+    setup(fn: TSystemFunction<Readonly<PARAMDESC>>): SystemBuilder<Readonly<PARAMDESC>> {
         return this.withSetupFunction(fn);
     }
 
-    withName(name: string): SystemBuilder<PARAMDESC> {
+    withName(name: string): SystemBuilder<Readonly<PARAMDESC>> {
         this.systemName = name;
         return this;
     }
 
-    withRunFunction(fn: TSystemFunction<PARAMDESC>): SystemBuilder<PARAMDESC> {
+    withRunFunction(fn: TSystemFunction<Readonly<PARAMDESC>>): SystemBuilder<Readonly<PARAMDESC>> {
         this.runFunction = fn;
         return this;
     }
 
-    withSetupFunction(fn: TSystemFunction<PARAMDESC>): SystemBuilder<PARAMDESC> {
+    withSetupFunction(fn: TSystemFunction<Readonly<PARAMDESC>>): SystemBuilder<Readonly<PARAMDESC>> {
         this.setupFunction = fn;
         return this;
     }

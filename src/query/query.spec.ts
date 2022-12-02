@@ -38,6 +38,9 @@ export type TAccessQueryData<DESC extends IAccessQuery<TObjectProto>> = {
 }
 
 export interface IAccessDescriptor<C extends object | undefined> {
+    /**
+     * @internal
+     */
     [accessDescSym]: {
         readonly data?: string
         readonly optional: boolean
@@ -48,28 +51,35 @@ export interface IAccessDescriptor<C extends object | undefined> {
 }
 
 export interface IExistenceDescriptor<C extends TObjectProto> {
+    /**
+     * @internal
+     */
     [existenceDescSym]: {
-        readonly target: C | TTag
+        readonly target: Readonly<C> | TTag
         readonly targetType: ETargetType
         readonly type: EExistence
     }
 }
 
 export interface IQuery<DESC, DATA> {
-    readonly descriptor: DESC
+    readonly descriptor: Readonly<DESC>
     readonly queryType: EQueryType
     readonly resultLength: number
 
-    [addEntitySym](entity: IEntity): void
+    /** @internal */
+    [addEntitySym](entity: Readonly<IEntity>): void
+    /** @internal */
     [clearEntitiesSym](): void
-    [removeEntitySym](entity: IEntity): void
-    [setEntitiesSym](entities: IterableIterator<IEntity>): void
+    /** @internal */
+    [removeEntitySym](entity: Readonly<IEntity>): void
+    /** @internal */
+    [setEntitiesSym](entities: Readonly<IterableIterator<Readonly<IEntity>>>): void
 
     execute(handler: (data: DATA) => Promise<void> | void): Promise<void>
     getFirst(): DATA | undefined
     iter(): IterableIterator<DATA>
-    matchesEntity(entity: IEntity): boolean
-    toArray(): DATA[]
+    matchesEntity(entity: Readonly<IEntity>): boolean
+    toArray(): Array<DATA>
 }
 
 export interface IComponentsQuery<DESC extends IAccessQuery<TObjectProto>> extends IQuery<DESC, TAccessQueryData<DESC>> {}

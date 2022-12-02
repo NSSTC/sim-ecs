@@ -10,22 +10,22 @@ import type {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
 import type {IIStateProto} from "../state/state.spec";
 import {addSyncPoint} from "../ecs/ecs-sync-point";
 import {PreptimeWorld} from "./preptime/preptime-world";
-import {IResourceRegistrationOptions} from "./world-builder.spec";
+import type {IResourceRegistrationOptions} from "./world-builder.spec";
 
 export * from './world-builder.spec';
 
 export class WorldBuilder implements IWorldBuilder {
     protected callbacks = new Set<(world: PreptimeWorld) => void>();
     protected worldName?: string;
-    protected defaultScheduler: IScheduler = new Scheduler();
-    protected resources = new Map<TObjectProto, Array<unknown>>();
-    protected stateSchedulers = new Map<IIStateProto, IScheduler>();
+    protected defaultScheduler: Readonly<IScheduler> = new Scheduler();
+    protected resources = new Map<Readonly<TObjectProto>, ReadonlyArray<unknown>>();
+    protected stateSchedulers = new Map<IIStateProto, Readonly<IScheduler>>();
 
     constructor(
-        protected serde: ISerDe,
+        protected serde: Readonly<ISerDe>,
     ) {}
 
-    addCallback(cb: (world: PreptimeWorld) => void): WorldBuilder {
+    addCallback(cb: (world: Readonly<PreptimeWorld>) => void): WorldBuilder {
         this.callbacks.add(cb);
         return this;
     }
@@ -50,25 +50,25 @@ export class WorldBuilder implements IWorldBuilder {
         return world;
     }
 
-    c(Component: TObjectProto, options?: IObjectRegistrationOptions): WorldBuilder {
+    c(Component: TObjectProto, options?: Readonly<IObjectRegistrationOptions>): WorldBuilder {
         return this.withComponent(Component, options);
     }
 
-    protected checkSyncPointLoop(root: ISyncPoint): void {
+    protected checkSyncPointLoop(root: Readonly<ISyncPoint>): void {
         if (this.hasSyncPointLoop(root)) {
             throw new Error('The sync-points provided form a loop!');
         }
     }
 
-    component(Component: TObjectProto, options?: IObjectRegistrationOptions): WorldBuilder {
+    component(Component: TObjectProto, options?: Readonly<IObjectRegistrationOptions>): WorldBuilder {
         return this.withComponent(Component, options);
     }
 
-    components(...Components: TObjectProto[]): WorldBuilder {
+    components(...Components: ReadonlyArray<TObjectProto>): WorldBuilder {
         return this.withComponents(...Components);
     }
 
-    protected hasSyncPointLoop(root: ISyncPoint): boolean {
+    protected hasSyncPointLoop(root: Readonly<ISyncPoint>): boolean {
         const check = (root: ISyncPoint, direction: 'after' | 'before') => {
             const syncPoints = new Set<ISyncPoint>();
             let currentSyncPoint = root;
@@ -92,22 +92,18 @@ export class WorldBuilder implements IWorldBuilder {
             return true;
         }
 
-        if (check(root, 'before')) {
-            return true;
-        }
-
-        return false;
+        return check(root, 'before');
     }
 
     name(name: string): WorldBuilder {
         return this.withName(name);
     }
 
-    r(Resource: TObjectProto, options?: Partial<IResourceRegistrationOptions>): IWorldBuilder {
+    r(Resource: TObjectProto, options?: Readonly<Partial<IResourceRegistrationOptions>>): IWorldBuilder {
         return this.withResource(Resource, options);
     }
 
-    resource(Resource: TObjectProto, options?: Partial<IResourceRegistrationOptions>): IWorldBuilder {
+    resource(Resource: TObjectProto, options?: Readonly<Partial<IResourceRegistrationOptions>>): IWorldBuilder {
         return this.withResource(Resource, options);
     }
 
@@ -146,7 +142,7 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withComponent(Component: TObjectProto, options?: IObjectRegistrationOptions): WorldBuilder {
+    withComponent(Component: TObjectProto, options?: Readonly<IObjectRegistrationOptions>): WorldBuilder {
         this.serde.registerTypeHandler(
             Component,
             options?.serDe?.deserializer ?? dataStructDeserializer.bind(undefined, Component),
@@ -156,7 +152,7 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withComponents(...Components: TObjectProto[]): WorldBuilder {
+    withComponents(...Components: ReadonlyArray<TObjectProto>): WorldBuilder {
         for (const Component of Components) {
             this.withComponent(Component);
         }
@@ -164,7 +160,7 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withDefaultScheduler(scheduler: IScheduler): IWorldBuilder {
+    withDefaultScheduler(scheduler: Readonly<IScheduler>): IWorldBuilder {
         const root = scheduler.pipeline.root;
 
         this.checkSyncPointLoop(root);
@@ -189,7 +185,7 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withResource(Resource: TObjectProto, options?: Partial<IResourceRegistrationOptions>): WorldBuilder {
+    withResource(Resource: TObjectProto, options?: Readonly<Partial<IResourceRegistrationOptions>>): WorldBuilder {
         this.resources.set(Resource, options?.constructorArgs ?? []);
         this.serde.registerTypeHandler(
             Resource,
@@ -200,7 +196,7 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withResources(Resources: TObjectProto[]): WorldBuilder {
+    withResources(Resources: ReadonlyArray<TObjectProto>): WorldBuilder {
         for (const Resource of Resources) {
             this.withResource(Resource);
         }
@@ -208,7 +204,7 @@ export class WorldBuilder implements IWorldBuilder {
         return this;
     }
 
-    withStateScheduler(state: IIStateProto, scheduler: IScheduler): WorldBuilder {
+    withStateScheduler(state: IIStateProto, scheduler: Readonly<IScheduler>): WorldBuilder {
         if (this.stateSchedulers.has(state)) {
             throw new Error(`A scheduler was already assigned to ${state.name}!`);
         }

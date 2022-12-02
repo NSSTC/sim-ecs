@@ -1,4 +1,4 @@
-import type {TObjectProto, TTypeProto} from "../_.spec";
+import type {TTypeProto} from "../_.spec";
 import type {IEntity} from "../entity/entity.spec";
 import type {ISerDeOptions, TDeserializer, TSerializer} from "../serde/serde.spec";
 import type {IEntitiesQuery, TExistenceQuery} from "../query/query.spec";
@@ -6,7 +6,6 @@ import type {IEntityBuilder} from "../entity/entity-builder.spec";
 import type {IRuntimeWorld} from "./runtime/runtime-world.spec";
 import type {ISerialFormat} from "../serde/serial-format.spec";
 import type {IPreptimeWorld} from "./preptime/preptime-world.spec";
-import {RuntimeWorld} from "./runtime/runtime-world";
 
 
 export type TGroupHandle = number;
@@ -23,13 +22,13 @@ export interface IImmutableWorld {
      * To get a single entity by ID, please use the global function `getEntity()`
      * @param query
      */
-    getEntities(query?: IEntitiesQuery): IterableIterator<IEntity>
+    getEntities(query?: Readonly<IEntitiesQuery>): IterableIterator<IEntity>
 
     /**
      * Check whether an entity exists in this world
      * @param entity
      */
-    hasEntity(entity: IEntity): boolean
+    hasEntity(entity: Readonly<IEntity>): boolean
 
 
     /// ****************************************************************************************************************
@@ -52,7 +51,7 @@ export interface IImmutableWorld {
      * The query can be used to only save a sub-set with specific conditions
      * @param options
      */
-    save(options?: ISerDeOptions<TSerializer>): ISerialFormat
+    save(options?: Readonly<ISerDeOptions<TSerializer>>): ISerialFormat
 
 
     /// ****************************************************************************************************************
@@ -63,19 +62,19 @@ export interface IImmutableWorld {
      * Get a resource which was previously stored
      * @param type
      */
-    getResource<T extends object>(type: TTypeProto<T>): T
+    getResource<T extends object>(type: Readonly<TTypeProto<T>>): T
 
     /**
      * Get all resources stored in this world. Useful for debugging
      * @param types
      */
-    getResources(types?: TExistenceQuery<any>): IterableIterator<object>
+    getResources(types?: Readonly<TExistenceQuery<any>>): IterableIterator<object>
 
     /**
      * Check if a resource was stored
      * @param type
      */
-    hasResource<T extends object>(type: T | TTypeProto<T>): boolean
+    hasResource<T extends object>(type: Readonly<T> | TTypeProto<T>): boolean
 }
 
 export interface IMutableWorld {
@@ -87,7 +86,7 @@ export interface IMutableWorld {
      * Add an entity to this world
      * @param entity
      */
-    addEntity(entity: IEntity): void
+    addEntity(entity: Readonly<IEntity>): void
 
     /**
      * Convenience builder to create a new Entity
@@ -109,7 +108,7 @@ export interface IMutableWorld {
      * Remove an entity from this world
      * @param entity
      */
-    removeEntity(entity: IEntity): void
+    removeEntity(entity: Readonly<IEntity>): void
 
 
     /// ****************************************************************************************************************
@@ -121,14 +120,14 @@ export interface IMutableWorld {
      * @param groupHandle
      * @param entity
      */
-    addEntityToGroup(groupHandle: TGroupHandle, entity: IEntity): void
+    addEntityToGroup(groupHandle: TGroupHandle, entity: Readonly<IEntity>): void
 
     /**
      * Add several entities in this world to a group in this world
      * @param groupHandle
      * @param entities
      */
-    addEntitiesToGroup(groupHandle: TGroupHandle, entities: Array<IEntity> | IterableIterator<IEntity>): void
+    addEntitiesToGroup(groupHandle: TGroupHandle, entities: ReadonlyArray<Readonly<IEntity>> | IterableIterator<IEntity>): void
 
     /**
      * Move group from other world to this one.
@@ -136,7 +135,7 @@ export interface IMutableWorld {
      * @param otherWorld
      * @param groupHandle
      */
-    assimilateGroup(otherWorld: IPreptimeWorld, groupHandle: TGroupHandle): TGroupHandle
+    assimilateGroup(otherWorld: Readonly<IPreptimeWorld>, groupHandle: TGroupHandle): TGroupHandle
 
     /**
      * Disband all groups.
@@ -165,7 +164,7 @@ export interface IMutableWorld {
      * @param world
      * @param intoGroup
      */
-    merge(world: IPreptimeWorld | IRuntimeWorld, intoGroup?: TGroupHandle): [TGroupHandle, Array<IEntity>]
+    merge(world: Readonly<IPreptimeWorld | IRuntimeWorld>, intoGroup?: TGroupHandle): [TGroupHandle, Array<IEntity>]
 
 
     /// ****************************************************************************************************************
@@ -178,7 +177,11 @@ export interface IMutableWorld {
      * @param options
      * @param intoGroup
      */
-    load(prefab: ISerialFormat, options?: ISerDeOptions<TDeserializer>, intoGroup?: TGroupHandle): TGroupHandle
+    load(
+        prefab: Readonly<ISerialFormat>,
+        options?: Readonly<ISerDeOptions<TDeserializer>>,
+        intoGroup?: TGroupHandle,
+    ): TGroupHandle
 
 
     /// ****************************************************************************************************************
@@ -190,7 +193,7 @@ export interface IMutableWorld {
      * @param type
      * @param args constructor parameters
      */
-    addResource<T extends object>(type: T | TTypeProto<T>, ...args: Array<unknown>): T | TTypeProto<T>
+    addResource<T extends object>(type: Readonly<T> | TTypeProto<T>, ...args: ReadonlyArray<unknown>): T | TTypeProto<T>
 
     /**
      * Remove all resources from this world

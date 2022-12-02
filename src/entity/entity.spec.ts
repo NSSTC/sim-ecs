@@ -46,7 +46,7 @@ export interface IEntity extends IReadOnlyEntity {
      * @param component
      * @param args
      */
-    addComponent(component: object | TObjectProto, ...args: unknown[]): IEntity
+    addComponent(component: Readonly<object> | TObjectProto, ...args: ReadonlyArray<unknown>): IEntity
 
     /**
      * Add a tag to this entity
@@ -61,7 +61,7 @@ export interface IEntity extends IReadOnlyEntity {
      * Un-associate a component from this entity
      * @param component
      */
-    removeComponent(component: object | TObjectProto): IEntity
+    removeComponent(component: Readonly<object> | TObjectProto): IEntity
 
     /**
      * Remove a tag from this entity

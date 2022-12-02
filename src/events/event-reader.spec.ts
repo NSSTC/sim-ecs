@@ -3,9 +3,9 @@ import type {TSubscriber} from "./_";
 
 export interface IEventReader<T extends TObjectProto> {
     readonly eventHandler: TSubscriber<T>
-    readonly eventType: T
+    readonly eventType: Readonly<T>
 
-    execute(handler: (event: InstanceType<T>) => void | Promise<void>): Promise<void>
-    getOne(): InstanceType<T> | undefined
-    iter(): IterableIterator<InstanceType<T>>
+    execute(handler: (event: Readonly<InstanceType<T>>) => void | Promise<void>): Promise<void>
+    getOne(): Readonly<InstanceType<T>> | undefined
+    iter(): IterableIterator<Readonly<InstanceType<T>>>
 }

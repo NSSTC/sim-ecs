@@ -9,7 +9,7 @@ export class EventWriter<T extends TObjectProto> implements IEventWriter<T>{
         protected bus: IEventBus
     ) {}
 
-    publish(event: InstanceType<T>): Promise<void> {
+    publish(event: Readonly<InstanceType<T>>): Promise<void> {
         return this.bus.publish(event);
     }
 }

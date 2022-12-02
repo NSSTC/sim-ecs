@@ -31,7 +31,7 @@ export function getEntity(id: TEntityId): IEntity | undefined {
  * Register an entity by its ID
  * @param entity
  */
-export function registerEntity(entity: IEntity) {
+export function registerEntity(entity: Readonly<IEntity>) {
     entities.set(entity.id, new WeakRef(entity));
 }
 
@@ -39,7 +39,7 @@ export function registerEntity(entity: IEntity) {
  * Remove an entity
  * @param entity
  */
-export function unregisterEntity(entity: IEntity): void {
+export function unregisterEntity(entity: Readonly<IEntity>): void {
     unregisterEntityId(entity.id);
 }
 

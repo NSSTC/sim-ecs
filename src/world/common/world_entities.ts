@@ -28,7 +28,7 @@ export function createEntity(this: IMutableWorld): IEntity {
     return entity;
 }
 
-export function getEntities(this: PreptimeWorld | RuntimeWorld, query?: IEntitiesQuery): IterableIterator<IEntity> {
+export function getEntities(this: PreptimeWorld | RuntimeWorld, query?: Readonly<IEntitiesQuery>): IterableIterator<IEntity> {
     if (!query) {
         return this.data.entities.values();
     }

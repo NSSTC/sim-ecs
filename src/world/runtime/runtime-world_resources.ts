@@ -1,10 +1,14 @@
 import {type RuntimeWorld} from "./runtime-world";
 import type {TTypeProto} from "../../_.spec";
 import {systemRunParamSym} from "../../system/_";
-import {TSystemParameterDesc} from "../../system/system.spec";
+import type {TSystemParameterDesc} from "../../system/system.spec";
 import {SimECSReplaceResourceEvent, SimECSSystemReplaceResource} from "../../events/internal-events";
 
-export function addResource<T extends object>(this: RuntimeWorld, obj: T | TTypeProto<T>, ...args: Array<unknown>): T {
+export function addResource<T extends object>(
+    this: RuntimeWorld,
+    obj: Readonly<T> | TTypeProto<T>,
+    ...args: ReadonlyArray<unknown>
+): T {
     let type: TTypeProto<T>;
     let instance: T;
 
@@ -33,7 +37,11 @@ export function addResource<T extends object>(this: RuntimeWorld, obj: T | TType
     return instance;
 }
 
-export function replaceResource<T extends object>(this: RuntimeWorld, obj: T | TTypeProto<T>, ...args: Array<unknown>): void {
+export async function replaceResource<T extends object>(
+    this: RuntimeWorld,
+    obj: Readonly<T> | TTypeProto<T>,
+    ...args: ReadonlyArray<unknown>
+): Promise<void> {
     let type: TTypeProto<T>;
 
     if (typeof obj === 'object') {
@@ -49,18 +57,17 @@ export function replaceResource<T extends object>(this: RuntimeWorld, obj: T | T
     this.data.resources.delete(type);
     const resourceObj = this.addResource(obj, ...args);
 
-    this.eventBus.publish(new SimECSReplaceResourceEvent(
+    await this.eventBus.publish(new SimECSReplaceResourceEvent(
         type,
         resourceObj,
     ));
 
     { // Also replace the resources for all systems
         let system, resourceDesc;
-        let systemParamName, systemParamDesc;
         for ([system, resourceDesc] of this.systemResourceMap) {
             if (resourceDesc.resourceType.name == type.name) {
                 (system[systemRunParamSym] as TSystemParameterDesc)[resourceDesc.paramName] = resourceObj;
-                this.eventBus.publish(new SimECSSystemReplaceResource(
+                await this.eventBus.publish(new SimECSSystemReplaceResource(
                     system,
                     resourceDesc.paramName,
                     resourceDesc.resourceType,

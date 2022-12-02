@@ -9,7 +9,7 @@ import {IEventBus} from "../events/event-bus.spec";
 export * from "./scheduler.spec";
 
 
-export async function defaultSchedulingAlgorithm(stageExecutors: TExecutor[]) {
+export async function defaultSchedulingAlgorithm(stageExecutors: ReadonlyArray<TExecutor>) {
     let stageExecutor;
     for (stageExecutor of stageExecutors) {
         await stageExecutor();
@@ -29,7 +29,7 @@ export class Scheduler implements IScheduler {
         return this.#pipeline;
     }
 
-    set pipeline(newPipeline: IPipeline) {
+    set pipeline(newPipeline: Readonly<IPipeline>) {
         if (this.#isPrepared) {
             throw new Error('This scheduler was already prepared or is executing and cannot be changed right now!');
         }
@@ -37,7 +37,7 @@ export class Scheduler implements IScheduler {
         this.#pipeline = newPipeline;
     }
 
-    getExecutor(eventBus: IEventBus): TExecutor {
+    getExecutor(eventBus: Readonly<IEventBus>): TExecutor {
         const stageExecutors: TExecutor[] = [];
 
         for (const group of this.#pipeline.getGroups()) {
@@ -51,7 +51,7 @@ export class Scheduler implements IScheduler {
         return () => this.schedulingAlgorithm(stageExecutors);
     }
 
-    getSystems(): Set<ISystem> {
+    getSystems(): ReadonlySet<ISystem> {
         const systems = new Set<ISystem>();
         let group, stage, system;
 
@@ -66,7 +66,7 @@ export class Scheduler implements IScheduler {
         return systems;
     }
 
-    async prepare(world: IRuntimeWorld): Promise<void> {
+    async prepare(world: Readonly<IRuntimeWorld>): Promise<void> {
         let stage;
         let syncPoint;
         let system;

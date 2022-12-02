@@ -1,7 +1,6 @@
 import type {IEventBus} from "./event-bus.spec";
 import type {TObjectProto} from "../_.spec";
 import type {IEventReader} from "./event-reader.spec";
-import type {IEventWriter} from "./event-writer.spec";
 import {EventReader} from "./event-reader";
 import {EventWriter} from "./event-writer";
 import type {TSubscriber} from "./_";
@@ -9,17 +8,17 @@ import type {TSubscriber} from "./_";
 export * from "./event-bus.spec";
 
 export class EventBus implements IEventBus {
-    protected subscribers = new Map<TObjectProto, Set<TSubscriber<TObjectProto>>>();
+    protected subscribers = new Map<Readonly<TObjectProto>, Set<TSubscriber<TObjectProto>>>();
 
-    createReader<T extends TObjectProto>(Event: T): IEventReader<T> {
+    createReader<T extends TObjectProto>(Event: Readonly<T>): EventReader<T> {
         return new EventReader(this, Event);
     }
 
-    createWriter<T extends TObjectProto>(): IEventWriter<T> {
+    createWriter<T extends TObjectProto>(): EventWriter<T> {
         return new EventWriter(this);
     }
 
-    async publish(event: object): Promise<void> {
+    async publish(event: Readonly<object>): Promise<void> {
         const subscribers = this.subscribers.get(event.constructor as TObjectProto) ?? [];
         let handler;
 
@@ -39,7 +38,7 @@ export class EventBus implements IEventBus {
         subscriberList.add(handler);
     }
 
-    subscribeReader<T extends TObjectProto>(reader: IEventReader<T>) {
+    subscribeReader<T extends TObjectProto>(reader: Readonly<IEventReader<T>>): void {
         this.subscribe(reader.eventType, reader.eventHandler);
     }
 
@@ -54,7 +53,7 @@ export class EventBus implements IEventBus {
         subscriberList.delete(handler);
     }
 
-    unsubscribeReader<T extends TObjectProto>(reader: EventReader<T>): void {
+    unsubscribeReader<T extends TObjectProto>(reader: Readonly<EventReader<T>>): void {
         this.unsubscribe(reader.eventType, reader.eventHandler);
     }
 }

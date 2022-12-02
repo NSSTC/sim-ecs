@@ -6,7 +6,7 @@ const syncPoints = new Map<string, ISyncPoint>();
  * Register a sync-point by name
  * @param syncPoint
  */
-export function addSyncPoint(syncPoint: ISyncPoint): void {
+export function addSyncPoint(syncPoint: Readonly<ISyncPoint>): void {
     if (!syncPoint.name) {
         throw new Error('Cannot register a sync point without a name!');
     }

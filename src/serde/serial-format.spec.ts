@@ -7,7 +7,7 @@ export interface ISerialFormat extends Array<TEntity> {
      * Copy an external array
      * @param arr
      */
-    fromArray(arr: TEntity[]): ISerialFormat
+    fromArray(arr: ReadonlyArray<TEntity>): ISerialFormat
 
     /**
      * IMPORTANT: This method also exists as a static member.

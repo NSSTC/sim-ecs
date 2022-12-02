@@ -5,10 +5,10 @@ import type {ISystem} from "../../system/system.spec";
 export * from "./sync-point.spec";
 
 export class SyncPoint implements ISyncPoint {
-    after?: ISyncPoint;
-    before?: ISyncPoint;
-    name?: string
-    stages: IStage[] = [];
+    public after?: ISyncPoint;
+    public before?: ISyncPoint;
+    public name?: string
+    public stages: Array<IStage> = [];
     protected syncPointHandlers = new Set<Function>();
 
 
@@ -40,7 +40,7 @@ export class SyncPoint implements ISyncPoint {
         return this;
     }
 
-    fromPrefab({after, before, stages = []}: ISyncPointPrefab): SyncPoint {
+    fromPrefab({after, before, stages = []}: Readonly<ISyncPointPrefab>): SyncPoint {
         this.after = after
             ? new SyncPoint().fromPrefab(after)
             : undefined;

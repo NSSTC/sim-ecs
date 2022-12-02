@@ -12,7 +12,7 @@ export class PushDownAutomaton<T> implements IPushDownAutomaton<T> {
     protected currentState?: T;
     protected statesTail?: TStateNode<T>;
 
-    get state(): T | undefined {
+    get state(): Readonly<T | undefined> {
         return this.currentState;
     }
 

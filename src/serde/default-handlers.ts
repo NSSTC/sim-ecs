@@ -2,6 +2,7 @@ import type {TDeserializer, TSerializer} from "./serde.spec";
 import {Entity} from "../entity/entity";
 import {Reference} from "./referencing";
 import {EReferenceType} from "./referencing.spec";
+import type {TObjectProto} from "../_.spec";
 
 
 export const getDefaultSerializer = function (customSerializer?: TSerializer): TSerializer {
@@ -48,7 +49,7 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
         switch (constructorName.toLowerCase()) {
             case 'array': {
                 const inOut = {containsRefs: false};
-                const parsedData = JSON.parse(data as string, serializeObjectReviver.bind(undefined, inOut));
+                const parsedData: ReadonlyArray<unknown> = JSON.parse(data as string, serializeObjectReviver.bind(undefined, inOut));
 
                 if (!Array.isArray(parsedData)) {
                     throw new Error(`Cannot deserialize Array with data of type ${typeof data}! Array expected!`);
@@ -56,8 +57,8 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
 
                 return {
                     containsRefs: inOut.containsRefs,
-                    data: parsedData as Array<unknown>,
-                    type: Array,
+                    data: parsedData,
+                    type: Array as unknown as TObjectProto,
                 };
             }
 
@@ -69,7 +70,7 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
                 return {
                     containsRefs: false,
                     data: new Date(data),
-                    type: Date,
+                    type: Date as unknown as TObjectProto,
                 };
             }
 
@@ -96,7 +97,7 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
 
             case 'object': {
                 const inOut = {containsRefs: false};
-                const parsedData = JSON.parse(data as string, serializeObjectReviver.bind(undefined, inOut));
+                const parsedData: Readonly<object> = JSON.parse(data as string, serializeObjectReviver.bind(undefined, inOut));
 
                 if (typeof parsedData != 'object') {
                     throw new Error(`Cannot deserialize Object with data of type ${typeof data}! Object expected!`);
@@ -104,8 +105,8 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
 
                 return {
                     containsRefs: inOut.containsRefs,
-                    data: parsedData as object,
-                    type: Object,
+                    data: parsedData,
+                    type: Object as unknown as TObjectProto,
                 };
             }
 
@@ -139,7 +140,7 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
     }
 };
 
-const serializeObjectReplacer = function (key: string, value: object): string | object {
+const serializeObjectReplacer = function (key: string, value: Readonly<object>): string | object {
     return value instanceof Entity
         ? new Reference(EReferenceType.Entity, value.id).toString()
         : value;

@@ -16,11 +16,11 @@ import {SimECSSystemAddResource} from "../events/internal-events";
 
 export * from "./system.spec";
 
-export function createSystem<T extends TSystemParameterDesc>(parameterDesc: T): ISystemBuilder<T> {
+export function createSystem<T extends TSystemParameterDesc>(parameterDesc: Readonly<T>): ISystemBuilder<T> {
     return new SystemBuilder(parameterDesc);
 }
 
-export function getQueriesFromSystem(system: ISystem): Query<unknown, unknown>[] {
+export function getQueriesFromSystem(system: Readonly<ISystem>): Array<Readonly<Query<unknown, unknown>>> {
     const queries: Query<unknown, unknown>[] = [];
     let param: TSystemParameter;
 
@@ -33,7 +33,7 @@ export function getQueriesFromSystem(system: ISystem): Query<unknown, unknown>[]
     return queries;
 }
 
-export function getSystemRunParameters(system: ISystem, world: IRuntimeWorld): TSystemParameterDesc {
+export function getSystemRunParameters(system: Readonly<ISystem>, world: Readonly<IRuntimeWorld>): TSystemParameterDesc {
     let runParameters = {};
 
     for (const [paramName, paramDesc] of Object.entries(system.parameterDesc)) {

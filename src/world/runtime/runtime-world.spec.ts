@@ -2,13 +2,12 @@ import type {IIStateProto, IState} from "../../state/state.spec";
 import type {IScheduler} from "../../scheduler/scheduler.spec";
 import type {ISerDe} from "../../serde/serde.spec";
 import type {IImmutableWorld} from "../world.spec";
-import {IEventBus} from "../../events/event-bus.spec";
-import {ISystemActions, ITransitionActions} from "../actions.spec";
-import {IEntity} from "../../entity/entity.spec";
-import {InstanceMap} from "../../util/instance-map";
-import {TObjectProto, TTypeProto} from "../../_.spec";
-import {TGroupHandle} from "../world.spec";
-import {ISystem} from "../../system/system.spec";
+import type {IEventBus} from "../../events/event-bus.spec";
+import type {ISystemActions, ITransitionActions} from "../actions.spec";
+import type {IEntity} from "../../entity/entity.spec";
+import {type InstanceMap} from "../../util/instance-map";
+import type {TObjectProto, TTypeProto} from "../../_.spec";
+import type {TGroupHandle} from "../world.spec";
 
 export * from './commands/commands.spec';
 
@@ -25,20 +24,20 @@ export interface IRuntimeWorldData {
 }
 
 export interface IRuntimeWorldInitData {
-    entities: Set<IEntity>
+    entities: ReadonlySet<Readonly<IEntity>>
     groups: {
         nextHandle: TGroupHandle
-        entityLinks: Map<TGroupHandle, Set<IEntity>>
+        entityLinks: Map<TGroupHandle, ReadonlySet<Readonly<IEntity>>>
     }
-    resources: Map<object | TObjectProto, Array<unknown>>
+    resources: ReadonlyMap<Readonly<object> | TObjectProto, ReadonlyArray<unknown>>
 }
 
 export interface IRuntimeWorldInitConfig {
-    readonly defaultScheduler: IScheduler
+    readonly defaultScheduler: Readonly<IScheduler>
     readonly executionFunction?: TExecutionFunction | undefined
     readonly initialState: IIStateProto
     readonly serde: Readonly<ISerDe>
-    readonly stateSchedulers: ReadonlyMap<IIStateProto, IScheduler>
+    readonly stateSchedulers: ReadonlyMap<Readonly<IIStateProto>, Readonly<IScheduler>>
 }
 
 export interface IRuntimeWorld extends IImmutableWorld {
@@ -54,7 +53,7 @@ export interface IRuntimeWorld extends IImmutableWorld {
      * Data to operate on.
      * This data may mutate at any time
      */
-    data: IRuntimeWorldData
+    data: Readonly<IRuntimeWorldData>
     /**
      * Boolean indicator if the world is currently executing
      */
@@ -66,7 +65,7 @@ export interface IRuntimeWorld extends IImmutableWorld {
     /**
      * Architecture to send messages between systems
      */
-    readonly eventBus: IEventBus
+    readonly eventBus: Readonly<IEventBus>
     /**
      * World's name
      */
@@ -74,18 +73,18 @@ export interface IRuntimeWorld extends IImmutableWorld {
     /**
      * Object containing all actions available inside a system
      */
-    readonly systemActions: ISystemActions
+    readonly systemActions: Readonly<ISystemActions>
     /**
      * Object containing all actions available on step-to-step transitions, as well as to states
      */
-    readonly transitionActions: ITransitionActions
+    readonly transitionActions: Readonly<ITransitionActions>
 
     /**
      * Replace a resource from this world with a new value
      * @param obj
      * @param args
      */
-    replaceResource<T extends object>(obj: T | TTypeProto<T>, ...args: Array<unknown>): void
+    replaceResource<T extends object>(obj: Readonly<T> | TTypeProto<T>, ...args: ReadonlyArray<unknown>): Promise<void>
 
     /**
      * Start a continuous execution.

@@ -12,14 +12,13 @@ export interface IEntityBuilder {
      * @param component
      * @param args
      */
-    with(component: object | TObjectProto, ...args: unknown[]): IEntityBuilder
+    with(component: Readonly<object | TObjectProto>, ...args: ReadonlyArray<unknown>): IEntityBuilder
 
     /**
      * Add all components to target entity
      * @param component
      */
-    withAll(...component: (object | TObjectProto)[]): IEntityBuilder
+    withAll(...component: ReadonlyArray<object | TObjectProto>): IEntityBuilder
 }
 
 export type TEntityBuilderProto = { new(): TEntityBuilderProto };
-export default IEntityBuilder;

@@ -13,41 +13,43 @@ export type TSystemParameter =
     | ISystemResource<TObjectProto>
     | ISystemStorage;
 export type TSystemParameterDesc = { [name: string]: TSystemParameter };
-export type TSystemFunction<PDESC extends TSystemParameterDesc> = (params: PDESC) => void | Promise<void>;
+export type TSystemFunction<PDESC extends TSystemParameterDesc> = (params: Readonly<PDESC>) => void | Promise<void>;
 
 export interface ISystem<PDESC extends TSystemParameterDesc = TSystemParameterDesc> {
-    [systemRunParamSym]?: PDESC
+    /** @internal */
+    [systemRunParamSym]?: Readonly<PDESC>
     readonly name: string
-    readonly parameterDesc: PDESC
-    readonly runFunction: TSystemFunction<PDESC>
-    readonly setupFunction: TSystemFunction<PDESC>
+    readonly parameterDesc: Readonly<PDESC>
+    readonly runFunction: TSystemFunction<Readonly<PDESC>>
+    readonly setupFunction: TSystemFunction<Readonly<PDESC>>
 }
 
 export interface ISystemResource<T extends object> {
+    /** @internal */
     [systemResourceTypeSym]: TTypeProto<T>
 }
 
 interface ISystemStorage {}
 
-export const Actions: ISystemActions = { [Symbol()]: undefined } as unknown as ISystemActions;
+export const Actions: ISystemActions = { [Symbol()]: undefined } as unknown as Readonly<ISystemActions>;
 
-export function ReadEvents<T extends TObjectProto>(type: T): IEventReader<T> {
+export function ReadEvents<T extends TObjectProto>(type: T | ErrorConstructor): Readonly<IEventReader<T>> {
     return {
         [systemEventReaderSym]: type,
     } as unknown as IEventReader<T>;
 }
 
-export function ReadResource<T extends object>(type: TTypeProto<T>): ISystemResource<T> & Readonly<T> {
+export function ReadResource<T extends object>(type: TTypeProto<T>): ISystemResource<T> & T {
     return {
         [systemResourceTypeSym]: type,
     } as ISystemResource<T> & Readonly<T>;
 }
 
-export function Storage<T>(initializer: T): ISystemStorage & T {
+export function Storage<T>(initializer: T): Readonly<ISystemStorage> & T {
     return initializer as ISystemStorage & T;
 }
 
-export function WriteEvents<T extends TObjectProto>(type: T): IEventWriter<T> {
+export function WriteEvents<T extends TObjectProto>(type: T): Readonly<IEventWriter<T>> {
     return {
         [systemEventWriterSym]: type,
     } as unknown as IEventWriter<T>;

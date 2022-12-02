@@ -6,11 +6,15 @@ import {type RuntimeWorld} from "../runtime/runtime-world";
 import type {IMutableWorld} from "../world.spec";
 
 
-export function addEntityToGroup(this: PreptimeWorld | RuntimeWorld, groupHandle: TGroupHandle, entity: IEntity): void {
+export function addEntityToGroup(this: PreptimeWorld | RuntimeWorld, groupHandle: TGroupHandle, entity: Readonly<IEntity>): void {
     this.addEntitiesToGroup(groupHandle, [entity]);
 }
 
-export function addEntitiesToGroup(this: PreptimeWorld | RuntimeWorld, groupHandle: TGroupHandle, entities: Array<IEntity> | IterableIterator<IEntity>): void {
+export function addEntitiesToGroup(
+    this: PreptimeWorld | RuntimeWorld,
+    groupHandle: TGroupHandle,
+    entities: ReadonlyArray<Readonly<IEntity>> | IterableIterator<Readonly<IEntity>>,
+): void {
     const link = getLink(this, groupHandle);
     let entity;
     for (entity of entities) {
@@ -18,7 +22,11 @@ export function addEntitiesToGroup(this: PreptimeWorld | RuntimeWorld, groupHand
     }
 }
 
-export function assimilateGroup(this: PreptimeWorld | RuntimeWorld, otherWorld: IPreptimeWorld, handle: TGroupHandle): TGroupHandle {
+export function assimilateGroup(
+    this: PreptimeWorld | RuntimeWorld,
+    otherWorld: Readonly<IPreptimeWorld>,
+    handle: TGroupHandle,
+): TGroupHandle {
     const entities = otherWorld.getGroupEntities(handle);
     const newGroup = this.createGroup();
 
@@ -39,7 +47,10 @@ export function createGroup(this: PreptimeWorld | RuntimeWorld): TGroupHandle {
     return handle;
 }
 
-export function getGroupEntities(this: PreptimeWorld | RuntimeWorld, groupHandle: TGroupHandle): IterableIterator<IEntity> {
+export function getGroupEntities(
+    this: PreptimeWorld | RuntimeWorld,
+    groupHandle: TGroupHandle,
+): IterableIterator<IEntity> {
     return getLink(this, groupHandle).keys();
 }
 

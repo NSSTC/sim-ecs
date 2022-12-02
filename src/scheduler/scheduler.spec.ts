@@ -1,10 +1,10 @@
 import type {IPipeline} from "./pipeline/pipeline.spec";
 import type {TExecutor} from "../_.spec";
 import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec";
-import {IEventBus} from "../events/event-bus.spec";
-import {ISystem} from "../system/system.spec";
+import type {IEventBus} from "../events/event-bus.spec";
+import type {ISystem} from "../system/system.spec";
 
-export type TSchedulingAlgorithm = (stageExecutors: TExecutor[]) => Promise<void>;
+export type TSchedulingAlgorithm = (stageExecutors: ReadonlyArray<TExecutor>) => Promise<void>;
 
 /**
  * The sim-ecs scheduler works by breaking down scheduling in a way which makes it simple to define a pipeline and
@@ -21,16 +21,16 @@ export interface IScheduler {
     /**
      * Execute this schedule once
      */
-    getExecutor(eventBus: IEventBus): TExecutor
+    getExecutor(eventBus: Readonly<IEventBus>): TExecutor
 
     /**
      * Get all unique systems in this schedule
      */
-    getSystems(): Set<ISystem>
+    getSystems(): ReadonlySet<ISystem>
 
     /**
      * Prepare this scheduler for usage
      * @param world
      */
-    prepare(world: IRuntimeWorld): Promise<void>
+    prepare(world: Readonly<IRuntimeWorld>): Promise<void>
 }

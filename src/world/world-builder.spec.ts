@@ -6,11 +6,11 @@ import type {IIStateProto} from "../state/state.spec";
 import type {IPreptimeWorld} from "./preptime/preptime-world.spec";
 
 export interface IObjectRegistrationOptions {
-    serDe: ISerDeOperations
+    serDe: Readonly<ISerDeOperations>
 }
 
 export interface IResourceRegistrationOptions extends IObjectRegistrationOptions{
-    constructorArgs: Array<unknown>
+    constructorArgs: ReadonlyArray<unknown>
 }
 
 export interface IWorldBuilder {
@@ -24,20 +24,20 @@ export interface IWorldBuilder {
      * @param Component
      * @param options
      */
-    c(Component: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder
+    c(Component: Readonly<TObjectProto>, options?: Readonly<IObjectRegistrationOptions>): IWorldBuilder
 
     /**
      * Alias for [withComponent]{@link IWorldBuilder#withComponent}
      * @param Component
      * @param options
      */
-    component(Component: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder
+    component(Component: Readonly<TObjectProto>, options?: Readonly<IObjectRegistrationOptions>): IWorldBuilder
 
     /**
      * Alias for [withComponent]{@link IWorldBuilder#withComponent}
      * @param Components
      */
-    components(...Components: TObjectProto[]): IWorldBuilder
+    components(...Components: ReadonlyArray<Readonly<TObjectProto>>): IWorldBuilder
 
     /**
      * Alias for [withName]{@link IWorldBuilder#withName}
@@ -50,14 +50,14 @@ export interface IWorldBuilder {
      * @param Resource
      * @param options
      */
-    r(Resource: TObjectProto, options?: Partial<IResourceRegistrationOptions>): IWorldBuilder
+    r(Resource: Readonly<TObjectProto>, options?: Readonly<Partial<IResourceRegistrationOptions>>): IWorldBuilder
 
     /**
      * Alias for [withResource]{@link IWorldBuilder#withResource}
      * @param Resource
      * @param options
      */
-    resource(Resource: TObjectProto, options?: Partial<IResourceRegistrationOptions>): IWorldBuilder
+    resource(Resource: Readonly<TObjectProto>, options?: Readonly<Partial<IResourceRegistrationOptions>>): IWorldBuilder
 
     /**
      * Transform the root sync point
@@ -70,19 +70,19 @@ export interface IWorldBuilder {
      * @param Component
      * @param options
      */
-    withComponent(Component: TObjectProto, options?: IObjectRegistrationOptions): IWorldBuilder
+    withComponent(Component: Readonly<TObjectProto>, options?: Readonly<IObjectRegistrationOptions>): IWorldBuilder
 
     /**
      * Register several components with default options in the world
      * @param Components
      */
-    withComponents(...Components: TObjectProto[]): IWorldBuilder
+    withComponents(...Components: ReadonlyArray<Readonly<TObjectProto>>): IWorldBuilder
 
     /**
      * Add a default scheduler
      * @param scheduler
      */
-    withDefaultScheduler(scheduler: IScheduler): IWorldBuilder
+    withDefaultScheduler(scheduler: Readonly<IScheduler>): IWorldBuilder
 
     /**
      * Create and add a default schedule
@@ -101,25 +101,25 @@ export interface IWorldBuilder {
      * @param Resource
      * @param options
      */
-    withResource(Resource: TObjectProto, options?: Partial<IResourceRegistrationOptions>): IWorldBuilder
+    withResource(Resource: Readonly<TObjectProto>, options?: Readonly<Partial<IResourceRegistrationOptions>>): IWorldBuilder
 
     /**
      * Register several resources for serDe
      * @param Resources
      */
-    withResources(Resources: TObjectProto[]): IWorldBuilder
+    withResources(Resources: ReadonlyArray<Readonly<TObjectProto>>): IWorldBuilder
 
     /**
      * Add a per-state custom scheduler
      * @param state
      * @param scheduler
      */
-    withStateScheduler(state: IIStateProto, scheduler: IScheduler): IWorldBuilder
+    withStateScheduler(state: Readonly<IIStateProto>, scheduler: Readonly<IScheduler>): IWorldBuilder
 
     /**
      * Create and add a per-state schedule
      * @param state
      * @param planner
      */
-    withStateScheduling(state: IIStateProto, planner: (root: ISyncPoint) => void): IWorldBuilder
+    withStateScheduling(state: Readonly<IIStateProto>, planner: (root: ISyncPoint) => void): IWorldBuilder
 }

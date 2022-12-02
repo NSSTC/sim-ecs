@@ -11,16 +11,14 @@ export type TSerializer = (component: unknown) => TSerializable;
 
 
 export interface ISerDeOptions<T extends TSerializer | TDeserializer> {
-    // this is true by default!
-    autoAssignId?: boolean
-    entities?: IEntitiesQuery
+    entities?: Readonly<IEntitiesQuery>
     fallbackHandler?: T
     /**
      * Replace resources in the world with loaded data
      * @default true
      */
     replaceResources?: boolean
-    resources?: TObjectProto[]
+    resources?: ReadonlyArray<TObjectProto>
     useDefaultHandler?: boolean
     useRegisteredHandlers?: boolean
 }
@@ -28,12 +26,12 @@ export interface ISerDeOptions<T extends TSerializer | TDeserializer> {
 export interface IDeserializerOutput {
     containsRefs: boolean
     data: object
-    type: TObjectProto
+    type: Readonly<TObjectProto>
 }
 
 export interface ISerDeDataSet {
-    entities: IterableIterator<IEntity>
-    resources: Record<string, object>
+    entities: IterableIterator<Readonly<IEntity>>
+    resources: Readonly<Record<string, Readonly<object>>>
 }
 
 export interface ISerDeOperations {
@@ -47,12 +45,12 @@ export interface ISerDe {
      * @param data
      * @param options
      */
-    deserialize(data: ISerialFormat, options?: ISerDeOptions<TDeserializer>): ISerDeDataSet
+    deserialize(data: Readonly<ISerialFormat>, options?: Readonly<ISerDeOptions<TDeserializer>>): ISerDeDataSet
 
     /**
      * Get an overview over all registered type handlers; useful for debugging
      */
-    getRegisteredTypeHandlers(): IterableIterator<[string, ISerDeOperations]>
+    getRegisteredTypeHandlers(): IterableIterator<[string, Readonly<ISerDeOperations>]>
 
     /**
      * Register type handlers for transformations
@@ -60,26 +58,26 @@ export interface ISerDe {
      * @param deserializer
      * @param serializer
      */
-    registerTypeHandler(Type: TObjectProto, deserializer: TCustomDeserializer, serializer: TSerializer): void
+    registerTypeHandler(Type: Readonly<TObjectProto>, deserializer: TCustomDeserializer, serializer: TSerializer): void
 
     /**
      * Transform data objects into writable data
      * @param data
      * @param options
      */
-    serialize(data: ISerDeDataSet, options?: ISerDeOptions<TSerializer>): ISerialFormat
+    serialize(data: Readonly<ISerDeDataSet>, options?: Readonly<ISerDeOptions<TSerializer>>): ISerialFormat
 
     /**
      * Remove a type handler registration
      * @param Type
      */
-    unregisterTypeHandler(Type: TObjectProto): void
+    unregisterTypeHandler(Type: Readonly<TObjectProto>): void
 }
 
 
-export const CIdMarker = '#ID';
-export const CMarkerSeparator = '|';
-export const CRefMarker = '*****';
-export const CResourceMarker = '#RES';
-export const CResourceMarkerValue = 1;
-export const CTagMarker = '#TAGS';
+export const CIdMarker = '#ID' as const;
+export const CMarkerSeparator = '|' as const;
+export const CRefMarker = '*****' as const;
+export const CResourceMarker = '#RES' as const;
+export const CResourceMarkerValue = 1 as const;
+export const CTagMarker = '#TAGS' as const;

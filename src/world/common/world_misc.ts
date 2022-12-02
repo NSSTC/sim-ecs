@@ -5,7 +5,11 @@ import {type PreptimeWorld} from "../preptime/preptime-world";
 import {type RuntimeWorld} from "../runtime/runtime-world";
 import type {IMutableWorld} from "../world.spec";
 
-export function merge(this: IMutableWorld & (PreptimeWorld | RuntimeWorld), elsewhere: IPreptimeWorld, intoGroup?: TGroupHandle): [TGroupHandle, Array<IEntity>] {
+export function merge(
+    this: IMutableWorld & (PreptimeWorld | RuntimeWorld),
+    elsewhere: Readonly<IPreptimeWorld>,
+    intoGroup?: TGroupHandle,
+): [TGroupHandle, Array<IEntity>] {
     const groupHandle = intoGroup ?? this.data.groups.nextHandle++;
     const entities = [];
     let entity;

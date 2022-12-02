@@ -4,8 +4,8 @@ import type {IScheduler} from "../../scheduler/scheduler.spec";
 import type {ISerDe} from "../../serde/serde.spec";
 import type {IIStateProto} from "../../state/state.spec";
 import type {TObjectProto} from "../../_.spec";
-import {IEntity} from "../../entity/entity.spec";
-import {TGroupHandle} from "../world.spec";
+import type {IEntity} from "../../entity/entity.spec";
+import type {TGroupHandle} from "../world.spec";
 
 
 export interface IPreptimeData {
@@ -14,7 +14,7 @@ export interface IPreptimeData {
         nextHandle: TGroupHandle,
         entityLinks: Map<TGroupHandle, Set<IEntity>>,
     }
-    resources: Map<object | TObjectProto, Array<unknown>>
+    resources: Map<object | TObjectProto, ReadonlyArray<unknown>>
 }
 
 export interface IPreptimeOptions {
@@ -23,9 +23,9 @@ export interface IPreptimeOptions {
 }
 
 export interface IPreptimeWorldConfig {
-    defaultScheduler: IScheduler
-    serde: ISerDe
-    stateSchedulers: Map<IIStateProto, IScheduler>
+    defaultScheduler: Readonly<IScheduler>
+    serde: Readonly<ISerDe>
+    stateSchedulers: Map<IIStateProto, Readonly<IScheduler>>
 }
 
 export interface IPreptimeWorld extends IWorld {
@@ -45,5 +45,5 @@ export interface IPreptimeWorld extends IWorld {
     /**
      * Prepare a runtime environment from this world
      */
-    prepareRun(options?: Partial<IPreptimeOptions>): Promise<IRuntimeWorld>
+    prepareRun(options?: Readonly<Partial<IPreptimeOptions>>): Promise<IRuntimeWorld>
 }

@@ -7,18 +7,18 @@ import type {TObjectProto} from "../_.spec";
 
 export class EntitiesQuery extends Query<TExistenceQuery<TObjectProto>, IEntity> implements IEntitiesQuery {
     constructor(
-        protected queryDesc: TExistenceQuery<TObjectProto>
+        protected queryDesc: Readonly<TExistenceQuery<TObjectProto>>
     ) {
         super(EQueryType.Entities, queryDesc);
     }
 
-    [addEntitySym](entity: IEntity): void {
+    [addEntitySym](entity: Readonly<IEntity>): void {
         if (this.matchesEntity(entity)) {
             this.queryResult.set(entity, entity);
         }
     }
 
-    matchesEntity(entity: IEntity): boolean {
+    matchesEntity(entity: Readonly<IEntity>): boolean {
         let componentDesc;
 
         for (componentDesc of this.queryDescriptor) {

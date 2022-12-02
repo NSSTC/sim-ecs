@@ -9,7 +9,7 @@ const worlds = new Set<IPreptimeWorld | IRuntimeWorld>();
  * Register a world
  * @param world
  */
-export function addWorld(world: IPreptimeWorld | IRuntimeWorld) {
+export function addWorld(world: Readonly<IPreptimeWorld | IRuntimeWorld>) {
     worlds.add(world);
 }
 
@@ -45,6 +45,6 @@ export function getWorlds(): IterableIterator<IPreptimeWorld | IRuntimeWorld> {
  * Remove a world
  * @param world
  */
-export function removeWorld(world: IPreptimeWorld | IRuntimeWorld) {
+export function removeWorld(world: Readonly<IPreptimeWorld | IRuntimeWorld>) {
     worlds.delete(world);
 }

@@ -4,7 +4,7 @@ import type {TEntity} from "./_";
 export * from "./serial-format.spec";
 
 export class SerialFormat extends Array<TEntity> implements ISerialFormat {
-    static fromArray(arr: TEntity[]): SerialFormat {
+    static fromArray(arr: ReadonlyArray<TEntity>): SerialFormat {
         return new SerialFormat().fromArray(arr);
     }
 
@@ -12,7 +12,7 @@ export class SerialFormat extends Array<TEntity> implements ISerialFormat {
         return new SerialFormat().fromJSON(json);
     }
 
-    fromArray(arr: TEntity[]): SerialFormat {
+    fromArray(arr: ReadonlyArray<TEntity>): SerialFormat {
         Object.assign(this, arr);
         return this;
     }
@@ -20,7 +20,7 @@ export class SerialFormat extends Array<TEntity> implements ISerialFormat {
     fromJSON(json: string): SerialFormat {
         this.length = 0;
 
-        const newVals = JSON.parse(json);
+        const newVals: Readonly<object> = JSON.parse(json);
 
         if (!Array.isArray(newVals)) {
             throw new Error('Input JSON must be an array!');

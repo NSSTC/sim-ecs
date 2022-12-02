@@ -21,10 +21,10 @@ export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {
 
     constructor(
         protected _queryType: EQueryType,
-        protected queryDescriptor: DESC,
+        protected queryDescriptor: Readonly<DESC>,
     ) {}
 
-    get descriptor(): DESC {
+    get descriptor(): Readonly<DESC> {
         return this.queryDescriptor;
     }
 
@@ -37,7 +37,7 @@ export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {
     }
 
     /** @internal */
-    abstract [addEntitySym](entity: IEntity): void;
+    abstract [addEntitySym](entity: Readonly<IEntity>): void;
 
     /** @internal */
     [clearEntitiesSym]() {
@@ -45,12 +45,12 @@ export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {
     }
 
     /** @internal */
-    [removeEntitySym](entity: IEntity) {
+    [removeEntitySym](entity: Readonly<IEntity>) {
         this.queryResult.delete(entity)
     }
 
     /** @internal */
-    [setEntitiesSym](entities: IterableIterator<IEntity>) {
+    [setEntitiesSym](entities: IterableIterator<Readonly<IEntity>>) {
         let entity;
 
         this.queryResult.clear();
@@ -75,7 +75,7 @@ export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {
         return this.queryResult.values();
     }
 
-    abstract matchesEntity(entity: IEntity): boolean;
+    abstract matchesEntity(entity: Readonly<IEntity>): boolean;
 
     toArray(): DATA[] {
         return Array.from(this.queryResult.values());
