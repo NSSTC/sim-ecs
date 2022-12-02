@@ -5,12 +5,6 @@ import {EReferenceType} from "./referencing.spec";
 
 
 export const getDefaultSerializer = function (customSerializer?: TSerializer): TSerializer {
-    const serializeObjectReplacer = function (key: string, value: object): string | object {
-        return value instanceof Entity
-            ? new Reference(EReferenceType.Entity, value.id).toString()
-            : value;
-    };
-
     return (component: unknown) => {
         let componentName: string = typeof component;
 
@@ -50,15 +44,6 @@ export const getDefaultSerializer = function (customSerializer?: TSerializer): T
 }
 
 export const getDefaultDeserializer = function (customDeserializer?: TDeserializer): TDeserializer {
-    const serializeObjectReviver = (inOut: {containsRefs: boolean} = {containsRefs: false}, key: string, value: any) => {
-        if (value == 'string' && Reference.isReferenceString(value)) {
-            inOut.containsRefs = true;
-            return Reference.fromString(value);
-        }
-
-        return value;
-    };
-
     return (constructorName: string, data: unknown) => {
         switch (constructorName.toLowerCase()) {
             case 'array': {
@@ -152,4 +137,19 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
 
         return customDeserializer(constructorName, data);
     }
+};
+
+const serializeObjectReplacer = function (key: string, value: object): string | object {
+    return value instanceof Entity
+        ? new Reference(EReferenceType.Entity, value.id).toString()
+        : value;
+};
+
+const serializeObjectReviver = (inOut: {containsRefs: boolean} = {containsRefs: false}, key: string, value: any) => {
+    if (typeof value == 'string' && Reference.isReferenceString(value)) {
+        inOut.containsRefs = true;
+        return Reference.fromString(value);
+    }
+
+    return value;
 };

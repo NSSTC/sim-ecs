@@ -134,31 +134,9 @@ export class SerDe implements ISerDe {
             }
 
             {
-                const replaceRef = (obj: Record<string, any>) => {
-                    let key: string;
-                    let value;
-
-                    for ([key, value] of Object.entries(obj)) {
-                        if (value instanceof Reference) {
-                            switch (value.type) {
-                                case EReferenceType.Entity: {
-                                    obj[key] = getEntity(value.id);
-                                    break;
-                                }
-                                default: {
-                                    obj[key] = value.id;
-                                }
-                            }
-                        } else if (typeof value == 'object') {
-                            replaceRef(value);
-                        }
-                    }
-                };
-
-                let component;
-
+                let component: Record<string, any>;
                 for (component of objectsWithRefs) {
-                    replaceRef(component);
+                    dereferenceComponentRefs(component);
                 }
             }
         }
@@ -250,3 +228,24 @@ export class SerDe implements ISerDe {
         this.typeHandlers.delete(Type.name);
     }
 }
+
+const dereferenceComponentRefs = (component: Record<string, unknown>) => {
+    let key: string;
+    let value: unknown;
+
+    for ([key, value] of Object.entries(component)) {
+        if (value instanceof Reference) {
+            switch (value.type) {
+                case EReferenceType.Entity: {
+                    component[key] = getEntity(value.id);
+                    break;
+                }
+                default: {
+                    component[key] = value.id;
+                }
+            }
+        } else if (typeof value == 'object' && value !== null) {
+            dereferenceComponentRefs(value as Record<string, unknown>);
+        }
+    }
+};
