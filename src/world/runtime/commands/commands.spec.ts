@@ -20,14 +20,14 @@ export interface ICommands {
      * Add an entity to the world
      * @param entity
      */
-    addEntity(entity: IEntity): void
+    addEntity(entity: Readonly<IEntity>): void
 
     /**
      * Add a resource to this world and returns the resource instance
      * @param type
      * @param args constructor parameters
      */
-    addResource<T extends object>(type: T | TTypeProto<T>, ...args: unknown[]): T
+    addResource<T extends object>(type: T | TTypeProto<T>, ...args: ReadonlyArray<unknown>): T
 
     /**
      * Build an entity and add it to this world using an entity builder
@@ -44,20 +44,20 @@ export interface ICommands {
      * @param prefab
      * @param options
      */
-    load(prefab: ISerialFormat, options?: ISerDeOptions<TDeserializer>): TGroupHandle
+    load(prefab: Readonly<ISerialFormat>, options?: Readonly<ISerDeOptions<TDeserializer>>): TGroupHandle
 
     /**
      * Merge entities from another world into this one
      * @param world
      */
-    merge(world: IWorld): TGroupHandle
+    merge(world: Readonly<IWorld>): TGroupHandle
 
     /**
      * Provides an environment to securely change an entity's data
      * @param entity
      * @param mutator
      */
-    mutateEntity(entity: IReadOnlyEntity, mutator: (entity: IEntity) => Promise<void> | void): void
+    mutateEntity(entity: Readonly<IReadOnlyEntity>, mutator: (entity: IEntity) => Promise<void> | void): void
 
     /**
      * Revert the running world to a previous state
@@ -80,7 +80,7 @@ export interface ICommands {
      * Remove an entity from the world, deleting all of its components
      * @param entity
      */
-    removeEntity(entity: IEntity): void
+    removeEntity(entity: Readonly<IEntity>): void
 
     /**
      * Remove a group and all entities inside from this world

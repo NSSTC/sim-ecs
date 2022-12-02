@@ -10,20 +10,20 @@ export class CommandEntityBuilder implements ICommandEntityBuilder {
     protected entity: Entity = new Entity();
 
     constructor(
-        protected world: IWorld,
-        protected commands: ICommands
+        protected world: Readonly<IWorld>,
+        protected commands: Readonly<ICommands>,
     ) {}
 
     build(): void {
         this.commands.addEntity(this.entity);
     }
 
-    with(component: object | TObjectProto, ...args: unknown[]): CommandEntityBuilder {
+    with(component: object | TObjectProto, ...args: ReadonlyArray<unknown>): CommandEntityBuilder {
         this.entity.addComponent(component, ...args);
         return this;
     }
 
-    withAll(...components: (object | TObjectProto)[]): CommandEntityBuilder {
+    withAll(...components: ReadonlyArray<object | TObjectProto>): CommandEntityBuilder {
         let component;
 
         for (component of components) {

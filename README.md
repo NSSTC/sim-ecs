@@ -28,15 +28,13 @@ npm install sim-ecs
     - [System Parameter Types](#system-parameter-types)
 - [Defining Components](#defining-components)
 - [Adding Entities](#adding-entities)
-- [Working with States](#working-with-states-optional)
+- [Working with States](#working-with-states--optional-)
 - [Update loop](#Update-loop)
 - [Commands](#commands)
 - [Saving and using Prefabs](#saving-and-using-prefabs)
 - [Syncing instances](#syncing-instances)
 - [Building for Production](#building-for-production)
-- [Comparison with other TS ECS libs](#comparison-with-other-ts-ecs-libs)
-    - [Features](#features)
-    - [Performance](#performance)
+- [Performance](#performance)
 
 
 ## Considerations
@@ -110,7 +108,7 @@ It will print a message every second and can be executed with:
 
 ### Pong
 
-![Pong can be played with the keyboard and saves on pausing.](./.github/assets/pong.png)
+![Pong can be played with the keyboard and saves on pausing.](./media/pong.png)
 
 ```
 $ cd examples/pong && npm install && npm run start
@@ -127,7 +125,7 @@ Then, you can open the `index.html` in the public folder to run the game.
 
 ### System Error
 
-![On error, detailed information including the system's name can be retrieved](./.github/assets/error.png)
+![On error, detailed information including the system's name can be retrieved](./media/error.png)
 
 ```
 $ npm run example-system-error
@@ -510,7 +508,7 @@ Some minimizers need to be adjusted. For example WebPack (using Terser) needs to
 The Pong example uses WebPack and demonstrates how to set up WebPack for proper production usage (in `make.js`).
 
 
-### Performance
+## Performance
 
 Please take the results with a grain of salt. These are benchmarks, so they are synthetic.
 An actual application will use a mix out of everything and more, and depending on that may have a different experience.

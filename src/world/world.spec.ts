@@ -62,7 +62,7 @@ export interface IImmutableWorld {
      * Get a resource which was previously stored
      * @param type
      */
-    getResource<T extends object>(type: Readonly<TTypeProto<T>>): T
+    getResource<T extends object>(type: TTypeProto<T>): T
 
     /**
      * Get all resources stored in this world. Useful for debugging
@@ -74,7 +74,7 @@ export interface IImmutableWorld {
      * Check if a resource was stored
      * @param type
      */
-    hasResource<T extends object>(type: Readonly<T> | TTypeProto<T>): boolean
+    hasResource<T extends object>(type: T | TTypeProto<T>): boolean
 }
 
 export interface IMutableWorld {
@@ -193,7 +193,7 @@ export interface IMutableWorld {
      * @param type
      * @param args constructor parameters
      */
-    addResource<T extends object>(type: Readonly<T> | TTypeProto<T>, ...args: ReadonlyArray<unknown>): T | TTypeProto<T>
+    addResource<T extends object>(type: T | TTypeProto<T>, ...args: ReadonlyArray<unknown>): T | TTypeProto<T>
 
     /**
      * Remove all resources from this world

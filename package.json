@@ -57,7 +57,7 @@
     "build": "tsc --project . && npm run doc",
     "build-examples": "cd examples && tsc --project .",
     "ci": "npm run prebuild && tsc --project . && npm run postbuild",
-    "doc": "typedoc src/index.ts --out docs --includeVersion --excludeInternal",
+    "doc": "typedoc src/index.ts --out docs --includeVersion --excludeInternal --excludePrivate --excludeProtected --media ./media",
     "coverage": "nyc -r lcov -e .ts -x \"**/*.test.ts\" -x \"**/*.spec.ts\" -x \"src/tests\" npm run test",
     "example-counter": "ts-node -P tsconfig.json examples/counter.ts",
     "example-events": "ts-node -P tsconfig.json examples/events.ts",

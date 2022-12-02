@@ -11,11 +11,11 @@ export interface ICommandEntityBuilder {
      * @param component
      * @param args
      */
-    with(component: object | TObjectProto, ...args: unknown[]): ICommandEntityBuilder
+    with(component: object | TObjectProto, ...args: ReadonlyArray<unknown>): ICommandEntityBuilder
 
     /**
      * Add all components to target entity
      * @param component
      */
-    withAll(...component: (object | TObjectProto)[]): ICommandEntityBuilder
+    withAll(...component: ReadonlyArray<object | TObjectProto>): ICommandEntityBuilder
 }

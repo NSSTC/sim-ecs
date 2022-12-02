@@ -3,7 +3,7 @@ import {type PreptimeWorld} from "./preptime-world";
 
 export function addResource<T extends object>(
     this: PreptimeWorld,
-    Type: Readonly<T> | TTypeProto<T>,
+    Type: T | TTypeProto<T>,
     ...args: ReadonlyArray<unknown>
 ): T | TTypeProto<T> {
     this.data.resources.set(Type, args);

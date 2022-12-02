@@ -84,7 +84,7 @@ export interface IRuntimeWorld extends IImmutableWorld {
      * @param obj
      * @param args
      */
-    replaceResource<T extends object>(obj: Readonly<T> | TTypeProto<T>, ...args: ReadonlyArray<unknown>): Promise<void>
+    replaceResource<T extends object>(obj: T | TTypeProto<T>, ...args: ReadonlyArray<unknown>): Promise<void>
 
     /**
      * Start a continuous execution.

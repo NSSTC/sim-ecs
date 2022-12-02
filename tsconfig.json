@@ -19,6 +19,7 @@
     "removeComments": false,
     "sourceMap": true,
     "strict": true,
+    "stripInternal": true,
     "target": "es2020"
   },
   "exclude": [

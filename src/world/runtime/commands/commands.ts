@@ -16,14 +16,14 @@ import {Entity} from "../../../entity/entity";
 export * from "./commands.spec";
 
 export class Commands implements ICommands {
-    protected commands: TCommand[] = [];
+    protected commands: Array<TCommand> = [];
 
     constructor(
         protected readonly world: RuntimeWorld,
-        protected readonly queries: Set<IQuery<unknown, unknown>>,
+        protected readonly queries: ReadonlySet<Readonly<IQuery<unknown, unknown>>>,
     ) {}
 
-    addEntity(entity: IEntity): void {
+    addEntity(entity: Readonly<IEntity>): void {
         this.commands.push(() => {
             this.world.addEntity(entity);
 
@@ -34,7 +34,7 @@ export class Commands implements ICommands {
         });
     }
 
-    addResource<T extends object>(obj: TTypeProto<T> | T, ...args: unknown[]): T {
+    addResource<T extends object>(obj: TTypeProto<T> | T, ...args: ReadonlyArray<unknown>): T {
         let type: TTypeProto<T>;
         let instance: T;
 
@@ -77,7 +77,7 @@ export class Commands implements ICommands {
         }
     }
 
-    load(prefab: ISerialFormat, options?: ISerDeOptions<TDeserializer>): TGroupHandle {
+    load(prefab: Readonly<ISerialFormat>, options?: Readonly<ISerDeOptions<TDeserializer>>): TGroupHandle {
         const handle = this.world.createGroup();
         this.commands.push(() => {
             this.world.load(prefab, options, handle);
@@ -92,13 +92,13 @@ export class Commands implements ICommands {
         return handle;
     }
 
-    merge(world: IPreptimeWorld): TGroupHandle {
+    merge(world: Readonly<IPreptimeWorld>): TGroupHandle {
         const handle = this.world.createGroup();
         this.commands.push(() => { this.world.merge(world, handle) });
         return handle;
     }
 
-    mutateEntity(entity: IReadOnlyEntity, mutator: (entity: IEntity) => Promise<void> | void): void {
+    mutateEntity(entity: Readonly<IReadOnlyEntity>, mutator: (entity: IEntity) => Promise<void> | void): void {
         if (!(entity instanceof Entity)) {
             throw new Error(`The entity "${entity.id}" cannot be mutated!`);
         }
@@ -122,7 +122,7 @@ export class Commands implements ICommands {
         this.commands.push(command);
     }
 
-    removeEntity(entity: IEntity): void {
+    removeEntity(entity: Readonly<IEntity>): void {
         this.commands.push(() => this.world.removeEntity(entity));
     }
 
@@ -144,7 +144,7 @@ export class Commands implements ICommands {
         });
     }
 
-    replaceResource<T extends object>(obj: TTypeProto<T> | T, ...args: unknown[]): void {
+    replaceResource<T extends object>(obj: TTypeProto<T> | T, ...args: ReadonlyArray<unknown>): void {
         let type: TTypeProto<T>;
 
         if (typeof obj === 'object') {

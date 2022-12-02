@@ -45,7 +45,7 @@ export function ReadResource<T extends object>(type: TTypeProto<T>): ISystemReso
     } as ISystemResource<T> & Readonly<T>;
 }
 
-export function Storage<T>(initializer: T): Readonly<ISystemStorage> & T {
+export function Storage<T>(initializer: T): ISystemStorage & T {
     return initializer as ISystemStorage & T;
 }
 
