@@ -40,7 +40,6 @@ const SimpleIterSystem = createSystem({
 
 export class Benchmark implements IBenchmark {
     readonly name = 'sim-ecs';
-    count = 0;
     prepWorld: IPreptimeWorld;
     runWorld!: IRuntimeWorld;
 
@@ -77,7 +76,11 @@ export class Benchmark implements IBenchmark {
     }
 
     reset(): void {
-        this.count = 0;
+        const counter = this.runWorld?.getResource(CounterResource);
+
+        if (counter) {
+            counter.count = 0;
+        }
     }
 
     async init(): Promise<void> {
