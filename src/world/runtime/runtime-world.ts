@@ -222,8 +222,6 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
                 const execFn = this.executionFunction;
                 const cleanUp = () => {
                     this.pda.clear();
-                    this.awaiterResolve();
-                    this.#awaiter = undefined;
 
                     {
                         let syncPoint;
@@ -231,6 +229,9 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
                             syncPoint.clearOnSyncHandlers();
                         }
                     }
+
+                    this.#awaiter = undefined;
+                    this.awaiterResolve();
                 };
 
                 const mainLoop = async () => {
