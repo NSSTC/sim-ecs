@@ -622,11 +622,11 @@ Measured in "points" for comparison. More is better!
 
 | Library | Points | Deviation | Comment |
 |    ---: |   ---: | :---      | :---    |
-| Ape-ECS | 132 | ± 0.054% | |
-| bitecs | 6464 | ± 0.57% | |
-| javelin | 218 | ± 0.43% | |
-| sim-ecs | 1081 | ± 0.72% | |
-| tick-knock | 61 | ± 0.081% | |
+| Ape-ECS | 118 | ± 0.093% |  |
+| bitecs | 6506 | ± 0.56% |  |
+| javelin | 184 | ± 0.35% |  |
+| sim-ecs | 254 | ± 0.27% |  |
+| tick-knock | 57 | ± 0.066% |  |
 
 
 

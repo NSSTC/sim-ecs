@@ -102,7 +102,7 @@ export class Benchmark implements IBenchmark {
     }
 
     reset() {
-        this.prepWorld.getResource(CounterResource).count = 0;
+        this.runWorld.getResource(CounterResource).count = 0;
     }
 
     async init(): Promise<void> {
