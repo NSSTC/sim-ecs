@@ -8,6 +8,7 @@ class Velocity { x = 1 }
 
 export class Benchmark implements IBenchmark {
     readonly name = 'sim-ecs';
+    comment = '';
     world: IPreptimeWorld;
     world2: IPreptimeWorld;
 
@@ -49,7 +50,7 @@ export class Benchmark implements IBenchmark {
 
         {
             const json = this.world.save().toJSON();
-            console.log(`${this.name} SerializeSave file size: ${new TextEncoder().encode(json).length / 1024} KB`);
+            this.comment = `file size: ${new TextEncoder().encode(json).length / 1024} KB`;
         }
     }
 

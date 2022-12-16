@@ -1,10 +1,10 @@
 import {createWorld, component, World, number, createQuery} from "@javelin/ecs"
 import { IBenchmark } from '../../benchmark.spec';
 
-const Transform = {}
-const Position = { x: number }
-const Rotation = {}
-const Velocity = { x: number }
+const Transform = {};
+const Position = { x: number };
+const Rotation = {};
+const Velocity = { x: number };
 
 export class Benchmark implements IBenchmark {
     readonly name = 'javelin';
@@ -22,7 +22,7 @@ export class Benchmark implements IBenchmark {
             })
         );
 
-        for (let i = 0; i < this.iterCount; i++) {
+        for (let i = 0; i < 1000; i++) {
             this.world.create(
                 component(Transform),
                 component(Position, { x: 0 }),

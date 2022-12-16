@@ -45,6 +45,7 @@ const defaultSuite = {
             const totalTime = runTimes.reduce((acc, val) => acc + val, 0);
             results[bench.name] = {
                 name: bench.name,
+                comment: bench.comment ?? '',
                 averageTime: totalTime / runTimes.length,
                 fastestTime: Math.min.apply(Math, runTimes),
                 slowestTime: Math.max.apply(Math, runTimes),

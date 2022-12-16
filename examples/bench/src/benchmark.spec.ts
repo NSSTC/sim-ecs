@@ -1,5 +1,6 @@
 export interface IBenchmark {
     readonly name: string
+    comment?: string
 
     init(): Promise<void> | void
     reset(): Promise<void> | void
@@ -17,6 +18,7 @@ export interface ICaseResult {
     fastestTime: number
     slowestTime: number
     totalTime: number
+    comment: string
 }
 
 export interface ISuiteResult {

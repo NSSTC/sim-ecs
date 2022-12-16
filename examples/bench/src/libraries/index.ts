@@ -7,10 +7,11 @@ import {IBenchmarkConstructor} from "../benchmark.spec";
 
 
 export const scheduleBenchmarks: IBenchmarkConstructor[] = [
-    //ApeECS.Schedule,
-    //BitECS.Schedule,
-    //SimECS.Schedule,
-    //TickKnock.Schedule,
+    ApeECS.Schedule,
+    BitECS.Schedule,
+    Javelin.Schedule,
+    SimECS.Schedule,
+    TickKnock.Schedule,
 ];
 
 export const serializeBenchmarks: IBenchmarkConstructor[] = [

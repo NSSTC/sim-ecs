@@ -1,6 +1,6 @@
 {
   "name": "ecs-bench",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "dependencies": {
     "@javelin/ecs": "1.0.0-alpha.13",
@@ -12,7 +12,7 @@
     "tick-knock": "4.1.0",
     "ts-node": "^10.9.1",
     "tslib": "^2.4.1",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.4"
   },
   "devDependencies": {
     "@types/benchmark": "^2.1.2",

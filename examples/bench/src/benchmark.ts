@@ -2,25 +2,32 @@ import {suites} from "./suites";
 import {IBenchmarkConstructor, ISuiteResult} from "./benchmark.spec";
 import {scheduleBenchmarks, serializeBenchmarks, simpleInsertBenchmarks, simpleIterBenchmarks} from "./libraries";
 
-(async () => {
-    const iterCount = 1000;
-    const probeCount = 50;
+interface IBenchDesc {
+    name: string,
+    bench: IBenchmarkConstructor[]
+    iterCount: number
+    probeCount: number
+}
 
-    const libBenches: { name: string, bench: IBenchmarkConstructor[] }[] = [
-        { name: 'Simple Insert', bench: simpleInsertBenchmarks },
-        { name: 'Simple Iter', bench: simpleIterBenchmarks },
-        //{ name: 'Schedule', bench: scheduleBenchmarks },
-        { name: 'Serialize', bench: serializeBenchmarks },
+(async () => {
+    const libBenches: IBenchDesc[] = [
+        { name: 'Simple Insert', bench: simpleInsertBenchmarks, iterCount: 100, probeCount: 50 },
+        { name: 'Simple Iter', bench: simpleIterBenchmarks, iterCount: 5, probeCount: 10 },
+        { name: 'Schedule', bench: scheduleBenchmarks, iterCount: 5, probeCount: 10 },
+        { name: 'Serialize', bench: serializeBenchmarks, iterCount: 100, probeCount: 50 },
     ];
 
     for (const libBench of libBenches) {
         for (const suite of suites) {
             let lastResult: ISuiteResult;
 
-            console.log('\n', suite.name, '/', libBench.name);
-            console.log('--------------------------------');
+            console.log('\n', `**${suite.name} / ${libBench.name}**`);
+            console.log(
+                '\n| Library | Points | Deviation | Comment |',
+                '\n|    ---: |   ---: | :---      | :---    |',
+            );
 
-            await suite.init(libBench.bench, iterCount, probeCount);
+            await suite.init(libBench.bench, libBench.iterCount, libBench.probeCount);
 
             for await (const result of suite.run()) {
                 const bench = result.currentResult;
@@ -33,8 +40,13 @@ import {scheduleBenchmarks, serializeBenchmarks, simpleInsertBenchmarks, simpleI
                     Math.abs( bench.fastestTime - bench.averageTime ) / ((bench.slowestTime + bench.averageTime) / 2),
                 ];
 
-                //console.log(JSON.stringify(bench));
-                console.log('   ', bench.name, Math.round(1 / (bench.averageTime / 1000)), 'ops/s ±', Math.max.apply(Math, deviations).toPrecision(2).toString() + '%')
+                console.log(
+                    '|', bench.name,
+                    '|', Math.round(1 / (bench.averageTime / 1000)),
+                    '|', '±', Math.max.apply(Math, deviations).toPrecision(2).toString() + '%',
+                    '|', bench.comment,
+                    '|',
+                )
             }
 
             await suite.reset();

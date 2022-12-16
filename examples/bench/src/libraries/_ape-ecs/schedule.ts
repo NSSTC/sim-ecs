@@ -110,7 +110,6 @@ export class Benchmark implements IBenchmark {
                     [A.name]: { val: 0 },
                     [B.name]: { val: 0 },
                     [C.name]: { val: 0 },
-                    [D.name]: { val: 0 },
                     [E.name]: { val: 0 },
                 }
             });

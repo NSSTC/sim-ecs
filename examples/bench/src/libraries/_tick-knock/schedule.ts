@@ -117,7 +117,6 @@ export class Benchmark implements IBenchmark {
                 .add(new A(0))
                 .add(new B(0))
                 .add(new C(0))
-                .add(new D(0))
                 .add(new E(0))
             );
         }

@@ -8,6 +8,7 @@ const Velocity = { x: number }
 
 export class Benchmark implements IBenchmark {
     readonly name = 'Javelin';
+    comment = '';
     world: World;
 
     constructor(
@@ -32,7 +33,7 @@ export class Benchmark implements IBenchmark {
 
         {
             const json = JSON.stringify(this.world.createSnapshot());
-            console.log(`${this.name} SerializeSave file size: ${new TextEncoder().encode(json).length / 1024} KB`);
+            this.comment = `file size: ${new TextEncoder().encode(json).length / 1024} KB`;
         }
     }
 

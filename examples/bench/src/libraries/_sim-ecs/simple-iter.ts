@@ -76,11 +76,7 @@ export class Benchmark implements IBenchmark {
     }
 
     reset(): void {
-        const counter = this.runWorld?.getResource(CounterResource);
-
-        if (counter) {
-            counter.count = 0;
-        }
+        this.runWorld.getResource(CounterResource).count = 0;
     }
 
     async init(): Promise<void> {

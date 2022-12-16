@@ -35,6 +35,8 @@ npm install sim-ecs
 - [Syncing instances](#syncing-instances)
 - [Building for Production](#building-for-production)
 - [Performance](#performance)
+    - [The Benchmarks](#the-benchmarks)
+    - [The Result](#the-result)
 
 
 ## Considerations
@@ -515,55 +517,124 @@ An actual application will use a mix out of everything and more, and depending o
 
 You can run these benchmarks on your own machine - they are in the `examples/bench` folder.
 
+
+### The Benchmarks
+
+These benchmarks are based on the Rust [ECS Bench Suite](https://github.com/rust-gamedev/ecs_bench_suite).
+
+
+#### Simple Insert
+
+This benchmark is designed to test the base cost of constructing entities and moving components into the ECS.
+Inserts 1,000 entities, each with 4 components.
+
+
+#### Simple Iter
+
+This benchmark is designed to test the core overheads involved in component iteration in best-case conditions.
+
+Dataset: 1,000 entities, each with 4 components.
+
+Test: Iterate through all entities with Position and Velocity, and add velocity onto position.
+
+
+#### System Scheduling
+
+This benchmark is designed to test how efficiently the ECS can schedule multiple independent systems.
+his is primarily an outer-parallelism test.
+
+Dataset:
+
+- 10,000 entities with (A, B) components.
+- 10,000 entities with (A, B, C) components.
+- 10,000 entities with (A, B, C, D) components.
+- 10,000 entities with (A, B, C, E) components.
+
+Test: Three systems accessing the following components mutably, where each system swaps the values stored in each component:
+
+- (A, B)
+- (C, D)
+- (C, E)
+
+
+#### Serialize
+
+This benchmark is designed to test how quickly the ECS can serialize and deserialize its entities in JSON.
+
+Dataset: 1,000 entities, each with 4 components.
+
+Test: Serialize all entities to JSON in-memory. Then deserialize back into the ECS.
+
+
+### The Result
+
 ```
 --------------------------------------------------------------------------------
 TypeScript ECS Bench
 --------------------------------------------------------------------------------
 
-30th November 2022
+16th December 2022
 
 Platform: Windows_NT win32 x64 v10.0.22621
 CPU: AMD Ryzen 7 3700X 8-Core Processor@3600MHz
 NodeJS: v19.2.0
 
-Bench           v0.2.0
-TypeScript      v4.9.3
+Bench           v0.3.0
+TypeScript      v4.9.4
 TS-Lib          v2.4.1
 TS-Node         v10.9.1
 
 Ape-ECS         v1.3.1
 bitecs          v0.3.38
 Javelin         v1.0.0-alpha.13
-sim-ecs         v0.6.0
+sim-ecs         v0.6.1
 tick-knock      v4.1.0
 
-
- Default Suite / Simple Insert
---------------------------------
-    Ape-ECS 91 ops/s ± 0.36%
-    bitecs 500 ops/s ± 0.96%
-    javelin 172 ops/s ± 0.36%
-    sim-ecs 106 ops/s ± 1.7%
-    tick-knock 468 ops/s ± 1.1%
-
-
-
- Default Suite / Simple Iter
---------------------------------
-    Ape-ECS 167 ops/s ± 0.17%
-    bitecs 1005 ops/s ± 0.34%
-    javelin 105 ops/s ± 0.096%
-    sim-ecs 2106 ops/s ± 1.0%
-    tick-knock 56 ops/s ± 0.11%
-
-
-
- Default Suite / Serialize
---------------------------------
-Ape-ECS SerializeSave file size: 417.3427734375 KB
-    Ape-ECS 70 ops/s ± 1.4%
-Javelin SerializeSave file size: 31.1455078125 KB
-    Javelin 522 ops/s ± 1.3%
-sim-ecs SerializeSave file size: 92.677734375 KB
-    sim-ecs 125 ops/s ± 1.5%
+Measured in "points" for comparison. More is better!
 ```
+
+
+ **Default Suite / Simple Insert**
+
+| Library | Points | Deviation | Comment |
+|    ---: |   ---: | :---      | :---    |
+| Ape-ECS | 928 | ± 1.2% |  |
+| bitecs | 14562 | ± 0.19% |  |
+| javelin | 1959 | ± 1.7% |  |
+| sim-ecs | 1658 | ± 1.5% |  |
+| tick-knock | 8637 | ± 0.36% |  |
+
+
+
+ **Default Suite / Simple Iter**
+
+| Library | Points | Deviation | Comment |
+|    ---: |   ---: | :---      | :---    |
+| Ape-ECS | 30609 | ± 0.23% |  |
+| bitecs | 165563 | ± 1.0% |  |
+| javelin | 22862 | ± 0.044% |  |
+| sim-ecs | 887 | ± 0.20% |  |
+| tick-knock | 9632 | ± 0.36% |  |
+
+
+
+ **Default Suite / Schedule**
+
+| Library | Points | Deviation | Comment |
+|    ---: |   ---: | :---      | :---    |
+| Ape-ECS | 132 | ± 0.054% | |
+| bitecs | 6464 | ± 0.57% | |
+| javelin | 218 | ± 0.43% | |
+| sim-ecs | 1081 | ± 0.72% | |
+| tick-knock | 61 | ± 0.081% | |
+
+
+
+ **Default Suite / Serialize**
+
+| Library | Points | Deviation | Comment |
+|    ---: |   ---: | :---      | :---    |
+| Ape-ECS | 75 | ± 1.3% | file size: 417.3427734375 KB |
+| Javelin | 547 | ± 1.3% | file size: 31.1455078125 KB |
+| sim-ecs | 120 | ± 1.5% | file size: 92.677734375 KB |
+

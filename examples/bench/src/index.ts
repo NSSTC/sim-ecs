@@ -53,6 +53,8 @@ bitecs\t\tv${bitVersion}
 Javelin\t\tv${javelinVersion}
 sim-ecs\t\tv${simVersion}
 tick-knock\tv${tickKnockVersion}
+
+Measured in "points" for comparison. More is better!
 `);
 
 

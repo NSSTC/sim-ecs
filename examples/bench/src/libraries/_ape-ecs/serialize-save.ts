@@ -8,6 +8,7 @@ class Velocity extends Component { x = 1 }
 
 export class Benchmark implements IBenchmark {
     readonly name = 'Ape-ECS';
+    comment = '';
     world: World;
     world2: World;
 
@@ -39,7 +40,7 @@ export class Benchmark implements IBenchmark {
 
         {
             const json = JSON.stringify(this.world.getObject());
-            console.log(`${this.name} SerializeSave file size: ${new TextEncoder().encode(json).length / 1024} KB`);
+            this.comment = `file size: ${new TextEncoder().encode(json).length / 1024} KB`;
         }
     }
 

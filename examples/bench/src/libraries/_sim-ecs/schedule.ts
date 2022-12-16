@@ -96,7 +96,7 @@ export class Benchmark implements IBenchmark {
 
         for (let i = 0; i < 10000; i++) {
             this.prepWorld.buildEntity()
-                .withAll(A, B, C, D, E)
+                .withAll(A, B, C, E)
                 .build();
         }
     }

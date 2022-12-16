@@ -98,7 +98,6 @@ export class Benchmark implements IBenchmark {
                 addComponent(this.world, A, eid);
                 addComponent(this.world, B, eid);
                 addComponent(this.world, C, eid);
-                addComponent(this.world, D, eid);
                 addComponent(this.world, E, eid);
             }
         }
