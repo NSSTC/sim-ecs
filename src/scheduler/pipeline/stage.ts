@@ -34,6 +34,6 @@ export class Stage implements IStage {
     }
 
     getExecutor(eventBus: Readonly<IEventBus>): TExecutor {
-        return () => this.schedulingAlgorithm(this.systems, eventBus);
+        return this.schedulingAlgorithm.bind(this, this.systems, eventBus);
     }
 }

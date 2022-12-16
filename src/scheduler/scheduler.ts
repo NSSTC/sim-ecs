@@ -45,10 +45,10 @@ export class Scheduler implements IScheduler {
                 stageExecutors.push(stage.getExecutor(eventBus));
             }
 
-            stageExecutors.push(() => group.executeOnSyncHandlers() as Promise<unknown> as ReturnType<TExecutor>);
+            stageExecutors.push(group.executeOnSyncHandlers.bind(group) as () => Promise<any>);
         }
 
-        return () => this.schedulingAlgorithm(stageExecutors);
+        return this.schedulingAlgorithm.bind(this, stageExecutors);
     }
 
     getSystems(): ReadonlySet<ISystem> {
