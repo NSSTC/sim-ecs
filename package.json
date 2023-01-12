@@ -66,6 +66,7 @@
     "loop-test-ts": "madge -c  --extensions ts --warning --orphans ./src",
     "prepare": "npm run build",
     "test": "mocha -r ts-node/register src/**/*.test.ts",
-    "postbuild": "npm run loop-test-js"
+    "postbuild": "npm run loop-test-js",
+    "experiment": "ts-node test.ts"
   }
 }

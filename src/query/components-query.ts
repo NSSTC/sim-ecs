@@ -14,6 +14,7 @@ import {accessDescSym, addEntitySym} from "./_";
 export class ComponentsQuery<DESC extends IAccessQuery<TObjectProto>> extends Query<DESC, TAccessQueryData<DESC>> implements IComponentsQuery<DESC> {
     constructor(
         protected queryDescriptor: Readonly<DESC>,
+        protected initialArchetypeCacheSize = 1000,
     ) {
         super(EQueryType.Components, queryDescriptor);
     }

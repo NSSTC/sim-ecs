@@ -1,6 +1,7 @@
 import type {TObjectProto, TTypeProto} from "../_.spec";
 import type {IEntity, TTag} from "../entity/entity.spec";
 import type {accessDescSym, addEntitySym, clearEntitiesSym, existenceDescSym, removeEntitySym, setEntitiesSym} from "./_";
+import {resultLength} from "./_";
 
 export type TAccessQueryParameter<C extends TObjectProto> = C & IAccessDescriptor<InstanceType<C>>;
 export type TOptionalAccessQueryParameter<C extends TObjectProto | undefined> = IAccessDescriptor<C extends TObjectProto ? InstanceType<C> : undefined> & C extends TObjectProto ? C : undefined;
@@ -72,6 +73,8 @@ export interface IQuery<DESC, DATA> {
     [clearEntitiesSym](): void
     /** @internal */
     [removeEntitySym](entity: Readonly<IEntity>): void
+    /** @internal */
+    [resultLength]: number
     /** @internal */
     [setEntitiesSym](entities: Readonly<IterableIterator<Readonly<IEntity>>>): void
 

@@ -1,4 +1,12 @@
-import {Actions, buildWorld, createSystem, ISyncPointPrefab, queryComponents, Write} from "../src";
+import {
+    Actions,
+    buildWorld,
+    createSystem,
+    ISyncPointPrefab,
+    queryComponents,
+    registerComponentFieldTypes,
+    Write
+} from "../src";
 
 
 // a component.
@@ -7,6 +15,16 @@ class CounterInfo {
     count = 0;
     limit = 100;
 }
+
+// This step is optional and should be used later for tweaking performance.
+// It registers the field types of all properties of the component.
+// That way, the most efficient way to store the data can be used, which can lead to performance benefits
+registerComponentFieldTypes(CounterInfo, {
+    // u8 in this case refers to this field being stored in a Uint8ClampedArray archetype
+    // It's a good type, since we only iterate from 0 to 100.
+    count: 'u8',
+    limit: 'u8',
+});
 
 // systems process data. We declare what kind of input we need in the struct below,
 // and then define the processing code here
