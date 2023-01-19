@@ -34,6 +34,7 @@ npm install sim-ecs
 - [Saving and using Prefabs](#saving-and-using-prefabs)
 - [Syncing instances](#syncing-instances)
 - [Building for Production](#building-for-production)
+- [Plugins](#plugins)
 - [Performance](#performance)
     - [The Benchmarks](#the-benchmarks)
     - [The Result](#the-result)
@@ -508,6 +509,15 @@ const {entityFromIdQuery} = queryComponents({ entityFromIdQuery: ReadEntity(enti
 When building for production, it is important to keep class names.
 Some minimizers need to be adjusted. For example WebPack (using Terser) needs to pass this as configuration.
 The Pong example uses WebPack and demonstrates how to set up WebPack for proper production usage (in `make.js`).
+
+
+## Plugins
+
+Here's an overview of known plugins for sim-ecs:
+
+| Name                                                    | Description        |
+|---------------------------------------------------------|--------------------|
+| [sim-ecs-tiled](https://github.com/NSSTC/sim-ecs-tiled) | Tiled map importer |
 
 
 ## Performance
