@@ -34,6 +34,9 @@
     "typescript",
     "world"
   ],
+  "engines": {
+    "node": ">=14"
+  },
   "dependencies": {
     "tslib": "^2.4.1"
   },
