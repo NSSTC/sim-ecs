@@ -1,7 +1,7 @@
 import type {IEntity, TEntityId, TTag} from "./entity.spec";
 import type {TObjectProto, TTypeProto} from "../_.spec";
 import {registerEntity} from "../ecs/ecs-entity";
-import {ISerDe} from "../serde/serde.spec";
+import type {ISerDe} from "../serde/serde.spec";
 
 export * from './entity.spec';
 
@@ -14,10 +14,7 @@ export class Entity implements IEntity {
     protected uuid: TEntityId;
 
     constructor(uuid?: TEntityId) {
-        this.uuid = uuid
-            ? uuid
-            : Entity.uuidFn();
-
+        this.uuid = uuid ?? Entity.uuidFn();
         registerEntity(this);
     }
 
@@ -47,7 +44,7 @@ export class Entity implements IEntity {
             : new (component.prototype.constructor.bind(component, ...Array.from(arguments).slice(1)))();
     }
 
-    clone(serde: ISerDe, uuid?: TEntityId): IEntity {
+    clone(serde: ISerDe, uuid?: TEntityId): Entity {
         // serialize
         const serialFormat = serde.serialize({
             entities: [this].values(),
