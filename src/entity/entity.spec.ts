@@ -1,4 +1,5 @@
 import type {TObjectProto, TTypeProto} from "../_.spec";
+import {ISerDe} from "../serde/serde.spec";
 
 export type TEntityId = string;
 export type TTag = number | string;
@@ -12,15 +13,33 @@ export interface IReadOnlyEntity {
     readonly id: TEntityId
 
     /**
+     * Clone this entity with all of its components and tags.
+     * This is done by serializing and de-serializing the entity
+     * @param serde SerDe to use for serialization
+     * @param uuid UUID of new component
+     */
+    clone(serde: ISerDe, uuid?: TEntityId): IEntity
+
+    /**
      * Get a component of a certain type which is associated with this entity
      * @param component
      */
     getComponent<T extends object>(component: TTypeProto<T>): T | undefined
 
     /**
+     * Get number of components associated with this entity
+     */
+    getComponentCount(): number
+
+    /**
      * Get all components
      */
     getComponents(): IterableIterator<object>
+
+    /**
+     * Get number of tags associated with this entity
+     */
+    getTagCount(): number
 
     /**
      * Get all tags

@@ -1,5 +1,6 @@
 import {assert, expect} from 'chai';
 import {Entity} from "./entity";
+import {SerDe} from "../serde/serde";
 
 describe('Test Entity', () => {
     it('addComponent', () => {
@@ -7,6 +8,27 @@ describe('Test Entity', () => {
 
         entity.addComponent(new Number(0));
         assert.equal(Array.from(entity.getComponents()).length, 1);
+    });
+
+    it('clone', () => {
+        const component = { a: 42 };
+        const entity = new Entity('1');
+
+        entity.addComponent(component);
+        entity.addTag('TEST');
+
+        const clonedEntity = entity.clone(new SerDe(), '2');
+
+        assert.notEqual(entity, clonedEntity);
+        assert.notEqual(entity.id, clonedEntity.id);
+
+        assert.equal(entity.getComponentCount(), clonedEntity.getComponentCount());
+        assert.notEqual(entity.getComponents().next().value, clonedEntity.getComponents().next().value);
+        // @ts-ignore
+        assert.equal(entity.getComponents().next().value.a, clonedEntity.getComponents().next().value.a);
+
+        assert.equal(entity.getTagCount(), clonedEntity.getTagCount());
+        assert.equal(entity.getTags().next().value, clonedEntity.getTags().next().value);
     });
 
     it('removeComponent', () => {
