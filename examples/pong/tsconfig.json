@@ -2,7 +2,8 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "alwaysStrict": true,
-    "experimentalDecorators": true,
+    "declaration": false,
+    "downlevelIteration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
@@ -19,6 +20,10 @@
     "removeComments": true,
     "sourceMap": true,
     "strict": true,
-    "target": "es2017"
-  }
+    "target": "es2020"
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
