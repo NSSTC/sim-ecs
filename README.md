@@ -2,11 +2,20 @@
 
 A type-based, components-first, fully async batteries-included ECS, which is optimized for simulation needs.
 There's a big emphasis on developer experience, like type-hinting and auto-completions. 
-Sim-ecs will run in NodeJS, BunJS and the browser.
+Sim-ecs will run in NodeJS, Deno, BunJS and the browser.
 
+It can be installed using your favorite package manager, for example:
+
+```shell
+$ npm install sim-ecs
 ```
-npm install sim-ecs
+
+or used as direct import for Deno:
+
+```typescript
+import * as simEcs from "https://deno.land/x/sim_ecs@0.6.1/src/index.ts";
 ```
+
 
 ---
 
@@ -79,7 +88,7 @@ If using the prebuilt library, "ES2020" was selected as the build target. Hence,
 | Opera            | 67+     | Desktop                     |
 | Samsung Internet | 13.0+   |                             |
 | NodeJS           | 14+     |                             |
-| Deno             | -       | ESM + TS is a blocker       |
+| Deno             | 1.0+    |                             |
 | Bun              | 0.2.2+  |                             |
 
 
