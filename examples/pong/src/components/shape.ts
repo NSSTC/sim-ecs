@@ -1,4 +1,4 @@
-import {Dimensions} from "../models/dimensions";
+import {Dimensions} from "../models/dimensions.ts";
 
 export class Shape {
     constructor(

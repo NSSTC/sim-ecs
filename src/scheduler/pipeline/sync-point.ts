@@ -1,8 +1,8 @@
-import type {ISyncPoint, ISyncPointPrefab} from "./sync-point.spec";
-import {type IStage, Stage} from "./stage";
-import type {ISystem} from "../../system/system.spec";
+import type {ISyncPoint, ISyncPointPrefab} from "./sync-point.spec.ts";
+import {type IStage, Stage} from "./stage.ts";
+import type {ISystem} from "../../system/system.spec.ts";
 
-export * from "./sync-point.spec";
+export * from "./sync-point.spec.ts";
 
 export class SyncPoint implements ISyncPoint {
     public after?: ISyncPoint;

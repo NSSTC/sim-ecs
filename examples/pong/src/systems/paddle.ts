@@ -1,12 +1,12 @@
 import {createSystem, queryComponents, Read, ReadResource, Write} from "sim-ecs";
-import {EMovement, GameStore} from "../models/game-store";
-import {EPaddleSide, Paddle} from "../components/paddle";
-import {Position} from "../components/position";
-import {Velocity} from "../components/velocity";
-import {Shape} from "../components/shape";
-import {PaddleTransforms} from "../models/paddle-transforms";
-import {Dimensions} from "../models/dimensions";
-import {Transform} from "../models/transform";
+import {EMovement, GameStore} from "../models/game-store.ts";
+import {EPaddleSide, Paddle} from "../components/paddle.ts";
+import {Position} from "../components/position.ts";
+import {Velocity} from "../components/velocity.ts";
+import {Shape} from "../components/shape.ts";
+import {PaddleTransforms} from "../models/paddle-transforms.ts";
+import {Dimensions} from "../models/dimensions.ts";
+import {Transform} from "../models/transform.ts";
 
 export const PaddleSystem = createSystem({
     gameStore: ReadResource(GameStore),

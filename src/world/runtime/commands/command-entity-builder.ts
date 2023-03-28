@@ -1,10 +1,10 @@
-import {Entity} from "../../../entity/entity";
-import type {ICommandEntityBuilder} from "./command-entity-builder.spec";
-import type {TObjectProto} from "../../../_.spec";
-import type {IWorld} from "../../world.spec";
-import {ICommands} from "./commands.spec";
+import {Entity} from "../../../entity/entity.ts";
+import type {ICommandEntityBuilder} from "./command-entity-builder.spec.ts";
+import type {TObjectProto} from "../../../_.spec.ts";
+import type {IWorld} from "../../world.spec.ts";
+import {ICommands} from "./commands.spec.ts";
 
-export * from './command-entity-builder.spec';
+export * from './command-entity-builder.spec.ts';
 
 export class CommandEntityBuilder implements ICommandEntityBuilder {
     protected entity: Entity = new Entity();

@@ -1,4 +1,4 @@
-import type {IEntity, TEntityId} from "../entity/entity.spec";
+import type {IEntity, TEntityId} from "../entity/entity.spec.ts";
 
 const entities = new Map<TEntityId, WeakRef<IEntity>>();
 

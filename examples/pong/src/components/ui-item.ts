@@ -1,4 +1,4 @@
-import {EActions} from "../app/actions";
+import {EActions} from "../app/actions.ts";
 
 export class UIItem {
     public captionMod?: (str: string) => string | undefined;

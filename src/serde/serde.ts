@@ -1,10 +1,10 @@
-import type {TObjectProto} from "../_.spec";
+import type {TObjectProto} from "../_.spec.ts";
 import {
     CIdMarker,
     CResourceMarker,
     CResourceMarkerValue,
     CTagMarker,
-} from "./serde.spec";
+} from "./serde.spec.ts";
 import type {
     IDeserializerOutput,
     ISerDe,
@@ -14,18 +14,18 @@ import type {
     TCustomDeserializer,
     TDeserializer,
     TSerializer
-} from "./serde.spec";
-import type {ISerialFormat} from "./serial-format.spec";
-import {SerialFormat} from "./serial-format";
-import type {IEntity, TEntityId, TTag} from "../entity/entity.spec";
-import {getDefaultDeserializer, getDefaultSerializer} from "./default-handlers";
-import {Entity} from "../entity/entity";
-import type {TEntity} from "./_";
-import {Reference} from "./referencing";
-import {EReferenceType} from "./referencing.spec";
-import {getEntity} from "../ecs/ecs-entity";
+} from "./serde.spec.ts";
+import type {ISerialFormat} from "./serial-format.spec.ts";
+import {SerialFormat} from "./serial-format.ts";
+import type {IEntity, TEntityId, TTag} from "../entity/entity.spec.ts";
+import {getDefaultDeserializer, getDefaultSerializer} from "./default-handlers.ts";
+import {Entity} from "../entity/entity.ts";
+import type {TEntity} from "./_.ts";
+import {Reference} from "./referencing.ts";
+import {EReferenceType} from "./referencing.spec.ts";
+import {getEntity} from "../ecs/ecs-entity.ts";
 
-export * from "./serde.spec";
+export * from "./serde.spec.ts";
 
 export class SerDe implements ISerDe {
     protected typeHandlers = new Map<string, Readonly<ISerDeOperations>>();

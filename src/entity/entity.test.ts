@@ -1,6 +1,6 @@
 import {assert, expect} from 'chai';
-import {Entity} from "./entity";
-import {SerDe} from "../serde/serde";
+import {Entity} from "./entity.ts";
+import {SerDe} from "../serde/serde.ts";
 
 describe('Test Entity', () => {
     it('addComponent', () => {

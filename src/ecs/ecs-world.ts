@@ -1,7 +1,7 @@
-import {type IWorldBuilder, WorldBuilder} from "../world/world-builder";
-import {SerDe} from "../serde/serde";
-import type {IPreptimeWorld} from "../world/preptime/preptime-world.spec";
-import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec";
+import {type IWorldBuilder, WorldBuilder} from "../world/world-builder.ts";
+import {SerDe} from "../serde/serde.ts";
+import type {IPreptimeWorld} from "../world/preptime/preptime-world.spec.ts";
+import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec.ts";
 
 const worlds = new Set<IPreptimeWorld | IRuntimeWorld>();
 

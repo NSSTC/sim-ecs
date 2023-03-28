@@ -1,15 +1,15 @@
-import type {IIStateProto, IState} from "../../state/state.spec";
-import type {IScheduler} from "../../scheduler/scheduler.spec";
-import type {ISerDe} from "../../serde/serde.spec";
-import type {IImmutableWorld} from "../world.spec";
-import type {IEventBus} from "../../events/event-bus.spec";
-import type {ISystemActions, ITransitionActions} from "../actions.spec";
-import type {IEntity} from "../../entity/entity.spec";
-import {type InstanceMap} from "../../util/instance-map";
-import type {TObjectProto, TTypeProto} from "../../_.spec";
-import type {TGroupHandle} from "../world.spec";
+import type {IIStateProto, IState} from "../../state/state.spec.ts";
+import type {IScheduler} from "../../scheduler/scheduler.spec.ts";
+import type {ISerDe} from "../../serde/serde.spec.ts";
+import type {IImmutableWorld} from "../world.spec.ts";
+import type {IEventBus} from "../../events/event-bus.spec.ts";
+import type {ISystemActions, ITransitionActions} from "../actions.spec.ts";
+import type {IEntity} from "../../entity/entity.spec.ts";
+import {type InstanceMap} from "../../util/instance-map.ts";
+import type {TObjectProto, TTypeProto} from "../../_.spec.ts";
+import type {TGroupHandle} from "../world.spec.ts";
 
-export * from './commands/commands.spec';
+export * from './commands/commands.spec.ts';
 
 
 export type TExecutionFunction = ((callback: Function) => any) | typeof setTimeout | typeof requestAnimationFrame;

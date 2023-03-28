@@ -1,4 +1,4 @@
-import {Actions, createSystem, WriteResource} from "../../../../../src";
+import {Actions, createSystem, WriteResource} from "../../../../..";
 
 export class CounterResource {
     count = 0

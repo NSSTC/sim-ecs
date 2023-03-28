@@ -1,6 +1,6 @@
-import {type RuntimeWorld} from "./runtime-world";
-import type {IEntity} from "../../entity/entity.spec";
-import {addEntitySym, removeEntitySym} from "../../query/_";
+import {type RuntimeWorld} from "./runtime-world.ts";
+import type {IEntity} from "../../entity/entity.spec.ts";
+import {addEntitySym, removeEntitySym} from "../../query/_.ts";
 
 export function addEntity(this: RuntimeWorld, entity: Readonly<IEntity>): void {
     this.data.entities.add(entity);

@@ -1,4 +1,4 @@
-import {buildWorld, createSystem, ReadEvents, Storage, WriteEvents} from "../src";
+import {buildWorld, createSystem, ReadEvents, Storage, WriteEvents} from "../src/index.ts";
 
 /// This example creates a new event, a system that triggers the event once per second,
 /// and a system that prints a message whenever the event is received.

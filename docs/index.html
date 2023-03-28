@@ -1,4 +1,4 @@
-<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>sim-ecs - v0.6.0</title><meta name="description" content="Documentation for sim-ecs - v0.6.0"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>sim-ecs - v0.6.1</title><meta name="description" content="Documentation for sim-ecs - v0.6.1"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
 <div class="tsd-toolbar-contents container">
 <div class="table-cell" id="tsd-search" data-base=".">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
@@ -6,12 +6,12 @@
 <div id="tsd-toolbar-links"></div></div>
 <ul class="results">
 <li class="state loading">Preparing search index...</li>
-<li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">sim-ecs - v0.6.0</a></div>
+<li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">sim-ecs - v0.6.1</a></div>
 <div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
 <div class="container container-main">
 <div class="col-8 col-content">
 <div class="tsd-page-title">
-<h2>sim-ecs - v0.6.0</h2></div>
+<h2>sim-ecs - v0.6.1</h2></div>
 <div class="tsd-panel tsd-typography">
 <a href="#sim-ecs" id="sim-ecs" style="color: inherit; text-decoration: none;">
   <h1>sim-ecs</h1>
@@ -56,7 +56,12 @@ Sim-ecs will run in NodeJS, BunJS and the browser.</p>
 <li><a href="#saving-and-using-prefabs">Saving and using Prefabs</a></li>
 <li><a href="#syncing-instances">Syncing instances</a></li>
 <li><a href="#building-for-production">Building for Production</a></li>
-<li><a href="#performance">Performance</a></li>
+<li><a href="#plugins">Plugins</a></li>
+<li><a href="#performance">Performance</a><ul>
+<li><a href="#the-benchmarks">The Benchmarks</a></li>
+<li><a href="#the-result">The Result</a></li>
+</ul>
+</li>
 </ul>
 
 <a href="#considerations" id="considerations" style="color: inherit; text-decoration: none;">
@@ -358,9 +363,32 @@ Especially when writing networked simulations, it is very important to keep cert
 <a href="#building-for-production" id="building-for-production" style="color: inherit; text-decoration: none;">
   <h2>Building for Production</h2>
 </a>
-<p>When building for production, it is important to keep class names.
-Some minimizers need to be adjusted. For example WebPack (using Terser) needs to pass this as configuration.
-The Pong example uses WebPack and demonstrates how to set up WebPack for proper production usage (in <code>make.js</code>).</p>
+<p>When building for production, it is important to keep class names. Some minimizers need to be adjusted.
+The Pong example is a good template for a project setup for development and production builds. </p>
+
+<a href="#webpack" id="webpack" style="color: inherit; text-decoration: none;">
+  <h3>Webpack</h3>
+</a>
+<p>Webpack must <a href="https://webpack.js.org/plugins/terser-webpack-plugin/">use Terser</a>. The config could look like this:</p>
+<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-1"> </span><span class="hl-3">TerserPlugin</span><span class="hl-1"> = </span><span class="hl-4">require</span><span class="hl-1">(</span><span class="hl-6">&quot;terser-webpack-plugin&quot;</span><span class="hl-1">);</span><br/><br/><span class="hl-7">module</span><span class="hl-1">.</span><span class="hl-7">exports</span><span class="hl-1"> = {</span><br/><span class="hl-1">  </span><span class="hl-0">optimization:</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-0">minimize:</span><span class="hl-1"> </span><span class="hl-2">true</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-0">minimizer:</span><span class="hl-1"> [</span><span class="hl-2">new</span><span class="hl-1"> </span><span class="hl-4">TerserPlugin</span><span class="hl-1">({</span><br/><span class="hl-1">      </span><span class="hl-0">terserOptions:</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-0">keep_classnames:</span><span class="hl-1"> </span><span class="hl-2">true</span><span class="hl-1">,</span><br/><span class="hl-1">      },</span><br/><span class="hl-1">    })],</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">};</span>
+</code></pre>
+
+<a href="#plugins" id="plugins" style="color: inherit; text-decoration: none;">
+  <h2>Plugins</h2>
+</a>
+<p>Here&#39;s an overview of known plugins for sim-ecs:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/NSSTC/sim-ecs-tiled">sim-ecs-tiled</a></td>
+<td>Tiled map importer</td>
+</tr>
+</tbody></table>
 
 <a href="#performance" id="performance" style="color: inherit; text-decoration: none;">
   <h2>Performance</h2>
@@ -368,8 +396,208 @@ The Pong example uses WebPack and demonstrates how to set up WebPack for proper 
 <p>Please take the results with a grain of salt. These are benchmarks, so they are synthetic.
 An actual application will use a mix out of everything and more, and depending on that may have a different experience.</p>
 <p>You can run these benchmarks on your own machine - they are in the <code>examples/bench</code> folder.</p>
-<pre><code><span class="hl-1">--------------------------------------------------------------------------------</span><br/><span class="hl-0">TypeScript</span><span class="hl-1"> </span><span class="hl-3">ECS</span><span class="hl-1"> </span><span class="hl-0">Bench</span><br/><span class="hl-1">--------------------------------------------------------------------------------</span><br/><br/><span class="hl-1">30</span><span class="hl-0">th</span><span class="hl-1"> </span><span class="hl-0">November</span><span class="hl-1"> </span><span class="hl-9">2022</span><br/><br/><span class="hl-10">Platform</span><span class="hl-1">: </span><span class="hl-0">Windows_NT</span><span class="hl-1"> </span><span class="hl-0">win32</span><span class="hl-1"> </span><span class="hl-0">x64</span><span class="hl-1"> </span><span class="hl-0">v10</span><span class="hl-1">.</span><span class="hl-9">0.22621</span><br/><span class="hl-10">CPU</span><span class="hl-1">: </span><span class="hl-3">AMD</span><span class="hl-1"> </span><span class="hl-0">Ryzen</span><span class="hl-1"> </span><span class="hl-9">7</span><span class="hl-1"> 3700</span><span class="hl-3">X</span><span class="hl-1"> </span><span class="hl-9">8</span><span class="hl-1">-</span><span class="hl-0">Core</span><span class="hl-1"> </span><span class="hl-0">Processor</span><span class="hl-1">@3600</span><span class="hl-0">MHz</span><br/><span class="hl-10">NodeJS</span><span class="hl-1">: </span><span class="hl-0">v19</span><span class="hl-1">.</span><span class="hl-9">2.0</span><br/><br/><span class="hl-0">Bench</span><span class="hl-1">           </span><span class="hl-0">v0</span><span class="hl-1">.</span><span class="hl-9">2.0</span><br/><span class="hl-0">TypeScript</span><span class="hl-1">      </span><span class="hl-0">v4</span><span class="hl-1">.</span><span class="hl-9">9.3</span><br/><span class="hl-3">TS</span><span class="hl-1">-</span><span class="hl-0">Lib</span><span class="hl-1">          </span><span class="hl-0">v2</span><span class="hl-1">.</span><span class="hl-9">4.1</span><br/><span class="hl-3">TS</span><span class="hl-1">-</span><span class="hl-0">Node</span><span class="hl-1">         </span><span class="hl-0">v10</span><span class="hl-1">.</span><span class="hl-9">9.1</span><br/><br/><span class="hl-0">Ape</span><span class="hl-1">-</span><span class="hl-3">ECS</span><span class="hl-1">         </span><span class="hl-0">v1</span><span class="hl-1">.</span><span class="hl-9">3.1</span><br/><span class="hl-0">bitecs</span><span class="hl-1">          </span><span class="hl-0">v0</span><span class="hl-1">.</span><span class="hl-9">3.38</span><br/><span class="hl-0">Javelin</span><span class="hl-1">         </span><span class="hl-0">v1</span><span class="hl-1">.</span><span class="hl-9">0.0</span><span class="hl-1">-</span><span class="hl-0">alpha</span><span class="hl-1">.</span><span class="hl-9">13</span><br/><span class="hl-0">sim</span><span class="hl-1">-</span><span class="hl-0">ecs</span><span class="hl-1">         </span><span class="hl-0">v0</span><span class="hl-1">.</span><span class="hl-9">6.0</span><br/><span class="hl-0">tick</span><span class="hl-1">-</span><span class="hl-0">knock</span><span class="hl-1">      </span><span class="hl-0">v4</span><span class="hl-1">.</span><span class="hl-9">1.0</span><br/><br/><br/><span class="hl-1"> </span><span class="hl-0">Default</span><span class="hl-1"> </span><span class="hl-0">Suite</span><span class="hl-1"> / </span><span class="hl-0">Simple</span><span class="hl-1"> </span><span class="hl-0">Insert</span><br/><span class="hl-1">--------------------------------</span><br/><span class="hl-1">    </span><span class="hl-0">Ape</span><span class="hl-1">-</span><span class="hl-3">ECS</span><span class="hl-1"> </span><span class="hl-9">91</span><span class="hl-1"> </span><span class="hl-0">ops</span><span class="hl-1">/</span><span class="hl-0">s</span><span class="hl-1"> ± </span><span class="hl-9">0.36</span><span class="hl-1">%</span><br/><span class="hl-1">    </span><span class="hl-0">bitecs</span><span class="hl-1"> </span><span class="hl-9">500</span><span class="hl-1"> </span><span class="hl-0">ops</span><span class="hl-1">/</span><span class="hl-0">s</span><span class="hl-1"> ± </span><span class="hl-9">0.96</span><span class="hl-1">%</span><br/><span class="hl-1">    </span><span class="hl-0">javelin</span><span class="hl-1"> </span><span class="hl-9">172</span><span class="hl-1"> </span><span class="hl-0">ops</span><span class="hl-1">/</span><span class="hl-0">s</span><span class="hl-1"> ± </span><span class="hl-9">0.36</span><span class="hl-1">%</span><br/><span class="hl-1">    </span><span class="hl-0">sim</span><span class="hl-1">-</span><span class="hl-0">ecs</span><span class="hl-1"> </span><span class="hl-9">106</span><span class="hl-1"> </span><span class="hl-0">ops</span><span class="hl-1">/</span><span class="hl-0">s</span><span class="hl-1"> ± </span><span class="hl-9">1.7</span><span class="hl-1">%</span><br/><span class="hl-1">    </span><span class="hl-0">tick</span><span class="hl-1">-</span><span class="hl-0">knock</span><span class="hl-1"> </span><span class="hl-9">468</span><span class="hl-1"> </span><span class="hl-0">ops</span><span class="hl-1">/</span><span class="hl-0">s</span><span class="hl-1"> ± </span><span class="hl-9">1.1</span><span class="hl-1">%</span><br/><br/><br/><br/><span class="hl-1"> </span><span class="hl-0">Default</span><span class="hl-1"> </span><span class="hl-0">Suite</span><span class="hl-1"> / </span><span class="hl-0">Simple</span><span class="hl-1"> </span><span class="hl-0">Iter</span><br/><span class="hl-1">--------------------------------</span><br/><span class="hl-1">    </span><span class="hl-0">Ape</span><span class="hl-1">-</span><span class="hl-3">ECS</span><span class="hl-1"> </span><span class="hl-9">167</span><span class="hl-1"> </span><span class="hl-0">ops</span><span class="hl-1">/</span><span class="hl-0">s</span><span class="hl-1"> ± </span><span class="hl-9">0.17</span><span class="hl-1">%</span><br/><span class="hl-1">    </span><span class="hl-0">bitecs</span><span class="hl-1"> </span><span class="hl-9">1005</span><span class="hl-1"> </span><span class="hl-0">ops</span><span class="hl-1">/</span><span class="hl-0">s</span><span class="hl-1"> ± </span><span class="hl-9">0.34</span><span class="hl-1">%</span><br/><span class="hl-1">    </span><span class="hl-0">javelin</span><span class="hl-1"> </span><span class="hl-9">105</span><span class="hl-1"> </span><span class="hl-0">ops</span><span class="hl-1">/</span><span class="hl-0">s</span><span class="hl-1"> ± </span><span class="hl-9">0.096</span><span class="hl-1">%</span><br/><span class="hl-1">    </span><span class="hl-0">sim</span><span class="hl-1">-</span><span class="hl-0">ecs</span><span class="hl-1"> </span><span class="hl-9">2106</span><span class="hl-1"> </span><span class="hl-0">ops</span><span class="hl-1">/</span><span class="hl-0">s</span><span class="hl-1"> ± </span><span class="hl-9">1.0</span><span class="hl-1">%</span><br/><span class="hl-1">    </span><span class="hl-0">tick</span><span class="hl-1">-</span><span class="hl-0">knock</span><span class="hl-1"> </span><span class="hl-9">56</span><span class="hl-1"> </span><span class="hl-0">ops</span><span class="hl-1">/</span><span class="hl-0">s</span><span class="hl-1"> ± </span><span class="hl-9">0.11</span><span class="hl-1">%</span><br/><br/><br/><br/><span class="hl-1"> </span><span class="hl-0">Default</span><span class="hl-1"> </span><span class="hl-0">Suite</span><span class="hl-1"> / </span><span class="hl-0">Serialize</span><br/><span class="hl-1">--------------------------------</span><br/><span class="hl-0">Ape</span><span class="hl-1">-</span><span class="hl-3">ECS</span><span class="hl-1"> </span><span class="hl-0">SerializeSave</span><span class="hl-1"> </span><span class="hl-0">file</span><span class="hl-1"> </span><span class="hl-10">size</span><span class="hl-1">: </span><span class="hl-9">417.3427734375</span><span class="hl-1"> </span><span class="hl-3">KB</span><br/><span class="hl-1">    </span><span class="hl-0">Ape</span><span class="hl-1">-</span><span class="hl-3">ECS</span><span class="hl-1"> </span><span class="hl-9">70</span><span class="hl-1"> </span><span class="hl-0">ops</span><span class="hl-1">/</span><span class="hl-0">s</span><span class="hl-1"> ± </span><span class="hl-9">1.4</span><span class="hl-1">%</span><br/><span class="hl-0">Javelin</span><span class="hl-1"> </span><span class="hl-0">SerializeSave</span><span class="hl-1"> </span><span class="hl-0">file</span><span class="hl-1"> </span><span class="hl-10">size</span><span class="hl-1">: </span><span class="hl-9">31.1455078125</span><span class="hl-1"> </span><span class="hl-3">KB</span><br/><span class="hl-1">    </span><span class="hl-0">Javelin</span><span class="hl-1"> </span><span class="hl-9">522</span><span class="hl-1"> </span><span class="hl-0">ops</span><span class="hl-1">/</span><span class="hl-0">s</span><span class="hl-1"> ± </span><span class="hl-9">1.3</span><span class="hl-1">%</span><br/><span class="hl-0">sim</span><span class="hl-1">-</span><span class="hl-0">ecs</span><span class="hl-1"> </span><span class="hl-0">SerializeSave</span><span class="hl-1"> </span><span class="hl-0">file</span><span class="hl-1"> </span><span class="hl-10">size</span><span class="hl-1">: </span><span class="hl-9">92.677734375</span><span class="hl-1"> </span><span class="hl-3">KB</span><br/><span class="hl-1">    </span><span class="hl-0">sim</span><span class="hl-1">-</span><span class="hl-0">ecs</span><span class="hl-1"> </span><span class="hl-9">125</span><span class="hl-1"> </span><span class="hl-0">ops</span><span class="hl-1">/</span><span class="hl-0">s</span><span class="hl-1"> ± </span><span class="hl-9">1.5</span><span class="hl-1">%</span>
+
+<a href="#the-benchmarks" id="the-benchmarks" style="color: inherit; text-decoration: none;">
+  <h3>The Benchmarks</h3>
+</a>
+<p>These benchmarks are based on the Rust <a href="https://github.com/rust-gamedev/ecs_bench_suite">ECS Bench Suite</a>.</p>
+
+<a href="#simple-insert" id="simple-insert" style="color: inherit; text-decoration: none;">
+  <h4>Simple Insert</h4>
+</a>
+<p>This benchmark is designed to test the base cost of constructing entities and moving components into the ECS.
+Inserts 1,000 entities, each with 4 components.</p>
+
+<a href="#simple-iter" id="simple-iter" style="color: inherit; text-decoration: none;">
+  <h4>Simple Iter</h4>
+</a>
+<p>This benchmark is designed to test the core overheads involved in component iteration in best-case conditions.</p>
+<p>Dataset: 1,000 entities, each with 4 components.</p>
+<p>Test: Iterate through all entities with Position and Velocity, and add velocity onto position.</p>
+
+<a href="#system-scheduling" id="system-scheduling" style="color: inherit; text-decoration: none;">
+  <h4>System Scheduling</h4>
+</a>
+<p>This benchmark is designed to test how efficiently the ECS can schedule multiple independent systems.
+his is primarily an outer-parallelism test.</p>
+<p>Dataset:</p>
+<ul>
+<li>10,000 entities with (A, B) components.</li>
+<li>10,000 entities with (A, B, C) components.</li>
+<li>10,000 entities with (A, B, C, D) components.</li>
+<li>10,000 entities with (A, B, C, E) components.</li>
+</ul>
+<p>Test: Three systems accessing the following components mutably, where each system swaps the values stored in each component:</p>
+<ul>
+<li>(A, B)</li>
+<li>(C, D)</li>
+<li>(C, E)</li>
+</ul>
+
+<a href="#serialize" id="serialize" style="color: inherit; text-decoration: none;">
+  <h4>Serialize</h4>
+</a>
+<p>This benchmark is designed to test how quickly the ECS can serialize and deserialize its entities in JSON.</p>
+<p>Dataset: 1,000 entities, each with 4 components.</p>
+<p>Test: Serialize all entities to JSON in-memory. Then deserialize back into the ECS.</p>
+
+<a href="#the-result" id="the-result" style="color: inherit; text-decoration: none;">
+  <h3>The Result</h3>
+</a>
+<pre><code><span class="hl-1">--------------------------------------------------------------------------------</span><br/><span class="hl-0">TypeScript</span><span class="hl-1"> </span><span class="hl-3">ECS</span><span class="hl-1"> </span><span class="hl-0">Bench</span><br/><span class="hl-1">--------------------------------------------------------------------------------</span><br/><br/><span class="hl-1">16</span><span class="hl-0">th</span><span class="hl-1"> </span><span class="hl-0">December</span><span class="hl-1"> </span><span class="hl-9">2022</span><br/><br/><span class="hl-10">Platform</span><span class="hl-1">: </span><span class="hl-0">Windows_NT</span><span class="hl-1"> </span><span class="hl-0">win32</span><span class="hl-1"> </span><span class="hl-0">x64</span><span class="hl-1"> </span><span class="hl-0">v10</span><span class="hl-1">.</span><span class="hl-9">0.22621</span><br/><span class="hl-10">CPU</span><span class="hl-1">: </span><span class="hl-3">AMD</span><span class="hl-1"> </span><span class="hl-0">Ryzen</span><span class="hl-1"> </span><span class="hl-9">7</span><span class="hl-1"> 3700</span><span class="hl-3">X</span><span class="hl-1"> </span><span class="hl-9">8</span><span class="hl-1">-</span><span class="hl-0">Core</span><span class="hl-1"> </span><span class="hl-0">Processor</span><span class="hl-1">@3600</span><span class="hl-0">MHz</span><br/><span class="hl-10">NodeJS</span><span class="hl-1">: </span><span class="hl-0">v19</span><span class="hl-1">.</span><span class="hl-9">2.0</span><br/><br/><span class="hl-0">Bench</span><span class="hl-1">           </span><span class="hl-0">v0</span><span class="hl-1">.</span><span class="hl-9">3.0</span><br/><span class="hl-0">TypeScript</span><span class="hl-1">      </span><span class="hl-0">v4</span><span class="hl-1">.</span><span class="hl-9">9.4</span><br/><span class="hl-3">TS</span><span class="hl-1">-</span><span class="hl-0">Lib</span><span class="hl-1">          </span><span class="hl-0">v2</span><span class="hl-1">.</span><span class="hl-9">4.1</span><br/><span class="hl-3">TS</span><span class="hl-1">-</span><span class="hl-0">Node</span><span class="hl-1">         </span><span class="hl-0">v10</span><span class="hl-1">.</span><span class="hl-9">9.1</span><br/><br/><span class="hl-0">Ape</span><span class="hl-1">-</span><span class="hl-3">ECS</span><span class="hl-1">         </span><span class="hl-0">v1</span><span class="hl-1">.</span><span class="hl-9">3.1</span><br/><span class="hl-0">bitecs</span><span class="hl-1">          </span><span class="hl-0">v0</span><span class="hl-1">.</span><span class="hl-9">3.38</span><br/><span class="hl-0">Javelin</span><span class="hl-1">         </span><span class="hl-0">v1</span><span class="hl-1">.</span><span class="hl-9">0.0</span><span class="hl-1">-</span><span class="hl-0">alpha</span><span class="hl-1">.</span><span class="hl-9">13</span><br/><span class="hl-0">sim</span><span class="hl-1">-</span><span class="hl-0">ecs</span><span class="hl-1">         </span><span class="hl-0">v0</span><span class="hl-1">.</span><span class="hl-9">6.1</span><br/><span class="hl-0">tick</span><span class="hl-1">-</span><span class="hl-0">knock</span><span class="hl-1">      </span><span class="hl-0">v4</span><span class="hl-1">.</span><span class="hl-9">1.0</span><br/><br/><span class="hl-0">Measured</span><span class="hl-1"> </span><span class="hl-2">in</span><span class="hl-1"> </span><span class="hl-6">&quot;points&quot;</span><span class="hl-1"> </span><span class="hl-0">for</span><span class="hl-1"> </span><span class="hl-0">comparison</span><span class="hl-1">. </span><span class="hl-0">More</span><span class="hl-1"> </span><span class="hl-0">is</span><span class="hl-1"> </span><span class="hl-0">better</span><span class="hl-1">!</span>
 </code></pre>
+<p> <strong>Default Suite / Simple Insert</strong></p>
+<table>
+<thead>
+<tr>
+<th align="right">Library</th>
+<th align="right">Points</th>
+<th align="left">Deviation</th>
+<th align="left">Comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">Ape-ECS</td>
+<td align="right">928</td>
+<td align="left">± 1.2%</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="right">bitecs</td>
+<td align="right">14562</td>
+<td align="left">± 0.19%</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="right">javelin</td>
+<td align="right">1959</td>
+<td align="left">± 1.7%</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="right">sim-ecs</td>
+<td align="right">1658</td>
+<td align="left">± 1.5%</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="right">tick-knock</td>
+<td align="right">8637</td>
+<td align="left">± 0.36%</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p> <strong>Default Suite / Simple Iter</strong></p>
+<table>
+<thead>
+<tr>
+<th align="right">Library</th>
+<th align="right">Points</th>
+<th align="left">Deviation</th>
+<th align="left">Comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">Ape-ECS</td>
+<td align="right">30609</td>
+<td align="left">± 0.23%</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="right">bitecs</td>
+<td align="right">165563</td>
+<td align="left">± 1.0%</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="right">javelin</td>
+<td align="right">22862</td>
+<td align="left">± 0.044%</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="right">sim-ecs</td>
+<td align="right">887</td>
+<td align="left">± 0.20%</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="right">tick-knock</td>
+<td align="right">9632</td>
+<td align="left">± 0.36%</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p> <strong>Default Suite / Schedule</strong></p>
+<table>
+<thead>
+<tr>
+<th align="right">Library</th>
+<th align="right">Points</th>
+<th align="left">Deviation</th>
+<th align="left">Comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">Ape-ECS</td>
+<td align="right">118</td>
+<td align="left">± 0.093%</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="right">bitecs</td>
+<td align="right">6506</td>
+<td align="left">± 0.56%</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="right">javelin</td>
+<td align="right">184</td>
+<td align="left">± 0.35%</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="right">sim-ecs</td>
+<td align="right">254</td>
+<td align="left">± 0.27%</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="right">tick-knock</td>
+<td align="right">57</td>
+<td align="left">± 0.066%</td>
+<td align="left"></td>
+</tr>
+</tbody></table>
+<p> <strong>Default Suite / Serialize</strong></p>
+<table>
+<thead>
+<tr>
+<th align="right">Library</th>
+<th align="right">Points</th>
+<th align="left">Deviation</th>
+<th align="left">Comment</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="right">Ape-ECS</td>
+<td align="right">75</td>
+<td align="left">± 1.3%</td>
+<td align="left">file size: 417.3427734375 KB</td>
+</tr>
+<tr>
+<td align="right">Javelin</td>
+<td align="right">547</td>
+<td align="left">± 1.3%</td>
+<td align="left">file size: 31.1455078125 KB</td>
+</tr>
+<tr>
+<td align="right">sim-ecs</td>
+<td align="right">120</td>
+<td align="left">± 1.5%</td>
+<td align="left">file size: 92.677734375 KB</td>
+</tr>
+</tbody></table>
 </div></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
@@ -388,7 +616,7 @@ An actual application will use a mix out of everything and more, and depending o
 <h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
 <div class="tsd-accordion-details">
 <ul>
-<li class="current selected"><a href="modules.html">sim-<wbr/>ecs -<wbr/> v0.6.0</a>
+<li class="current selected"><a href="modules.html">sim-<wbr/>ecs -<wbr/> v0.6.1</a>
 <ul></ul></li></ul></div></details></nav>
 <nav class="tsd-navigation secondary menu-sticky">
 <ul>

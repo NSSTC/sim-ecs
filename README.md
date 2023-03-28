@@ -506,9 +506,28 @@ const {entityFromIdQuery} = queryComponents({ entityFromIdQuery: ReadEntity(enti
 
 ## Building for Production
 
-When building for production, it is important to keep class names.
-Some minimizers need to be adjusted. For example WebPack (using Terser) needs to pass this as configuration.
-The Pong example uses WebPack and demonstrates how to set up WebPack for proper production usage (in `make.js`).
+When building for production, it is important to keep class names. Some minimizers need to be adjusted.
+The Pong example is a good template for a project setup for development and production builds. 
+
+
+### Webpack
+
+Webpack must [use Terser](https://webpack.js.org/plugins/terser-webpack-plugin/). The config could look like this:
+
+```javascript
+const TerserPlugin = require("terser-webpack-plugin");
+
+module.exports = {
+  optimization: {
+    minimize: true,
+    minimizer: [new TerserPlugin({
+      terserOptions: {
+        keep_classnames: true,
+      },
+    })],
+  },
+};
+```
 
 
 ## Plugins

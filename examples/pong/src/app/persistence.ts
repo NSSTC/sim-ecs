@@ -1,6 +1,6 @@
 import {type ITransitionActions, queryEntities, SerialFormat, type TGroupHandle, WithTag} from "sim-ecs";
-import {ScoreBoard} from "../models/score-board";
-import {ETags} from "../models/tags";
+import {ScoreBoard} from "../models/score-board.ts";
+import {ETags} from "../models/tags.ts";
 
 
 const saveKey = 'save';

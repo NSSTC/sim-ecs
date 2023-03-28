@@ -1,11 +1,11 @@
-import {ETags} from "../models/tags";
-import {type Collision} from "../components/collision";
-import {type Position} from "../components/position";
-import {type Shape} from "../components/shape";
-import {type Velocity} from "../components/velocity";
-import {EPaddleSide, type Paddle} from "../components/paddle";
-import {defaultBallPositionX, defaultBallPositionY, defaultBallVelocityX, defaultBallVelocityY} from "./game";
-import {CTagMarker} from 'sim-ecs';
+import {ETags} from "../models/tags.ts";
+import {type Collision} from "../components/collision.ts";
+import {type Position} from "../components/position.ts";
+import {type Shape} from "../components/shape.ts";
+import {type Velocity} from "../components/velocity.ts";
+import {EPaddleSide, type Paddle} from "../components/paddle.ts";
+import {defaultBallPositionX, defaultBallPositionY, defaultBallVelocityX, defaultBallVelocityY} from "./game.ts";
+import {CTagMarker} from "sim-ecs";
 
 export const savablePrefab = [
     { // Ball

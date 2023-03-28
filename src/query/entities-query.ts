@@ -1,9 +1,9 @@
-import type {IEntitiesQuery, TExistenceQuery} from "./query.spec";
-import {EExistence, EQueryType, ETargetType} from "./query.spec";
-import {Query} from "./query";
-import type {IEntity, TTag} from "../entity/entity.spec";
-import {addEntitySym, existenceDescSym} from "./_";
-import type {TObjectProto} from "../_.spec";
+import type {IEntitiesQuery, TExistenceQuery} from "./query.spec.ts";
+import {EExistence, EQueryType, ETargetType} from "./query.spec.ts";
+import {Query} from "./query.ts";
+import type {IEntity, TTag} from "../entity/entity.spec.ts";
+import {addEntitySym, existenceDescSym} from "./_.ts";
+import type {TObjectProto} from "../_.spec.ts";
 
 export class EntitiesQuery extends Query<TExistenceQuery<TObjectProto>, IEntity> implements IEntitiesQuery {
     constructor(

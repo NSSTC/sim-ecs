@@ -1,6 +1,6 @@
 import {type ITransitionActions, SerialFormat, State, type TGroupHandle} from "sim-ecs";
-import {menuPrefab} from "../prefabs/menu";
-import {GameStore} from "../models/game-store";
+import {menuPrefab} from "../prefabs/menu.ts";
+import {GameStore} from "../models/game-store.ts";
 
 export class MenuState extends State {
     prefabHandle!: TGroupHandle;

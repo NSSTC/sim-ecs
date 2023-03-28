@@ -1,8 +1,8 @@
 import {Actions, createSystem, queryComponents, Storage, Write, WriteResource} from "sim-ecs";
-import {UIItem} from "../components/ui-item";
-import {EMovement, GameStore} from "../models/game-store";
-import {EActions} from "../app/actions";
-import {GameState} from "../states/game";
+import {UIItem} from "../components/ui-item.ts";
+import {EMovement, GameStore} from "../models/game-store.ts";
+import {EActions} from "../app/actions.ts";
+import {GameState} from "../states/game.ts";
 
 
 export const MenuSystem = createSystem({

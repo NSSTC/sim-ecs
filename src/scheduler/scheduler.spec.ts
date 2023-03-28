@@ -1,8 +1,8 @@
-import type {IPipeline} from "./pipeline/pipeline.spec";
-import type {TExecutor} from "../_.spec";
-import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec";
-import type {IEventBus} from "../events/event-bus.spec";
-import type {ISystem} from "../system/system.spec";
+import type {IPipeline} from "./pipeline/pipeline.spec.ts";
+import type {TExecutor} from "../_.spec.ts";
+import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec.ts";
+import type {IEventBus} from "../events/event-bus.spec.ts";
+import type {ISystem} from "../system/system.spec.ts";
 
 export type TSchedulingAlgorithm = (stageExecutors: ReadonlyArray<TExecutor>) => Promise<void>;
 

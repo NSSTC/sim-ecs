@@ -1,9 +1,9 @@
-import type {IEventReader} from "./event-reader.spec";
-import type {IEventBus} from "./event-bus.spec";
-import type {TObjectProto} from "../_.spec";
-import type {TSubscriber} from "./_";
+import type {IEventReader} from "./event-reader.spec.ts";
+import type {IEventBus} from "./event-bus.spec.ts";
+import type {TObjectProto} from "../_.spec.ts";
+import type {TSubscriber} from "./_.ts";
 
-export * from "./event-reader.spec";
+export * from "./event-reader.spec.ts";
 
 export class EventReader<T extends TObjectProto> implements IEventReader<T> {
     protected _eventHandler: TSubscriber<T> = event => { this.eventCache.push(event) };

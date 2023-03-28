@@ -1,7 +1,7 @@
-import type {ISerialFormat} from "./serial-format.spec";
-import type {TEntity} from "./_";
+import type {ISerialFormat} from "./serial-format.spec.ts";
+import type {TEntity} from "./_.ts";
 
-export * from "./serial-format.spec";
+export * from "./serial-format.spec.ts";
 
 export class SerialFormat extends Array<TEntity> implements ISerialFormat {
     static fromArray(arr: ReadonlyArray<TEntity>): SerialFormat {

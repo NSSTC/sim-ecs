@@ -1,5 +1,5 @@
-import {RuntimeWorld} from "./runtime-world";
-import {SimECSSystemAddResource} from "../../events/internal-events";
+import {RuntimeWorld} from "./runtime-world.ts";
+import {SimECSSystemAddResource} from "../../events/internal-events.ts";
 
 export function registerSystemAddResourceEvent(this: RuntimeWorld) {
     this.eventBus.subscribe(SimECSSystemAddResource, event => {

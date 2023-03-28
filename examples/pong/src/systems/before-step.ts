@@ -1,5 +1,5 @@
 import {createSystem, Storage, WriteResource} from "sim-ecs";
-import {GameStore} from "../models/game-store";
+import {GameStore} from "../models/game-store.ts";
 
 
 const CFrameTimeCap = 33;

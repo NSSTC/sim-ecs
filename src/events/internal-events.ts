@@ -1,6 +1,6 @@
-import type {ISystem} from "../system/system.spec";
-import type {TObjectProto} from "../_.spec";
-import type {IIStateProto} from "../state/state.spec";
+import type {ISystem} from "../system/system.spec.ts";
+import type {TObjectProto} from "../_.spec.ts";
+import type {IIStateProto} from "../state/state.spec.ts";
 
 
 class SimECSPDAEvent {

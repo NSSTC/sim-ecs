@@ -14,7 +14,6 @@
     ],
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "noEmit": true,
     "noImplicitAny": true,
     "outDir": "dist",
     "preserveConstEnums": true,

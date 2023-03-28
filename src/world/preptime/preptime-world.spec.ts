@@ -1,11 +1,11 @@
-import type {IWorld} from "../world.spec";
-import type {IRuntimeWorld, TExecutionFunction} from "../runtime/runtime-world.spec";
-import type {IScheduler} from "../../scheduler/scheduler.spec";
-import type {ISerDe} from "../../serde/serde.spec";
-import type {IIStateProto} from "../../state/state.spec";
-import type {TObjectProto} from "../../_.spec";
-import type {IEntity} from "../../entity/entity.spec";
-import type {TGroupHandle} from "../world.spec";
+import type {IWorld} from "../world.spec.ts";
+import type {IRuntimeWorld, TExecutionFunction} from "../runtime/runtime-world.spec.ts";
+import type {IScheduler} from "../../scheduler/scheduler.spec.ts";
+import type {ISerDe} from "../../serde/serde.spec.ts";
+import type {IIStateProto} from "../../state/state.spec.ts";
+import type {TObjectProto} from "../../_.spec.ts";
+import type {IEntity} from "../../entity/entity.spec.ts";
+import type {TGroupHandle} from "../world.spec.ts";
 
 
 export interface IPreptimeData {

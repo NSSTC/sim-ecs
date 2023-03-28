@@ -1,9 +1,9 @@
-import type {IEntity, TEntityId, TTag} from "./entity.spec";
-import type {TObjectProto, TTypeProto} from "../_.spec";
-import {registerEntity} from "../ecs/ecs-entity";
-import type {ISerDe} from "../serde/serde.spec";
+import type {IEntity, TEntityId, TTag} from "./entity.spec.ts";
+import type {TObjectProto, TTypeProto} from "../_.spec.ts";
+import {registerEntity} from "../ecs/ecs-entity.ts";
+import type {ISerDe} from "../serde/serde.spec.ts";
 
-export * from './entity.spec';
+export * from './entity.spec.ts';
 
 let idCounter = BigInt(0);
 

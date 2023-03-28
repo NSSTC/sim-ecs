@@ -1,6 +1,6 @@
-import type {ISystem} from "../../system/system.spec";
-import type {TExecutor} from "../../_.spec";
-import type {IEventBus} from "../../events/event-bus.spec";
+import type {ISystem} from "../../system/system.spec.ts";
+import type {TExecutor} from "../../_.spec.ts";
+import type {IEventBus} from "../../events/event-bus.spec.ts";
 
 export type TStageSchedulingAlgorithm = (systems: ReadonlyArray<Readonly<ISystem>>, eventBus: Readonly<IEventBus>) => Promise<void>;
 

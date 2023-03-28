@@ -1,3 +1,1 @@
-import 'regenerator-runtime';
-import "./main.scss";
-import './main';
+import "./main.ts";

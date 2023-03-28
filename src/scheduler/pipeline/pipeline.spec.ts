@@ -1,4 +1,4 @@
-import type {ISyncPoint} from "./sync-point.spec";
+import type {ISyncPoint} from "./sync-point.spec.ts";
 
 export interface IPipeline {
     readonly root: Readonly<ISyncPoint>

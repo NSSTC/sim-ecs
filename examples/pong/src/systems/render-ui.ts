@@ -1,7 +1,7 @@
-import {Position} from "../components/position";
+import {Position} from "../components/position.ts";
 import {createSystem, queryComponents, Read, Storage, WriteResource} from "sim-ecs";
-import {UIItem} from "../components/ui-item";
-import {relToScreenCoords} from "../app/util";
+import {UIItem} from "../components/ui-item.ts";
+import {relToScreenCoords} from "../app/util.ts";
 
 export const RenderUISystem = createSystem({
     ctx: WriteResource(CanvasRenderingContext2D),

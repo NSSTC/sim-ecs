@@ -1,5 +1,5 @@
-import {Position} from "../components/position";
-import {Dimensions} from "./dimensions";
+import {Position} from "../components/position.ts";
+import {Dimensions} from "./dimensions.ts";
 
 export class Transform {
     constructor(

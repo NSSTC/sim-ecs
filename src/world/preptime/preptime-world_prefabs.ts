@@ -1,10 +1,10 @@
-import type {ISerDeOptions, TSerializer} from "../../serde/serde.spec";
-import type {ISerialFormat} from "../../serde/serial-format.spec";
-import {type PreptimeWorld} from "./preptime-world";
-import type {TGroupHandle} from "../world.spec";
-import type {TDeserializer} from "../../serde/serde.spec";
-import type {IEntity} from "../../entity/entity.spec";
-import type {TObjectProto} from "../../_.spec";
+import type {ISerDeOptions, TSerializer} from "../../serde/serde.spec.ts";
+import type {ISerialFormat} from "../../serde/serial-format.spec.ts";
+import {type PreptimeWorld} from "./preptime-world.ts";
+import type {TGroupHandle} from "../world.spec.ts";
+import type {TDeserializer} from "../../serde/serde.spec.ts";
+import type {IEntity} from "../../entity/entity.spec.ts";
+import type {TObjectProto} from "../../_.spec.ts";
 
 export function load(
     this: PreptimeWorld,

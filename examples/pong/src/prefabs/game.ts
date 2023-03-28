@@ -1,11 +1,11 @@
-import {EPaddleSide, type Paddle} from "../components/paddle";
-import {type Shape} from "../components/shape";
-import {type UIItem} from "../components/ui-item";
-import {type Position} from "../components/position";
-import {type Collision} from "../components/collision";
-import {EWallSide, EWallType, type Wall} from "../components/wall";
+import {EPaddleSide, type Paddle} from "../components/paddle.ts";
+import {type Shape} from "../components/shape.ts";
+import {type UIItem} from "../components/ui-item.ts";
+import {type Position} from "../components/position.ts";
+import {type Collision} from "../components/collision.ts";
+import {EWallSide, EWallType, type Wall} from "../components/wall.ts";
 import {CResourceMarker, CResourceMarkerValue} from "sim-ecs";
-import {type ScoreBoard} from "../models/score-board";
+import {type ScoreBoard} from "../models/score-board.ts";
 
 
 export const defaultBallPositionX = 0.49;

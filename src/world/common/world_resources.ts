@@ -1,7 +1,7 @@
-import type {TObjectProto, TTypeProto} from "../../_.spec";
-import {type PreptimeWorld} from "../preptime/preptime-world";
-import {type RuntimeWorld} from "../runtime/runtime-world";
-import type {TExistenceQuery} from "../../query/query.spec";
+import type {TObjectProto, TTypeProto} from "../../_.spec.ts";
+import {type PreptimeWorld} from "../preptime/preptime-world.ts";
+import {type RuntimeWorld} from "../runtime/runtime-world.ts";
+import type {TExistenceQuery} from "../../query/query.spec.ts";
 
 
 export function clearResources(this: PreptimeWorld | RuntimeWorld): void {

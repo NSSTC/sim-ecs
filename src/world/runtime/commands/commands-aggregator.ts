@@ -1,7 +1,7 @@
-import type {ICommandsAggregator, TCommand} from "./commands-aggregator.spec";
+import type {ICommandsAggregator, TCommand} from "./commands-aggregator.spec.ts";
 
 
-export * from "./commands-aggregator.spec";
+export * from "./commands-aggregator.spec.ts";
 
 export class CommandsAggregator implements ICommandsAggregator {
     commands: TCommand[] = [];

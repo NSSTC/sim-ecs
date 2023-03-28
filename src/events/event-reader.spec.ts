@@ -1,5 +1,5 @@
-import type {TObjectProto} from "../_.spec";
-import type {TSubscriber} from "./_";
+import type {TObjectProto} from "../_.spec.ts";
+import type {TSubscriber} from "./_.ts";
 
 export interface IEventReader<T extends TObjectProto> {
     readonly eventHandler: TSubscriber<T>

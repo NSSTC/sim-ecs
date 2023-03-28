@@ -1,11 +1,11 @@
-import type {IStage, TStageSchedulingAlgorithm} from "./stage.spec";
-import type {ISystem} from "../../system/system.spec";
-import type {TExecutor, TTypeProto} from "../../_.spec";
-import {systemRunParamSym} from "../../system/_";
-import {SystemError} from "../../world/error";
-import type {IEventBus} from "../../events/event-bus.spec";
+import type {IStage, TStageSchedulingAlgorithm} from "./stage.spec.ts";
+import type {ISystem} from "../../system/system.spec.ts";
+import type {TExecutor, TTypeProto} from "../../_.spec.ts";
+import {systemRunParamSym} from "../../system/_.ts";
+import {SystemError} from "../../world/error.ts";
+import type {IEventBus} from "../../events/event-bus.spec.ts";
 
-export * from "./stage.spec";
+export * from "./stage.spec.ts";
 
 export async function defaultStageSchedulingAlgorithm(systems: ReadonlyArray<Readonly<ISystem>>, eventBus: Readonly<IEventBus>): Promise<void> {
     let system;

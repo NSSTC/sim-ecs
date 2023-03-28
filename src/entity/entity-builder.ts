@@ -1,8 +1,8 @@
-import {Entity, type TEntityId} from "./entity";
-import type {IEntityBuilder} from "./entity-builder.spec";
-import type {TObjectProto} from "../_.spec";
+import {Entity, type TEntityId} from "./entity.ts";
+import type {IEntityBuilder} from "./entity-builder.spec.ts";
+import type {TObjectProto} from "../_.spec.ts";
 
-export * from './entity-builder.spec';
+export * from './entity-builder.spec.ts';
 
 export class EntityBuilder implements IEntityBuilder {
     protected components = new Map<Readonly<object | TObjectProto>, ReadonlyArray<unknown>>();

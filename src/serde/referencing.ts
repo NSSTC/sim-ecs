@@ -1,5 +1,5 @@
-import {EReferenceType, type IReference} from "./referencing.spec";
-import {CMarkerSeparator, CRefMarker} from "./serde.spec";
+import {EReferenceType, type IReference} from "./referencing.spec.ts";
+import {CMarkerSeparator, CRefMarker} from "./serde.spec.ts";
 
 export class Reference implements IReference {
     constructor(

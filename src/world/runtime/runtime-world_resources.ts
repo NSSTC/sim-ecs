@@ -1,8 +1,8 @@
-import {type RuntimeWorld} from "./runtime-world";
-import type {TTypeProto} from "../../_.spec";
-import {systemRunParamSym} from "../../system/_";
-import type {TSystemParameterDesc} from "../../system/system.spec";
-import {SimECSReplaceResourceEvent, SimECSSystemReplaceResource} from "../../events/internal-events";
+import {type RuntimeWorld} from "./runtime-world.ts";
+import type {TTypeProto} from "../../_.spec.ts";
+import {systemRunParamSym} from "../../system/_.ts";
+import type {TSystemParameterDesc} from "../../system/system.spec.ts";
+import {SimECSReplaceResourceEvent, SimECSSystemReplaceResource} from "../../events/internal-events.ts";
 
 export function addResource<T extends object>(
     this: RuntimeWorld,

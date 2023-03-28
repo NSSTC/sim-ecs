@@ -1,7 +1,7 @@
 import {createSystem, queryComponents, Read, ReadEntity, Write} from "sim-ecs";
-import {Shape} from "../components/shape";
-import {Collision} from "../components/collision";
-import {Position} from "../components/position";
+import {Shape} from "../components/shape.ts";
+import {Collision} from "../components/collision.ts";
+import {Position} from "../components/position.ts";
 
 export const CollisionSystem = createSystem({
     query: queryComponents({

@@ -1,5 +1,5 @@
-import {PushDownAutomaton} from './pda';
-import {assert} from 'chai';
+import {PushDownAutomaton} from './pda.ts";
+import {assert} from 'chai.ts";
 
 describe('Test PDA', () => {
     class State {}

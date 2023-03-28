@@ -1,8 +1,8 @@
-import {EQueryType, type IQuery} from "./query.spec";
-import type {IEntity} from "../entity/entity";
-import {addEntitySym, clearEntitiesSym, removeEntitySym, setEntitiesSym} from "./_";
+import {EQueryType, type IQuery} from "./query.spec.ts";
+import type {IEntity} from "../entity/entity.ts";
+import {addEntitySym, clearEntitiesSym, removeEntitySym, setEntitiesSym} from "./_.ts";
 
-export * from "./query.spec";
+export * from "./query.spec.ts";
 export {
     Read,
     ReadEntity,
@@ -13,7 +13,7 @@ export {
     Write,
     WithoutTag,
     WriteOptional,
-} from "./query.util";
+} from "./query.util.ts";
 
 
 export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {

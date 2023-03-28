@@ -1,4 +1,4 @@
-import {buildWorld, IPreptimeWorld, SerialFormat} from '../../../../../src';
+import {buildWorld, IPreptimeWorld, SerialFormat} from '../../../../..';
 import {IBenchmark} from "../../benchmark.spec";
 
 class Transform {}

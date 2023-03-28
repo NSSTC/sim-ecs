@@ -4,12 +4,12 @@ import type {
     IComponentsQuery,
     TAccessQueryData,
     TAccessQueryParameter,
-} from "./query.spec";
-import {EQueryType, ETargetType} from "./query.spec";
-import {Query} from "./query";
-import type {TObjectProto} from "../_.spec";
-import type {IEntity, TTag} from "../entity/entity.spec";
-import {accessDescSym, addEntitySym} from "./_";
+} from "./query.spec.ts";
+import {EQueryType, ETargetType} from "./query.spec.ts";
+import {Query} from "./query.ts";
+import type {TObjectProto} from "../_.spec.ts";
+import type {IEntity, TTag} from "../entity/entity.spec.ts";
+import {accessDescSym, addEntitySym} from "./_.ts";
 
 export class ComponentsQuery<DESC extends IAccessQuery<TObjectProto>> extends Query<DESC, TAccessQueryData<DESC>> implements IComponentsQuery<DESC> {
     constructor(

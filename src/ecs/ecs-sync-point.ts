@@ -1,4 +1,4 @@
-import type {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
+import type {ISyncPoint} from "../scheduler/pipeline/sync-point.spec.ts";
 
 const syncPoints = new Map<string, ISyncPoint>();
 

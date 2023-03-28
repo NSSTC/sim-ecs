@@ -1,19 +1,19 @@
-import type {IPreptimeOptions, IPreptimeWorld, IPreptimeWorldConfig} from "./preptime-world.spec";
-import {SerDe} from "../../serde/serde";
-import {Scheduler} from "../../scheduler/scheduler";
+import type {IPreptimeOptions, IPreptimeWorld, IPreptimeWorldConfig} from "./preptime-world.spec.ts";
+import {SerDe} from "../../serde/serde.ts";
+import {Scheduler} from "../../scheduler/scheduler.ts";
 import {
     buildEntity,
     clearEntities,
     createEntity,
     getEntities,
-} from "../common/world_entities";
+} from "../common/world_entities.ts";
 import {
     clearResources,
     getResource,
     getResources,
     hasResource,
     removeResource,
-} from "../common/world_resources";
+} from "../common/world_resources.ts";
 import {
     addEntitiesToGroup,
     addEntityToGroup,
@@ -22,17 +22,17 @@ import {
     createGroup,
     getGroupEntities,
     removeGroup,
-} from "../common/world_groups";
-import {addEntity, hasEntity, removeEntity} from "./preptime-world_entities";
-import {addResource} from "./preptime-world_resources";
-import {load, save} from "./preptime-world_prefabs";
-import {merge} from "../common/world_misc";
-import type {IRuntimeWorld} from "../runtime/runtime-world.spec";
-import {RuntimeWorld} from "../runtime/runtime-world";
-import {State} from "../../state/state";
-import type {IPreptimeData} from "./preptime-world.spec";
+} from "../common/world_groups.ts";
+import {addEntity, hasEntity, removeEntity} from "./preptime-world_entities.ts";
+import {addResource} from "./preptime-world_resources.ts";
+import {load, save} from "./preptime-world_prefabs.ts";
+import {merge} from "../common/world_misc.ts";
+import type {IRuntimeWorld} from "../runtime/runtime-world.spec.ts";
+import {RuntimeWorld} from "../runtime/runtime-world.ts";
+import {State} from "../../state/state.ts";
+import type {IPreptimeData} from "./preptime-world.spec.ts";
 
-export * from "./preptime-world.spec";
+export * from "./preptime-world.spec.ts";
 
 
 export class PreptimeWorld implements IPreptimeWorld {

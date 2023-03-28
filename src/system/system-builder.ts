@@ -1,7 +1,7 @@
-import type {ISystemBuilder} from "./system-builder.spec";
-import type {ISystem, TSystemFunction, TSystemParameterDesc} from "./system.spec";
+import type {ISystemBuilder} from "./system-builder.spec.ts";
+import type {ISystem, TSystemFunction, TSystemParameterDesc} from "./system.spec.ts";
 
-export * from "./system-builder.spec";
+export * from "./system-builder.spec.ts";
 
 export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements ISystemBuilder<Readonly<PARAMDESC>> {
     systemName: string = '';

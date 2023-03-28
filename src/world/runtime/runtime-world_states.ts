@@ -1,9 +1,9 @@
-import {type RuntimeWorld} from "./runtime-world";
-import type {IIStateProto} from "../../state/state.spec";
-import {State} from "../../state/state";
-import type {IScheduler} from "../../scheduler/scheduler.spec";
-import {EventReader} from "../../events/event-reader";
-import {EventBus} from "../../events/event-bus";
+import {type RuntimeWorld} from "./runtime-world.ts";
+import type {IIStateProto} from "../../state/state.spec.ts";
+import {State} from "../../state/state.ts";
+import type {IScheduler} from "../../scheduler/scheduler.spec.ts";
+import {EventReader} from "../../events/event-reader.ts";
+import {EventBus} from "../../events/event-bus.ts";
 
 export async function popState(this: RuntimeWorld): Promise<void> {
     unsubscribeEventsOfSchedulerSystems(this.eventBus, this.currentScheduler!);

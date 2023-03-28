@@ -1,4 +1,4 @@
-import type {IEntity} from "../entity/entity.spec";
+import type {IEntity} from "../entity/entity.spec.ts";
 
 export class EntityAdded {
     constructor(

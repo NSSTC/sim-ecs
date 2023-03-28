@@ -1,4 +1,4 @@
-import {buildWorld, createSystem, IPreptimeWorld, IRuntimeWorld, queryComponents, Write} from '../../../../../src';
+import {buildWorld, createSystem, IPreptimeWorld, IRuntimeWorld, queryComponents, Write} from '../../../../..';
 import type {IBenchmark} from "../../benchmark.spec";
 import {CheckEndSystem, CounterResource} from "./_";
 

@@ -1,7 +1,7 @@
 import {Actions, createSystem, ReadResource} from "sim-ecs";
-import {GameStore} from "../models/game-store";
-import {GameState} from "../states/game";
-import {PauseState} from "../states/pause";
+import {GameStore} from "../models/game-store.ts";
+import {GameState} from "../states/game.ts";
+import {PauseState} from "../states/pause.ts";
 
 
 export const PauseSystem = createSystem({

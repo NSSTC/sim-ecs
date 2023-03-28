@@ -1,21 +1,21 @@
 import {buildWorld, IPreptimeWorld} from "sim-ecs";
-import {UIItem} from "./components/ui-item";
-import {Paddle} from "./components/paddle";
-import {Position} from "./components/position";
-import {Velocity} from "./components/velocity";
-import {Shape} from "./components/shape";
-import {ScoreBoard} from "./models/score-board";
-import {Collision} from "./components/collision";
-import {Wall} from "./components/wall";
-import {PauseState} from "./states/pause";
-import {defaultSchedule} from "./schedules/default";
-import {pauseSchedule} from "./schedules/pause";
-import {GameState} from "./states/game";
-import {gameSchedule} from "./schedules/game";
-import {GameStore} from "./models/game-store";
-import {PaddleTransforms} from "./models/paddle-transforms";
-import {Dimensions} from "./models/dimensions";
-import {MenuState} from "./states/menu";
+import {UIItem} from "./components/ui-item.ts";
+import {Paddle} from "./components/paddle.ts";
+import {Position} from "./components/position.ts";
+import {Velocity} from "./components/velocity.ts";
+import {Shape} from "./components/shape.ts";
+import {ScoreBoard} from "./models/score-board.ts";
+import {Collision} from "./components/collision.ts";
+import {Wall} from "./components/wall.ts";
+import {PauseState} from "./states/pause.ts";
+import {defaultSchedule} from "./schedules/default.ts";
+import {pauseSchedule} from "./schedules/pause.ts";
+import {GameState} from "./states/game.ts";
+import {gameSchedule} from "./schedules/game.ts";
+import {GameStore} from "./models/game-store.ts";
+import {PaddleTransforms} from "./models/paddle-transforms.ts";
+import {Dimensions} from "./models/dimensions.ts";
+import {MenuState} from "./states/menu.ts";
 
 
 const cleanup = () => {

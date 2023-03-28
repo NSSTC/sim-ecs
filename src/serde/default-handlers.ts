@@ -1,8 +1,8 @@
-import type {TDeserializer, TSerializer} from "./serde.spec";
-import {Entity} from "../entity/entity";
-import {Reference} from "./referencing";
-import {EReferenceType} from "./referencing.spec";
-import type {TObjectProto} from "../_.spec";
+import type {TDeserializer, TSerializer} from "./serde.spec.ts";
+import {Entity} from "../entity/entity.ts";
+import {Reference} from "./referencing.ts";
+import {EReferenceType} from "./referencing.spec.ts";
+import type {TObjectProto} from "../_.spec.ts";
 
 
 export const getDefaultSerializer = function (customSerializer?: TSerializer): TSerializer {

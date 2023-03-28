@@ -1,11 +1,11 @@
-import type {IIStateProto, IState} from "../state/state.spec";
-import type {ICommands} from "./runtime/commands/commands.spec";
-import type {TTypeProto} from "../_.spec";
-import type {IEntitiesQuery} from "../query/query.spec";
-import type {ISerDeOptions, TSerializer} from "../serde/serde.spec";
-import type {ISerialFormat} from "../serde/serial-format.spec";
-import type {IEventBus} from "../events/event-bus.spec";
-import type {IReadOnlyEntity} from "../entity/entity.spec";
+import type {IIStateProto, IState} from "../state/state.spec.ts";
+import type {ICommands} from "./runtime/commands/commands.spec.ts";
+import type {TTypeProto} from "../_.spec.ts";
+import type {IEntitiesQuery} from "../query/query.spec.ts";
+import type {ISerDeOptions, TSerializer} from "../serde/serde.spec.ts";
+import type {ISerialFormat} from "../serde/serial-format.spec.ts";
+import type {IEventBus} from "../events/event-bus.spec.ts";
+import type {IReadOnlyEntity} from "../entity/entity.spec.ts";
 
 export interface ITransitionActions extends ISystemActions {
     eventBus: Readonly<IEventBus>

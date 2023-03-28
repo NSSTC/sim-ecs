@@ -1,8 +1,8 @@
-import type {IEventBus} from "./event-bus.spec";
-import type {IEventWriter} from "./event-writer.spec";
-import type {TObjectProto} from "../_.spec";
+import type {IEventBus} from "./event-bus.spec.ts";
+import type {IEventWriter} from "./event-writer.spec.ts";
+import type {TObjectProto} from "../_.spec.ts";
 
-export * from "./event-writer.spec";
+export * from "./event-writer.spec.ts";
 
 export class EventWriter<T extends TObjectProto> implements IEventWriter<T>{
     constructor(

@@ -1,5 +1,5 @@
 import {createSystem, Storage, WriteResource} from "sim-ecs";
-import {EMovement, GameStore} from "../models/game-store";
+import {EMovement, GameStore} from "../models/game-store.ts";
 
 export enum EKeyState {
     Down,

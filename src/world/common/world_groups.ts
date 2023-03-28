@@ -1,9 +1,9 @@
-import type {TGroupHandle} from "../world.spec";
-import type {IEntity} from "../../entity/entity.spec";
-import type {IPreptimeWorld} from "../preptime/preptime-world.spec";
-import {type PreptimeWorld} from "../preptime/preptime-world";
-import {type RuntimeWorld} from "../runtime/runtime-world";
-import type {IMutableWorld} from "../world.spec";
+import type {TGroupHandle} from "../world.spec.ts";
+import type {IEntity} from "../../entity/entity.spec.ts";
+import type {IPreptimeWorld} from "../preptime/preptime-world.spec.ts";
+import {type PreptimeWorld} from "../preptime/preptime-world.ts";
+import {type RuntimeWorld} from "../runtime/runtime-world.ts";
+import type {IMutableWorld} from "../world.spec.ts";
 
 
 export function addEntityToGroup(this: PreptimeWorld | RuntimeWorld, groupHandle: TGroupHandle, entity: Readonly<IEntity>): void {

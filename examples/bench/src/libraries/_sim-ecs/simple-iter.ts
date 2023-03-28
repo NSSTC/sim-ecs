@@ -6,7 +6,7 @@ import {
     queryComponents,
     Read,
     Write
-} from '../../../../../src';
+} from '../../../../..';
 import type {IBenchmark} from "../../benchmark.spec";
 import {CheckEndSystem, CounterResource} from "./_";
 

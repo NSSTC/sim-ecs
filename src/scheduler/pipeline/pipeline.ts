@@ -1,7 +1,7 @@
-import type {IPipeline} from "./pipeline.spec";
-import {type ISyncPoint, SyncPoint} from "./sync-point";
+import type {IPipeline} from "./pipeline.spec.ts";
+import {type ISyncPoint, SyncPoint} from "./sync-point.ts";
 
-export * from "./pipeline.spec";
+export * from "./pipeline.spec.ts";
 
 export class Pipeline implements IPipeline {
     protected _root: ISyncPoint = new SyncPoint();

@@ -1,19 +1,19 @@
-import type {ICommands} from "./commands.spec";
-import type {IEntity, IReadOnlyEntity} from "../../../entity/entity.spec";
-import type {TTypeProto} from "../../../_.spec";
-import type {TDeserializer, ISerDeOptions} from "../../../serde/serde.spec";
-import type {ISerialFormat} from "../../../serde/serial-format.spec";
-import type {TGroupHandle} from "../../world.spec";
-import type {IIStateProto} from "../../../state/state.spec";
-import type {TCommand} from "./commands-aggregator.spec";
-import {CommandEntityBuilder} from "./command-entity-builder";
-import {RuntimeWorld} from "../runtime-world";
-import type {IPreptimeWorld} from "../../preptime/preptime-world.spec";
-import {IQuery} from "../../../query/query.spec";
-import {addEntitySym} from "../../../query/_";
-import {Entity} from "../../../entity/entity";
+import type {ICommands} from "./commands.spec.ts";
+import type {IEntity, IReadOnlyEntity} from "../../../entity/entity.spec.ts";
+import type {TTypeProto} from "../../../_.spec.ts";
+import type {TDeserializer, ISerDeOptions} from "../../../serde/serde.spec.ts";
+import type {ISerialFormat} from "../../../serde/serial-format.spec.ts";
+import type {TGroupHandle} from "../../world.spec.ts";
+import type {IIStateProto} from "../../../state/state.spec.ts";
+import type {TCommand} from "./commands-aggregator.spec.ts";
+import {CommandEntityBuilder} from "./command-entity-builder.ts";
+import {RuntimeWorld} from "../runtime-world.ts";
+import type {IPreptimeWorld} from "../../preptime/preptime-world.spec.ts";
+import {IQuery} from "../../../query/query.spec.ts";
+import {addEntitySym} from "../../../query/_.ts";
+import {Entity} from "../../../entity/entity.ts";
 
-export * from "./commands.spec";
+export * from "./commands.spec.ts";
 
 export class Commands implements ICommands {
     protected commands: Array<TCommand> = [];

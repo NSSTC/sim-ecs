@@ -1,4 +1,4 @@
-import {buildWorld, IPreptimeWorld} from '../../../../../src';
+import {buildWorld, IPreptimeWorld} from '../../../../..';
 import { IBenchmark } from '../../benchmark.spec';
 
 class Transform {}

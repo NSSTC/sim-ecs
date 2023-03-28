@@ -1,11 +1,11 @@
-import type {TTypeProto} from "../_.spec";
-import type {IEntity} from "../entity/entity.spec";
-import type {ISerDeOptions, TDeserializer, TSerializer} from "../serde/serde.spec";
-import type {IEntitiesQuery, TExistenceQuery} from "../query/query.spec";
-import type {IEntityBuilder} from "../entity/entity-builder.spec";
-import type {IRuntimeWorld} from "./runtime/runtime-world.spec";
-import type {ISerialFormat} from "../serde/serial-format.spec";
-import type {IPreptimeWorld} from "./preptime/preptime-world.spec";
+import type {TTypeProto} from "../_.spec.ts";
+import type {IEntity} from "../entity/entity.spec.ts";
+import type {ISerDeOptions, TDeserializer, TSerializer} from "../serde/serde.spec.ts";
+import type {IEntitiesQuery, TExistenceQuery} from "../query/query.spec.ts";
+import type {IEntityBuilder} from "../entity/entity-builder.spec.ts";
+import type {IRuntimeWorld} from "./runtime/runtime-world.spec.ts";
+import type {ISerialFormat} from "../serde/serial-format.spec.ts";
+import type {IPreptimeWorld} from "./preptime/preptime-world.spec.ts";
 
 
 export type TGroupHandle = number;

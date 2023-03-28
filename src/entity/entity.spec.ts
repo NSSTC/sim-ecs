@@ -1,5 +1,5 @@
-import type {TObjectProto, TTypeProto} from "../_.spec";
-import {ISerDe} from "../serde/serde.spec";
+import type {TObjectProto, TTypeProto} from "../_.spec.ts";
+import {ISerDe} from "../serde/serde.spec.ts";
 
 export type TEntityId = string;
 export type TTag = number | string;

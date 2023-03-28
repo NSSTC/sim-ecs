@@ -1,5 +1,5 @@
-import type {TTypeProto} from "../../_.spec";
-import {type PreptimeWorld} from "./preptime-world";
+import type {TTypeProto} from "../../_.spec.ts";
+import {type PreptimeWorld} from "./preptime-world.ts";
 
 export function addResource<T extends object>(
     this: PreptimeWorld,

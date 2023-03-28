@@ -1,14 +1,14 @@
 import {type ITransitionActions, queryEntities, SerialFormat, State, type TGroupHandle, With} from "sim-ecs";
-import {gamePrefab} from "../prefabs/game";
-import {EPaddleSide, Paddle} from "../components/paddle";
-import {Position} from "../components/position";
-import {GameStore} from "../models/game-store";
-import {Velocity} from "../components/velocity";
-import {load} from "../app/persistence";
-import {Shape} from "../components/shape";
-import {UIItem} from "../components/ui-item";
-import {ScoreBoard} from "../models/score-board";
-import {savablePrefab} from "../prefabs/savable";
+import {gamePrefab} from "../prefabs/game.ts";
+import {EPaddleSide, Paddle} from "../components/paddle.ts";
+import {Position} from "../components/position.ts";
+import {GameStore} from "../models/game-store.ts";
+import {Velocity} from "../components/velocity.ts";
+import {load} from "../app/persistence.ts";
+import {Shape} from "../components/shape.ts";
+import {UIItem} from "../components/ui-item.ts";
+import {ScoreBoard} from "../models/score-board.ts";
+import {savablePrefab} from "../prefabs/savable.ts";
 
 export class GameState extends State {
     saveDataPrefabHandle?: TGroupHandle;

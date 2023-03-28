@@ -1,11 +1,11 @@
-import {type PreptimeWorld} from "../preptime/preptime-world";
-import type {IEntity} from "../../entity/entity.spec";
-import type {IEntityBuilder} from "../../entity/entity-builder.spec";
-import type {IEntitiesQuery} from "../../query/query.spec";
-import {EntityBuilder} from "../../entity/entity-builder";
-import {Entity} from "../../entity/entity";
-import {type RuntimeWorld} from "../runtime/runtime-world";
-import type {IMutableWorld} from "../world.spec";
+import {type PreptimeWorld} from "../preptime/preptime-world.ts";
+import type {IEntity} from "../../entity/entity.spec.ts";
+import type {IEntityBuilder} from "../../entity/entity-builder.spec.ts";
+import type {IEntitiesQuery} from "../../query/query.spec.ts";
+import {EntityBuilder} from "../../entity/entity-builder.ts";
+import {Entity} from "../../entity/entity.ts";
+import {type RuntimeWorld} from "../runtime/runtime-world.ts";
+import type {IMutableWorld} from "../world.spec.ts";
 
 
 export function buildEntity(this: IMutableWorld, uuid?: string): IEntityBuilder {

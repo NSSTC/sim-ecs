@@ -1,4 +1,4 @@
-import {Actions, buildWorld, createSystem, ReadEvents, SystemError} from "../src";
+import {Actions, buildWorld, createSystem, ReadEvents, SystemError} from "../src/index.ts";
 
 
 const ErrorTriggerSystem = createSystem({})

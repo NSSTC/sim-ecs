@@ -3,12 +3,12 @@ import type {
     IExistenceDescriptor,
     TAccessQueryParameter,
     TOptionalAccessQueryParameter
-} from "./query.spec";
-import {EAccess, EExistence, ETargetType} from "./query.spec";
-import type {TObjectProto, TTypeProto} from "../_.spec";
-import type {IEntity, TTag} from "../entity/entity.spec";
-import {Entity} from "../entity/entity";
-import {accessDescSym, existenceDescSym} from "./_";
+} from "./query.spec.ts";
+import {EAccess, EExistence, ETargetType} from "./query.spec.ts";
+import type {TObjectProto, TTypeProto} from "../_.spec.ts";
+import type {IEntity, TTag} from "../entity/entity.spec.ts";
+import {Entity} from "../entity/entity.ts";
+import {accessDescSym, existenceDescSym} from "./_.ts";
 
 export function ReadEntity(uuid?: string): TAccessQueryParameter<TTypeProto<Readonly<IEntity>>> {
     return Object.assign({}, Entity, {

@@ -1,9 +1,9 @@
-import type {TObjectProto} from "../_.spec";
-import type {ISerDeOperations} from "../serde/serde.spec";
-import type {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
-import type {IScheduler} from "../scheduler/scheduler.spec";
-import type {IIStateProto} from "../state/state.spec";
-import type {IPreptimeWorld} from "./preptime/preptime-world.spec";
+import type {TObjectProto} from "../_.spec.ts";
+import type {ISerDeOperations} from "../serde/serde.spec.ts";
+import type {ISyncPoint} from "../scheduler/pipeline/sync-point.spec.ts";
+import type {IScheduler} from "../scheduler/scheduler.spec.ts";
+import type {IIStateProto} from "../state/state.spec.ts";
+import type {IPreptimeWorld} from "./preptime/preptime-world.spec.ts";
 
 export interface IObjectRegistrationOptions {
     serDe: Readonly<ISerDeOperations>

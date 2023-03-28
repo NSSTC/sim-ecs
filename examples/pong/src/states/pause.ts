@@ -1,7 +1,7 @@
 import {type ITransitionActions, SerialFormat, State, type TGroupHandle} from "sim-ecs";
-import {pausePrefab} from "../prefabs/pause";
-import {GameStore} from "../models/game-store";
-import {save} from "../app/persistence";
+import {pausePrefab} from "../prefabs/pause.ts";
+import {GameStore} from "../models/game-store.ts";
+import {save} from "../app/persistence.ts";
 
 export class PauseState extends State {
     prefabHandle!: TGroupHandle;

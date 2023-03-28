@@ -1,12 +1,12 @@
 import {createSystem, queryComponents, Read, WithTag, Write, WriteResource} from "sim-ecs";
-import {Velocity} from "../components/velocity";
-import {Collision} from "../components/collision";
-import {EWallSide, EWallType, Wall} from "../components/wall";
-import {Paddle} from "../components/paddle";
-import {ScoreBoard} from "../models/score-board";
-import {Position} from "../components/position";
-import {defaultBallPositionX, defaultBallPositionY} from "../prefabs/game";
-import {ETags} from "../models/tags";
+import {Velocity} from "../components/velocity.ts";
+import {Collision} from "../components/collision.ts";
+import {EWallSide, EWallType, Wall} from "../components/wall.ts";
+import {Paddle} from "../components/paddle.ts";
+import {ScoreBoard} from "../models/score-board.ts";
+import {Position} from "../components/position.ts";
+import {defaultBallPositionX, defaultBallPositionY} from "../prefabs/game.ts";
+import {ETags} from "../models/tags.ts";
 
 
 export const BallSystem = createSystem({

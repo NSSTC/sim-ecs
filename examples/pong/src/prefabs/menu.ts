@@ -1,6 +1,6 @@
-import {EActions} from "../app/actions";
-import {type Position} from "../components/position";
-import {type UIItem} from "../components/ui-item";
+import {EActions} from "../app/actions.ts";
+import {type Position} from "../components/position.ts";
+import {type UIItem} from "../components/ui-item.ts";
 
 // This could also be pure JSON, but in order to use TS types and have static checks it is recommended to write it as TS array.
 export const menuPrefab = [

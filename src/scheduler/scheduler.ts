@@ -1,12 +1,12 @@
-import type {IScheduler} from "./scheduler.spec";
-import {type IPipeline, Pipeline} from "./pipeline/pipeline";
-import type {TExecutor} from "../_.spec";
-import {systemRunParamSym} from "../system/_";
-import {getSystemRunParameters, ISystem} from "../system/system";
-import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec";
-import {IEventBus} from "../events/event-bus.spec";
+import type {IScheduler} from "./scheduler.spec.ts";
+import {type IPipeline, Pipeline} from "./pipeline/pipeline.ts";
+import type {TExecutor} from "../_.spec.ts";
+import {systemRunParamSym} from "../system/_.ts";
+import {getSystemRunParameters, ISystem} from "../system/system.ts";
+import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec.ts";
+import {IEventBus} from "../events/event-bus.spec.ts";
 
-export * from "./scheduler.spec";
+export * from "./scheduler.spec.ts";
 
 
 export async function defaultSchedulingAlgorithm(stageExecutors: ReadonlyArray<TExecutor>) {

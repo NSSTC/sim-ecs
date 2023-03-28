@@ -3,18 +3,18 @@ import type {
     ISystemResource,
     TSystemParameter,
     TSystemParameterDesc,
-} from "./system.spec";
-import {Actions, Storage} from "./system.spec";
-import {SystemBuilder} from "./system-builder";
-import {Query} from "../query/query";
-import type {TObjectProto} from "../_.spec";
-import {systemEventReaderSym, systemEventWriterSym, systemResourceTypeSym} from "./_";
-import type {ISystemBuilder} from "./system-builder.spec";
-import {type IRuntimeWorld} from "../world/runtime/runtime-world";
-import {SimECSSystemAddResource} from "../events/internal-events";
+} from "./system.spec.ts";
+import {Actions, Storage} from "./system.spec.ts";
+import {SystemBuilder} from "./system-builder.ts";
+import {Query} from "../query/query.ts";
+import type {TObjectProto} from "../_.spec.ts";
+import {systemEventReaderSym, systemEventWriterSym, systemResourceTypeSym} from "./_.ts";
+import type {ISystemBuilder} from "./system-builder.spec.ts";
+import {type IRuntimeWorld} from "../world/runtime/runtime-world.ts";
+import {SimECSSystemAddResource} from "../events/internal-events.ts";
 
 
-export * from "./system.spec";
+export * from "./system.spec.ts";
 
 export function createSystem<T extends TSystemParameterDesc>(parameterDesc: Readonly<T>): ISystemBuilder<T> {
     return new SystemBuilder(parameterDesc);

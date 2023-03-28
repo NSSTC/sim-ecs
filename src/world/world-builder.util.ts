@@ -1,5 +1,5 @@
-import type {TObjectProto} from "../_.spec";
-import type {IDeserializerOutput} from "../serde/serde.spec";
+import type {TObjectProto} from "../_.spec.ts";
+import type {IDeserializerOutput} from "../serde/serde.spec.ts";
 
 // todo: read the Constructor parameters in order to throw early if a field is missing
 export function dataStructDeserializer(Constructor: TObjectProto, data: unknown): IDeserializerOutput {

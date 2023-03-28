@@ -1,18 +1,18 @@
 import type {
     IObjectRegistrationOptions,
     IWorldBuilder,
-} from "./world-builder.spec";
-import type {TObjectProto} from "../_.spec";
-import type {ISerDe} from "../serde/serde.spec";
-import {dataStructDeserializer, dataStructSerializer} from "./world-builder.util";
-import {type IScheduler, Scheduler} from "../scheduler/scheduler";
-import type {ISyncPoint} from "../scheduler/pipeline/sync-point.spec";
-import type {IIStateProto} from "../state/state.spec";
-import {addSyncPoint} from "../ecs/ecs-sync-point";
-import {PreptimeWorld} from "./preptime/preptime-world";
-import type {IResourceRegistrationOptions} from "./world-builder.spec";
+} from "./world-builder.spec.ts";
+import type {TObjectProto} from "../_.spec.ts";
+import type {ISerDe} from "../serde/serde.spec.ts";
+import {dataStructDeserializer, dataStructSerializer} from "./world-builder.util.ts";
+import {type IScheduler, Scheduler} from "../scheduler/scheduler.ts";
+import type {ISyncPoint} from "../scheduler/pipeline/sync-point.spec.ts";
+import type {IIStateProto} from "../state/state.spec.ts";
+import {addSyncPoint} from "../ecs/ecs-sync-point.ts";
+import {PreptimeWorld} from "./preptime/preptime-world.ts";
+import type {IResourceRegistrationOptions} from "./world-builder.spec.ts";
 
-export * from './world-builder.spec';
+export * from './world-builder.spec.ts';
 
 export class WorldBuilder implements IWorldBuilder {
     protected callbacks = new Set<(world: PreptimeWorld) => void>();

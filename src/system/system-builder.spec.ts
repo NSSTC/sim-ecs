@@ -1,4 +1,4 @@
-import type {ISystem, TSystemFunction, TSystemParameterDesc} from "./system.spec";
+import type {ISystem, TSystemFunction, TSystemParameterDesc} from "./system.spec.ts";
 
 export interface ISystemBuilder<PARAMDESC extends TSystemParameterDesc> {
     parameterDesc: Readonly<PARAMDESC>

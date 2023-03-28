@@ -1,4 +1,4 @@
-import {Actions, buildWorld, createSystem, ISyncPointPrefab, queryComponents, Write} from "../src";
+import {Actions, buildWorld, createSystem, ISyncPointPrefab, queryComponents, Write} from "../src/index.ts";
 
 
 // a component.

@@ -1,7 +1,7 @@
 import {createSystem, queryComponents, Read, Storage, WriteResource} from "sim-ecs";
-import {Position} from "../components/position";
-import {Shape} from "../components/shape";
-import {relToScreenCoords} from "../app/util";
+import {Position} from "../components/position.ts";
+import {Shape} from "../components/shape.ts";
+import {relToScreenCoords} from "../app/util.ts";
 
 export const RenderGameSystem = createSystem({
     ctx: WriteResource(CanvasRenderingContext2D),

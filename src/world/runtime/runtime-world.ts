@@ -3,13 +3,13 @@ import type {
     IRuntimeWorldInitConfig,
     IRuntimeWorldInitData,
     TExecutionFunction,
-} from "./runtime-world.spec";
+} from "./runtime-world.spec.ts";
 import {
     buildEntity,
     clearEntities,
     createEntity,
     getEntities,
-} from "../common/world_entities";
+} from "../common/world_entities.ts";
 import {
     addEntitiesToGroup,
     addEntityToGroup,
@@ -18,38 +18,38 @@ import {
     createGroup,
     getGroupEntities,
     removeGroup,
-} from "../common/world_groups";
-import {merge} from "../common/world_misc";
-import {load, save} from "./runtime-world_prefabs";
+} from "../common/world_groups.ts";
+import {merge} from "../common/world_misc.ts";
+import {load, save} from "./runtime-world_prefabs.ts";
 import {
     clearResources,
     getResource,
     getResources,
     hasResource,
     removeResource,
-} from "../common/world_resources";
-import {addEntity, hasEntity, removeEntity} from "./runtime-world_entities";
-import {addResource, replaceResource} from "./runtime-world_resources";
-import {SimECSPushDownAutomaton} from "../../pda/sim-ecs-pda";
-import type {IState} from "../../state/state.spec";
-import {popState, pushState} from "./runtime-world_states";
-import {EventBus} from "../../events/event-bus";
-import type {IScheduler} from "../../scheduler/scheduler.spec";
-import type {TExecutor, TObjectProto} from "../../_.spec";
-import type {IMutableWorld} from "../world.spec";
-import {Commands} from "./commands/commands";
-import type {ISystemActions, ITransitionActions} from "../actions.spec";
-import {getQueriesFromSystem} from "../../system/system";
-import type {ISystem} from "../../system/system.spec";
-import {setEntitiesSym} from "../../query/_";
-import type {IRuntimeWorldData} from "./runtime-world.spec";
-import {Query} from "../../query/query";
-import {registerSystemAddResourceEvent} from "./runtime-world_events";
-import {SimECSPDAPushStateEvent} from "../../events/internal-events";
-import type {ISyncPoint} from "../../scheduler/pipeline/sync-point.spec";
+} from "../common/world_resources.ts";
+import {addEntity, hasEntity, removeEntity} from "./runtime-world_entities.ts";
+import {addResource, replaceResource} from "./runtime-world_resources.ts";
+import {SimECSPushDownAutomaton} from "../../pda/sim-ecs-pda.ts";
+import type {IState} from "../../state/state.spec.ts";
+import {popState, pushState} from "./runtime-world_states.ts";
+import {EventBus} from "../../events/event-bus.ts";
+import type {IScheduler} from "../../scheduler/scheduler.spec.ts";
+import type {TExecutor, TObjectProto} from "../../_.spec.ts";
+import type {IMutableWorld} from "../world.spec.ts";
+import {Commands} from "./commands/commands.ts";
+import type {ISystemActions, ITransitionActions} from "../actions.spec.ts";
+import {getQueriesFromSystem} from "../../system/system.ts";
+import type {ISystem} from "../../system/system.spec.ts";
+import {setEntitiesSym} from "../../query/_.ts";
+import type {IRuntimeWorldData} from "./runtime-world.spec.ts";
+import {Query} from "../../query/query.ts";
+import {registerSystemAddResourceEvent} from "./runtime-world_events.ts";
+import {SimECSPDAPushStateEvent} from "../../events/internal-events.ts";
+import type {ISyncPoint} from "../../scheduler/pipeline/sync-point.spec.ts";
 
-export * from "./runtime-world.spec";
-export * from "./commands/commands.spec";
+export * from "./runtime-world.spec.ts";
+export * from "./commands/commands.spec.ts";
 
 
 export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
