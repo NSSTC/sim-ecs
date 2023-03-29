@@ -1,4 +1,4 @@
-import {Actions, createSystem, queryComponents, Storage, Write, WriteResource} from "sim-ecs";
+import {Actions, createSystem, hmrSwapSystem, queryComponents, Storage, Write, WriteResource} from "sim-ecs";
 import {UIItem} from "../components/ui-item.ts";
 import {EMovement, GameStore} from "../models/game-store.ts";
 import {EActions} from "../app/actions.ts";
@@ -13,6 +13,7 @@ export const MenuSystem = createSystem({
         uiItem: Write(UIItem)
     }),
 })
+    .withName('MenuSystem')
     .withRunFunction(({actions, gameStore, storage, query}) => {
         // todo: use index
         if (gameStore.input.actions.menuMovement == EMovement.down) {
@@ -60,3 +61,9 @@ export const MenuSystem = createSystem({
         }
     })
     .build();
+
+// @ts-ignore
+hmr:if (import.meta.hot) {
+    // @ts-ignore
+    import.meta.hot.accept(mod => hmrSwapSystem(mod[Object.getOwnPropertyNames(mod)[0]]));
+}

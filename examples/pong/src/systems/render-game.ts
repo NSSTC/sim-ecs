@@ -1,4 +1,4 @@
-import {createSystem, queryComponents, Read, Storage, WriteResource} from "sim-ecs";
+import {createSystem, hmrSwapSystem, queryComponents, Read, Storage, WriteResource} from "sim-ecs";
 import {Position} from "../components/position.ts";
 import {Shape} from "../components/shape.ts";
 import {relToScreenCoords} from "../app/util.ts";
@@ -11,6 +11,7 @@ export const RenderGameSystem = createSystem({
         shape: Read(Shape)
     })
 })
+    .withName('RenderGameSystem')
     .withSetupFunction(({ctx, storage}) => {
         storage.toScreenCoords = relToScreenCoords.bind(undefined, ctx.canvas);
     })
@@ -28,3 +29,9 @@ export const RenderGameSystem = createSystem({
         });
     })
     .build();
+
+// @ts-ignore
+hmr:if (import.meta.hot) {
+    // @ts-ignore
+    import.meta.hot.accept(mod => hmrSwapSystem(mod[Object.getOwnPropertyNames(mod)[0]]));
+}

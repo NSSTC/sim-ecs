@@ -1,5 +1,5 @@
 import {Position} from "../components/position.ts";
-import {createSystem, queryComponents, Read, Storage, WriteResource} from "sim-ecs";
+import {createSystem, hmrSwapSystem, queryComponents, Read, Storage, WriteResource} from "sim-ecs";
 import {UIItem} from "../components/ui-item.ts";
 import {relToScreenCoords} from "../app/util.ts";
 
@@ -11,6 +11,7 @@ export const RenderUISystem = createSystem({
         ui: Read(UIItem)
     })
 })
+    .withName('RenderUISystem')
     .withSetupFunction(({ctx, storage}) => {
         storage.toScreenCoords = relToScreenCoords.bind(undefined, ctx.canvas);
     })
@@ -33,4 +34,10 @@ export const RenderUISystem = createSystem({
 
 function getFinalCaption(ui: UIItem): string {
     return ui.captionMod?.(ui.caption) ?? ui.caption;
+}
+
+// @ts-ignore
+hmr:if (import.meta.hot) {
+    // @ts-ignore
+    import.meta.hot.accept(mod => hmrSwapSystem(mod[Object.getOwnPropertyNames(mod)[0]]));
 }

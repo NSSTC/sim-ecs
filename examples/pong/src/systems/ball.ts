@@ -1,4 +1,4 @@
-import {createSystem, queryComponents, Read, WithTag, Write, WriteResource} from "sim-ecs";
+import {createSystem, hmrSwapSystem, queryComponents, Read, WithTag, Write, WriteResource} from "sim-ecs";
 import {Velocity} from "../components/velocity.ts";
 import {Collision} from "../components/collision.ts";
 import {EWallSide, EWallType, Wall} from "../components/wall.ts";
@@ -18,6 +18,7 @@ export const BallSystem = createSystem({
         vel: Write(Velocity),
     })
 })
+    .withName('BallSystem')
     .withRunFunction(({scoreBoard, query}) => {
         let wallCollisionHorizontal = false;
         let wallCollisionVertical = EWallSide.None;
@@ -62,3 +63,9 @@ export const BallSystem = createSystem({
         });
     })
     .build();
+
+// @ts-ignore
+hmr:if (import.meta.hot) {
+    // @ts-ignore
+    import.meta.hot.accept(mod => hmrSwapSystem(mod[Object.getOwnPropertyNames(mod)[0]]));
+}

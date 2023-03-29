@@ -1,4 +1,4 @@
-import {createSystem, queryComponents, Read, ReadResource, Write} from "sim-ecs";
+import {createSystem, hmrSwapSystem, queryComponents, Read, ReadResource, Write} from "sim-ecs";
 import {EMovement, GameStore} from "../models/game-store.ts";
 import {EPaddleSide, Paddle} from "../components/paddle.ts";
 import {Position} from "../components/position.ts";
@@ -18,6 +18,7 @@ export const PaddleSystem = createSystem({
         vel: Write(Velocity)
     }),
 })
+    .withName('PaddleSystem')
     .withRunFunction(({gameStore, paddleTrans, query}) => {
         return query.execute(({paddle, pos, shape, vel}) => {
             updateTransformationResource(paddle.side, pos, shape.dimensions, paddleTrans);
@@ -80,4 +81,10 @@ function updateVelocity(pos: Position, vel: Velocity, paddleHeight: number, delt
             break;
         }
     }
+}
+
+// @ts-ignore
+hmr:if (import.meta.hot) {
+    // @ts-ignore
+    import.meta.hot.accept(mod => hmrSwapSystem(mod[Object.getOwnPropertyNames(mod)[0]]));
 }

@@ -1,5 +1,5 @@
 import {Position} from "../components/position.ts";
-import {createSystem, queryComponents, Read, ReadResource, Write} from "sim-ecs";
+import {createSystem, hmrSwapSystem, ISystem, queryComponents, Read, ReadResource, Write} from "sim-ecs";
 import {Velocity} from "../components/velocity.ts";
 import {GameStore} from "../models/game-store.ts";
 
@@ -11,6 +11,7 @@ export const AnimationSystem = createSystem({
         vel: Read(Velocity),
     }),
 })
+    .withName('AnimationSystem')
     .withRunFunction(({gameStore, query}) => {
         const k = gameStore.lastFrameDeltaTime / 10;
         return query.execute(({pos, vel}) => {
@@ -19,3 +20,9 @@ export const AnimationSystem = createSystem({
         });
     })
     .build();
+
+// @ts-ignore
+hmr:if (import.meta.hot) {
+    // @ts-ignore
+    import.meta.hot.accept(mod => hmrSwapSystem(mod[Object.getOwnPropertyNames(mod)[0]]));
+}

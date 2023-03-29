@@ -47,6 +47,7 @@ import {Query} from "../../query/query.ts";
 import {registerSystemAddResourceEvent} from "./runtime-world_events.ts";
 import {SimECSPDAPushStateEvent} from "../../events/internal-events.ts";
 import type {ISyncPoint} from "../../scheduler/pipeline/sync-point.spec.ts";
+import {systemRunParamSym} from "../../system/_.ts";
 
 export * from "./runtime-world.spec.ts";
 export * from "./commands/commands.spec.ts";
@@ -143,6 +144,29 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
 
     public flushCommands(): Promise<void> {
         return this.commands.executeAll();
+    }
+
+    public hmrReplaceSystem(newSystem: ISystem<any>): void {
+        const newName = newSystem.name;
+        const schedulers = [this.config.defaultScheduler, ...this.config.stateSchedulers.values()];
+        let i, stage, system, systems;
+
+        schedulers
+            .map(scheduler => scheduler.pipeline.getGroups())
+            .flat()
+            .forEach(group => {
+                for (stage of group.stages) {
+                    systems = stage.systems;
+                    i = 0;
+
+                    for (system = systems[i]; !!system; system = systems[++i]) {
+                        if (system.name == newName) {
+                            newSystem[systemRunParamSym] = system[systemRunParamSym];
+                            systems[i] = newSystem;
+                        }
+                    }
+                }
+            });
     }
 
     public async prepare(): Promise<void> {

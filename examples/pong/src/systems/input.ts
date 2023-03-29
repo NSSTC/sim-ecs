@@ -1,4 +1,4 @@
-import {createSystem, Storage, WriteResource} from "sim-ecs";
+import {createSystem, hmrSwapSystem, Storage, WriteResource} from "sim-ecs";
 import {EMovement, GameStore} from "../models/game-store.ts";
 
 export enum EKeyState {
@@ -15,6 +15,7 @@ export const InputSystem = createSystem({
     gameStore: WriteResource(GameStore),
     inputEvents: Storage<IInputEvent[]> ([]),
 })
+    .withName('InputSystem')
     .withSetupFunction(({inputEvents}) => {
         window.addEventListener('keydown', event => inputEvents.push({key: event.key, type: EKeyState.Down}));
         window.addEventListener('keyup', event => inputEvents.push({key: event.key, type: EKeyState.Up}));
@@ -92,3 +93,9 @@ export const InputSystem = createSystem({
         inputEvents.length = 0;
     })
     .build();
+
+// @ts-ignore
+hmr:if (import.meta.hot) {
+    // @ts-ignore
+    import.meta.hot.accept(mod => hmrSwapSystem(mod[Object.getOwnPropertyNames(mod)[0]]));
+}

@@ -38,6 +38,7 @@ export * from "./preptime-world.spec.ts";
 export class PreptimeWorld implements IPreptimeWorld {
     public config: IPreptimeWorldConfig;
     public data: IPreptimeData;
+    protected runtimeWorlds = new Array<WeakRef<IRuntimeWorld>>();
 
     constructor(
         public name?: string,
@@ -72,6 +73,12 @@ export class PreptimeWorld implements IPreptimeWorld {
         }
     }
 
+    public getExistingRuntimeWorlds(): ReadonlyArray<IRuntimeWorld> {
+        return this.runtimeWorlds
+            .map(world => world.deref())
+            .filter(world => !!world) as ReadonlyArray<IRuntimeWorld>;
+    }
+
     public async prepareRun(options?: Readonly<Partial<IPreptimeOptions>>): Promise<IRuntimeWorld> {
         // todo: don't copy the refs, copy all objects
 
@@ -90,6 +97,10 @@ export class PreptimeWorld implements IPreptimeWorld {
         );
 
         await runWorld.prepare();
+
+        this.runtimeWorlds = this.runtimeWorlds.filter(world => !!world.deref());
+        this.runtimeWorlds.push(new WeakRef(runWorld));
+
         return runWorld;
     }
 

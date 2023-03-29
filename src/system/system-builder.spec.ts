@@ -8,7 +8,7 @@ export interface ISystemBuilder<PARAMDESC extends TSystemParameterDesc> {
     /**
      * Build the system as defined in code
      */
-    build(): ISystem<Readonly<PARAMDESC>>
+    build(): Readonly<ISystem<Readonly<PARAMDESC>>>
 
     /**
      * Alias for [withName]{@link ISystemBuilder#withName}

@@ -14,7 +14,7 @@ export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements IS
         this.parameterDesc = params;
     }
 
-    build(): ISystem<Readonly<PARAMDESC>> {
+    build(): Readonly<ISystem<Readonly<PARAMDESC>>> {
         const self = this;
         const System = class implements Readonly<ISystem<Readonly<PARAMDESC>>> {
             readonly name = self.systemName;

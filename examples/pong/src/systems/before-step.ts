@@ -1,4 +1,4 @@
-import {createSystem, Storage, WriteResource} from "sim-ecs";
+import {createSystem, hmrSwapSystem, Storage, WriteResource} from "sim-ecs";
 import {GameStore} from "../models/game-store.ts";
 
 
@@ -9,6 +9,7 @@ export const BeforeStepSystem = createSystem({
     ctx: WriteResource(CanvasRenderingContext2D),
     storage: Storage({ lastTransition: 0 })
 })
+    .withName('BeforeStepSystem')
     .withRunFunction(({gameStore, ctx, storage}) => {
         { // Update delta time
             const now = Date.now();
@@ -23,3 +24,9 @@ export const BeforeStepSystem = createSystem({
         }
     })
     .build();
+
+// @ts-ignore
+hmr:if (import.meta.hot) {
+    // @ts-ignore
+    import.meta.hot.accept(mod => hmrSwapSystem(mod[Object.getOwnPropertyNames(mod)[0]]));
+}

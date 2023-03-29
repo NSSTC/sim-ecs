@@ -1,4 +1,4 @@
-import {createSystem, queryComponents, Read, ReadEntity, Write} from "sim-ecs";
+import {createSystem, hmrSwapSystem, queryComponents, Read, ReadEntity, Write} from "sim-ecs";
 import {Shape} from "../components/shape.ts";
 import {Collision} from "../components/collision.ts";
 import {Position} from "../components/position.ts";
@@ -11,6 +11,7 @@ export const CollisionSystem = createSystem({
         shape: Read(Shape)
     }),
 })
+    .withName('CollisionSystem')
     .withRunFunction(({query}) => {
         const rects = Array.from(query.iter()).map(({collision, entity, position, shape}) => {
             // ideally, this should be two separate steps,
@@ -57,3 +58,9 @@ export const CollisionSystem = createSystem({
         }
     })
     .build();
+
+// @ts-ignore
+hmr:if (import.meta.hot) {
+    // @ts-ignore
+    import.meta.hot.accept(mod => hmrSwapSystem(mod[Object.getOwnPropertyNames(mod)[0]]));
+}

@@ -43,6 +43,11 @@ export interface IPreptimeWorld extends IWorld {
     readonly name?: string
 
     /**
+     * Get a list of RuntimeWorlds which was generated from this PreptimeWorld
+     */
+    getExistingRuntimeWorlds(): ReadonlyArray<IRuntimeWorld>
+
+    /**
      * Prepare a runtime environment from this world
      */
     prepareRun(options?: Readonly<Partial<IPreptimeOptions>>): Promise<IRuntimeWorld>

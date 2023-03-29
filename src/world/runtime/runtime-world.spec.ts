@@ -8,6 +8,7 @@ import type {IEntity} from "../../entity/entity.spec.ts";
 import {type InstanceMap} from "../../util/instance-map.ts";
 import type {TObjectProto, TTypeProto} from "../../_.spec.ts";
 import type {TGroupHandle} from "../world.spec.ts";
+import type {ISystem} from "../../system/system.spec.ts";
 
 export * from './commands/commands.spec.ts';
 
@@ -78,6 +79,12 @@ export interface IRuntimeWorld extends IImmutableWorld {
      * Object containing all actions available on step-to-step transitions, as well as to states
      */
     readonly transitionActions: Readonly<ITransitionActions>
+
+    /**
+     * Hot replace a system
+     * @param newSystem
+     */
+    hmrReplaceSystem(newSystem: ISystem<any>): void
 
     /**
      * Replace a resource from this world with a new value

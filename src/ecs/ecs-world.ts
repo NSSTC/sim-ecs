@@ -2,6 +2,8 @@ import {type IWorldBuilder, WorldBuilder} from "../world/world-builder.ts";
 import {SerDe} from "../serde/serde.ts";
 import type {IPreptimeWorld} from "../world/preptime/preptime-world.spec.ts";
 import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec.ts";
+import type {ISystem} from "../system/system.spec.ts";
+import {PreptimeWorld} from "../world/preptime/preptime-world.ts";
 
 const worlds = new Set<IPreptimeWorld | IRuntimeWorld>();
 
@@ -39,6 +41,19 @@ export function getWorld(name: string): IPreptimeWorld | IRuntimeWorld | undefin
  */
 export function getWorlds(): IterableIterator<IPreptimeWorld | IRuntimeWorld> {
     return worlds.values();
+}
+
+export function hmrSwapSystem(system: ISystem): void {
+    let world;
+    let ptWorld;
+
+    for (world of worlds) {
+        if (world instanceof PreptimeWorld) {
+            for (ptWorld of world.getExistingRuntimeWorlds()) {
+                ptWorld.hmrReplaceSystem(system);
+            }
+        }
+    }
 }
 
 /**

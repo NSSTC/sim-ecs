@@ -34,7 +34,8 @@ import * as simEcs from "https://deno.land/x/sim_ecs@0.6.1/src/index.ts";
         - [Runtime World](#runtime-world)
 - [Setting Resources](#setting-resources)
     - [Defining Systems](#defining-systems)
-    - [System Parameter Types](#system-parameter-types)
+      - [System Parameter Types](#system-parameter-types)
+      - [Hot Reloading Systems](#hot-reloading-systems)
 - [Defining Components](#defining-components)
 - [Adding Entities](#adding-entities)
 - [Working with States](#working-with-states--optional-)
@@ -327,6 +328,57 @@ const CountSystem = createSystem({
     systemStorage2: Storage({ data: [1,2,3] }),
 }).build();
 ```
+
+
+### Hot Reloading Systems
+
+Systems can be hot-reloaded. The Pong example shows that off nicely.
+In order to enable HMR, the following is suggested:
+
+1. Make sure that you put every system into its own module (file), from which it's exported.
+2. Every system must be named.
+3. Implement your dev server's HMR strategy and on accept call `hmrSwapSystem()`. 
+   It takes the new system as its parameter, which you should get from the new module's exports.
+
+For example, a system module may look like this:
+
+```typescript
+import {createSystem, hmrSwapSystem, ISystem, queryComponents, Read, ReadResource, Write} from "sim-ecs";
+import {Position} from "../components/position.ts";
+import {Velocity} from "../components/velocity.ts";
+import {GameStore} from "../models/game-store.ts";
+
+
+// The System must be exported (of course)
+export const AnimationSystem = createSystem({
+    gameStore: ReadResource(GameStore),
+    query: queryComponents({
+        pos: Write(Position),
+        vel: Read(Velocity),
+    }),
+})
+    .withName('AnimationSystem')                                                  // It's important to name the System!!
+    .withRunFunction(({gameStore, query}) => {
+        const k = gameStore.lastFrameDeltaTime / 10;
+        return query.execute(({pos, vel}) => {
+            pos.x += vel.x * k;
+            pos.y += vel.y * k;
+        });
+    })
+    .build();
+
+// using the dev server's HMR strategy...
+// @ts-ignore
+hmr:if (import.meta.hot) {
+    // @ts-ignore
+    import.meta.hot.accept(mod => 
+        hmrSwapSystem(mod[Object.getOwnPropertyNames(mod)[0]] as AnimationSystem) // pass the System from the new Module
+    );
+}
+```
+
+Note: The label `hmr` was chosen as an easy and reliable way to remove this code block from a prod build.
+
 
 ## Defining Components
 
