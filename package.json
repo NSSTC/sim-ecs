@@ -4,6 +4,7 @@
   "license": "MPL 2.0",
   "repository": "https://github.com/NSSTC/sim-ecs.git",
   "homepage": "https://nsstc.github.io/sim-ecs/",
+  "type": "module",
   "main": "dist/sim-ecs.cjs",
   "module": "dist/sim-ecs.mjs",
   "sideEffects": false,
