@@ -4,7 +4,7 @@ import type {ISystem, TSystemFunction, TSystemParameterDesc} from "./system.spec
 export * from "./system-builder.spec.ts";
 
 export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements ISystemBuilder<Readonly<PARAMDESC>> {
-    systemName: string = '';
+    systemName: string = 'ECS_Unnamed_System';
     parameterDesc: Readonly<PARAMDESC>;
     setupFunction: TSystemFunction<Readonly<PARAMDESC>> = () => {};
     runFunction: TSystemFunction<Readonly<PARAMDESC>> = () => {};
@@ -24,7 +24,7 @@ export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements IS
         };
 
         Object.defineProperty(System, 'name', {
-            configurable: true,
+            configurable: false,
             writable: false,
             enumerable: false,
             value: this.systemName,
