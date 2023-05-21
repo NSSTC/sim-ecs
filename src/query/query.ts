@@ -50,7 +50,7 @@ export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {
     }
 
     /** @internal */
-    [setEntitiesSym](entities: IterableIterator<Readonly<IEntity>>) {
+    [setEntitiesSym](entities: Readonly<IterableIterator<Readonly<IEntity>>>) {
         let entity;
 
         this.queryResult.clear();

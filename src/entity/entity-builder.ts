@@ -9,7 +9,7 @@ export class EntityBuilder implements IEntityBuilder {
 
     constructor(
         protected uuid?: TEntityId,
-        protected callback?: (entity: Entity) => void
+        protected callback?: (entity: Entity) => void,
     ) {}
 
     build(): Entity {
