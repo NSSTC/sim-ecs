@@ -35,7 +35,7 @@ import type {IState} from "../../state/state.spec.ts";
 import {popState, pushState} from "./runtime-world_states.ts";
 import {EventBus} from "../../events/event-bus.ts";
 import type {IScheduler} from "../../scheduler/scheduler.spec.ts";
-import type {TExecutor, TObjectProto} from "../../_.spec.ts";
+import type {TExecutor} from "../../_.spec.ts";
 import type {IMutableWorld} from "../world.spec.ts";
 import {Commands} from "./commands/commands.ts";
 import type {ISystemActions, ITransitionActions} from "../actions.spec.ts";
@@ -44,7 +44,6 @@ import type {ISystem} from "../../system/system.spec.ts";
 import {setEntitiesSym} from "../../query/_.ts";
 import type {IRuntimeWorldData} from "./runtime-world.spec.ts";
 import {Query} from "../../query/query.ts";
-import {registerSystemAddResourceEvent} from "./runtime-world_events.ts";
 import {SimECSPDAPushStateEvent} from "../../events/internal-events.ts";
 import type {ISyncPoint} from "../../scheduler/pipeline/sync-point.spec.ts";
 import {systemRunParamSym} from "../../system/_.ts";
@@ -67,7 +66,7 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
     protected readonly pda = new SimECSPushDownAutomaton<IState>(this);
     protected queries = new Set<Readonly<Query<unknown, unknown>>>();
     protected shouldRunSystems = false;
-    protected systemResourceMap = new Map<Readonly<ISystem>, Readonly<{ paramName: string, resourceType: Readonly<TObjectProto> }>>();
+    protected systems: Set<ISystem>;
     protected systemWorld: ISystemActions;
     protected transitionWorld: ITransitionActions;
 
@@ -118,8 +117,29 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
             }, this.systemWorld)
         }
 
-        this.registerSystemAddResourceEvent();
-        //this.registerSystemReplaceResourceEvent();
+        { // Get all systems and cache the result
+            this.systems = new Set(this.config.defaultScheduler.getSystems());
+            let scheduler;
+            let system;
+
+            for (scheduler of this.config.stateSchedulers.values()) {
+                for (system of scheduler.getSystems()) {
+                    this.systems.add(system);
+                }
+            }
+        }
+
+        { // set the context for all systems
+            let system;
+
+            for (system of this.systems) {
+                if (system.runtimeContext !== undefined) {
+                    throw new Error('Cannot use a system in two runtimes at the same time!');
+                }
+
+                system.setRuntimeContext(this);
+            }
+        }
     }
 
     get awaiter(): Promise<void> | undefined {
@@ -171,13 +191,14 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
 
     public async prepare(): Promise<void> {
         await this.config.defaultScheduler.prepare(this);
-        this.pda.clear();
+        this.pda.clear(this.transitionActions);
 
         {
             let scheduler;
             let query, system;
 
             for (system of this.config.defaultScheduler.getSystems()) {
+                system.setRuntimeContext(this);
                 for (query of getQueriesFromSystem(system)) {
                     this.queries.add(query);
                 }
@@ -231,7 +252,7 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
             }
 
             this.eventBus.subscribe(SimECSPDAPushStateEvent, event => {
-                const stateScheduler = this.config.stateSchedulers.get(event.state) ?? this.config.defaultScheduler;
+                const stateScheduler = this.config.stateSchedulers.get(event.newState.constructor) ?? this.config.defaultScheduler;
                 let syncPoint;
 
                 for (syncPoint of stateScheduler.pipeline!.getGroups()) {
@@ -245,7 +266,7 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
             {
                 const execFn = this.executionFunction;
                 const cleanUp = () => {
-                    this.pda.clear();
+                    this.pda.clear(this.transitionActions);
 
                     {
                         let syncPoint;
@@ -304,6 +325,17 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
         this.shouldRunSystems = false;
     }
 
+    // @ts-ignore
+    [Symbol.dispose]() {
+        { // unset the context for all systems
+            let system;
+
+            for (system of this.systems) {
+                system.unsetRuntimeContext(this);
+            }
+        }
+    }
+
 
     /// ****************************************************************************************************************
     /// Entities
@@ -316,13 +348,6 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
     public getEntities = getEntities;
     public hasEntity = hasEntity;
     public removeEntity = removeEntity;
-
-
-    /// ****************************************************************************************************************
-    /// Events
-    /// ****************************************************************************************************************
-
-    protected registerSystemAddResourceEvent = registerSystemAddResourceEvent;
 
 
     /// ****************************************************************************************************************

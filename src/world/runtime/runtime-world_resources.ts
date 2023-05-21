@@ -61,18 +61,4 @@ export async function replaceResource<T extends object>(
         type,
         resourceObj,
     ));
-
-    { // Also replace the resources for all systems
-        let system, resourceDesc;
-        for ([system, resourceDesc] of this.systemResourceMap) {
-            if (resourceDesc.resourceType.name == type.name) {
-                (system[systemRunParamSym] as TSystemParameterDesc)[resourceDesc.paramName] = resourceObj;
-                await this.eventBus.publish(new SimECSSystemReplaceResource(
-                    system,
-                    resourceDesc.paramName,
-                    resourceDesc.resourceType,
-                ));
-            }
-        }
-    }
 }

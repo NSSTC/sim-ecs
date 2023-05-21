@@ -3,9 +3,22 @@ import type {TTypeProto} from "../_.spec.ts";
 
 export interface IPushDownAutomaton<T> {
     readonly state?: T
+
+    /**
+     * Clear the PDA by GC-ing all entries
+     */
     clear(): void
+
+    /**
+     * Remove the current state from the stack and return it
+     */
     pop(): T | undefined
-    push<P extends TTypeProto<T>>(state: P): void
+
+    /**
+     * Put a new state on the stack and return a ref to the created instance
+     * @param state
+     */
+    push<P extends TTypeProto<T>>(state: P): T
 }
 
 export type TPushDownAutomatonProto<T> = { new(): IPushDownAutomaton<T> };

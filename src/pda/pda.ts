@@ -32,11 +32,13 @@ export class PushDownAutomaton<T> implements IPushDownAutomaton<T> {
         return oldTail.state;
     }
 
-    push<P extends TTypeProto<T>>(State: P): void {
+    push<P extends TTypeProto<T>>(State: P): T {
         this.currentState = new State();
         this.statesTail = {
             prevNode: this.statesTail,
             state: this.currentState,
         };
+
+        return this.currentState;
     }
 }

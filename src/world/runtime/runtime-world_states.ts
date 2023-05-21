@@ -7,7 +7,7 @@ import {EventBus} from "../../events/event-bus.ts";
 
 export async function popState(this: RuntimeWorld): Promise<void> {
     unsubscribeEventsOfSchedulerSystems(this.eventBus, this.currentScheduler!);
-    await this.pda.pop()?.deactivate(this.transitionWorld);
+    await (await this.pda.pop())?.deactivate(this.transitionWorld);
 
     const newState = this.pda.state;
     if (!newState) {

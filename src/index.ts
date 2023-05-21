@@ -1,3 +1,13 @@
+// Polyfills
+
+// @ts-ignore
+Symbol.dispose ??= Symbol('Symbol.dispose');
+// @ts-ignore
+Symbol.asyncDispose ??= Symbol('Symbol.asyncDispose');
+
+
+// Import all
+
 export * from './ecs/ecs-entity.ts';
 export * from './ecs/ecs-query.ts';
 export * from './ecs/ecs-sync-point.ts';
@@ -7,13 +17,10 @@ export * from './entity/entity-builder.ts';
 export * from './query/query.ts';
 export * from './events/event-bus.ts';
 export * from './pda/sim-ecs-pda.ts';
-
-// Scheduler exports
 export * from './scheduler/scheduler.ts';
 export * from './scheduler/pipeline/pipeline.ts';
 export * from './scheduler/pipeline/stage.ts';
 export * from './scheduler/pipeline/sync-point.ts';
-
 export * from './serde/serde.ts';
 export * from './serde/serial-format.ts';
 export * from './state/state.ts';

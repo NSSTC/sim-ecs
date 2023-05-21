@@ -1,34 +1,52 @@
 import type {ISystem} from "../system/system.spec.ts";
 import type {TObjectProto} from "../_.spec.ts";
-import type {IIStateProto} from "../state/state.spec.ts";
+import type {IIStateProto, IState} from "../state/state.spec.ts";
 
 
-class SimECSPDAEvent {
+export class SimECSEvent {}
+
+class SimECSPDAEvent extends SimECSEvent {
     constructor(
-        public readonly state: Readonly<IIStateProto>
-    ) {}
+        public readonly state: Readonly<IState> | undefined,
+    ) { super() }
 }
 
-export class SimECSPDAPushStateEvent extends SimECSPDAEvent {}
+export class SimECSPDAPopStateEvent extends SimECSPDAEvent {
+    constructor(
+        public readonly oldState: Readonly<IState> | undefined,
+        public readonly newState: Readonly<IState> | undefined,
+    ) {
+        super(newState);
+    }
+}
+
+export class SimECSPDAPushStateEvent extends SimECSPDAEvent {
+    constructor(
+        public readonly oldState: Readonly<IState> | undefined,
+        public readonly newState: Readonly<IState>,
+    ) {
+        super(newState);
+    }
+}
 
 
-class SimECSResourceEvent<T extends TObjectProto> {
+class SimECSResourceEvent<T extends TObjectProto> extends SimECSEvent {
     constructor(
         public resourceType: T,
         public resourceObject: InstanceType<T>,
-    ) {}
+    ) { super() }
 }
 
 export class SimECSAddResourceEvent<T extends TObjectProto> extends SimECSResourceEvent<T> {}
 export class SimECSReplaceResourceEvent<T extends TObjectProto> extends SimECSResourceEvent<T> {}
 
 
-class SimECSSystemResourceEvent {
+class SimECSSystemResourceEvent extends SimECSEvent{
     constructor(
         public readonly system: Readonly<ISystem>,
         public readonly paramName: string,
         public readonly resource: Readonly<TObjectProto>,
-    ) {}
+    ) { super() }
 }
 
 export class SimECSSystemAddResource extends SimECSSystemResourceEvent {}

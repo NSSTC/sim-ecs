@@ -4,6 +4,8 @@ import type {ISystemActions} from "../world/actions.spec.ts";
 import {systemEventReaderSym, systemEventWriterSym, systemResourceTypeSym, systemRunParamSym} from "./_.ts";
 import type {IEventReader} from "../events/event-reader.spec.ts";
 import type {IEventWriter} from "../events/event-writer.spec.ts";
+import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec.ts";
+import {type RuntimeWorld} from "../world/runtime/runtime-world.ts";
 
 export type TSystemParameter =
     IEntitiesQuery
@@ -18,10 +20,28 @@ export type TSystemFunction<PDESC extends TSystemParameterDesc> = (params: Reado
 export interface ISystem<PDESC extends TSystemParameterDesc = TSystemParameterDesc> {
     /** @internal */
     [systemRunParamSym]?: Readonly<PDESC>
+
     readonly name: string
-    readonly parameterDesc: Readonly<PDESC>
+    readonly parameterDesc: PDESC
     readonly runFunction: TSystemFunction<Readonly<PDESC>>
+    readonly runtimeContext: IRuntimeWorld | undefined
     readonly setupFunction: TSystemFunction<Readonly<PDESC>>
+
+    /**
+     * Set world in which the System will be executed.
+     * This will be used to register event readers for speedy cache-syncs
+     *
+     * @internal
+     * @param world
+     */
+    setRuntimeContext(world: IRuntimeWorld): void
+
+    /**
+     * Unset the world in which the system was executed.
+     *
+     * @internal
+     */
+    unsetRuntimeContext(world: IRuntimeWorld): void
 }
 
 export interface ISystemResource<T extends object> {

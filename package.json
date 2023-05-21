@@ -53,20 +53,19 @@
     "@types/chai": "~4.3.5",
     "@types/mocha": "~10.0.1",
     "chai": "~4.3.7",
+    "esbuild": "~0.17.18",
     "madge": "~6.0.0",
     "mocha": "~10.2.0",
     "nyc": "~15.1.0",
     "ts-node": "~10.9.1",
     "typedoc": "~0.24.7",
-    "typescript": "~5.0.4",
-    "esbuild": "~0.17.18"
+    "typescript": "^5.0.4"
   },
   "files": [
     "dist"
   ],
   "scripts": {
     "prebuild": "npm run loop-test-ts && npm run test",
-
     "bench": "cd examples/bench && npm run bench",
     "build": "npm run esmbuild && npm run dtsbuild && npm run doc",
     "build-examples": "cd examples && tsc --project .",
@@ -90,7 +89,6 @@
     "prepare": "npm run build",
     "test": "echo 'Testing disabled until Mocha can handle TS ESM!'",
     "test-original": "mocha --experimental-specifier-resolution=node --loader=ts-node/esm src/**/*.test.ts",
-
     "postbuild": "npm run loop-test-js"
   }
 }

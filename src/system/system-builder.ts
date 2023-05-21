@@ -1,5 +1,9 @@
 import type {ISystemBuilder} from "./system-builder.spec.ts";
 import type {ISystem, TSystemFunction, TSystemParameterDesc} from "./system.spec.ts";
+import {setRuntimeContext, unsetRuntimeContext} from "./system_context.ts";
+import {IRuntimeWorld} from "../world/runtime/runtime-world.spec.ts";
+import {RuntimeWorld} from "../world/runtime/runtime-world.ts";
+import {ISystemContext} from "./system_context.spec.ts";
 
 export * from "./system-builder.spec.ts";
 
@@ -16,11 +20,25 @@ export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements IS
 
     build(): Readonly<ISystem<Readonly<PARAMDESC>>> {
         const self = this;
-        const System = class implements Readonly<ISystem<Readonly<PARAMDESC>>> {
+        const System = class implements Readonly<ISystem<Readonly<PARAMDESC>>>, ISystemContext {
+            /** @internal */
+            _context = undefined;
+            /** @internal */
+            _handlers = new Map();
+
             readonly name = self.systemName;
             readonly parameterDesc = self.parameterDesc;
             readonly runFunction = self.runFunction;
             readonly setupFunction = self.setupFunction;
+
+            get runtimeContext(): IRuntimeWorld | undefined {
+                return this._context;
+            }
+
+            /** @internal */
+            setRuntimeContext = setRuntimeContext;
+            /** @internal */
+            unsetRuntimeContext = unsetRuntimeContext;
         };
 
         Object.defineProperty(System, 'name', {
