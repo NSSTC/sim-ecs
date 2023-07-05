@@ -2,7 +2,11 @@ import {type RuntimeWorld} from "./runtime-world.ts";
 import type {TTypeProto} from "../../_.spec.ts";
 import {systemRunParamSym} from "../../system/_.ts";
 import type {TSystemParameterDesc} from "../../system/system.spec.ts";
-import {SimECSReplaceResourceEvent, SimECSSystemReplaceResource} from "../../events/internal-events.ts";
+import {
+    SimECSAddResourceEvent,
+    SimECSReplaceResourceEvent,
+    SimECSSystemReplaceResource
+} from "../../events/internal-events.ts";
 
 export function addResource<T extends object>(
     this: RuntimeWorld,
@@ -34,6 +38,9 @@ export function addResource<T extends object>(
     }
 
     this.data.resources.set(type, instance);
+    // todo: await in 0.7.0
+    this.eventBus.publish(new SimECSAddResourceEvent(type, instance));
+
     return instance;
 }
 
