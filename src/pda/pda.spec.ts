@@ -2,6 +2,13 @@
 import type {TTypeProto} from "../_.spec.ts";
 
 export interface IPushDownAutomaton<T> {
+    /**
+     * Number of states in the PDA
+     */
+    readonly size: number
+    /**
+     * Current state
+     */
     readonly state?: T
 
     /**

@@ -10,7 +10,12 @@ type TStateNode<T> = {
 
 export class PushDownAutomaton<T> implements IPushDownAutomaton<T> {
     protected currentState?: T;
+    #size = 0;
     protected statesTail?: TStateNode<T>;
+
+    get size(): number {
+        return this.#size;
+    }
 
     get state(): Readonly<T | undefined> {
         return this.currentState;
@@ -19,6 +24,7 @@ export class PushDownAutomaton<T> implements IPushDownAutomaton<T> {
     clear(): void {
         this.currentState = undefined;
         this.statesTail = undefined;
+        this.#size = 0;
     }
 
     pop(): T | undefined {
@@ -28,6 +34,7 @@ export class PushDownAutomaton<T> implements IPushDownAutomaton<T> {
 
         this.statesTail = this.statesTail.prevNode;
         this.currentState = this.statesTail?.state;
+        this.#size--;
 
         return oldTail.state;
     }
@@ -39,6 +46,7 @@ export class PushDownAutomaton<T> implements IPushDownAutomaton<T> {
             state: this.currentState,
         };
 
+        this.#size++;
         return this.currentState;
     }
 }
