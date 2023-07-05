@@ -12,8 +12,8 @@ class SimECSEntityEvent extends SimECSEvent {
     ) { super() }
 }
 
-export class SimECSEntityAddEvent extends SimECSEntityEvent {}
-export class SimECSEntityRemoveEvent extends SimECSEntityEvent {}
+export class SimECSAddEntityEvent extends SimECSEntityEvent {}
+export class SimECSRemoveEntityEvent extends SimECSEntityEvent {}
 
 class SimECSPDAEvent extends SimECSEvent {
     constructor(

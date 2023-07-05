@@ -1,7 +1,7 @@
 import {type RuntimeWorld} from "./runtime-world.ts";
 import type {IEntity} from "../../entity/entity.spec.ts";
 import {addEntitySym, removeEntitySym} from "../../query/_.ts";
-import {SimECSEntityAddEvent, SimECSEntityRemoveEvent} from "../../events/internal-events.ts";
+import {SimECSAddEntityEvent, SimECSRemoveEntityEvent} from "../../events/internal-events.ts";
 
 export function addEntity(this: RuntimeWorld, entity: Readonly<IEntity>): void {
     this.data.entities.add(entity);
@@ -14,7 +14,7 @@ export function addEntity(this: RuntimeWorld, entity: Readonly<IEntity>): void {
     }
 
     // todo: await in 0.7.0
-    this.eventBus.publish(new SimECSEntityAddEvent(entity));
+    this.eventBus.publish(new SimECSAddEntityEvent(entity));
 }
 
 export function hasEntity(this: RuntimeWorld, entity: Readonly<IEntity>): boolean {
@@ -32,5 +32,5 @@ export function removeEntity(this: RuntimeWorld, entity: Readonly<IEntity>): voi
     }
 
     // todo: await in 0.7.0
-    this.eventBus.publish(new SimECSEntityRemoveEvent(entity));
+    this.eventBus.publish(new SimECSRemoveEntityEvent(entity));
 }
