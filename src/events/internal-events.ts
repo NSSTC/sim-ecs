@@ -1,9 +1,19 @@
 import type {ISystem} from "../system/system.spec.ts";
 import type {TObjectProto} from "../_.spec.ts";
-import type {IIStateProto, IState} from "../state/state.spec.ts";
+import type {IState} from "../state/state.spec.ts";
+import type {IEntity} from "../entity/entity.spec.ts";
 
 
 export class SimECSEvent {}
+
+class SimECSEntityEvent extends SimECSEvent {
+    constructor(
+        public readonly entity: Readonly<IEntity>,
+    ) { super() }
+}
+
+export class SimECSEntityAddEvent extends SimECSEntityEvent {}
+export class SimECSEntityRemoveEvent extends SimECSEntityEvent {}
 
 class SimECSPDAEvent extends SimECSEvent {
     constructor(
