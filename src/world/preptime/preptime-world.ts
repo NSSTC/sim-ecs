@@ -12,7 +12,6 @@ import {
     getResource,
     getResources,
     hasResource,
-    removeResource,
 } from "../common/world_resources.ts";
 import {
     addEntitiesToGroup,
@@ -24,7 +23,7 @@ import {
     removeGroup,
 } from "../common/world_groups.ts";
 import {addEntity, hasEntity, removeEntity} from "./preptime-world_entities.ts";
-import {addResource} from "./preptime-world_resources.ts";
+import {addResource, removeResource} from "./preptime-world_resources.ts";
 import {load, save} from "./preptime-world_prefabs.ts";
 import {merge} from "../common/world_misc.ts";
 import type {IRuntimeWorld} from "../runtime/runtime-world.spec.ts";

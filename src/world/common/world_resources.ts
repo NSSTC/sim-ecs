@@ -51,11 +51,3 @@ export function hasResource<T extends object>(this: PreptimeWorld | RuntimeWorld
 
     return this.data.resources.has(type);
 }
-
-export function removeResource<T extends object>(this: PreptimeWorld | RuntimeWorld, type: TTypeProto<T>): void {
-    if (!this.data.resources.has(type)) {
-        throw new Error(`Resource with name "${type.name}" does not exists!`);
-    }
-
-    this.data.resources.delete(type);
-}

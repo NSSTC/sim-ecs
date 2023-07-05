@@ -49,6 +49,7 @@ class SimECSResourceEvent<T extends TObjectProto> extends SimECSEvent {
 
 export class SimECSAddResourceEvent<T extends TObjectProto> extends SimECSResourceEvent<T> {}
 export class SimECSReplaceResourceEvent<T extends TObjectProto> extends SimECSResourceEvent<T> {}
+export class SimECSRemoveResourceEvent<T extends TObjectProto> extends SimECSResourceEvent<T> {}
 
 
 class SimECSSystemResourceEvent extends SimECSEvent{

@@ -3,10 +3,11 @@ import type {TTypeProto} from "../../_.spec.ts";
 import {systemRunParamSym} from "../../system/_.ts";
 import type {TSystemParameterDesc} from "../../system/system.spec.ts";
 import {
-    SimECSAddResourceEvent,
+    SimECSAddResourceEvent, SimECSRemoveResourceEvent,
     SimECSReplaceResourceEvent,
     SimECSSystemReplaceResource
 } from "../../events/internal-events.ts";
+import {PreptimeWorld} from "../preptime/preptime-world.ts";
 
 export function addResource<T extends object>(
     this: RuntimeWorld,
@@ -42,6 +43,17 @@ export function addResource<T extends object>(
     this.eventBus.publish(new SimECSAddResourceEvent(type, instance));
 
     return instance;
+}
+
+export function removeResource<T extends object>(this: RuntimeWorld, type: TTypeProto<T>): void {
+    if (!this.data.resources.has(type)) {
+        throw new Error(`Resource with name "${type.name}" does not exists!`);
+    }
+
+    const instance = this.data.resources.get(type)!;
+    this.data.resources.delete(type);
+    // todo: await in 0.7.0
+    this.eventBus.publish(new SimECSRemoveResourceEvent(type, instance as T));
 }
 
 export async function replaceResource<T extends object>(

@@ -26,10 +26,9 @@ import {
     getResource,
     getResources,
     hasResource,
-    removeResource,
 } from "../common/world_resources.ts";
 import {addEntity, hasEntity, removeEntity} from "./runtime-world_entities.ts";
-import {addResource, replaceResource} from "./runtime-world_resources.ts";
+import {addResource, removeResource, replaceResource} from "./runtime-world_resources.ts";
 import {SimECSPushDownAutomaton} from "../../pda/sim-ecs-pda.ts";
 import type {IState} from "../../state/state.spec.ts";
 import {popState, pushState} from "./runtime-world_states.ts";
