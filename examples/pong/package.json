@@ -4,18 +4,19 @@
   "private": true,
   "dependencies": {
     "sim-ecs": "file:../../src",
-    "tslib": "~2.5.0"
+    "tslib": "~2.6.0"
   },
   "engines": {
     "node": ">=14.18"
   },
   "devDependencies": {
-    "typescript": "~5.0.2",
-    "vite": "^4.2.1"
+    "typescript": "~5.1.6",
+    "vite": "^4.3.9"
   },
   "scripts": {
     "build": "vite build",
     "dev": "vite --open",
+    "install": "npm i --lockfile-version 1",
     "start": "vite --open"
   }
 }
