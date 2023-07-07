@@ -1,9 +1,31 @@
 import type {TObjectProto, TTypeProto} from "../_.spec.ts";
-import {ISerDe} from "../serde/serde.spec.ts";
+import type {ISerDe} from "../serde/serde.spec.ts";
+import type {SimECSAddComponentEvent} from "../events/internal-events.ts";
+import type {
+    SimECSAddTagEvent,
+    SimECSCloneEntityEvent,
+    SimECSRemoveComponentEvent,
+    SimECSRemoveTagEvent
+} from "../events/internal-events.ts";
+
 
 export type TEntityId = string;
 export type TTag = number | string;
 
+export type TAddComponentEventHandler = (event: SimECSAddComponentEvent) => void;
+export type TAddTagEventHandler = (event: SimECSAddTagEvent) => void;
+export type TCloneEventHandler = (event: SimECSCloneEntityEvent) => void;
+export type TRemoveComponentEventHandler = (event: SimECSRemoveComponentEvent) => void;
+export type TRemoveTagEventHandler = (event: SimECSRemoveTagEvent) => void;
+
+
+export interface IEventMap {
+    addComponent: TAddComponentEventHandler,
+    addTag: TAddTagEventHandler,
+    clone: TCloneEventHandler,
+    removeComponent: TRemoveComponentEventHandler,
+    removeTag: TRemoveTagEventHandler,
+}
 
 export interface IReadOnlyEntity {
     /**
@@ -11,6 +33,13 @@ export interface IReadOnlyEntity {
      * The ID is generated and must be manually maintained when syncing with another instance
      */
     readonly id: TEntityId
+
+    /**
+     * Add event listener
+     * @param event
+     * @param handler
+     */
+    addEventListener<T extends keyof IEventMap>(event: T, handler: IEventMap[T]): void
 
     /**
      * Clone this entity with all of its components and tags.
@@ -57,6 +86,13 @@ export interface IReadOnlyEntity {
      * @param tag
      */
     hasTag(tag: TTag): boolean
+
+    /**
+     * Remove a listener
+     * @param event
+     * @param handler
+     */
+    removeEventListener<T extends keyof IEventMap>(event: T, handler: IEventMap[T]): void
 }
 
 export interface IEntity extends IReadOnlyEntity {

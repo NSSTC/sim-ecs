@@ -31,5 +31,5 @@ export function unsetRuntimeContext(this: ISystem & ISystemContext, context: Run
 function handleSimECSReplaceResourceEvent(this: ISystem, event: Readonly<SimECSReplaceResourceEvent<TObjectProto>>) {
     Object.entries(this.parameterDesc)
         .filter(param => param[1] instanceof event.resourceType)
-        .forEach(param => this.parameterDesc[param[0]] = event.resourceObject);
+        .forEach(param => this.parameterDesc[param[0]] = event.resourceInstance);
 }

@@ -5,7 +5,7 @@ import type {TSystemParameterDesc} from "../../system/system.spec.ts";
 import {
     SimECSAddResourceEvent, SimECSRemoveResourceEvent,
     SimECSReplaceResourceEvent,
-    SimECSSystemReplaceResource
+    SimECSSystemReplaceResourceEvent
 } from "../../events/internal-events.ts";
 import {PreptimeWorld} from "../preptime/preptime-world.ts";
 

@@ -11,7 +11,7 @@ import type {TObjectProto} from "../_.spec.ts";
 import {systemEventReaderSym, systemEventWriterSym, systemResourceTypeSym} from "./_.ts";
 import type {ISystemBuilder} from "./system-builder.spec.ts";
 import {type IRuntimeWorld} from "../world/runtime/runtime-world.ts";
-import {SimECSSystemAddResource} from "../events/internal-events.ts";
+import {SimECSSystemAddResourceEvent} from "../events/internal-events.ts";
 
 
 export * from "./system.spec.ts";
@@ -60,7 +60,7 @@ export function getSystemRunParameters(system: Readonly<ISystem>, world: Readonl
                 value: world.getResource(resourceType),
             });
 
-            world.eventBus.publish(new SimECSSystemAddResource(
+            world.eventBus.publish(new SimECSSystemAddResourceEvent(
                 system,
                 paramName,
                 resourceType,

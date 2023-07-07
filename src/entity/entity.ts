@@ -1,15 +1,40 @@
-import type {IEntity, TEntityId, TTag} from "./entity.spec.ts";
+import type {
+    IEntity,
+    IEventMap,
+    TAddComponentEventHandler,
+    TAddTagEventHandler,
+    TCloneEventHandler,
+    TEntityId,
+    TRemoveComponentEventHandler,
+    TRemoveTagEventHandler,
+    TTag,
+} from "./entity.spec.ts";
 import type {TObjectProto, TTypeProto} from "../_.spec.ts";
 import {registerEntity} from "../ecs/ecs-entity.ts";
 import type {ISerDe} from "../serde/serde.spec.ts";
+import {
+    SimECSAddComponentEvent,
+    SimECSAddTagEvent,
+    SimECSCloneEntityEvent,
+    SimECSRemoveComponentEvent,
+    SimECSRemoveTagEvent
+} from "../events/internal-events.ts";
 
 export * from './entity.spec.ts';
+
 
 let idCounter = BigInt(0);
 
 export class Entity implements IEntity {
     static uuidFn: () => TEntityId = () => `${Date.now()}_${(idCounter++).toString()}`;
     protected components: Map<Readonly<TObjectProto>, /* mut */ object> = new Map();
+    protected eventHandlers: { [T in keyof IEventMap]: Set<IEventMap[T]> } = {
+        addComponent: new Set<TAddComponentEventHandler>(),
+        addTag: new Set<TAddTagEventHandler>(),
+        clone: new Set<TCloneEventHandler>(),
+        removeComponent: new Set<TRemoveComponentEventHandler>(),
+        removeTag: new Set<TRemoveTagEventHandler>(),
+    };
     protected tags: Set<TTag> = new Set();
     protected uuid: TEntityId;
 
@@ -30,11 +55,49 @@ export class Entity implements IEntity {
         }
 
         this.components.set(obj.constructor as TObjectProto, obj);
+
+        {
+            const event = new SimECSAddComponentEvent(obj.constructor, obj);
+            let handler;
+            for (handler of this.eventHandlers.addComponent.values()) {
+                handler(event);
+            }
+        }
+
         return this;
+    }
+
+    addEventListener<T extends keyof IEventMap>(event: T, handler: IEventMap[T]): void {
+        switch (event) {
+            case "addComponent":
+                this.eventHandlers.addComponent.add(handler as TAddComponentEventHandler);
+                break;
+            case "addTag":
+                this.eventHandlers.addTag.add(handler as TAddTagEventHandler);
+                break;
+            case "clone":
+                this.eventHandlers.clone.add(handler as TCloneEventHandler);
+                break;
+            case "removeComponent":
+                this.eventHandlers.removeComponent.add(handler as TRemoveComponentEventHandler);
+                break;
+            case "removeTag":
+                this.eventHandlers.removeTag.add(handler as TRemoveTagEventHandler);
+                break;
+        }
     }
 
     addTag(tag: TTag): Entity {
         this.tags.add(tag);
+
+        {
+            const event = new SimECSAddTagEvent(tag);
+            let handler ;
+            for (handler of this.eventHandlers.addTag.values()) {
+                handler(event);
+            }
+        }
+
         return this;
     }
 
@@ -57,6 +120,14 @@ export class Entity implements IEntity {
         // assign new ID
         entity.uuid = uuid ?? Entity.uuidFn();
 
+        { // send out event
+            const event = new SimECSCloneEntityEvent(this, entity);
+            let handler;
+            for (handler of this.eventHandlers.clone.values()) {
+                handler(event);
+            }
+        }
+
         // DONE!
         return entity;
     }
@@ -74,9 +145,9 @@ export class Entity implements IEntity {
     }
 
     protected getConstructor(component: Readonly<object> | TObjectProto): Readonly<TObjectProto> {
-        return typeof component === 'object'
-            ? component.constructor as TObjectProto
-            : component;
+        return this.isConstructor(component)
+            ? component as TObjectProto
+            : component.constructor;
     }
 
     getTagCount(): number {
@@ -95,13 +166,65 @@ export class Entity implements IEntity {
         return this.tags.has(tag);
     }
 
+    protected isConstructor(component: Readonly<object> | TObjectProto): boolean {
+        return typeof component !== 'object';
+    }
+
     removeComponent(component: Readonly<object> | TObjectProto): Entity {
-        this.components.delete(this.getConstructor(component));
+        const componentConstructor = this.getConstructor(component);
+
+        if (!this.components.has(componentConstructor)) {
+            return this;
+        }
+
+        const componentInstance = this.isConstructor(component)
+            ? this.components.get(component as TObjectProto)!
+            : component;
+
+        this.components.delete(componentConstructor);
+
+        {
+            const event = new SimECSRemoveComponentEvent(componentConstructor, componentInstance);
+            let handler;
+            for (handler of this.eventHandlers.removeComponent.values()) {
+                handler(event);
+            }
+        }
+
         return this;
+    }
+
+    removeEventListener<T extends keyof IEventMap>(event: T, handler: IEventMap[T]): void {
+        switch (event) {
+            case "addComponent":
+                this.eventHandlers.addComponent.delete(handler as TAddComponentEventHandler);
+                break;
+            case "addTag":
+                this.eventHandlers.addTag.delete(handler as TAddTagEventHandler);
+                break;
+            case "clone":
+                this.eventHandlers.clone.delete(handler as TCloneEventHandler);
+                break;
+            case "removeComponent":
+                this.eventHandlers.removeComponent.delete(handler as TRemoveComponentEventHandler);
+                break;
+            case "removeTag":
+                this.eventHandlers.removeTag.delete(handler as TRemoveTagEventHandler);
+                break;
+        }
     }
 
     removeTag(tag: TTag): Entity {
         this.tags.delete(tag);
+
+        {
+            const event = new SimECSRemoveTagEvent(tag);
+            let handler;
+            for (handler of this.eventHandlers.removeTag.values()) {
+                handler(event);
+            }
+        }
+
         return this;
     }
 }

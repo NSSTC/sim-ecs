@@ -46,6 +46,7 @@ import {Query} from "../../query/query.ts";
 import {SimECSPDAPushStateEvent} from "../../events/internal-events.ts";
 import type {ISyncPoint} from "../../scheduler/pipeline/sync-point.spec.ts";
 import {systemRunParamSym} from "../../system/_.ts";
+import type {IEntity, IEventMap} from "../../entity/entity.spec.ts";
 
 export * from "./runtime-world.spec.ts";
 export * from "./commands/commands.spec.ts";
@@ -59,6 +60,7 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
     protected currentScheduler: IScheduler;
     protected currentSchedulerExecutor?: TExecutor;
     public data: IRuntimeWorldData;
+    protected entityEventHandlers = new Map<IEntity, IEventMap>();
     public readonly eventBus = new EventBus();
     protected executionFunction: TExecutionFunction;
     protected isPrepared = false;
@@ -394,15 +396,6 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
     /// States
     /// ****************************************************************************************************************
 
-    /**
-     * Remove the current state and switch to the last one
-     * @protected
-     */
     public popState = popState;
-
-    /**
-     * Switch to a new state
-     * @protected
-     */
     public pushState = pushState;
 }
