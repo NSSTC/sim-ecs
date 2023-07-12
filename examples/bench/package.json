@@ -11,8 +11,8 @@
     "sim-ecs": "file:../../src",
     "tick-knock": "4.2.0",
     "ts-node": "^10.9.1",
-    "tslib": "^2.5.0",
-    "typescript": "^5.0.2"
+    "tslib": "^2.6.0",
+    "typescript": "^5.1.6"
   },
   "devDependencies": {
     "@types/benchmark": "^2.1.2",

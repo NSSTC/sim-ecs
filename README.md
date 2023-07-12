@@ -663,22 +663,22 @@ Test: Serialize all entities to JSON in-memory. Then deserialize back into the E
 TypeScript ECS Bench
 --------------------------------------------------------------------------------
 
-16th December 2022
+12nd July 2023
 
 Platform: Windows_NT win32 x64 v10.0.22621
 CPU: AMD Ryzen 7 3700X 8-Core Processor@3600MHz
-NodeJS: v19.2.0
+NodeJS: v19.4.0
 
 Bench           v0.3.0
-TypeScript      v4.9.4
-TS-Lib          v2.4.1
+TypeScript      v5.1.6
+TS-Lib          v2.6.0
 TS-Node         v10.9.1
 
 Ape-ECS         v1.3.1
 bitecs          v0.3.38
 Javelin         v1.0.0-alpha.13
-sim-ecs         v0.6.1
-tick-knock      v4.1.0
+sim-ecs         v0.6.2
+tick-knock      v4.2.0
 
 Measured in "points" for comparison. More is better!
 ```
@@ -686,45 +686,46 @@ Measured in "points" for comparison. More is better!
 
  **Default Suite / Simple Insert**
 
-| Library | Points | Deviation | Comment |
-|    ---: |   ---: | :---      | :---    |
-| Ape-ECS | 928 | ± 1.2% |  |
-| bitecs | 14562 | ± 0.19% |  |
-| javelin | 1959 | ± 1.7% |  |
-| sim-ecs | 1658 | ± 1.5% |  |
-| tick-knock | 8637 | ± 0.36% |  |
+|    Library | Points | Deviation | Comment |
+|-----------:|-------:|:----------|:--------|
+|    Ape-ECS |    963 | ± 1.2%    |         |
+|     bitecs |  13195 | ± 0.78%   |         |
+|    javelin |   1824 | ± 1.7%    |         |
+|    sim-ecs |   1534 | ± 1.4%    |         |
+| tick-knock |   8132 | ± 1.2%    |         |
 
 
 
  **Default Suite / Simple Iter**
 
-| Library | Points | Deviation | Comment |
-|    ---: |   ---: | :---      | :---    |
-| Ape-ECS | 30609 | ± 0.23% |  |
-| bitecs | 165563 | ± 1.0% |  |
-| javelin | 22862 | ± 0.044% |  |
-| sim-ecs | 887 | ± 0.20% |  |
-| tick-knock | 9632 | ± 0.36% |  |
+|    Library | Points | Deviation | Comment |
+|-----------:|-------:|:----------|:--------|
+|    Ape-ECS |  30516 | ± 0.33%   |         |
+|     bitecs | 178891 | ± 0.88%   |         |
+|    javelin |  21631 | ± 0.26%   |         |
+|    sim-ecs |    916 | ± 0.23%   |         |
+| tick-knock |  10691 | ± 0.10%   |         |
 
 
 
  **Default Suite / Schedule**
 
-| Library | Points | Deviation | Comment |
-|    ---: |   ---: | :---      | :---    |
-| Ape-ECS | 118 | ± 0.093% |  |
-| bitecs | 6506 | ± 0.56% |  |
-| javelin | 184 | ± 0.35% |  |
-| sim-ecs | 254 | ± 0.27% |  |
-| tick-knock | 57 | ± 0.066% |  |
+|    Library | Points | Deviation | Comment |
+|-----------:|-------:|:----------|:--------|
+|    Ape-ECS |    106 | ± 0.092%  |         |
+|     bitecs |   6656 | ± 0.34%   |         |
+|    javelin |    214 | ± 0.50%   |         |
+|    sim-ecs |    273 | ± 0.38%   |         |
+| tick-knock |     47 | ± 0.041%  |         |
 
 
 
  **Default Suite / Serialize**
 
-| Library | Points | Deviation | Comment |
-|    ---: |   ---: | :---      | :---    |
-| Ape-ECS | 75 | ± 1.3% | file size: 417.3427734375 KB |
-| Javelin | 547 | ± 1.3% | file size: 31.1455078125 KB |
-| sim-ecs | 120 | ± 1.5% | file size: 92.677734375 KB |
+| Library | Points | Deviation | Comment                      |
+|--------:|-------:|:----------|:-----------------------------|
+| Ape-ECS |     63 | ± 1.3%    | file size: 417.3427734375 KB |
+| Javelin |    502 | ± 1.4%    | file size: 31.1455078125 KB  |
+| sim-ecs |     97 | ± 1.6%    | file size: 92.677734375 KB   |
+
 
