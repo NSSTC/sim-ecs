@@ -50,22 +50,10 @@ export class WorldBuilder implements IWorldBuilder {
         return world;
     }
 
-    c(Component: TObjectProto, options?: Readonly<IObjectRegistrationOptions>): WorldBuilder {
-        return this.withComponent(Component, options);
-    }
-
     protected checkSyncPointLoop(root: Readonly<ISyncPoint>): void {
         if (this.hasSyncPointLoop(root)) {
             throw new Error('The sync-points provided form a loop!');
         }
-    }
-
-    component(Component: TObjectProto, options?: Readonly<IObjectRegistrationOptions>): WorldBuilder {
-        return this.withComponent(Component, options);
-    }
-
-    components(...Components: ReadonlyArray<TObjectProto>): WorldBuilder {
-        return this.withComponents(...Components);
     }
 
     protected hasSyncPointLoop(root: Readonly<ISyncPoint>): boolean {
@@ -93,18 +81,6 @@ export class WorldBuilder implements IWorldBuilder {
         }
 
         return check(root, 'before');
-    }
-
-    name(name: string): WorldBuilder {
-        return this.withName(name);
-    }
-
-    r(Resource: TObjectProto, options?: Readonly<Partial<IResourceRegistrationOptions>>): IWorldBuilder {
-        return this.withResource(Resource, options);
-    }
-
-    resource(Resource: TObjectProto, options?: Readonly<Partial<IResourceRegistrationOptions>>): IWorldBuilder {
-        return this.withResource(Resource, options);
     }
 
     protected registerAllNamedSyncPoints(root: ISyncPoint) {
@@ -237,14 +213,17 @@ export class WorldBuilder implements IWorldBuilder {
 
         return this;
     }
+
+    /// ****************************************************************************************************************
+    /// Aliases
+    /// ****************************************************************************************************************
+
+    public c = this.withComponent;
+    public component = this.withComponent;
+    public components = this.withComponents;
+
+    public name = this.withName;
+
+    public r = this.withResource;
+    public resource = this.withResource;
 }
-
-
-// Change alias refs for better performance
-
-WorldBuilder.prototype.c = WorldBuilder.prototype.withComponent;
-WorldBuilder.prototype.component = WorldBuilder.prototype.withComponent;
-WorldBuilder.prototype.components = WorldBuilder.prototype.withComponents;
-WorldBuilder.prototype.name = WorldBuilder.prototype.withName;
-WorldBuilder.prototype.r = WorldBuilder.prototype.withResource;
-WorldBuilder.prototype.resource = WorldBuilder.prototype.withResource;
