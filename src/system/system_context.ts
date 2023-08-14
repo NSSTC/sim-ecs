@@ -1,11 +1,11 @@
-import {ISystem} from "./system.spec";
+import type {ISystem} from "./system.spec.ts";
 import {
     SimECSReplaceResourceEvent,
 } from "../events/internal-events.ts";
 import {RuntimeWorld} from "../world/runtime/runtime-world.ts";
-import {TObjectProto, TTypeProto} from "../_.spec.ts";
-import {ISystemContext} from "./system_context.spec.ts";
-import {TSubscriber} from "../events/_.ts";
+import type {TObjectProto, TTypeProto} from "../_.spec.ts";
+import type {ISystemContext} from "./system_context.spec.ts";
+import type {TSubscriber} from "../events/_.ts";
 
 
 export function setRuntimeContext(this: ISystem & ISystemContext, context: RuntimeWorld): void {
