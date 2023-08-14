@@ -2,7 +2,7 @@ import {Entity} from "../../../entity/entity.ts";
 import type {ICommandEntityBuilder} from "./command-entity-builder.spec.ts";
 import type {TObjectProto} from "../../../_.spec.ts";
 import type {IWorld} from "../../world.spec.ts";
-import {ICommands} from "./commands.spec.ts";
+import type {ICommands} from "./commands.spec.ts";
 
 export * from './command-entity-builder.spec.ts';
 

@@ -4,7 +4,7 @@ export enum EReferenceType {
 
 export interface IReference {
     /**
-     * Id of the referenced object
+     * ID of the referenced object
      */
     readonly id: string
     /**

@@ -1,9 +1,8 @@
 import type {ISystemBuilder} from "./system-builder.spec.ts";
 import type {ISystem, TSystemFunction, TSystemParameterDesc} from "./system.spec.ts";
 import {setRuntimeContext, unsetRuntimeContext} from "./system_context.ts";
-import {IRuntimeWorld} from "../world/runtime/runtime-world.spec.ts";
-import {RuntimeWorld} from "../world/runtime/runtime-world.ts";
-import {ISystemContext} from "./system_context.spec.ts";
+import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec.ts";
+import type {ISystemContext} from "./system_context.spec.ts";
 
 export * from "./system-builder.spec.ts";
 

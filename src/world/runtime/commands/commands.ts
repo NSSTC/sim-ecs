@@ -9,7 +9,7 @@ import type {TCommand} from "./commands-aggregator.spec.ts";
 import {CommandEntityBuilder} from "./command-entity-builder.ts";
 import {RuntimeWorld} from "../runtime-world.ts";
 import type {IPreptimeWorld} from "../../preptime/preptime-world.spec.ts";
-import {IQuery} from "../../../query/query.spec.ts";
+import type {IQuery} from "../../../query/query.spec.ts";
 import {addEntitySym} from "../../../query/_.ts";
 import {Entity} from "../../../entity/entity.ts";
 

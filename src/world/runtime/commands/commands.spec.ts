@@ -5,7 +5,7 @@ import type {ISerialFormat} from "../../../serde/serial-format.spec.ts";
 import type {IWorld, TGroupHandle} from "../../world.spec.ts";
 import type {IIStateProto} from "../../../state/state.spec.ts";
 import type {ICommandEntityBuilder} from "./command-entity-builder.spec.ts";
-import {IReadOnlyEntity} from "../../../entity/entity.spec.ts";
+import type {IReadOnlyEntity} from "../../../entity/entity.spec.ts";
 
 
 export type TCommand = () => Promise<void> | void;

@@ -5,7 +5,6 @@ import {systemEventReaderSym, systemEventWriterSym, systemResourceTypeSym, syste
 import type {IEventReader} from "../events/event-reader.spec.ts";
 import type {IEventWriter} from "../events/event-writer.spec.ts";
 import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec.ts";
-import {type RuntimeWorld} from "../world/runtime/runtime-world.ts";
 
 export type TSystemParameter =
     IEntitiesQuery
