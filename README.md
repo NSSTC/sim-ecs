@@ -13,7 +13,7 @@ $ npm install sim-ecs
 or used as direct import for Deno:
 
 ```typescript
-import * as simEcs from "https://deno.land/x/sim_ecs@0.6.2/src/index.ts";
+import * as simEcs from "https://deno.land/x/sim_ecs@v0.6.2/src/index.ts";
 ```
 
 
