@@ -237,7 +237,7 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
             this.awaiterResolve = resolve;
         });
 
-        (async () => {
+        {
             const syncPoints = new Set<ISyncPoint>();
 
             const syncHandler = async () => {
@@ -262,52 +262,56 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
                 }
             };
 
-            this.eventBus.subscribe(SimECSPDAPushStateEvent, pushStateHandler);
-            await this.pushState(this.config.initialState);
+            const cleanUp = () => {
+                this.eventBus.unsubscribe(SimECSPDAPushStateEvent, pushStateHandler);
+                this.pda.clear(this.transitionActions);
 
-            {
-                const execFn = this.executionFunction;
-                const cleanUp = () => {
-                    this.eventBus.unsubscribe(SimECSPDAPushStateEvent, pushStateHandler);
-                    this.pda.clear(this.transitionActions);
-
-                    {
-                        let syncPoint;
-                        for (syncPoint of syncPoints) {
-                            syncPoint.clearOnSyncHandlers();
-                        }
+                {
+                    let syncPoint;
+                    for (syncPoint of syncPoints) {
+                        syncPoint.clearOnSyncHandlers();
                     }
-
-                    this.#awaiter = undefined;
-                    this.awaiterResolve();
-                };
-
-                const mainLoop = async () => {
-                    if (!this.shouldRunSystems) {
-                        cleanUp();
-                        return;
-                    }
-
-                    try {
-                        await this.currentSchedulerExecutor!();
-                    } catch (error) {
-                        if (typeof error == 'object' && error != null) {
-                            await this.eventBus.publish(error);
-                        } else {
-                            throw error;
-                        }
-                    }
-
-                    execFn(mainLoop);
                 }
 
-                this.shouldRunSystems = true;
-                execFn(mainLoop);
-            }
-        })().catch(err => {
-            this.awaiterReject(err);
-            this.#awaiter = undefined;
-        });
+                this.#awaiter = undefined;
+                this.awaiterResolve();
+            };
+
+            (async () => {
+                this.eventBus.subscribe(SimECSPDAPushStateEvent, pushStateHandler);
+                await this.pushState(this.config.initialState);
+
+                {
+                    const execFn = this.executionFunction;
+
+                    const mainLoop = async () => {
+                        if (!this.shouldRunSystems) {
+                            cleanUp();
+                            return;
+                        }
+
+                        try {
+                            await this.currentSchedulerExecutor!();
+                        } catch (error) {
+                            if (typeof error == 'object' && error != null) {
+                                await this.eventBus.publish(error);
+                            } else {
+                                throw error;
+                            }
+                        }
+
+                        execFn(mainLoop);
+                    }
+
+                    this.shouldRunSystems = true;
+                    execFn(mainLoop);
+                }
+            })().catch(err => {
+                cleanUp();
+                this.awaiterReject(err);
+                this.#awaiter = undefined;
+            });
+        }
 
         return this.#awaiter;
     }
