@@ -32,9 +32,9 @@ import {addResource, removeResource, replaceResource} from "./runtime-world_reso
 import {SimECSPushDownAutomaton} from "../../pda/sim-ecs-pda.ts";
 import type {IState} from "../../state/state.spec.ts";
 import {popState, pushState} from "./runtime-world_states.ts";
-import {EventBus} from "../../events/event-bus.ts";
+import {EventBus, TSubscriber} from "../../events/event-bus.ts";
 import type {IScheduler} from "../../scheduler/scheduler.spec.ts";
-import type {TExecutor} from "../../_.spec.ts";
+import type {TExecutor, TTypeProto} from "../../_.spec.ts";
 import type {IMutableWorld} from "../world.spec.ts";
 import {Commands} from "./commands/commands.ts";
 import type {ISystemActions, ITransitionActions} from "../actions.spec.ts";
@@ -167,7 +167,7 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
         return this.commands.executeAll();
     }
 
-    public hmrReplaceSystem(newSystem: ISystem<any>): void {
+    public hmrReplaceSystem(newSystem: ISystem): void {
         const newName = newSystem.name;
         const schedulers = [this.config.defaultScheduler, ...this.config.stateSchedulers.values()];
         let i, stage, system, systems;
@@ -252,7 +252,7 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
                 }
             }
 
-            this.eventBus.subscribe(SimECSPDAPushStateEvent, event => {
+            const pushStateHandler: TSubscriber<TTypeProto<SimECSPDAPushStateEvent>> = event => {
                 const stateScheduler = this.config.stateSchedulers.get(event.newState.constructor) ?? this.config.defaultScheduler;
                 let syncPoint;
 
@@ -260,13 +260,15 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
                     syncPoints.add(syncPoint);
                     syncPoint.addOnSyncHandler(syncHandler);
                 }
-            });
+            };
 
+            this.eventBus.subscribe(SimECSPDAPushStateEvent, pushStateHandler);
             await this.pushState(this.config.initialState);
 
             {
                 const execFn = this.executionFunction;
                 const cleanUp = () => {
+                    this.eventBus.unsubscribe(SimECSPDAPushStateEvent, pushStateHandler);
                     this.pda.clear(this.transitionActions);
 
                     {

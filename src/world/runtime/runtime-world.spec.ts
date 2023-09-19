@@ -84,7 +84,7 @@ export interface IRuntimeWorld extends IImmutableWorld {
      * Hot replace a system
      * @param newSystem
      */
-    hmrReplaceSystem(newSystem: ISystem<any>): void
+    hmrReplaceSystem(newSystem: ISystem): void
 
     /**
      * Replace a resource from this world with a new value
