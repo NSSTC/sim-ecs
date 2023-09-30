@@ -37,7 +37,10 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/sim-ecs.mjs",
+      "import": [
+        "./dist/sim-ecs.mjs",
+        "./dist/index.d.ts"
+      ],
       "require": "./dist/sim-ecs.cjs"
     }
   },
