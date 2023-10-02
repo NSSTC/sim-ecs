@@ -42,7 +42,7 @@ export async function pushState(this: RuntimeWorld, NewState: IIStateProto): Pro
     subscribeEventsOfSchedulerSystems(this.eventBus, this.currentScheduler);
 }
 
-export function subscribeEventsOfSchedulerSystems(eventBus: EventBus, scheduler: IScheduler) {
+export function subscribeEventsOfSchedulerSystems(eventBus: EventBus, scheduler: IScheduler): void {
     const systems = scheduler.pipeline.getGroups().map(g => g.stages).flat().map(s => s.systems).flat();
     let system;
     let systemParam;
@@ -56,7 +56,7 @@ export function subscribeEventsOfSchedulerSystems(eventBus: EventBus, scheduler:
     }
 }
 
-export function unsubscribeEventsOfSchedulerSystems(eventBus: EventBus, scheduler: IScheduler) {
+export function unsubscribeEventsOfSchedulerSystems(eventBus: EventBus, scheduler: IScheduler): void {
     const systems = scheduler.pipeline.getGroups().map(g => g.stages).flat().map(s => s.systems).flat();
     let system;
     let systemParam;

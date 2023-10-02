@@ -74,7 +74,7 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
     constructor(
         public name: string,
         public config: IRuntimeWorldInitConfig,
-        $data?: Partial<IRuntimeWorldInitData>,
+        protected $data?: Partial<IRuntimeWorldInitData>,
     ) {
         this.commands = new Commands(this, this.queries);
         this.currentScheduler = this.config.defaultScheduler;
@@ -230,6 +230,10 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
 
         if (this.#awaiter) {
             throw new Error(`The runtime world "${this.name}" is already running!`);
+        }
+
+        if (!this.currentSchedulerExecutor) {
+            throw new Error('The runtime world hasn\'t initialized a scheduler executor!');
         }
 
         this.#awaiter = new Promise<void>((resolve, reject) => {
