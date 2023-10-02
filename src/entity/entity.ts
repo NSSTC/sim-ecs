@@ -104,7 +104,7 @@ export class Entity implements IEntity {
     protected asObject(component: Readonly<object> | TObjectProto, ...args: ReadonlyArray<unknown>): object {
         return typeof component === 'object'
             ? component
-            : new (component.prototype.constructor.bind(component, ...Array.from(arguments).slice(1)))();
+            : new (component.prototype.constructor.bind(component, ...args))();
     }
 
     clone(serde: ISerDe, uuid?: TEntityId): Entity {

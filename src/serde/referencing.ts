@@ -14,6 +14,10 @@ export class Reference implements IReference {
             return undefined;
         }
 
+        if (!type) {
+            return undefined;
+        }
+
         if (!(Object.values(EReferenceType) as string[]).includes(type)) {
             return undefined;
         }
@@ -23,6 +27,11 @@ export class Reference implements IReference {
 
     static isReferenceString (str: string): boolean {
         const [marker, type] = str.split(CMarkerSeparator);
+
+        if (!type) {
+            return false;
+        }
+
         return marker === CRefMarker && (Object.values(EReferenceType) as string[]).includes(type);
     }
 

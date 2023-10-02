@@ -140,13 +140,13 @@ export const getDefaultDeserializer = function (customDeserializer?: TDeserializ
     }
 };
 
-const serializeObjectReplacer = function (key: string, value: Readonly<object>): string | object {
+const serializeObjectReplacer = function (_key: string, value: Readonly<object>): string | object {
     return value instanceof Entity
         ? new Reference(EReferenceType.Entity, value.id).toString()
         : value;
 };
 
-const serializeObjectReviver = (inOut: {containsRefs: boolean} = {containsRefs: false}, key: string, value: any) => {
+const serializeObjectReviver = (inOut: {containsRefs: boolean} = {containsRefs: false}, _key: string, value: any) => {
     if (typeof value == 'string' && Reference.isReferenceString(value)) {
         inOut.containsRefs = true;
         return Reference.fromString(value);

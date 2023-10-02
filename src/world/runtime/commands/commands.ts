@@ -43,7 +43,7 @@ export class Commands implements ICommands {
             instance = obj;
         } else {
             type = obj;
-            instance = new (obj.prototype.constructor.bind(obj, ...Array.from(arguments).slice(1)))();
+            instance = new (obj.prototype.constructor.bind(obj, ...args))();
         }
 
         if (this.world.data.resources.has(type)) {

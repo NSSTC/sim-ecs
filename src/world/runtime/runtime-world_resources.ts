@@ -21,7 +21,7 @@ export function addResource<T extends object>(
     } else {
         type = obj;
         try {
-            instance = new (obj.prototype.constructor.bind(obj, ...Array.from(arguments).slice(1)))();
+            instance = new (obj.prototype.constructor.bind(obj, ...args))();
         } catch (err: any) {
             if (err instanceof TypeError && err.message.startsWith('Illegal constructor')) {
                 // @ts-ignore This may happen for some built-in constructors. They must be replaced later!
