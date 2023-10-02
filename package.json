@@ -2,7 +2,10 @@
   "name": "sim-ecs",
   "version": "0.6.3",
   "license": "MPL 2.0",
-  "repository": "https://github.com/NSSTC/sim-ecs.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NSSTC/sim-ecs.git"
+  },
   "homepage": "https://nsstc.github.io/sim-ecs/",
   "type": "module",
   "main": "dist/sim-ecs.cjs",
