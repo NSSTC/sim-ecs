@@ -13,7 +13,7 @@ $ npm install sim-ecs
 or used as direct import for Deno:
 
 ```typescript
-import * as simEcs from "https://deno.land/x/sim_ecs@v0.6.2/src/index.ts";
+import * as simEcs from "https://deno.land/x/sim_ecs@v0.6.3/src/index.ts";
 ```
 
 
@@ -163,6 +163,10 @@ Also, there is a [generated API-documentation](https://nsstc.github.io/sim-ecs/)
 In an ECS, a world is like a container for entities.
 Sim-ecs comes, by default, with two variants: A prepare-time world and a runtime world.
 
+_See
+["Counter" example](https://github.com/NSSTC/sim-ecs/blob/master/examples/counter.ts)
+&nbsp;_
+
 
 ### Prepare-Time World
 
@@ -174,7 +178,8 @@ const prepWorld = buildWorld().build();
 ```
 
 _See
-[IPreptimeWorld](https://nsstc.github.io/sim-ecs/interfaces/IPreptimeWorld.html)
+[IPreptimeWorld](https://nsstc.github.io/sim-ecs/interfaces/IPreptimeWorld.html),
+["Counter" example](https://github.com/NSSTC/sim-ecs/blob/master/examples/counter.ts)
 &nbsp;_
 
 
@@ -189,7 +194,8 @@ const runWorld = await prepWorld.prepareRun();
 ```
 
 _See
-[IRuntimeWorld](https://nsstc.github.io/sim-ecs/interfaces/IRuntimeWorld.html)
+[IRuntimeWorld](https://nsstc.github.io/sim-ecs/interfaces/IRuntimeWorld.html),
+["Counter" example](https://github.com/NSSTC/sim-ecs/blob/master/examples/counter.ts)
 &nbsp;_
 
 
@@ -247,6 +253,11 @@ const prepWorld = buildWorld()
     .build();
 ```
 
+_See
+["Counter" example](https://github.com/NSSTC/sim-ecs/blob/master/examples/counter.ts),
+["Pong" example](https://github.com/NSSTC/sim-ecs/tree/master/examples/pong)
+&nbsp;_
+
 
 ## Setting Resources
 
@@ -259,6 +270,11 @@ prepWorld.addResource(Date);
 console.log(world.getResource(Date).getDate());
 ```
 
+_See
+[addResource()](https://nsstc.github.io/sim-ecs/interfaces/IMutableWorld.html#addResource),
+[getResource()](https://nsstc.github.io/sim-ecs/interfaces/IWorld.html#getResource),
+[getResources()](https://nsstc.github.io/sim-ecs/interfaces/IWorld.html#getResources)
+&nbsp;_
 
 ## Defining Systems
 
@@ -278,7 +294,9 @@ const CountSystem = createSystem({
 
 _See
 [createSystem()](https://nsstc.github.io/sim-ecs/functions/createSystem.html),
-[ISystemBuilder](https://nsstc.github.io/sim-ecs/classes/SystemBuilder.html)
+[ISystemBuilder](https://nsstc.github.io/sim-ecs/classes/SystemBuilder.html),
+["Counter" example](https://github.com/NSSTC/sim-ecs/blob/master/examples/counter.ts),
+["Pong" example](https://github.com/NSSTC/sim-ecs/tree/master/examples/pong)
 &nbsp;_
 
 
@@ -328,6 +346,10 @@ const CountSystem = createSystem({
     systemStorage2: Storage({ data: [1,2,3] }),
 }).build();
 ```
+
+_See
+[createSystem()](https://nsstc.github.io/sim-ecs/functions/createSystem.html)
+&nbsp;_
 
 
 ### Hot Reloading Systems
@@ -379,6 +401,10 @@ hmr:if (import.meta.hot) {
 
 Note: The label `hmr` was chosen as an easy and reliable way to remove this code block from a prod build.
 
+_See
+["Pong" example](https://github.com/NSSTC/sim-ecs/blob/master/examples/pong/src/systems/ball.ts)
+&nbsp;_
+
 
 ## Defining Components
 
@@ -400,9 +426,11 @@ to the entity builder later on. If you don't do so, it is assumed that the compo
 You can also use a default-type de-/serializer on save/load, which allows for a variety of standard types (such as `Date`) as components.
 
 _See
+[IWorldBuilder](https://nsstc.github.io/sim-ecs/interfaces/IWorldBuilder.html),
 [buildEntity()](https://nsstc.github.io/sim-ecs/interfaces/IPreptimeWorld.html#buildEntity),
 [IEntityBuilder](https://nsstc.github.io/sim-ecs/interfaces/IEntityBuilder.html)
 &nbsp;_
+
 
 ## Adding Entities
 
@@ -431,6 +459,10 @@ If no state is passed to the dispatcher, all systems are run by default.
 While the world is running (using `run()`), the state can be changed using commands.
 Single calls to `step()` do not offer the benefits of a PDA.
 
+_See
+["Pong" example](https://github.com/NSSTC/sim-ecs/tree/master/examples/pong/src/states)
+&nbsp;_
+
 
 ## Update loop
 
@@ -457,6 +489,10 @@ but still only run at times when it is actually safe to do them.
 
 Such sync points include any major transitions in a step's life-cycle, and sim-ecs will always trigger the execution
 of all queued commands at the end of the step.
+
+_See
+[ICommands](https://nsstc.github.io/sim-ecs/interfaces/ICommands.html)
+&nbsp;_
 
 
 ## Saving and using Prefabs
@@ -537,6 +573,12 @@ saveToFile(jsonPrefab, 'prefab.json');
 const saveData = runWorld.save(queryEntities(With(Player))).toJSON();
 localStorage.setItem('save', saveData);
 ```
+
+_See
+[load()](https://nsstc.github.io/sim-ecs/interfaces/IWorld.html#load),
+[save()](https://nsstc.github.io/sim-ecs/interfaces/ITransitionActions.html#save),
+["Pong" example](https://github.com/NSSTC/sim-ecs/blob/master/examples/pong/src/states/game.ts)
+&nbsp;_
 
 
 ## Syncing instances
