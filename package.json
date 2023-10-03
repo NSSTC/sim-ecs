@@ -14,11 +14,13 @@
   "types": "dist/index.d.ts",
   "keywords": [
     "bevy",
+    "bun",
     "code-splitting",
     "component",
     "data",
     "data-driven",
     "decoupling",
+    "deno",
     "ecs",
     "entity",
     "event",
