@@ -106,7 +106,7 @@ $ npm run example-counter
 ``` 
 
 The counter example is a very small, minimal example to get a quick overview.
-It increases a number a few times and then terminates. You can run it using:
+It increases a number a few times and then terminates.
 
 
 ### Events
@@ -116,7 +116,7 @@ $ npm run example-events
 ``` 
 
 The events example demonstrates how to use the event bus to write and read events.
-It will print a message every second and can be executed with:
+It will print a message every second.
 
 
 ### Pong
