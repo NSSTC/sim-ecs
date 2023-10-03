@@ -521,32 +521,32 @@ enum MonsterTypes {
 // loading a prefab, the prefab might be in a different file, even maybe just JSON data!
 const prefab = [
     {
-        Position: <Position>{
+        Position: {
             x: 0,
             y: 1,
-        },
-        Player: <Player>{
+        } satisfies Position,
+        Player: {
             level: 1,
             name: 'Jane',
-        },
-        Health: <Health>{
+        } satisfies Player,
+        Health: {
             current: 100,
             max: 100,
-        },
+        } satisfies Health,
     },
     {
-        Position: <Position>{
+        Position: {
             x: 0,
             y: 1,
-        },
-        Monster: <Monster>{
+        } satisfies Position,
+        Monster: {
             hostileToPlayer: true,
             type: MonsterTypes.Tiger,
-        },
-        Health: <Health>{
+        } satisfies Monster,
+        Health: {
             current: 100,
             max: 250,
-        }
+        } satisfies Health,
     },
 ];
 
