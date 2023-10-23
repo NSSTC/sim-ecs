@@ -93,7 +93,7 @@
     "loop-test-js": "madge -c .",
     "loop-test-ts": "madge -c  --extensions ts --warning --orphans ./src",
     "prepare": "npm run build",
-    "test": "mocha --experimental-specifier-resolution=node --loader=ts-node/esm src/**/*.test.ts",
+    "test": "mocha --experimental-specifier-resolution=node --import=tsx src/**/*.test.ts",
     "postbuild": "npm run loop-test-js"
   }
 }
