@@ -723,17 +723,18 @@ sim-ecs         v0.6.4
 tick-knock      v4.2.0
 
 Measured in "points" for comparison. More is better!
+```
 
 
  **Default Suite / Simple Insert**
 
 |    Library | Points | Deviation | Comment |
 |-----------:|-------:|:----------|:--------|
-| Ape-ECS | 767 | ± 1.1% |  |
-| bitecs | 14507 | ± 0.20% |  |
-| javelin | 2043 | ± 1.6% |  |
-| sim-ecs | 989 | ± 1.1% |  |
-| tick-knock | 7911 | ± 0.22% |  |
+|    Ape-ECS |    767 | ± 1.1%    |         |
+|     bitecs |  14507 | ± 0.20%   |         |
+|    javelin |   2043 | ± 1.6%    |         |
+|    sim-ecs |    989 | ± 1.1%    |         |
+| tick-knock |   7911 | ± 0.22%   |         |
 
 
 
@@ -741,11 +742,11 @@ Measured in "points" for comparison. More is better!
 
 |    Library | Points | Deviation | Comment |
 |-----------:|-------:|:----------|:--------|
-| Ape-ECS | 23170 | ± 0.21% |  |
-| bitecs | 86356 | ± 0.36% |  |
-| javelin | 22883 | ± 0.049% |  |
-| sim-ecs | 1008 | ± 0.23% |  |
-| tick-knock | 11038 | ± 0.085% |  |
+|    Ape-ECS |  23170 | ± 0.21%   |         |
+|     bitecs |  86356 | ± 0.36%   |         |
+|    javelin |  22883 | ± 0.049%  |         |
+|    sim-ecs |   1008 | ± 0.23%   |         |
+| tick-knock |  11038 | ± 0.085%  |         |
 
 
 
@@ -754,11 +755,11 @@ Measured in "points" for comparison. More is better!
 
 |    Library | Points | Deviation | Comment |
 |-----------:|-------:|:----------|:--------|
-| Ape-ECS | 110 | ± 0.13% |  |
-| bitecs | 5231 | ± 0.47% |  |
-| javelin | 221 | ± 0.42% |  |
-| sim-ecs | 281 | ± 0.43% |  |
-| tick-knock | 55 | ± 0.18% |  |
+|    Ape-ECS |    110 | ± 0.13%   |         |
+|     bitecs |   5231 | ± 0.47%   |         |
+|    javelin |    221 | ± 0.42%   |         |
+|    sim-ecs |    281 | ± 0.43%   |         |
+| tick-knock |     55 | ± 0.18%   |         |
 
 
 
@@ -766,8 +767,8 @@ Measured in "points" for comparison. More is better!
 
 | Library | Points | Deviation | Comment                      |
 |--------:|-------:|:----------|:-----------------------------|
-| Ape-ECS | 64 | ± 1.4% | file size: 417.3427734375 KB |
-| Javelin | 557 | ± 1.3% | file size: 31.1455078125 KB |
-| sim-ecs | 113 | ± 1.6% | file size: 92.677734375 KB |
+| Ape-ECS |     64 | ± 1.4%    | file size: 417.3427734375 KB |
+| Javelin |    557 | ± 1.3%    | file size: 31.1455078125 KB  |
+| sim-ecs |    113 | ± 1.6%    | file size: 92.677734375 KB   |
 
 
