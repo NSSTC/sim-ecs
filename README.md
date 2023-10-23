@@ -705,36 +705,35 @@ Test: Serialize all entities to JSON in-memory. Then deserialize back into the E
 TypeScript ECS Bench
 --------------------------------------------------------------------------------
 
-12nd July 2023
+24th October 2023
 
 Platform: Windows_NT win32 x64 v10.0.22621
 CPU: AMD Ryzen 7 3700X 8-Core Processor@3600MHz
-NodeJS: v19.4.0
+NodeJS: v20.7.0
 
 Bench           v0.3.0
-TypeScript      v5.1.6
-TS-Lib          v2.6.0
-TS-Node         v10.9.1
+TypeScript      v5.2.2
+TS-Lib          v2.6.2
+TSX             v3.14.0
 
 Ape-ECS         v1.3.1
-bitecs          v0.3.38
+bitecs          v0.3.40
 Javelin         v1.0.0-alpha.13
-sim-ecs         v0.6.2
+sim-ecs         v0.6.4
 tick-knock      v4.2.0
 
 Measured in "points" for comparison. More is better!
-```
 
 
  **Default Suite / Simple Insert**
 
 |    Library | Points | Deviation | Comment |
 |-----------:|-------:|:----------|:--------|
-|    Ape-ECS |    963 | ± 1.2%    |         |
-|     bitecs |  13195 | ± 0.78%   |         |
-|    javelin |   1824 | ± 1.7%    |         |
-|    sim-ecs |   1534 | ± 1.4%    |         |
-| tick-knock |   8132 | ± 1.2%    |         |
+| Ape-ECS | 767 | ± 1.1% |  |
+| bitecs | 14507 | ± 0.20% |  |
+| javelin | 2043 | ± 1.6% |  |
+| sim-ecs | 989 | ± 1.1% |  |
+| tick-knock | 7911 | ± 0.22% |  |
 
 
 
@@ -742,11 +741,12 @@ Measured in "points" for comparison. More is better!
 
 |    Library | Points | Deviation | Comment |
 |-----------:|-------:|:----------|:--------|
-|    Ape-ECS |  30516 | ± 0.33%   |         |
-|     bitecs | 178891 | ± 0.88%   |         |
-|    javelin |  21631 | ± 0.26%   |         |
-|    sim-ecs |    916 | ± 0.23%   |         |
-| tick-knock |  10691 | ± 0.10%   |         |
+| Ape-ECS | 23170 | ± 0.21% |  |
+| bitecs | 86356 | ± 0.36% |  |
+| javelin | 22883 | ± 0.049% |  |
+| sim-ecs | 1008 | ± 0.23% |  |
+| tick-knock | 11038 | ± 0.085% |  |
+
 
 
 
@@ -754,11 +754,11 @@ Measured in "points" for comparison. More is better!
 
 |    Library | Points | Deviation | Comment |
 |-----------:|-------:|:----------|:--------|
-|    Ape-ECS |    106 | ± 0.092%  |         |
-|     bitecs |   6656 | ± 0.34%   |         |
-|    javelin |    214 | ± 0.50%   |         |
-|    sim-ecs |    273 | ± 0.38%   |         |
-| tick-knock |     47 | ± 0.041%  |         |
+| Ape-ECS | 110 | ± 0.13% |  |
+| bitecs | 5231 | ± 0.47% |  |
+| javelin | 221 | ± 0.42% |  |
+| sim-ecs | 281 | ± 0.43% |  |
+| tick-knock | 55 | ± 0.18% |  |
 
 
 
@@ -766,8 +766,8 @@ Measured in "points" for comparison. More is better!
 
 | Library | Points | Deviation | Comment                      |
 |--------:|-------:|:----------|:-----------------------------|
-| Ape-ECS |     63 | ± 1.3%    | file size: 417.3427734375 KB |
-| Javelin |    502 | ± 1.4%    | file size: 31.1455078125 KB  |
-| sim-ecs |     97 | ± 1.6%    | file size: 92.677734375 KB   |
+| Ape-ECS | 64 | ± 1.4% | file size: 417.3427734375 KB |
+| Javelin | 557 | ± 1.3% | file size: 31.1455078125 KB |
+| sim-ecs | 113 | ± 1.6% | file size: 92.677734375 KB |
 
 

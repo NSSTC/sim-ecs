@@ -6,7 +6,7 @@ const nodeVersion = process.version;
 const benchVersion = JSON.parse(readFileSync('package.json').toString()).version;
 const tsVersion = JSON.parse(readFileSync('node_modules/typescript/package.json').toString()).version;
 const tsLibVersion = JSON.parse(readFileSync('node_modules/tslib/package.json').toString()).version;
-const tsNodeVersion = JSON.parse(readFileSync('node_modules/ts-node/package.json').toString()).version;
+const tsxVersion = JSON.parse(readFileSync('node_modules/tsx/package.json').toString()).version;
 
 const apeVersion = JSON.parse(readFileSync('node_modules/ape-ecs/package.json').toString()).version;
 const bitVersion = JSON.parse(readFileSync('node_modules/bitecs/package.json').toString()).version;
@@ -46,7 +46,7 @@ NodeJS: ${nodeVersion}
 Bench\t\tv${benchVersion}
 TypeScript\tv${tsVersion}
 TS-Lib\t\tv${tsLibVersion}
-TS-Node\t\tv${tsNodeVersion}
+TSX\t\tv${tsxVersion}
 
 Ape-ECS\t\tv${apeVersion}
 bitecs\t\tv${bitVersion}
