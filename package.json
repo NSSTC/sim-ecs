@@ -53,19 +53,19 @@
     "node": ">=16.20"
   },
   "dependencies": {
-    "tslib": "^2.6.2"
+    "tslib": "^2"
   },
   "devDependencies": {
-    "@types/chai": "~4.3.6",
-    "@types/mocha": "~10.0.1",
-    "chai": "~4.3.8",
-    "esbuild": "~0.19.3",
-    "madge": "~6.1.0",
-    "mocha": "~10.2.0",
-    "nyc": "~15.1.0",
-    "ts-node": "~10.9.1",
-    "typedoc": "~0.25.1",
-    "typescript": "^5.2.2"
+    "@types/chai": "^4",
+    "@types/mocha": "^10",
+    "chai": "^4",
+    "esbuild": "~0.19",
+    "madge": "^6",
+    "mocha": "^10",
+    "nyc": "^15",
+    "tsx": "^3",
+    "typedoc": "~0.25",
+    "typescript": "^5"
   },
   "files": [
     "dist"
@@ -87,9 +87,9 @@
     "deno-example-system-error": "deno run examples/system-error.ts",
     "dtsbuild": "tsc -P ./tsconfig-tsc.json --emitDeclarationOnly",
     "esmbuild": "esbuild src/index.ts --bundle --outfile=dist/sim-ecs.mjs --allow-overwrite --format=esm --sourcemap --target=es2020 --minify",
-    "example-counter": "ts-node-esm -P tsconfig.json examples/counter.ts",
-    "example-events": "ts-node-esm -P tsconfig.json examples/events.ts",
-    "example-system-error": "ts-node-esm -P tsconfig.json examples/system-error.ts",
+    "example-counter": "tsx --tsconfig tsconfig.json examples/counter.ts",
+    "example-events": "tsx --tsconfig tsconfig.json examples/events.ts",
+    "example-system-error": "tsx --tsconfig tsconfig.json examples/system-error.ts",
     "loop-test-js": "madge -c .",
     "loop-test-ts": "madge -c  --extensions ts --warning --orphans ./src",
     "prepare": "npm run build",
