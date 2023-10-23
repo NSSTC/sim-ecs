@@ -232,10 +232,6 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
             throw new Error(`The runtime world "${this.name}" is already running!`);
         }
 
-        if (!this.currentSchedulerExecutor) {
-            throw new Error('The runtime world hasn\'t initialized a scheduler executor!');
-        }
-
         this.#awaiter = new Promise<void>((resolve, reject) => {
             this.awaiterReject = reject;
             this.awaiterResolve = resolve;
