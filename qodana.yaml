@@ -10,10 +10,10 @@ profile:
 #include:
 #  - name: <SomeEnabledInspectionId>
 #Disable inspections
-#exclude:
-#  - name: <SomeDisabledInspectionId>
-#    paths:
-#      - <path/where/not/run/inspection>
+exclude:
+  - name: Docs
+    paths:
+      - docs
 #Execute shell command before Qodana execution (Applied in CI/CD pipeline)
 #bootstrap: sh ./prepare-qodana.sh
 #Install IDE plugins before Qodana execution (Applied in CI/CD pipeline)
@@ -23,3 +23,4 @@ profile:
 linter: jetbrains/qodana-jvm:latest
 include:
   - name: CheckDependencyLicenses
+  - name: DuplicatedCode
