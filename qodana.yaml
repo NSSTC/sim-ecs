@@ -11,7 +11,7 @@ profile:
 #  - name: <SomeEnabledInspectionId>
 #Disable inspections
 exclude:
-  - name: Docs
+  - name: All
     paths:
       - docs
 #Execute shell command before Qodana execution (Applied in CI/CD pipeline)
