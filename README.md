@@ -228,7 +228,7 @@ import {buildWorld, ISyncPointPrefab} from "sim-ecs";
 
 const gameSchedule: ISyncPointPrefab = {
     stages: [
-        // Stage is executed sequentially (order guaranteed!)
+        // Stages are executed sequentially (order guaranteed!)
         [BeforeStepSystem],
         [InputSystem],
         [
