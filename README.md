@@ -639,7 +639,6 @@ Here's an overview of known plugins for sim-ecs:
 
 | Name                                                    | Description        |
 |---------------------------------------------------------|--------------------|
-| [sim-ecs-tiled](https://github.com/NSSTC/sim-ecs-tiled) | Tiled map importer |
 
 
 ## Performance
