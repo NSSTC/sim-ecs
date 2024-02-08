@@ -22,4 +22,20 @@ describe('Test PDA', () => {
         assert.equal(pda.pop(), undefined);
         assert.equal(pda.size, 0);
     });
+
+    it('clear', () => {
+        const pda = new PushDownAutomaton<State>();
+        pda.push(State1);
+        pda.push(State1);
+        pda.push(State1);
+        pda.push(State1);
+        pda.push(State1);
+
+        assert.equal(pda.size, 5);
+
+        pda.clear();
+
+        assert.equal(pda.size, 0);
+        assert.equal(pda.pop(), undefined);
+    });
 });
