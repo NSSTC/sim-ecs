@@ -125,6 +125,7 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
 
             for (scheduler of this.config.stateSchedulers.values()) {
                 for (system of scheduler.getSystems()) {
+                    system.setRuntimeContext(this);
                     this.systems.add(system);
                 }
             }
@@ -173,8 +174,7 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
         let i, stage, system, systems;
 
         schedulers
-            .map(scheduler => scheduler.pipeline.getGroups())
-            .flat()
+            .flatMap(scheduler => scheduler.pipeline.getGroups())
             .forEach(group => {
                 for (stage of group.stages) {
                     systems = stage.systems;
@@ -199,7 +199,6 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
             let query, system;
 
             for (system of this.config.defaultScheduler.getSystems()) {
-                system.setRuntimeContext(this);
                 for (query of getQueriesFromSystem(system)) {
                     this.queries.add(query);
                 }
