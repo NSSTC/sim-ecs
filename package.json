@@ -58,12 +58,12 @@
   "devDependencies": {
     "@types/chai": "^4",
     "@types/mocha": "^10",
-    "chai": "^4",
-    "esbuild": "~0.19",
+    "chai": "^5",
+    "esbuild": "~0.20",
     "madge": "^6",
     "mocha": "^10",
     "nyc": "^15",
-    "tsx": "^3",
+    "tsx": "^4",
     "typedoc": "~0.25",
     "typescript": "^5"
   },

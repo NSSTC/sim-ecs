@@ -10,7 +10,7 @@
     "fs-extra": "^11",
     "sim-ecs": "file:../../src",
     "tick-knock": "4.2.0",
-    "tsx": "^3",
+    "tsx": "^4",
     "tslib": "^2",
     "typescript": "^5"
   },
