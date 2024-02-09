@@ -82,6 +82,14 @@ export interface IReadOnlyEntity {
     hasComponent(component: typeof Object | TObjectProto): boolean
 
     /**
+     * Check if an event listener already exists on the entity
+     * Mostly intersting for testing the lib
+     * @param event
+     * @param handler
+     */
+    hasEventListener<T extends keyof IEventMap>(event: T, handler: IEventMap[T]): void
+
+    /**
      * Check if this entity has a given tag
      * @param tag
      */

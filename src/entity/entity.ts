@@ -162,6 +162,23 @@ export class Entity implements IEntity {
         return this.components.has(this.getConstructor(component));
     }
 
+    hasEventListener<T extends keyof IEventMap>(event: T, handler: IEventMap[T]): boolean {
+        switch (event) {
+            case "addComponent":
+                return this.eventHandlers.addComponent.has(handler as TAddComponentEventHandler);
+            case "addTag":
+                return this.eventHandlers.addTag.has(handler as TAddTagEventHandler);
+            case "clone":
+                return this.eventHandlers.clone.has(handler as TCloneEventHandler);
+            case "removeComponent":
+                return this.eventHandlers.removeComponent.has(handler as TRemoveComponentEventHandler);
+            case "removeTag":
+                return this.eventHandlers.removeTag.has(handler as TRemoveTagEventHandler);
+            default:
+                return false;
+        }
+    }
+
     hasTag(tag: TTag): boolean {
         return this.tags.has(tag);
     }
