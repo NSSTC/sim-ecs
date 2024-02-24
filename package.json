@@ -50,7 +50,7 @@
     }
   },
   "engines": {
-    "node": ">=16.20"
+    "node": ">=18"
   },
   "dependencies": {
     "tslib": "^2"
