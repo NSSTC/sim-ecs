@@ -16,6 +16,7 @@ export * from './entity/entity.ts';
 export * from './entity/entity-builder.ts';
 export * from './query/query.ts';
 export * from './events/event-bus.ts';
+export * from './events/internal-events.ts';
 export * from './pda/sim-ecs-pda.ts';
 export * from './scheduler/scheduler.ts';
 export * from './scheduler/pipeline/pipeline.ts';
