@@ -9,7 +9,6 @@ import {type InstanceMap} from "../../util/instance-map.ts";
 import type {TObjectProto, TTypeProto} from "../../_.spec.ts";
 import type {TGroupHandle} from "../world.spec.ts";
 import type {ISystem} from "../../system/system.spec.ts";
-import type {RuntimeWorld} from "./runtime-world.ts";
 
 export * from './commands/commands.spec.ts';
 
