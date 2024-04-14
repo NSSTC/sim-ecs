@@ -32,6 +32,7 @@ export class SimECSCloneEntityEvent extends SimECSEntityEvent {
         super(clone);
     }
 }
+export class SimECSMutateEntityEvent extends SimECSEntityEvent {}
 export class SimECSEntityAddComponentEvent extends SimECSEntityEvent {
     constructor(
         public readonly entity: Readonly<IEntity>,

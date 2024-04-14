@@ -43,7 +43,7 @@ export function addEntity(this: RuntimeWorld, entity: Readonly<IEntity>): void {
         this.entityEventHandlers.set(entity, eventMap);
     }
 
-    {
+    { // add entity to queries
         let query;
         for (query of this.queries) {
             query[addEntitySym](entity);
@@ -58,6 +58,14 @@ export function hasEntity(this: RuntimeWorld, entity: Readonly<IEntity>): boolea
     return this.data.entities.has(entity);
 }
 
+export function refreshEntityQueryRegistration(this: RuntimeWorld, entity: Readonly<IEntity>): void {
+    let query;
+    for (query of this.queries) {
+        query[removeEntitySym](entity);
+        query[addEntitySym](entity);
+    }
+}
+
 export function removeEntity(this: RuntimeWorld, entity: Readonly<IEntity>): void {
     if (!this.data.entities.has(entity)) {
         return;
@@ -65,7 +73,7 @@ export function removeEntity(this: RuntimeWorld, entity: Readonly<IEntity>): voi
 
     this.data.entities.delete(entity);
 
-    {
+    { // Remove entity from all queries
         let query;
         for (query of this.queries) {
             query[removeEntitySym](entity);

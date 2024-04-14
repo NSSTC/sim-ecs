@@ -9,6 +9,7 @@ import {type InstanceMap} from "../../util/instance-map.ts";
 import type {TObjectProto, TTypeProto} from "../../_.spec.ts";
 import type {TGroupHandle} from "../world.spec.ts";
 import type {ISystem} from "../../system/system.spec.ts";
+import type {RuntimeWorld} from "./runtime-world.ts";
 
 export * from './commands/commands.spec.ts';
 
@@ -85,6 +86,13 @@ export interface IRuntimeWorld extends IImmutableWorld {
      * @param newSystem
      */
     hmrReplaceSystem(newSystem: ISystem): void
+
+    /**
+     * Refresh an entity's registration with queries.
+     * This is useful e.g. after an entity was mutated
+     * @param entity
+     */
+    refreshEntityQueryRegistration(entity: Readonly<IEntity>): void
 
     /**
      * Replace a resource from this world with a new value

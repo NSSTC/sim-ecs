@@ -12,6 +12,7 @@ import type {IPreptimeWorld} from "../../preptime/preptime-world.spec.ts";
 import type {IQuery} from "../../../query/query.spec.ts";
 import {addEntitySym} from "../../../query/_.ts";
 import {Entity} from "../../../entity/entity.ts";
+import {SimECSMutateEntityEvent} from "../../../events/internal-events.ts";
 
 export * from "./commands.spec.ts";
 
@@ -103,10 +104,10 @@ export class Commands implements ICommands {
             throw new Error(`The entity "${entity.id}" cannot be mutated!`);
         }
 
-        mutator(entity);
-        this.commands.push(() => {
-            this.world.removeEntity(entity);
-            this.world.addEntity(entity);
+        this.commands.push(async () => {
+            mutator(entity);
+            this.world.refreshEntityQueryRegistration(entity);
+            await this.world.eventBus.publish(new SimECSMutateEntityEvent(entity));
         });
     }
 

@@ -27,7 +27,7 @@ import {
     getResources,
     hasResource,
 } from "../common/world_resources.ts";
-import {addEntity, hasEntity, removeEntity} from "./runtime-world_entities.ts";
+import {addEntity, hasEntity, refreshEntityQueryRegistration, removeEntity} from "./runtime-world_entities.ts";
 import {addResource, removeResource, replaceResource} from "./runtime-world_resources.ts";
 import {SimECSPushDownAutomaton} from "../../pda/sim-ecs-pda.ts";
 import type {IState} from "../../state/state.spec.ts";
@@ -333,12 +333,10 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
 
     // @ts-ignore
     [Symbol.dispose]() {
-        { // unset the context for all systems
-            let system;
-
-            for (system of this.systems) {
-                system.unsetRuntimeContext(this);
-            }
+        // unset the context for all systems
+        let system;
+        for (system of this.systems) {
+            system.unsetRuntimeContext(this);
         }
     }
 
@@ -353,6 +351,7 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
     public createEntity = createEntity;
     public getEntities = getEntities;
     public hasEntity = hasEntity;
+    public refreshEntityQueryRegistration = refreshEntityQueryRegistration;
     public removeEntity = removeEntity;
 
 
