@@ -62,6 +62,16 @@ In order to create optimized simulation runs, the ECS has to be fully specified 
 All components, systems and queries need to be registered at the start.
 
 
+### AoS vs SoA
+
+Sim-ecs uses the AoS (Array of Structs) approach, because it leads to much more control on the library side,
+and better lends itself to the promises we make about sim-ecs. The result is a polished experience with simple usage.
+
+An SoA (Struct of Arrays) on the other hand is an approach famously used by bitecs to get performance out of
+low-level mechanics in JS. This means it has overall better raw performance, but puts a lot of responsibilities on the 
+lib-users' side. This leads to more time spend developing ecs features, which already exist in sim-ecs.
+
+
 ## Why use sim-ecs
 
 Sim-ecs was created out of the lack of a fast, featured ECS library for TypeScript, which is able to handle
@@ -647,6 +657,9 @@ Please take the results with a grain of salt. These are benchmarks, so they are 
 An actual application will use a mix out of everything and more, and depending on that may have a different experience.
 
 You can run these benchmarks on your own machine - they are in the `examples/bench` folder.
+
+The below result compares several AoS-based ECS libraries, which are similar to sim-ecs.
+The only exception is bitecs, which is a SoA-based ECS library, for its usage in Phaser.
 
 
 ### The Benchmarks
