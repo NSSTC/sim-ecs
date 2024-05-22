@@ -1,6 +1,6 @@
-import {EQueryType, type IQuery} from "./query.spec.ts";
-import type {IEntity} from "../entity/entity.ts";
-import {addEntitySym, clearEntitiesSym, removeEntitySym, setEntitiesSym} from "./_.ts";
+import {EQueryType, type IQuery, IQueryDescriptor, TComparator} from "./query.spec.ts";
+import type {IEntity} from "../entity/entity.spec.ts";
+import {addEntitySym, clearEntitiesSym, entitySym, removeEntitySym, runSortSym, setEntitiesSym} from "./_.ts";
 
 export * from "./query.spec.ts";
 export {
@@ -16,10 +16,12 @@ export {
 } from "./query.util.ts";
 
 
-export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {
-    protected queryResult: Map<IEntity, DATA> = new Map();
+export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA>, IQueryDescriptor<DESC, DATA> {
+    protected isSortDirty = false;
+    protected queryResult: Array<DATA & { [entitySym]: IEntity }> = [];
+    protected sortComparator: TComparator<DATA> | undefined;
 
-    constructor(
+    protected constructor(
         protected _queryType: EQueryType,
         protected queryDescriptor: Readonly<DESC>,
     ) {}
@@ -33,7 +35,7 @@ export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {
     }
 
     get resultLength(): number {
-        return this.queryResult.size;
+        return this.queryResult.length;
     }
 
     /** @internal */
@@ -41,19 +43,35 @@ export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {
 
     /** @internal */
     [clearEntitiesSym]() {
-        this.queryResult.clear();
+        this.queryResult.length = 0;
     }
 
     /** @internal */
-    [removeEntitySym](entity: Readonly<IEntity>) {
-        this.queryResult.delete(entity)
+    [removeEntitySym](entity: Readonly<IEntity>): void {
+        const entityIndex = this.queryResult.findIndex(data => data[entitySym] === entity);
+
+        if (entityIndex < 0) {
+            return;
+        }
+
+        this.queryResult.splice(entityIndex, 1);
     }
 
     /** @internal */
-    [setEntitiesSym](entities: Readonly<IterableIterator<Readonly<IEntity>>>) {
+    [runSortSym](): void {
+        if (!this.isSortDirty || !this.sortComparator) {
+            return;
+        }
+
+        this.queryResult = this.queryResult.sort(this.sortComparator);
+        this.isSortDirty = false;
+    }
+
+    /** @internal */
+    [setEntitiesSym](entities: Readonly<IterableIterator<Readonly<IEntity>>>): void {
         let entity;
 
-        this.queryResult.clear();
+        this[clearEntitiesSym]();
 
         for (entity of entities) {
             this[addEntitySym](entity);
@@ -61,14 +79,14 @@ export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {
     }
 
     async execute(handler: (data: DATA) => Promise<void> | void): Promise<void> {
-        let data: DATA;
-        for (data of this.queryResult.values()) {
+        let data;
+        for (data of this.queryResult) {
             await handler(data);
         }
     }
 
     getFirst(): DATA | undefined {
-        return this.queryResult.values().next().value;
+        return this.queryResult[0];
     }
 
     iter(): IterableIterator<DATA> {
@@ -77,7 +95,12 @@ export abstract class Query<DESC, DATA> implements IQuery<DESC, DATA> {
 
     abstract matchesEntity(entity: Readonly<IEntity>): boolean;
 
+    sort(comparator: TComparator<DATA>): IQueryDescriptor<DESC, DATA> {
+        this.sortComparator = comparator;
+        return this;
+    }
+
     toArray(): DATA[] {
-        return Array.from(this.queryResult.values());
+        return [...this.queryResult];
     }
 }

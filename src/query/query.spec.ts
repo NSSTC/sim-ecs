@@ -37,6 +37,8 @@ export type TAccessQueryData<DESC extends IAccessQuery<TObjectProto>> = {
         : (Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<object>>> | undefined)
 }
 
+export type TComparator<DATA> = (a: DATA, b: DATA) => number;
+
 export interface IAccessDescriptor<C extends object | undefined> {
     /**
      * @internal
@@ -82,5 +84,11 @@ export interface IQuery<DESC, DATA> {
     toArray(): Array<DATA>
 }
 
+export interface IQueryDescriptor<DESC, DATA> extends IQuery<DESC, DATA> {
+    sort(comparator: TComparator<DATA>): IQueryDescriptor<DESC, DATA>
+}
+
 export interface IComponentsQuery<DESC extends IAccessQuery<TObjectProto>> extends IQuery<DESC, TAccessQueryData<DESC>> {}
+export interface IComponentsQueryDescriptor<DESC extends IAccessQuery<TObjectProto>> extends IQueryDescriptor<DESC, TAccessQueryData<DESC>> {}
 export interface IEntitiesQuery extends IQuery<TExistenceQuery<TObjectProto>, IEntity> {}
+export interface IEntitiesQueryDescriptor extends IQueryDescriptor<TExistenceQuery<TObjectProto>, IEntity> {}

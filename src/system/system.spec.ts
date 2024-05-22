@@ -1,4 +1,8 @@
-import type {IAccessQuery, IComponentsQuery, IEntitiesQuery} from "../query/query.spec.ts";
+import type {
+    IAccessQuery,
+    IComponentsQueryDescriptor,
+    IEntitiesQueryDescriptor
+} from "../query/query.spec.ts";
 import type {TObjectProto, TTypeProto} from "../_.spec.ts";
 import type {ISystemActions} from "../world/actions.spec.ts";
 import {systemEventReaderSym, systemEventWriterSym, systemResourceTypeSym, systemRunParamSym} from "./_.ts";
@@ -7,9 +11,9 @@ import type {IEventWriter} from "../events/event-writer.spec.ts";
 import type {IRuntimeWorld} from "../world/runtime/runtime-world.spec.ts";
 
 export type TSystemParameter =
-    IEntitiesQuery
+    IEntitiesQueryDescriptor
     | IEventReader<TObjectProto>
-    | IComponentsQuery<IAccessQuery<TObjectProto>>
+    | IComponentsQueryDescriptor<IAccessQuery<TObjectProto>>
     | ISystemActions
     | ISystemResource<TObjectProto>
     | ISystemStorage;

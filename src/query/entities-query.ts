@@ -2,7 +2,7 @@ import type {IEntitiesQuery, TExistenceQuery} from "./query.spec.ts";
 import {EExistence, EQueryType, ETargetType} from "./query.spec.ts";
 import {Query} from "./query.ts";
 import type {IEntity, TTag} from "../entity/entity.spec.ts";
-import {addEntitySym, existenceDescSym} from "./_.ts";
+import {addEntitySym, entitySym, existenceDescSym} from "./_.ts";
 import type {TObjectProto} from "../_.spec.ts";
 
 export class EntitiesQuery extends Query<TExistenceQuery<TObjectProto>, IEntity> implements IEntitiesQuery {
@@ -14,7 +14,8 @@ export class EntitiesQuery extends Query<TExistenceQuery<TObjectProto>, IEntity>
 
     [addEntitySym](entity: Readonly<IEntity>): void {
         if (this.matchesEntity(entity)) {
-            this.queryResult.set(entity, entity);
+            this.isSortDirty = true;
+            this.queryResult.push({ [entitySym]: entity, ...entity });
         }
     }
 

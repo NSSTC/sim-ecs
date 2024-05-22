@@ -1,4 +1,4 @@
-import type {
+import {
     IAccessDescriptor,
     IAccessQuery,
     IComponentsQuery,
@@ -9,7 +9,7 @@ import {EQueryType, ETargetType} from "./query.spec.ts";
 import {Query} from "./query.ts";
 import type {TObjectProto} from "../_.spec.ts";
 import type {IEntity, TTag} from "../entity/entity.spec.ts";
-import {accessDescSym, addEntitySym} from "./_.ts";
+import {accessDescSym, addEntitySym, entitySym} from "./_.ts";
 
 export class ComponentsQuery<DESC extends IAccessQuery<TObjectProto>> extends Query<DESC, TAccessQueryData<DESC>> implements IComponentsQuery<DESC> {
     constructor(
@@ -20,7 +20,11 @@ export class ComponentsQuery<DESC extends IAccessQuery<TObjectProto>> extends Qu
 
     [addEntitySym](entity: Readonly<IEntity>): void {
         if (this.matchesEntity(entity)) {
-            this.queryResult.set(entity, this.getComponentDataFromEntity(entity, this.queryDescriptor));
+            this.isSortDirty = true;
+            this.queryResult.push({
+                [entitySym]: entity,
+                ...this.getComponentDataFromEntity(entity, this.queryDescriptor),
+            });
         }
     }
 

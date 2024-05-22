@@ -40,7 +40,7 @@ import {Commands} from "./commands/commands.ts";
 import type {ISystemActions, ITransitionActions} from "../actions.spec.ts";
 import {getQueriesFromSystem} from "../../system/system.ts";
 import type {ISystem} from "../../system/system.spec.ts";
-import {setEntitiesSym} from "../../query/_.ts";
+import {runSortSym, setEntitiesSym} from "../../query/_.ts";
 import type {IRuntimeWorldData} from "./runtime-world.spec.ts";
 import {Query} from "../../query/query.ts";
 import {SimECSPDAPushStateEvent} from "../../events/internal-events.ts";
@@ -247,6 +247,13 @@ export class RuntimeWorld implements IRuntimeWorld, IMutableWorld {
                         await this.eventBus.publish(error);
                     } else {
                         throw error;
+                    }
+                }
+
+                {
+                    let query;
+                    for (query of this.queries) {
+                        query[runSortSym]();
                     }
                 }
             }
