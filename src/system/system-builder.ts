@@ -50,18 +50,6 @@ export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements IS
         return new System();
     }
 
-    name(name: string): SystemBuilder<Readonly<PARAMDESC>> {
-        return this.withName(name);
-    }
-
-    run(fn: TSystemFunction<Readonly<PARAMDESC>>): SystemBuilder<Readonly<PARAMDESC>> {
-        return this.withRunFunction(fn);
-    }
-
-    setup(fn: TSystemFunction<Readonly<PARAMDESC>>): SystemBuilder<Readonly<PARAMDESC>> {
-        return this.withSetupFunction(fn);
-    }
-
     withName(name: string): SystemBuilder<Readonly<PARAMDESC>> {
         this.systemName = name;
         return this;
@@ -76,10 +64,8 @@ export class SystemBuilder<PARAMDESC extends TSystemParameterDesc> implements IS
         this.setupFunction = fn;
         return this;
     }
+
+    name = this.withName;
+    run = this.withRunFunction;
+    setup = this.withSetupFunction;
 }
-
-// Change alias refs for better performance
-
-SystemBuilder.prototype.name = SystemBuilder.prototype.withName;
-SystemBuilder.prototype.run = SystemBuilder.prototype.withRunFunction;
-SystemBuilder.prototype.setup = SystemBuilder.prototype.withSetupFunction;
