@@ -685,7 +685,7 @@ Test: Iterate through all entities with Position and Velocity, and add velocity 
 #### System Scheduling
 
 This benchmark is designed to test how efficiently the ECS can schedule multiple independent systems.
-his is primarily an outer-parallelism test.
+This is primarily an outer-parallelism test.
 
 Dataset:
 
@@ -717,21 +717,21 @@ Test: Serialize all entities to JSON in-memory. Then deserialize back into the E
 TypeScript ECS Bench
 --------------------------------------------------------------------------------
 
-24th October 2023
+22nd May 2024
 
-Platform: Windows_NT win32 x64 v10.0.22621
+Platform: Windows_NT win32 x64 v10.0.22631
 CPU: AMD Ryzen 7 3700X 8-Core Processor@3600MHz
-NodeJS: v20.7.0
+NodeJS: v21.1.0
 
 Bench           v0.3.0
-TypeScript      v5.2.2
+TypeScript      v5.4.5
 TS-Lib          v2.6.2
-TSX             v3.14.0
+TSX             v4.10.5
 
 Ape-ECS         v1.3.1
 bitecs          v0.3.40
 Javelin         v1.0.0-alpha.13
-sim-ecs         v0.6.4
+sim-ecs         v0.6.5
 tick-knock      v4.2.0
 
 Measured in "points" for comparison. More is better!
@@ -743,9 +743,9 @@ Measured in "points" for comparison. More is better!
 |    Library | Points | Deviation | Comment |
 |-----------:|-------:|:----------|:--------|
 |    Ape-ECS |    767 | ± 1.1%    |         |
-|     bitecs |  14507 | ± 0.20%   |         |
-|    javelin |   2043 | ± 1.6%    |         |
-|    sim-ecs |    989 | ± 1.1%    |         |
+|     bitecs |  11218 | ± 0.41%   |         |
+|    javelin |   2028 | ± 1.6%    |         |
+|    sim-ecs |   1057 | ± 1.1%    |         |
 | tick-knock |   7911 | ± 0.22%   |         |
 
 
@@ -755,9 +755,9 @@ Measured in "points" for comparison. More is better!
 |    Library | Points | Deviation | Comment |
 |-----------:|-------:|:----------|:--------|
 |    Ape-ECS |  23170 | ± 0.21%   |         |
-|     bitecs |  86356 | ± 0.36%   |         |
-|    javelin |  22883 | ± 0.049%  |         |
-|    sim-ecs |   1008 | ± 0.23%   |         |
+|     bitecs | 119904 | ± 0.36%   |         |
+|    javelin |  19845 | ± 0.049%  |         |
+|    sim-ecs |    924 | ± 0.23%   |         |
 | tick-knock |  11038 | ± 0.085%  |         |
 
 
@@ -768,9 +768,9 @@ Measured in "points" for comparison. More is better!
 |    Library | Points | Deviation | Comment |
 |-----------:|-------:|:----------|:--------|
 |    Ape-ECS |    110 | ± 0.13%   |         |
-|     bitecs |   5231 | ± 0.47%   |         |
-|    javelin |    221 | ± 0.42%   |         |
-|    sim-ecs |    281 | ± 0.43%   |         |
+|     bitecs |   7288 | ± 0.19%   |         |
+|    javelin |    101 | ± 0.071%  |         |
+|    sim-ecs |    244 | ± 0.29%   |         |
 | tick-knock |     55 | ± 0.18%   |         |
 
 
