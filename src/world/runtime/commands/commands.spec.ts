@@ -57,7 +57,7 @@ export interface ICommands {
      * @param entity
      * @param mutator
      */
-    mutateEntity(entity: Readonly<IReadOnlyEntity>, mutator: (entity: IEntity) => Promise<void> | void): void
+    mutateEntity(entity: Readonly<IReadOnlyEntity>, mutator: (entity: IEntity) => any | Promise<any>): void
 
     /**
      * Revert the running world to a previous state

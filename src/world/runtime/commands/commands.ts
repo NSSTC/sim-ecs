@@ -99,7 +99,7 @@ export class Commands implements ICommands {
         return handle;
     }
 
-    mutateEntity(entity: Readonly<IReadOnlyEntity>, mutator: (entity: IEntity) => Promise<void> | void): void {
+    mutateEntity(entity: Readonly<IReadOnlyEntity>, mutator: (entity: IEntity) => Promise<any> | any): void {
         if (!(entity instanceof Entity)) {
             throw new Error(`The entity "${entity.id}" cannot be mutated!`);
         }
