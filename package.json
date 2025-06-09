@@ -56,15 +56,15 @@
     "tslib": "^2"
   },
   "devDependencies": {
-    "@types/chai": "^4",
+    "@types/chai": "^5",
     "@types/mocha": "^10",
     "chai": "^5",
-    "esbuild": "~0.21",
-    "madge": "^7",
-    "mocha": "^10",
-    "nyc": "^15",
+    "esbuild": "~0.25",
+    "madge": "^8",
+    "mocha": "^11",
+    "nyc": "^17",
     "tsx": "^4",
-    "typedoc": "~0.25",
+    "typedoc": "~0.28",
     "typescript": "^5"
   },
   "files": [
@@ -79,7 +79,7 @@
     "bun-example-events": "bun examples/events.ts",
     "bun-example-system-error": "bun examples/system-error.ts",
     "ci": "npm run prebuild && npm run cjsbuild && npm run esmbuild && npm run postbuild",
-    "doc": "typedoc src/index.ts --out docs --includeVersion --excludeInternal --excludePrivate --excludeProtected --media ./media",
+    "doc": "typedoc src/index.ts --out docs --includeVersion --excludeInternal --excludePrivate --excludeProtected",
     "cjsbuild": "esbuild src/index.ts --bundle --outfile=dist/sim-ecs.cjs --allow-overwrite --format=cjs --sourcemap --target=es2020 --minify",
     "coverage": "nyc -r lcov -e .ts -x \"**/*.test.ts\" -x \"**/*.spec.ts\" -x \"src/tests\" npm run test",
     "deno-example-counter": "deno run examples/counter.ts",
