@@ -1,4 +1,4 @@
-import {Read, ReadEntity, With, WithTag, Without, WithoutTag, Write} from "./query";
+import {Read, ReadEntity, ReadOptional, With, WithTag, Without, WithoutTag, Write} from "./query";
 import {queryComponents} from "../ecs/ecs-query";
 import {buildWorld} from "../ecs/ecs-world";
 import {createSystem} from "../system/system";
@@ -81,6 +81,21 @@ describe('Existence parameters in component queries', () => {
 
     it('WithoutTag matches an untagged entity', async () => {
         assert.equal(await count({c: Read(Component), _e: WithoutTag(Tag)}, false), 1);
+    });
+
+    it('still passes optional parameters to the system as data', async () => {
+        const query = queryComponents({c: Read(Component), o: ReadOptional(Marker)});
+        const System = createSystem({query}).withName('Probe').withRunFunction(() => {}).build();
+        const prepWorld = buildWorld()
+            .withDefaultScheduling(root => root.addNewStage(stage => stage.addSystem(System)))
+            .withComponents(Component, Marker)
+            .build();
+        const runWorld = await prepWorld.prepareRun();
+        runWorld.buildEntity().with(new Component()).build();
+
+        const first = query.getFirst()!;
+        assert.property(first, 'c');
+        assert.property(first, 'o');
     });
 
     it('does not pass existence parameters to the system as data', async () => {

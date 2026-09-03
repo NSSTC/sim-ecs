@@ -3,7 +3,7 @@ import type {IEntity, TTag} from "../entity/entity.spec.ts";
 import {accessDescSym, addEntitySym, clearEntitiesSym, existenceDescSym, removeEntitySym, setEntitiesSym} from "./_.ts";
 
 export type TAccessQueryParameter<C extends TObjectProto> = C & IAccessDescriptor<InstanceType<C>>;
-export type TOptionalAccessQueryParameter<C extends TObjectProto | undefined> = IAccessDescriptor<C extends TObjectProto ? InstanceType<C> : undefined> & C extends TObjectProto ? C : undefined;
+export type TOptionalAccessQueryParameter<C extends TObjectProto | undefined> = IAccessDescriptor<C extends TObjectProto ? InstanceType<C> : undefined> & (C extends TObjectProto ? C : undefined);
 export interface IAccessQuery<C extends TObjectProto> { [componentName: string]: TAccessQueryParameter<C> | TOptionalAccessQueryParameter<C> | TExistenceQueryParameter<C> }
 
 export type TExistenceQueryParameter<C extends TObjectProto> = IExistenceDescriptor<C>;
