@@ -4,7 +4,7 @@ import {accessDescSym, addEntitySym, clearEntitiesSym, existenceDescSym, removeE
 
 export type TAccessQueryParameter<C extends TObjectProto> = C & IAccessDescriptor<InstanceType<C>>;
 export type TOptionalAccessQueryParameter<C extends TObjectProto | undefined> = IAccessDescriptor<C extends TObjectProto ? InstanceType<C> : undefined> & C extends TObjectProto ? C : undefined;
-export interface IAccessQuery<C extends TObjectProto> { [componentName: string]: TAccessQueryParameter<C> | TOptionalAccessQueryParameter<C> }
+export interface IAccessQuery<C extends TObjectProto> { [componentName: string]: TAccessQueryParameter<C> | TOptionalAccessQueryParameter<C> | TExistenceQueryParameter<C> }
 
 export type TExistenceQueryParameter<C extends TObjectProto> = IExistenceDescriptor<C>;
 export type TExistenceQuery<C extends TObjectProto> = Array<TExistenceQueryParameter<C>>;
@@ -31,10 +31,13 @@ export enum EQueryType {
     Entities,
 }
 
+type TQueryParameterData<PARAM> = Required<Omit<InstanceType<PARAM & TObjectProto>, keyof IAccessDescriptor<object>>>;
+
 export type TAccessQueryData<DESC extends IAccessQuery<TObjectProto>> = {
-    [P in keyof DESC]: DESC[P] extends TAccessQueryParameter<TObjectProto>
-        ? Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<object>>>
-        : (Required<Omit<InstanceType<DESC[P]>, keyof IAccessDescriptor<object>>> | undefined)
+    [P in keyof DESC as DESC[P] extends IAccessDescriptor<object | undefined> ? P : never]:
+        DESC[P] extends TAccessQueryParameter<TObjectProto>
+            ? TQueryParameterData<DESC[P]>
+            : (TQueryParameterData<DESC[P]> | undefined)
 }
 
 export type TComparator<DATA> = (a: DATA, b: DATA) => number;
