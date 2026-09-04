@@ -1,4 +1,4 @@
-import type {IEntity} from "./entity.spec.ts";
+import type {IEntity, TTag} from "./entity.spec.ts";
 import type {TObjectProto} from "../_.spec.ts";
 
 export interface IEntityBuilder {
@@ -19,6 +19,18 @@ export interface IEntityBuilder {
      * @param component
      */
     withAll(...component: ReadonlyArray<object | TObjectProto>): IEntityBuilder
+
+    /**
+     * Add tag to target entity
+     * @param tag
+     */
+    withTag(tag: TTag): IEntityBuilder
+
+    /**
+     * Add all tags to target entity
+     * @param tags
+     */
+    withTags(...tags: ReadonlyArray<TTag>): IEntityBuilder
 }
 
 export type TEntityBuilderProto = { new(): TEntityBuilderProto };
